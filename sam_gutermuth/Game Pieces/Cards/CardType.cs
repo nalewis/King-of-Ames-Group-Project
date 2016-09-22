@@ -3,6 +3,7 @@
     public enum CardType
     {
         Keep,
-        Discard
+        Discard,
+        Stats
     }
 }

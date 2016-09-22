@@ -8,24 +8,22 @@ namespace GamePieces.Cards
 {
     public abstract class Card : Observer<Monster>
     {
-        public static List<Card> Cards = GetCards();
-
-        private static List<Card> GetCards()
+        public static List<Card> GetCards()
         {
             var cards = typeof(Card)
                 .Assembly.GetTypes()
                 .Where(t => t.IsSubclassOf(typeof(Card)) && !t.IsAbstract)
                 .Select(t => (Card) Activator.CreateInstance(t)).ToList();
 
-           var duplicates = new List<Card>();
-           foreach (var card in cards)
-           {
-               if (card.CardsPerDeck <= 1) continue;
-               for(var counter = 0; counter < card.CardsPerDeck-1; counter++)
-                   duplicates.Add((Card) Activator.CreateInstance(card.GetType()));
-           }
+            var duplicates = new List<Card>();
+            foreach (var card in cards)
+            {
+                if (card.CardsPerDeck <= 1) continue;
+                for (var counter = 0; counter < card.CardsPerDeck - 1; counter++)
+                    duplicates.Add((Card) Activator.CreateInstance(card.GetType()));
+            }
             cards.AddRange(duplicates);
-            return cards;
+            return new List<Card>(cards.OrderBy(card => Guid.NewGuid()));
         }
 
         public string Name => GetType().Name.Replace("_", " ");

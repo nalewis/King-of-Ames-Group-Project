@@ -59,12 +59,17 @@
     <Compile Include="Cards\Deck\Keep\Acid_Attack.cs" />
     <Compile Include="Cards\Deck\Keep\Alpha_Monster.cs" />
     <Compile Include="Cards\Deck\Keep\Armor_Plating.cs" />
+    <Compile Include="Cards\Deck\Keep\Death_From_Above.cs" />
     <Compile Include="Cards\Deck\Keep\Dedicated_News_Team.cs" />
     <Compile Include="Cards\Deck\Keep\Energy_Hoarder.cs" />
+    <Compile Include="Cards\Deck\Keep\Even_Bigger.cs" />
+    <Compile Include="Cards\Deck\Keep\Extra_Head.cs" />
     <Compile Include="Cards\Deck\Keep\Fire_Breathing.cs" />
     <Compile Include="Cards\Deck\Keep\Friend_Of_Children.cs" />
+    <Compile Include="Cards\Deck\Keep\Giant_Brain.cs" />
     <Compile Include="Cards\Deck\Keep\Herbivore.cs" />
     <Compile Include="Cards\Deck\Keep\It_Has_A_Child.cs" />
+    <Compile Include="Cards\Deck\Keep\Jets.cs" />
     <Compile Include="Cards\Deck\Keep\Regeneration.cs" />
     <Compile Include="Cards\Deck\Keep\Rooting_For_The_Underdog.cs" />
     <Compile Include="Cards\Deck\Keep\Solar_Powered.cs" />
