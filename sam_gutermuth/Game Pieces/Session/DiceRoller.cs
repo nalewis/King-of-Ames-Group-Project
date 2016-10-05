@@ -43,6 +43,7 @@ namespace GamePieces.Session
         public void Setup(int dice)
         {
             Array.Clear(Tally, 0, Tally.Length);
+            Rolling.ForEach(die => die.Save = false);
             if (Rolling.Count == dice) return;
             while (Rolling.Count != 0)
             {

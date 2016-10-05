@@ -140,7 +140,6 @@ namespace GamePieces.Monsters
             RemainingRolls = 0;
             Index = GameComponents.Monsters.Count;
             State = State.EndOfTurn;
-            GameComponents.Monsters.Add(this);
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace GamePieces.Monsters
         {
             State = State.StartOfTurn;
             Cards.ForEach(card => card.Reset());
-            if (InTokyo) VictroyPoints++;
+            if (InTokyo) VictroyPoints+=2;
             RemainingRolls = MaximumRolls;
             DiceRoller.Setup(Dice);
         }
