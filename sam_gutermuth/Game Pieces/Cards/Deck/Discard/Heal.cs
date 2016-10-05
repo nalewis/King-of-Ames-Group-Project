@@ -6,11 +6,10 @@ namespace GamePieces.Cards.Deck.Discard
     {
         public override CardType CardType => CardType.Discard;
 
-        protected override bool MonsterShouldUpdate(Monster monster)
-        {
-            return true;
-        }
-
+        /// <summary>
+        /// Heal 2 damage
+        /// </summary>
+        /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
             monster.Health += 2;

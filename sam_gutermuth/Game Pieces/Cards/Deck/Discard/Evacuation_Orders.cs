@@ -9,11 +9,10 @@ namespace GamePieces.Cards.Deck.Discard
         public override CardType CardType => CardType.Discard;
         public override int CardsPerDeck => 2;
 
-        protected override bool MonsterShouldUpdate(Monster monster)
-        {
-            return true;
-        }
-
+        /// <summary>
+        /// All other monsters lose 5 victory points
+        /// </summary>
+        /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
             monster.Monsters.Where(enemy => !enemy.Equals(monster))

@@ -123,6 +123,11 @@ namespace GamePieces.Monsters
             set { Set(value); }
         }
 
+        /// <summary>
+        /// The monster game piece
+        /// </summary>
+        /// <param name="gameComponents">The components which the monster belongs to</param>
+        /// <param name="name">The name of the monster</param>
         public Monster(GameComponents gameComponents, string name = "")
         {
             GameComponents = gameComponents;
@@ -138,7 +143,10 @@ namespace GamePieces.Monsters
             GameComponents.Monsters.Add(this);
         }
 
-
+        /// <summary>
+        /// This needs to be called to start the turn of the monster.
+        /// All values are set to the correct state for starting a turn.
+        /// </summary>
         public void StartTurn()
         {
             State = State.StartOfTurn;
@@ -148,6 +156,9 @@ namespace GamePieces.Monsters
             DiceRoller.Setup(Dice);
         }
 
+        /// <summary>
+        /// Rolls all available dice in 'Game Components'
+        /// </summary>
         public void Roll()
         {
             if (RemainingRolls == 0) return;
@@ -160,17 +171,26 @@ namespace GamePieces.Monsters
             }
         }
 
+        /// <summary>
+        /// Tallys the score of the dice and returns them to the dice pool
+        /// </summary>
         public void EndRolling()
         {
             State = State.TallyDice;
             DiceRoller.EndRolling(this);
         }
 
+        /// <summary>
+        /// Monster performs its attack
+        /// </summary>
         public void Attack()
         {
             Combat.Attack(this);
         }
 
+        /// <summary>
+        /// If in Tokyo and just attacked, the attacker and this swap locations
+        /// </summary>
         public void Yield()
         {
             if (!InTokyo || !Combat.Attacked.Contains(this)) return;
@@ -179,6 +199,10 @@ namespace GamePieces.Monsters
             Board.MoveIntoTokyo(Combat.Attacker);
         }
 
+        /// <summary>
+        /// Add a power-up card to the monster by spending saved energy
+        /// </summary>
+        /// <param name="card">Card to buy</param>
         public void BuyCard(Card card)
         {
             if (Energy < card.Cost) return;
@@ -194,7 +218,7 @@ namespace GamePieces.Monsters
             if (card.CardType != CardType.Keep)
             {
                 card.Update(this);
-                if(card.CardType == CardType.Discard) return;
+                if (card.CardType == CardType.Discard) return;
             }
             PreviousNumberOfCards = NumberOfCards;
             NumberOfCards++;
@@ -202,6 +226,10 @@ namespace GamePieces.Monsters
             Subscribe(card);
         }
 
+        /// <summary>
+        /// Remove power-up card from the monster
+        /// </summary>
+        /// <param name="card">Card to remove</param>
         public void RemoveCard(Card card)
         {
             State = State.RemovingCard;
@@ -212,19 +240,31 @@ namespace GamePieces.Monsters
             NumberOfCards--;
         }
 
-        public void SellCard(Card card)
+        /// <summary>
+        /// Sells the desired card to the given monster
+        /// </summary>
+        /// <param name="monster">Monster buying the card</param>
+        /// <param name="card">Card being sold</param>
+        public void SellCard(Monster monster, Card card)
         {
             RemoveCard(card);
             State = State.SellingCard;
             Energy += card.Cost;
+            monster.BuyCard(card);
         }
 
+        /// <summary>
+        /// End the monster's turn and resets values
+        /// </summary>
         public void EndTurn()
         {
             State = State.EndOfTurn;
             Combat.Reset();
         }
 
+        /// <summary>
+        /// Removes the monster from the game
+        /// </summary>
         public void Kill()
         {
             State = State.Dead;

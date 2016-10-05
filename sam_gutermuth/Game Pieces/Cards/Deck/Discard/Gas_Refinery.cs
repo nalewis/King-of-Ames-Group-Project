@@ -8,11 +8,11 @@ namespace GamePieces.Cards.Deck.Discard
         public override int Cost => 6;
         public override CardType CardType => CardType.Discard;
 
-        protected override bool MonsterShouldUpdate(Monster monster)
-        {
-            return true;
-        }
-
+        /// <summary>
+        /// Plus 2 victory oints
+        /// Deal 3 damage to all other monsters
+        /// </summary>
+        /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
             monster.VictroyPoints += 2;

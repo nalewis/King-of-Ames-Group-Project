@@ -7,11 +7,10 @@ namespace GamePieces.Cards.Deck.Discard
         public override int Cost => 4;
         public override CardType CardType => CardType.Discard;
 
-        protected override bool MonsterShouldUpdate(Monster monster)
-        {
-            return true;
-        }
-
+        /// <summary>
+        /// All monsters (including you) take 3 damage
+        /// </summary>
+        /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
             monster.Monsters.ForEach(player => player.Health -= 3);
