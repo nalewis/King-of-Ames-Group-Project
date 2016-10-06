@@ -10,11 +10,11 @@ namespace Testing
     {
         private static void Main(string[] args)
         {
-            //UnitTests.Run<Card_Tests>();
-            //UnitTests.Run<Board_Tests>();
+           // UnitTests.Run<Card_Tests>(true);
+          //  UnitTests.Run<Board_Tests>(true);
 
             var consoleGame = new ConsoleGame();
-            consoleGame.Play();
+           consoleGame.Play();
         }
     }
 }

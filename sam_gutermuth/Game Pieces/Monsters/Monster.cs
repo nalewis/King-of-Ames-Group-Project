@@ -140,6 +140,7 @@ namespace GamePieces.Monsters
             RemainingRolls = 0;
             Index = GameComponents.Monsters.Count;
             State = State.EndOfTurn;
+            Monsters.Add(this);
         }
 
         /// <summary>

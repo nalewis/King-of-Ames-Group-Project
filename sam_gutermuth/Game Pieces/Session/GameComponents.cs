@@ -25,10 +25,7 @@ namespace GamePieces.Session
                 CardsForSale.Add(Deck.Pop());
         }
 
-        public void AddMonster(string name)
-        {
-            Monsters.Add(new Monster(this, name));
-        }
+        public void AddMonster(string name) => new Monster(this, name);
 
         public void Reset()
         {
