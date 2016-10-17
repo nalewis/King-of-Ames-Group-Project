@@ -8,12 +8,12 @@ namespace GamePieces.Cards.Deck.Keep
         public override CardType CardType => CardType.Stats;
         public override int Cost => 7;
         public override int CardsPerDeck => 2;
-        private bool canUse = true;
+        private bool _canUse = true;
 
         protected override bool MonsterShouldUpdate(Monster monster)
         {
-            if (!canUse) return false;
-            canUse = false;
+            if (!_canUse) return false;
+            _canUse = false;
             return true;
         }
 
@@ -25,7 +25,7 @@ namespace GamePieces.Cards.Deck.Keep
         public override void UndoEffect(Monster monster)
         {
             monster.Dice -= 1;
-            canUse = true;
+            _canUse = true;
         }
     }
 }

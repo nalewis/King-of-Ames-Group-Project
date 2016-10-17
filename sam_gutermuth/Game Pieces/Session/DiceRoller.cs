@@ -51,8 +51,8 @@ namespace GamePieces.Session
                 else Green.Push(Rolling[0]);
                 Rolling.RemoveAt(0);
             }
-            while (dice-- > 0 && Black.Count != 0) Rolling.Add(Black.Pop());
-            while (dice-- > 0 && Green.Count != 0) Rolling.Add(Green.Pop());
+            while (dice-- >= 0 && Black.Count != 0) Rolling.Add(Black.Pop());
+            while (dice-- >= 0 && Green.Count != 0) Rolling.Add(Green.Pop());
         }
 
         /// <summary>

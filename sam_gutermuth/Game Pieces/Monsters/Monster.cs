@@ -41,6 +41,7 @@ namespace GamePieces.Monsters
         }
 
         public bool InTokyo => Location != Location.Default;
+        public bool CanYield => InTokyo && Combat.Attacked.Contains(this);
 
         //Cards
         public readonly List<Card> Cards = new List<Card>();
@@ -193,7 +194,7 @@ namespace GamePieces.Monsters
         /// </summary>
         public void Yield()
         {
-            if (!InTokyo || !Combat.Attacked.Contains(this)) return;
+            if (!CanYield) return;
             State = State.Yielding;
             Board.LeaveTokyo(this);
             Board.MoveIntoTokyo(Combat.Attacker);

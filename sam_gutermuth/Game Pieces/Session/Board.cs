@@ -24,6 +24,7 @@ namespace GamePieces.Session
 
         public void MoveIntoTokyo(Monster monster)
         {
+            if(monster.InTokyo) return;
             if (!TokyoCityIsOccupied)
             {
                 TokyoCity = monster;
