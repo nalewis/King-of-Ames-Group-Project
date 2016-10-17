@@ -8,10 +8,10 @@ namespace DataStructures.Observer_Pattern
     public abstract class Observable<T> where T : Observable<T>
     {
         private readonly List<Observer<T>>
-            Observers = new List<Observer<T>>(); //All subscripers to this observable
+            _observers = new List<Observer<T>>(); //All subscripers to this observable
 
         private readonly Dictionary<string, Property>
-            Properties = new Dictionary<string, Property>(); //All properties of this observable
+            _properties = new Dictionary<string, Property>(); //All properties of this observable
 
         /// <summary>
         /// Get the property value hashed at the key value
@@ -21,7 +21,7 @@ namespace DataStructures.Observer_Pattern
         protected dynamic Get([CallerMemberName] string key = null)
         {
             Property property;
-            return key != null && Properties.TryGetValue(key, out property) ? property.Value : null;
+            return key != null && _properties.TryGetValue(key, out property) ? property.Value : null;
         }
 
         /// <summary>
@@ -32,15 +32,15 @@ namespace DataStructures.Observer_Pattern
         protected void Set(object value, [CallerMemberName] string key = null)
         {
             if (key == null) return;
-            if (Properties.ContainsKey(key))
+            if (_properties.ContainsKey(key))
             {
-                Properties[key].Value = value;
+                _properties[key].Value = value;
             }
             else
             {
                 var property = new Property(value);
                 property.PropertyChanged += Update;
-                Properties.Add(key, property);
+                _properties.Add(key, property);
             }
         }
 
@@ -50,8 +50,8 @@ namespace DataStructures.Observer_Pattern
         /// <param name="observer">Observer</param>
         protected void Subscribe(Observer<T> observer)
         {
-            if (!Observers.Contains(observer))
-                Observers.Add(observer);
+            if (!_observers.Contains(observer))
+                _observers.Add(observer);
         }
 
         /// <summary>
@@ -60,8 +60,8 @@ namespace DataStructures.Observer_Pattern
         /// <param name="observer">Observer</param>
         protected void Unsubscribe(Observer<T> observer)
         {
-            if (Observers.Contains(observer))
-                Observers.Remove(observer);
+            if (_observers.Contains(observer))
+                _observers.Remove(observer);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace DataStructures.Observer_Pattern
             var update = new List<Observer<T>>();
             var reset = new List<Observer<T>>();
 
-            foreach (var observer in Observers)
+            foreach (var observer in _observers)
             {
                 if(observer.UpdateCondition((T) this))
                     update.Add(observer);

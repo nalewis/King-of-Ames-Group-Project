@@ -8,32 +8,32 @@ namespace GamePieces.Session
 {
     public class DiceRoller
     {
-        private readonly Random Random = new Random(); //Random Number Generator
-        private readonly int Faces = Enum.GetNames(typeof(Symbol)).Length; //Number of faces for each die
+        private readonly Random _random = new Random(); //Random Number Generator
+        private readonly int _faces = Enum.GetNames(typeof(Symbol)).Length; //Number of faces for each die
 
-        private readonly Stack<Die> Black, Green; //Black and green dice
+        private readonly Stack<Die> _black, _green; //Black and green dice
 
-        private readonly int[] Tally; //The score of the currently rolled dice
+        private readonly int[] _tally; //The score of the currently rolled dice
 
         public List<Die> Rolling = new List<Die>(); //All of thet dice being rollec
 
-        public int Attack => Tally[(int) Symbol.Attack]; //Attack points total
-        public int Energy => Tally[(int) Symbol.Energy]; //Energy points total
-        public int Heal => Tally[(int) Symbol.Heal]; //Heal points total
+        public int Attack => _tally[(int) Symbol.Attack]; //Attack points total
+        public int Energy => _tally[(int) Symbol.Energy]; //Energy points total
+        public int Heal => _tally[(int) Symbol.Heal]; //Heal points total
 
         public int VictroyPoints => //Victroy points total
-            (Tally[(int) Symbol.One] >= 3 ? 1 + Tally[(int) Symbol.One] - 3 : 0) +
-            (Tally[(int) Symbol.Two] >= 3 ? 2 + Tally[(int) Symbol.Two] - 3 : 0) +
-            (Tally[(int) Symbol.Three] >= 3 ? 3 + Tally[(int) Symbol.Three] - 3 : 0);
+            (_tally[(int) Symbol.One] >= 3 ? 1 + _tally[(int) Symbol.One] - 3 : 0) +
+            (_tally[(int) Symbol.Two] >= 3 ? 2 + _tally[(int) Symbol.Two] - 3 : 0) +
+            (_tally[(int) Symbol.Three] >= 3 ? 3 + _tally[(int) Symbol.Three] - 3 : 0);
 
         /// <summary>
         /// A collection of dice that rolls and tallys their values
         /// </summary>
         public DiceRoller()
         {
-            Black = new Stack<Die>(Enumerable.Range(0, 6).Select(die => new Die(Color.Black, Random, Faces)));
-            Green = new Stack<Die>(Enumerable.Range(0, 2).Select(die => new Die(Color.Green, Random, Faces)));
-            Tally = new int[Faces];
+            _black = new Stack<Die>(Enumerable.Range(0, 6).Select(die => new Die(Color.Black, _random, _faces)));
+            _green = new Stack<Die>(Enumerable.Range(0, 2).Select(die => new Die(Color.Green, _random, _faces)));
+            _tally = new int[_faces];
         }
 
         /// <summary>
@@ -42,17 +42,17 @@ namespace GamePieces.Session
         /// <param name="dice">Number of dice to roll</param>
         public void Setup(int dice)
         {
-            Array.Clear(Tally, 0, Tally.Length);
+            Array.Clear(_tally, 0, _tally.Length);
             Rolling.ForEach(die => die.Save = false);
             if (Rolling.Count == dice) return;
             while (Rolling.Count != 0)
             {
-                if (Rolling[0].Color == Color.Black) Black.Push(Rolling[0]);
-                else Green.Push(Rolling[0]);
+                if (Rolling[0].Color == Color.Black) _black.Push(Rolling[0]);
+                else _green.Push(Rolling[0]);
                 Rolling.RemoveAt(0);
             }
-            while (dice-- >= 0 && Black.Count != 0) Rolling.Add(Black.Pop());
-            while (dice-- >= 0 && Green.Count != 0) Rolling.Add(Green.Pop());
+            while (dice-- >= 0 && _black.Count != 0) Rolling.Add(_black.Pop());
+            while (dice-- >= 0 && _green.Count != 0) Rolling.Add(_green.Pop());
         }
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace GamePieces.Session
         /// </summary>
         public void Roll()
         {
-            Array.Clear(Tally, 0, Tally.Length);
+            Array.Clear(_tally, 0, _tally.Length);
             foreach (var die in Rolling)
             {
                 die.Roll();
-                Tally[(int) die.Symbol]++;
+                _tally[(int) die.Symbol]++;
             }
         }
 
@@ -78,7 +78,7 @@ namespace GamePieces.Session
             monster.Energy += Energy;
             monster.Health += Heal;
             monster.VictroyPoints += VictroyPoints;
-            Array.Clear(Tally, 0, Tally.Length);
+            Array.Clear(_tally, 0, _tally.Length);
         }
     }
 }

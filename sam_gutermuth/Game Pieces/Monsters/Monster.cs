@@ -16,11 +16,11 @@ namespace GamePieces.Monsters
         public DiceRoller DiceRoller => GameComponents.DiceRoller;
 
         //Location & Neighbors
-        private readonly int Index;
-        public Monster Previous => Monsters.Count == 1 ? this : Index != 0 ? Monsters[Index - 1] : Monsters.Last();
+        private readonly int _index;
+        public Monster Previous => Monsters.Count == 1 ? this : _index != 0 ? Monsters[_index - 1] : Monsters.Last();
 
         public Monster Next
-            => Monsters.Count == 1 ? this : Index != Monsters.Count - 1 ? Monsters[Index + 1] : Monsters.First();
+            => Monsters.Count == 1 ? this : _index != Monsters.Count - 1 ? Monsters[_index + 1] : Monsters.First();
 
 
         //Name
@@ -139,7 +139,7 @@ namespace GamePieces.Monsters
             Health = MaximumHealth;
             Location = Location.Default;
             RemainingRolls = 0;
-            Index = GameComponents.Monsters.Count;
+            _index = GameComponents.Monsters.Count;
             State = State.EndOfTurn;
             Monsters.Add(this);
         }

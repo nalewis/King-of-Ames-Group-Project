@@ -16,7 +16,6 @@ namespace GamePieces.Session
         public List<Card> CardsForSale => _gameComponents.CardsForSale;
         public List<Monster> Monsters => _gameComponents.Monsters;
         public Board Board => _gameComponents.Board;
-
         public bool Winner => Monsters.Count == 1 || Monsters.Exists(monster => monster.VictroyPoints >= 20);
 
         public Game(List<string> names)
