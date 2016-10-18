@@ -11,23 +11,20 @@ namespace Testing
         {
             while (true)
             {
-                var game = new Game(new List<string>()
-                {
-                    "King Kong",
-                    "Godzilla",
-                });
+                Game.StartGame(new List<string>() {"Godzilla", "King Kong"});
 
-                while (!game.Winner)
+                while (Game.Winner == null)
                 {
                     var n = 0;
-                    game.StartTurn();
-                    Console.WriteLine("\r\n" + game.Current.Name + ", select Dice to Switch Save State or Exit Rolling");
+                    Game.StartTurn();
+                    Console.WriteLine("\r\n" + Game.Current.Name + ", select Dice to Switch Save State or Exit Rolling");
                     while (true)
                     {
-                        game.Roll();
-                        game.Dice.ForEach(die => Console.Write(die.Symbol + "(" + (die.Save ? "S" : "R") + ") "));
+                        Game.Roll();
+                        DiceRoller.Rolling.ForEach(
+                            die => Console.Write(die.Symbol + "(" + (die.Save ? "S" : "R") + ") "));
                         Console.WriteLine();
-                        if (game.Current.RemainingRolls == 0)
+                        if (Game.Current.RemainingRolls == 0)
                         {
                             Console.WriteLine();
                             break;
@@ -44,49 +41,50 @@ namespace Testing
                         {
                             if (!int.TryParse(number, out n)) continue;
                             n -= 1;
-                            if (n >= 0 && n < game.Dice.Count)
-                                game.Dice[n].Save = !game.Dice[n].Save;
+                            if (n >= 0 && n < DiceRoller.Rolling.Count)
+                                DiceRoller.Rolling[n].Save = !DiceRoller.Rolling[n].Save;
                         }
                     }
-                    game.EndRolling();
-                    if (game.Board.TokyoCityIsOccupied && game.Board.TokyoCity.CanYield)
+                    Game.EndRolling();
+                    if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
                     {
-                        Console.WriteLine(game.Board.TokyoCity.Name + ": Yield? Y/N");
+                        Console.WriteLine(Board.TokyoCity.Name + ": Yield? Y/N");
                         var yield = Console.ReadLine();
                         Console.WriteLine();
-                        if (yield != null && yield.ToUpper().Equals("Y")) game.Board.TokyoCity.Yield();
+                        if (yield != null && yield.ToUpper().Equals("Y")) Board.TokyoCity.Yield();
                     }
-                    if (game.Board.TokyoBayIsOccupied && game.Board.TokyoBay.CanYield)
+                    if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
                     {
-                        Console.WriteLine(game.Board.TokyoBay.Name + ": Yield? Y/N");
+                        Console.WriteLine(Board.TokyoBay.Name + ": Yield? Y/N");
                         var yield = Console.ReadLine();
                         Console.WriteLine();
-                        if (yield != null && yield.ToUpper().Equals("Y")) game.Board.TokyoBay.Yield();
+                        if (yield != null && yield.ToUpper().Equals("Y")) Board.TokyoBay.Yield();
                     }
-                    if (game.CardsForSale.Where(card => card.Cost <= game.Current.Energy).ToList().Count != 0)
+                    if (Game.CardsForSale.Where(card => card.Cost <= Game.Current.Energy).ToList().Count != 0)
                     {
-                        Console.WriteLine("Select Card to Buy or Exits (You have " + game.Current.Energy + " energy)");
-                        game.CardsForSale.ForEach(card => Console.Write(card.Name + " (cost: " + card.Cost + ")   "));
+                        Console.WriteLine("Select Card to Buy or Exits (You have " + Game.Current.Energy + " energy)");
+                        Game.CardsForSale.ForEach(card => Console.Write(card.Name + " (cost: " + card.Cost + ")   "));
                         Console.WriteLine();
                         var cardSelection = Console.ReadLine();
                         if (cardSelection != null && !cardSelection.ToUpper().Equals("EXIT") &&
                             int.TryParse(cardSelection, out n))
                         {
                             n -= 1;
-                            game.BuyCard(n);
+                            Game.BuyCard(n);
                         }
                     }
 
-                    Console.WriteLine(game.Current.Name + ", your turn is over!");
-                    Console.WriteLine("Victroy Points: " + game.Current.VictroyPoints);
-                    Console.WriteLine("Health: " + game.Current.Health);
-                    Console.WriteLine("Energy: " + game.Current.Energy);
-                    Console.WriteLine("Location: " + game.Current.Location);
-                    game.Current.Cards.ForEach(card => Console.Write(card.Name + " "));
+                    Console.WriteLine(Game.Current.Name + ", your turn is over!");
+                    Console.WriteLine("Victroy Points: " + Game.Current.VictroyPoints);
+                    Console.WriteLine("Health: " + Game.Current.Health);
+                    Console.WriteLine("Energy: " + Game.Current.Energy);
+                    Console.WriteLine("Location: " + Game.Current.Location);
+                    Game.Current.Cards.ForEach(card => Console.Write(card.Name + " "));
                     Console.WriteLine();
-                    game.EndTurn();
+                    Game.EndTurn();
                 }
-                Console.WriteLine(game.Monsters.First().Name + " Wins!!!");
+
+                if (Game.Winner != null) Console.WriteLine(Game.Winner.Name + " Wins!!!");
                 Console.WriteLine("Play Again? Y/N");
                 var playAgain = Console.ReadLine();
                 if (playAgain != null && playAgain.ToUpper().Equals("Y")) continue;

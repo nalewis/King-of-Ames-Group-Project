@@ -5,7 +5,6 @@ using System.Xml;
 using System.Xml.Serialization;
 using GamePieces.Monsters;
 using GamePieces.Session;
-using Testing.Game_Pieces_Tests;
 using ZUnit;
 
 namespace Testing

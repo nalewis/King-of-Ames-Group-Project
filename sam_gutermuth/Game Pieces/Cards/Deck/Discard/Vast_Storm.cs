@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using GamePieces.Monsters;
+using GamePieces.Session;
 
 namespace GamePieces.Cards.Deck.Discard
 {
@@ -16,7 +17,7 @@ namespace GamePieces.Cards.Deck.Discard
         protected override void UpdateLogic(Monster monster)
         {
             monster.VictroyPoints += 2;
-            monster.Monsters.Where(enemy => !enemy.Equals(monster))
+            Game.Monsters.Where(enemy => !enemy.Equals(monster))
                 .ToList()
                 .ForEach(enemy => enemy.Energy -= enemy.Energy / 2);
         }

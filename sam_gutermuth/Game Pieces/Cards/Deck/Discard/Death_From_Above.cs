@@ -1,7 +1,7 @@
-﻿using System;
-using GamePieces.Monsters;
+﻿using GamePieces.Monsters;
+using GamePieces.Session;
 
-namespace GamePieces.Cards.Deck.Keep
+namespace GamePieces.Cards.Deck.Discard
 {
     public class Death_From_Above : Card
     {
@@ -17,8 +17,8 @@ namespace GamePieces.Cards.Deck.Keep
         {
             monster.VictroyPoints += 2;
             if (monster.Location == Location.TokyoCity) return;
-            monster.Board.LeaveTokyo(monster.Board.TokyoCity);
-            monster.Board.MoveIntoTokyo(monster);
+            Board.LeaveTokyo(Board.TokyoCity);
+            Board.MoveIntoTokyo(monster);
         }
     }
 }

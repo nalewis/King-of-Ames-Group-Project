@@ -1,4 +1,5 @@
 ﻿using GamePieces.Monsters;
+using GamePieces.Session;
 
 namespace GamePieces.Cards.Deck.Discard
 {
@@ -13,7 +14,7 @@ namespace GamePieces.Cards.Deck.Discard
         /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
-            monster.Monsters.ForEach(player => player.Health -= 3);
+            Game.Monsters.ForEach(player => player.Health -= 3);
         }
     }
 }
