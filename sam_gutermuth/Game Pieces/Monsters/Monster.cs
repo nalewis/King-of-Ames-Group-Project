@@ -8,20 +8,14 @@ namespace GamePieces.Monsters
 {
     public class Monster : Observable<Monster>
     {
-        //Game Components
-        private GameComponents GameComponents { get; }
-        public List<Monster> Monsters => GameComponents.Monsters;
-        public Board Board => GameComponents.Board;
-        private Combat Combat => GameComponents.Combat;
-        public DiceRoller DiceRoller => GameComponents.DiceRoller;
-
         //Location & Neighbors
         private readonly int _index;
-        public Monster Previous => Monsters.Count == 1 ? this : _index != 0 ? Monsters[_index - 1] : Monsters.Last();
 
-        public Monster Next
-            => Monsters.Count == 1 ? this : _index != Monsters.Count - 1 ? Monsters[_index + 1] : Monsters.First();
+        public Monster Previous =>
+            Game.Players == 1 ? this : _index != 0 ? Game.Monsters[_index - 1] : Game.Monsters.Last();
 
+        public Monster Next =>
+            Game.Players == 1 ? this : _index != Game.Players - 1 ? Game.Monsters[_index + 1] : Game.Monsters.First();
 
         //Name
         public string Name { get; }
@@ -41,7 +35,7 @@ namespace GamePieces.Monsters
         }
 
         public bool InTokyo => Location != Location.Default;
-        public bool CanYield => InTokyo && Combat.Attacked.Contains(this);
+        public bool CanYield => InTokyo && Game.Attacked.Contains(this);
 
         //Cards
         public readonly List<Card> Cards = new List<Card>();
@@ -99,7 +93,11 @@ namespace GamePieces.Monsters
             {
                 if (Get() != null)
                 {
-                    if (value < 0) value = 0;
+                    if (value <= 0)
+                    {
+                        value = 0;
+                        Kill();
+                    }
                     if (value > MaximumHealth) value = MaximumHealth;
                     State = value > Health ? State.Healing : State.Attacked;
                     if (State == State.Healing && InTokyo) return;
@@ -127,11 +125,9 @@ namespace GamePieces.Monsters
         /// <summary>
         /// The monster game piece
         /// </summary>
-        /// <param name="gameComponents">The components which the monster belongs to</param>
         /// <param name="name">The name of the monster</param>
-        public Monster(GameComponents gameComponents, string name = "")
+        public Monster(string name = "")
         {
-            GameComponents = gameComponents;
             Name = name;
             Energy = 0;
             NumberOfCards = 0;
@@ -139,9 +135,8 @@ namespace GamePieces.Monsters
             Health = MaximumHealth;
             Location = Location.Default;
             RemainingRolls = 0;
-            _index = GameComponents.Monsters.Count;
+            _index = Game.Players;
             State = State.EndOfTurn;
-            Monsters.Add(this);
         }
 
         /// <summary>
@@ -152,7 +147,7 @@ namespace GamePieces.Monsters
         {
             State = State.StartOfTurn;
             Cards.ForEach(card => card.Reset());
-            if (InTokyo) VictroyPoints+=2;
+            if (InTokyo) VictroyPoints += 2;
             RemainingRolls = MaximumRolls;
             DiceRoller.Setup(Dice);
         }
@@ -186,7 +181,17 @@ namespace GamePieces.Monsters
         /// </summary>
         public void Attack()
         {
-            Combat.Attack(this);
+            State = State.Attacking;
+            Game.Attacked.Clear();
+            if (AttackPoints != 0)
+            {
+                Game.Attacked.AddRange(Game.Monsters.Where(monster => monster.InTokyo != InTokyo).ToList());
+                Game.Attacked.ForEach(monster => monster.Health -= AttackPoints);
+                Board.Update();
+                Board.MoveIntoTokyo(this);
+            }
+            State = State.None;
+            AttackPoints = 0;
         }
 
         /// <summary>
@@ -197,7 +202,7 @@ namespace GamePieces.Monsters
             if (!CanYield) return;
             State = State.Yielding;
             Board.LeaveTokyo(this);
-            Board.MoveIntoTokyo(Combat.Attacker);
+            Board.MoveIntoTokyo(Game.Current);
         }
 
         /// <summary>
@@ -209,13 +214,6 @@ namespace GamePieces.Monsters
             if (Energy < card.Cost) return;
             State = State.BuyingCard;
             Energy -= card.Cost;
-
-            if (GameComponents.CardsForSale.Contains(card))
-            {
-                GameComponents.CardsForSale.Remove(card);
-                GameComponents.CardsForSale.Add(GameComponents.Deck.Pop());
-            }
-
             if (card.CardType != CardType.Keep)
             {
                 card.Update(this);
@@ -260,19 +258,18 @@ namespace GamePieces.Monsters
         public void EndTurn()
         {
             State = State.EndOfTurn;
-            Combat.Reset();
         }
 
         /// <summary>
         /// Removes the monster from the game
         /// </summary>
-        public void Kill()
+        private void Kill()
         {
-            State = State.Dead;
             if (InTokyo) Board.LeaveTokyo(this);
             Cards.Clear();
-            GameComponents.Monsters.Remove(this);
-            GameComponents.Dead.Add(this);
+            Game.Monsters.Remove(this);
+            Game.Dead.Add(this);
+            State = State.Dead;
         }
     }
 }

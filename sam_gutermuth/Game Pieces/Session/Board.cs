@@ -1,28 +1,25 @@
-﻿using System;
-using GamePieces.Monsters;
+﻿using GamePieces.Monsters;
 
 namespace GamePieces.Session
 {
-    public class Board
+    public static class Board
     {
         //Game Components
-        private GameComponents GameComponents { get; }
-        public int Monsters => GameComponents.Monsters.Count;
-        public bool UseTokyoBay => Monsters > 4;
+        public static int Monsters => Game.Monsters.Count;
+        public static bool UseTokyoBay => Monsters > 4;
 
         //State
-        public Monster TokyoCity { get; private set; }
-        public Monster TokyoBay { get; private set; }
+        public static Monster TokyoCity { get; private set; }
+        public static Monster TokyoBay { get; private set; }
 
-        public bool TokyoCityIsOccupied => TokyoCity != null;
-        public bool TokyoBayIsOccupied => TokyoBay != null;
+        public static bool TokyoCityIsOccupied => TokyoCity != null;
+        public static bool TokyoBayIsOccupied => TokyoBay != null;
 
-        public Board(GameComponents gameComponents)
-        {
-            GameComponents = gameComponents;
-        }
-
-        public void MoveIntoTokyo(Monster monster)
+        /// <summary>
+        /// Move the given monster into Tokyo
+        /// </summary>
+        /// <param name="monster">Monster</param>
+        public static void MoveIntoTokyo(Monster monster)
         {
             if(monster.InTokyo) return;
             if (!TokyoCityIsOccupied)
@@ -39,7 +36,11 @@ namespace GamePieces.Session
             }
         }
 
-        public void LeaveTokyo(Monster monster)
+        /// <summary>
+        /// Have the given monster leave Tokyo
+        /// </summary>
+        /// <param name="monster">Monster</param>
+        public static void LeaveTokyo(Monster monster)
         {
             if (TokyoCityIsOccupied && monster.Equals(TokyoCity))
             {
@@ -53,16 +54,24 @@ namespace GamePieces.Session
             }
         }
 
-        public void Update()
+        /// <summary>
+        /// Update the board based on the number of players
+        /// Tokyo Bay cannot be used if there are less than five players
+        /// </summary>
+        public static void Update()
         {
             if (UseTokyoBay || !TokyoBayIsOccupied) return;
             TokyoBay.Location = Location.Default;
             TokyoBay = null;
         }
 
-        public void Reset()
+        /// <summary>
+        /// Reset the board to the default state
+        /// </summary>
+        public static void Reset()
         {
-            TokyoCity = TokyoBay = null;
+            LeaveTokyo(TokyoCity);
+            LeaveTokyo(TokyoBay);
         }
     }
 }

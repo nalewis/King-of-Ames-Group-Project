@@ -1,65 +1,81 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GamePieces.Cards;
-using GamePieces.Dice;
 using GamePieces.Monsters;
 
 namespace GamePieces.Session
 {
-    public class Game
+    public static class Game
     {
-        private readonly GameComponents _gameComponents = new GameComponents();
+        //Monsters
+        public static Monster Current { get; set; }
 
-        public Monster Current { get; set; }
-        public List<Die> Dice => _gameComponents.DiceRoller.Rolling;
-        public DiceRoller DiceRoller => _gameComponents.DiceRoller;
-        public Stack<Card> Deck => _gameComponents.Deck;
-        public List<Card> CardsForSale => _gameComponents.CardsForSale;
-        public List<Monster> Monsters => _gameComponents.Monsters;
-        public Board Board => _gameComponents.Board;
-        public bool Winner => Monsters.Count == 1 || Monsters.Exists(monster => monster.VictroyPoints >= 20);
+        public static readonly List<Monster>
+            Monsters = new List<Monster>(),
+            Dead = new List<Monster>(),
+            Attacked = new List<Monster>();
 
-        public Game(List<string> names)
+        public static int Players => Monsters.Count;
+
+        public static Monster Winner =>
+            Players == 1
+                ? Monsters.First()
+                : Monsters.Exists(monster => monster.VictroyPoints >= 20)
+                    ? Monsters.Where(monster => monster.VictroyPoints >= 20).ToList().First()
+                    : null;
+
+
+        //Cards
+        public static Stack<Card> Deck;
+        public static readonly List<Card> CardsForSale = new List<Card>();
+
+        public static void StartGame(List<string> names)
         {
-            names.ForEach(name => _gameComponents.AddMonster(name));
-            Current = _gameComponents.Monsters[0];
+            Deck = new Stack<Card>(Card.GetCards());
+            for (var i = 0; i < 3; i++) if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
+            Monsters.Clear();
+            Dead.Clear();
+            names.ForEach(name => Monsters.Add(new Monster(name)));
+            Current = Monsters.First();
+            Board.Reset();
         }
 
-        public void StartTurn()
+        public static void StartTurn()
         {
             Current.StartTurn();
         }
 
-        public void Roll()
+        public static void Roll()
         {
             Current.Roll();
         }
 
-        public void EndRolling()
+        public static void EndRolling()
         {
             Current.EndRolling();
             Current.Attack();
         }
 
-        public void BuyCard(int index)
+        public static void BuyCard(int index)
         {
-            if(index < 0 || index > CardsForSale.Count) return;
+            if (index < 0 || index >= CardsForSale.Count) return;
             var card = CardsForSale[index];
             CardsForSale.RemoveAt(index);
             Current.BuyCard(card);
-            CardsForSale.Add(Deck.Pop());
+            if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
         }
 
-        public void SellCard(Monster monster, Card card)
+        public static void SellCard(Monster monster, Card card)
         {
             Current.SellCard(monster, card);
         }
 
-        public void RemoveCard(Card card)
+        public static void RemoveCard(Card card)
         {
             Current.RemoveCard(card);
         }
 
-        public void EndTurn()
+        public static void EndTurn()
         {
             Current.EndTurn();
             Current = Current.Next;

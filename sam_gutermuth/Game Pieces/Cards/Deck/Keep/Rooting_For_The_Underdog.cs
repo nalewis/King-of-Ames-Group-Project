@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using GamePieces.Monsters;
+using GamePieces.Session;
 
 namespace GamePieces.Cards.Deck.Keep
 {
@@ -10,7 +11,7 @@ namespace GamePieces.Cards.Deck.Keep
         protected override bool MonsterShouldUpdate(Monster monster)
         {
             return monster.State == State.EndOfTurn &&
-                   monster.Monsters.Where(enemy => !enemy.Equals(monster))
+                   Game.Monsters.Where(enemy => !enemy.Equals(monster))
                        .ToList()
                        .All(enemy => monster.VictroyPoints < enemy.VictroyPoints);
         }

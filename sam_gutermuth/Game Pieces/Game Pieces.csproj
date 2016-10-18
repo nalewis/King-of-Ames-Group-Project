@@ -45,6 +45,7 @@
     <Compile Include="Cards\Deck\Discard\Apartment_Building.cs" />
     <Compile Include="Cards\Deck\Discard\Commuter_Train.cs" />
     <Compile Include="Cards\Deck\Discard\Corner_Store.cs" />
+    <Compile Include="Cards\Deck\Discard\Death_From_Above.cs" />
     <Compile Include="Cards\Deck\Discard\Energize.cs" />
     <Compile Include="Cards\Deck\Discard\Evacuation_Orders.cs" />
     <Compile Include="Cards\Deck\Discard\Fire_Blast.cs" />
@@ -60,7 +61,6 @@
     <Compile Include="Cards\Deck\Keep\Acid_Attack.cs" />
     <Compile Include="Cards\Deck\Keep\Alpha_Monster.cs" />
     <Compile Include="Cards\Deck\Keep\Armor_Plating.cs" />
-    <Compile Include="Cards\Deck\Keep\Death_From_Above.cs" />
     <Compile Include="Cards\Deck\Keep\Dedicated_News_Team.cs" />
     <Compile Include="Cards\Deck\Keep\Energy_Hoarder.cs" />
     <Compile Include="Cards\Deck\Keep\Even_Bigger.cs" />
@@ -85,10 +85,8 @@
     <Compile Include="Monsters\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Session\Board.cs" />
-    <Compile Include="Session\Combat.cs" />
     <Compile Include="Session\DiceRoller.cs" />
     <Compile Include="Session\Game.cs" />
-    <Compile Include="Session\GameComponents.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Structures\Data Structures.csproj">
@@ -97,7 +95,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Cards\Deck\Keep" />
     <Folder Include="Dice" />
+    <Folder Include="Session" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

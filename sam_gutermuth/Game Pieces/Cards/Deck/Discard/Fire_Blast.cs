@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using GamePieces.Monsters;
+using GamePieces.Session;
 
 namespace GamePieces.Cards.Deck.Discard
 {
@@ -13,7 +14,7 @@ namespace GamePieces.Cards.Deck.Discard
         /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
-            monster.Monsters.Where(enemy => !enemy.Equals(monster))
+            Game.Monsters.Where(enemy => !enemy.Equals(monster))
                 .ToList()
                 .ForEach(enemy => enemy.Health -= 2);
         }
