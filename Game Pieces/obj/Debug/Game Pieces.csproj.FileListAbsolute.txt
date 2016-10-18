@@ -1,0 +1,7 @@
+C:\Users\samtg\Documents\309 Project\sam_gutermuth\Game Pieces\bin\Debug\GamePieces.dll
+C:\Users\samtg\Documents\309 Project\sam_gutermuth\Game Pieces\bin\Debug\GamePieces.pdb
+C:\Users\samtg\Documents\309 Project\sam_gutermuth\Game Pieces\bin\Debug\DataStructures.dll
+C:\Users\samtg\Documents\309 Project\sam_gutermuth\Game Pieces\bin\Debug\DataStructures.pdb
+C:\Users\samtg\Documents\309 Project\sam_gutermuth\Game Pieces\obj\Debug\Game Pieces.csprojResolveAssemblyReference.cache
+C:\Users\samtg\Documents\309 Project\sam_gutermuth\Game Pieces\obj\Debug\GamePieces.dll
+C:\Users\samtg\Documents\309 Project\sam_gutermuth\Game Pieces\obj\Debug\GamePieces.pdb
