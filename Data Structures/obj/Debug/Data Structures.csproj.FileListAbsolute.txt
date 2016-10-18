@@ -1,5 +1,0 @@
-C:\Users\samtg\Documents\309 Project\sam_gutermuth\Data Structures\obj\Debug\Data Structures.csprojResolveAssemblyReference.cache
-C:\Users\samtg\Documents\309 Project\sam_gutermuth\Data Structures\bin\Debug\DataStructures.dll
-C:\Users\samtg\Documents\309 Project\sam_gutermuth\Data Structures\bin\Debug\DataStructures.pdb
-C:\Users\samtg\Documents\309 Project\sam_gutermuth\Data Structures\obj\Debug\DataStructures.dll
-C:\Users\samtg\Documents\309 Project\sam_gutermuth\Data Structures\obj\Debug\DataStructures.pdb
