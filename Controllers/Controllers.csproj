@@ -39,6 +39,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Data Structures\Data Structures.csproj">
+      <Project>{B20265A0-2010-4E1C-AB32-8E441DEF08F7}</Project>
+      <Name>Data Structures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Game Pieces\Game Pieces.csproj">
+      <Project>{B38A16C3-74C0-4A57-BCD9-6000681C06B1}</Project>
+      <Name>Game Pieces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Networking\Networking.csproj">
+      <Project>{0B0E035A-CB84-49F4-8E84-32CF744B1AAC}</Project>
+      <Name>Networking</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
