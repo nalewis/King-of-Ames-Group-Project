@@ -11,9 +11,19 @@ namespace Controllers
             Game.StartGame(names);
         }
 
+        public static void StartTurn()
+        {
+            Game.StartTurn();
+        }
+
         public static List<Die> GetDice()
         {
             return DiceRoller.Rolling;
+        }
+
+        public static void Roll()
+        {
+            DiceRoller.Roll();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
@@ -8,6 +9,7 @@ namespace GameEngine
         [STAThread]
         static void Main()
         {
+            Controllers.Test.StartGame(new List<string>() { "Bob", "Bill" });
             using (var game = new Engine())
                 game.Run();
         }

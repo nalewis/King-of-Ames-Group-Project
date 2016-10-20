@@ -1,14 +1,20 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameEngine.DiceGraphics;
+using GamePieces.Dice;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace GameEngine {
     /// <summary>
-    /// This is the main type for your game.
+    /// This is the main type for the engine
     /// </summary>
     public class Engine : Game {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public static Dictionary<string, Texture2D> textureList;
+        bool firstUpdate;
+        DiceRow diceRow;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
@@ -16,13 +22,13 @@ namespace GameEngine {
         }
 
         /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// Initialization logic for the game engine. 
         /// </summary>
         protected override void Initialize() {
-            // TODO: Add your initialization logic here
+
+            textureList = new Dictionary<string, Texture2D>();
+            diceRow = new DiceRow();
+            firstUpdate = true;
 
             base.Initialize();
         }
@@ -32,10 +38,9 @@ namespace GameEngine {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            loadDice();
 
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -44,6 +49,7 @@ namespace GameEngine {
         /// </summary>
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
+            Content.Unload();
         }
 
         /// <summary>
@@ -52,10 +58,25 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (firstUpdate)
+            {
+                Controllers.Test.StartTurn();
+                Controllers.Test.Roll();
+
+                foreach (Die die in Controllers.Test.GetDice())
+                {
+                    diceRow.addDie(die);
+                }
+                firstUpdate = false;
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                Controllers.Test.Roll();
+
+            diceRow.UpdateDice();
 
             base.Update(gameTime);
         }
@@ -65,11 +86,30 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+            Texture2D toDraw;
+            textureList.TryGetValue("dice1", out toDraw);
+            spriteBatch.Begin();
+            diceRow.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public void AddTexture(string name)
+        {
+            Texture2D toAdd = Content.Load<Texture2D>("diceImages\\"+name);
+            textureList.Add(name, toAdd);
+        }
+
+        protected void loadDice()
+        {
+            AddTexture("dice1");
+            AddTexture("dice2");
+            AddTexture("dice3");
+            AddTexture("diceAttack");
+            AddTexture("diceHealth");
+            AddTexture("diceEnergy");
         }
     }
 }
