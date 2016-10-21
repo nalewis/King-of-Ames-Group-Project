@@ -85,13 +85,41 @@ if($_POST['COMMAND'] == "createUser"){
 if($_POST['COMMAND'] == "addServer"){
         $hostname = $_POST['hostname'];
         $hostip = $_POST['hostip'];
+		$players = $_POST['players'];
 
-        $sql = "INSERT INTO Server_List (hostname, hostip, status) VALUES ('$hostname', '$hostip', 'Creating')";
+        $sql = "INSERT INTO Server_List (hostname, hostip, players, status) VALUES ('$hostname', '$hostip', '$players', 'Creating')";
         if($conn->query($sql) === TRUE){
                 echo "Successfully created record\r\n";
         } else {
                 echo "Error creating record\r\n";
         }
+}
+
+//Lists all servers in the table
+if($_POST['COMMAND'] == "listServers"){
+		$sql = "select * from Server_List";
+        $result =  $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+                while($row = $result->fetch_assoc()) {
+                	echo $row["hostname"]. " - IP: " . $row["hostip"] . "\r\n";
+                }
+				echo "\0";
+        } else {
+                echo "0 results\r\n";
+        }
+}
+
+//deletes an entry in the table
+if($_POST['COMMAND'] == "DelPlayer"){
+	$hostname = $_POST['hostname'];
+	$hostip = $_POST['hostip'];
+	$sql = "DELETE FROM Server_List WHERE hostname='$hostname' AND hostip='$hostip'";
+	if($conn->query($sql) === TRUE){
+		echo "Successfully deleted server\r\n";
+	} else {
+		echo "Error deleting server\r\n";
+	}
 }
 
 

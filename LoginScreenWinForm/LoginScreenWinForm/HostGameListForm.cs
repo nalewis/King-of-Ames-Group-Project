@@ -12,10 +12,10 @@ namespace LoginScreenWinForm
 {
     public partial class HostGameListForm : Form
     {
+        Host host = new Host();
         public HostGameListForm()
         {
             InitializeComponent();
-            Host host = new Host();
             playerList.Items.Add(host.hostIP);
         }
 
@@ -24,6 +24,8 @@ namespace LoginScreenWinForm
             MainMenuForm main = new MainMenuForm();
             main.Show();
             this.Dispose();
+            host.delServer();
+            host.serverStop();
         }
     }
 }

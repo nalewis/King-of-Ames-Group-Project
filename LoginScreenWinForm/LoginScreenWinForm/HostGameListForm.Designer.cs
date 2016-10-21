@@ -38,7 +38,7 @@
             this.playerList.Name = "playerList";
             this.playerList.Size = new System.Drawing.Size(260, 194);
             this.playerList.TabIndex = 0;
-            this.playerList.UseCompatibleStateImageBehavior = false;
+            this.playerList.UseCompatibleStateImageBehavior = false;    
             // 
             // leaveGame
             // 

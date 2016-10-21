@@ -69,14 +69,15 @@ namespace LoginScreenWinForm
         {
             Console.WriteLine("hello!");
             hostIP = GetLocalIPAddress();
+            hostName = "TestHost";
             var config = new NetPeerConfiguration("King of Ames") { Port = 6969 };
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
             _server.Start();
             Console.WriteLine("Server started...");
+            addServer();
 
-            // At the moment it just responds to input
-            //TODO implement threading to return messages
+            // Starts thread to handle input from clients
             Thread recieve = new Thread(recieveLoop);
             recieve.Start();
 
@@ -86,6 +87,11 @@ namespace LoginScreenWinForm
             outMsg.Write((byte)PacketTypes.Login);
             //this won't be the case for other clients
             _client.Connect("localhost", 6969, outMsg);
+        }
+
+        public void serverStop()
+        {
+            _server.Shutdown("Closed");
         }
 
         public static void recieveLoop()
@@ -151,6 +157,7 @@ namespace LoginScreenWinForm
             //TODO how to pass object this far?
             data.Add("hostname", hostName);
             data.Add("hostip", hostIP);
+            data.Add("players", hostName);
             using (WebClient wc = new WebClient())
             {
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -165,6 +172,22 @@ namespace LoginScreenWinForm
                 {
                     return true;
                 }
+            }
+        }
+
+        public void delServer()
+        {
+            NameValueCollection data = new NameValueCollection();
+            //COMMAND is what the php looks for to determine it's actions
+            data.Add("COMMAND", "delServer");
+            data.Add("hostname", hostName);
+            data.Add("hostip", hostIP);
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
+                var encresult = Encoding.ASCII.GetString(result);
+                Console.WriteLine("\nResponse received was :\n{0}", encresult);
             }
         }
 
@@ -198,5 +221,77 @@ namespace LoginScreenWinForm
 
         }
 
+    }
+    class Client
+    {
+        public string myIP = "";
+        public string myName = "";
+        private static NetClient _client;
+        public Client()
+        {
+            myIP = GetLocalIPAddress();
+            myName = "TempName";
+
+            _client = new NetClient(new NetPeerConfiguration("King of Ames"));
+            _client.Start();
+            var outMsg = _client.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Login);
+            outMsg.Write(myName);
+            outMsg.Write(myIP);
+            //this won't be the case for other clients
+            _client.Connect("localhost", 6969, outMsg);
+        }
+
+        public List<string> listServers()
+        {
+            NameValueCollection data = new NameValueCollection();
+            //COMMAND is what the php looks for to determine it's actions
+            data.Add("COMMAND", "listServers");
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
+                var table = Encoding.ASCII.GetString(result);
+                //Console.WriteLine("\nResponse received was :\n{0}", table);
+
+                //Trying to put the result into a list of strings
+                List<string> servers = new List<string>();
+                string[] tbl = table.Split('\n');
+                for(int i = 0; i<tbl.Length;i++)
+                {
+                    servers.Add(tbl[i]);
+                }
+                return servers;
+            }
+        }
+
+        //Took from stack overflow
+        public static string GetLocalIPAddress()
+        {
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    return ip.ToString();
+                }
+            }
+            throw new Exception("Local IP Address Not Found!");
+        }
+        enum PacketTypes
+        {
+            Login,
+            LoginInfo,
+            NewUser,
+            delUser,
+            ListUsers,
+            newGame,
+            joinGame,
+            chat,
+            leave,
+            close,
+            Welcome,
+
+        }
     }
 }
