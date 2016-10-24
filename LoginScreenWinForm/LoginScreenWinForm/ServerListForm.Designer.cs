@@ -35,6 +35,7 @@
             // 
             // serverList
             // 
+            this.serverList.Activation = System.Windows.Forms.ItemActivation.TwoClick;
             this.serverList.Location = new System.Drawing.Point(12, 12);
             this.serverList.Name = "serverList";
             this.serverList.Size = new System.Drawing.Size(260, 194);

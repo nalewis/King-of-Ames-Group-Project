@@ -22,16 +22,13 @@ namespace LoginScreenWinForm
         public ServerListForm()
         {
             InitializeComponent();
-            List<string> servers = client.listServers();
-            for(int i = 0;i<servers.Count;i++)
-            {
-                serverList.Items.Add(servers.ElementAt(i));
-            }
+            formListServers();
         }
 
         private void refresh_Click(object sender, EventArgs e)
         {
-            client.listServers();
+            serverList.Items.Clear();
+            formListServers();
         }
 
         private void leaveGame_Click(object sender, EventArgs e)
@@ -39,6 +36,15 @@ namespace LoginScreenWinForm
             MainMenuForm main = new MainMenuForm();
             main.Show();
             this.Dispose();
+        }
+
+        private void formListServers()
+        {
+            List<string> servers = client.listServers();
+            for (int i = 0; i < servers.Count; i++)
+            {
+                serverList.Items.Add(servers.ElementAt(i));
+            }
         }
     }
 }

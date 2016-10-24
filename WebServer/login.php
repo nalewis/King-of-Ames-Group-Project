@@ -111,7 +111,7 @@ if($_POST['COMMAND'] == "listServers"){
 }
 
 //deletes an entry in the table
-if($_POST['COMMAND'] == "DelPlayer"){
+if($_POST['COMMAND'] == "delServer"){
 	$hostname = $_POST['hostname'];
 	$hostip = $_POST['hostip'];
 	$sql = "DELETE FROM Server_List WHERE hostname='$hostname' AND hostip='$hostip'";
