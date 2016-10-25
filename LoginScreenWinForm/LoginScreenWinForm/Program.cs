@@ -226,6 +226,8 @@ namespace LoginScreenWinForm
     {
         public string myIP = "";
         public string myName = "";
+        public string connectingTo = "";
+        public bool isConnecting = false;
         private static NetClient _client;
         public Client()
         {
@@ -234,12 +236,35 @@ namespace LoginScreenWinForm
 
             _client = new NetClient(new NetPeerConfiguration("King of Ames"));
             _client.Start();
-            var outMsg = _client.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Login);
-            outMsg.Write(myName);
-            outMsg.Write(myIP);
-            //this won't be the case for other clients
-            _client.Connect("localhost", 6969, outMsg);
+            //_client.Connect("localhost", 6969, outMsg);
+        }
+
+        public bool connect()
+        {
+            bool result = true;
+            return result;
+        }
+
+        public void recieveLoop()
+        {
+            while (true)
+            {
+                NetIncomingMessage inc;
+                if ((inc = _client.ReadMessage()) == null) continue;
+                switch (inc.MessageType)
+                {
+                    case NetIncomingMessageType.Error:
+                        Console.WriteLine(inc.ToString());
+                        break;
+                    case NetIncomingMessageType.StatusChanged:
+                        break;
+                    case NetIncomingMessageType.Data:
+                        var type = inc.ReadByte();  
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
         }
 
         public List<string> listServers()
@@ -263,6 +288,11 @@ namespace LoginScreenWinForm
                 }
                 return servers;
             }
+        }
+
+        public void clientStop()
+        {
+            _client.Shutdown("Closed");
         }
 
         //Took from stack overflow

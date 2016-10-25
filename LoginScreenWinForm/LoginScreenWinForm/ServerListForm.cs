@@ -19,6 +19,7 @@ namespace LoginScreenWinForm
     public partial class ServerListForm : Form
     {
         Client client = new Client();
+        string server;
         public ServerListForm()
         {
             InitializeComponent();
@@ -32,16 +33,37 @@ namespace LoginScreenWinForm
             formListServers();
         }
 
-        private void leaveGame_Click(object sender, EventArgs e)
+        private void mainMenu_Click(object sender, EventArgs e)
         {
             MainMenuForm main = new MainMenuForm();
+            client.clientStop();
             main.Show();
             this.Dispose();
         }
 
-        private void serverList_ItemSelectionChanged(object sender, EventArgs e)
-        {
+        private void serverList_Click(object sender, EventArgs e)
+        { 
+            var data = serverList.SelectedItem;
+            if(data != null && data.ToString().Contains("IP"))
+            {
+                Console.WriteLine(data);
+                server = data.ToString();
+                server = server.Split(':')[1];
+                server.Trim(' ');
+                Console.WriteLine("Space?" + server);
+            }
             join.Enabled = true;
+            join.BackColor = Color.LightGray;
+        }
+
+        private void join_Click(object sender, EventArgs e)
+        {
+            if(join.Enabled)
+            {
+                bool conn = client.connect();
+                if(conn) { Console.WriteLine("Connected"); }
+                else { Console.WriteLine("Couldn't Connect"); }
+            }
         }
 
         private void formListServers()

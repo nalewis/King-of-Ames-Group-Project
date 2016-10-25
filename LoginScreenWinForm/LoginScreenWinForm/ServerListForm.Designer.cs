@@ -28,42 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.serverList = new System.Windows.Forms.ListView();
-            this.refresh = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.mainMenu = new System.Windows.Forms.Button();
             this.join = new System.Windows.Forms.Button();
+            this.serverList = new System.Windows.Forms.ListBox();
+            this.refresh = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // serverList
+            // mainMenu
             // 
-            this.serverList.Activation = System.Windows.Forms.ItemActivation.TwoClick;
-            this.serverList.Location = new System.Drawing.Point(12, 12);
-            this.serverList.Name = "serverList";
-            this.serverList.Size = new System.Drawing.Size(260, 178);
-            this.serverList.TabIndex = 1;
-            this.serverList.UseCompatibleStateImageBehavior = false;
-            this.serverList.View = System.Windows.Forms.View.List;
-            // 
-            // refresh
-            // 
-            this.refresh.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.refresh.Location = new System.Drawing.Point(146, 203);
-            this.refresh.Name = "refresh";
-            this.refresh.Size = new System.Drawing.Size(112, 23);
-            this.refresh.TabIndex = 3;
-            this.refresh.Text = "Main Menu";
-            this.refresh.UseVisualStyleBackColor = true;
-            this.refresh.Click += new System.EventHandler(this.leaveGame_Click);
-            // 
-            // button1
-            // 
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.button1.Location = new System.Drawing.Point(28, 203);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Refresh";
-            this.button1.UseVisualStyleBackColor = true;
+            this.mainMenu.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.mainMenu.Location = new System.Drawing.Point(146, 203);
+            this.mainMenu.Name = "mainMenu";
+            this.mainMenu.Size = new System.Drawing.Size(112, 23);
+            this.mainMenu.TabIndex = 3;
+            this.mainMenu.Text = "Main Menu";
+            this.mainMenu.UseVisualStyleBackColor = true;
+            this.mainMenu.Click += new System.EventHandler(this.mainMenu_Click);
             // 
             // join
             // 
@@ -75,16 +55,37 @@
             this.join.TabIndex = 5;
             this.join.Text = "Join Game";
             this.join.UseVisualStyleBackColor = false;
+            this.join.Click += new System.EventHandler(this.join_Click);
+            // 
+            // serverList
+            // 
+            this.serverList.FormattingEnabled = true;
+            this.serverList.Location = new System.Drawing.Point(28, 12);
+            this.serverList.Name = "serverList";
+            this.serverList.Size = new System.Drawing.Size(230, 173);
+            this.serverList.TabIndex = 6;
+            this.serverList.Click += new System.EventHandler(this.serverList_Click);
+            // 
+            // refresh
+            // 
+            this.refresh.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.refresh.Location = new System.Drawing.Point(28, 203);
+            this.refresh.Name = "refresh";
+            this.refresh.Size = new System.Drawing.Size(112, 23);
+            this.refresh.TabIndex = 7;
+            this.refresh.Text = "Refresh";
+            this.refresh.UseVisualStyleBackColor = true;
+            this.refresh.Click += new System.EventHandler(this.refresh_Click);
             // 
             // ServerListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.join);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.refresh);
             this.Controls.Add(this.serverList);
+            this.Controls.Add(this.join);
+            this.Controls.Add(this.mainMenu);
             this.Name = "ServerListForm";
             this.Text = "ServerList";
             this.ResumeLayout(false);
@@ -92,10 +93,9 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.ListView serverList;
-        private System.Windows.Forms.Button refresh;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button mainMenu;
         private System.Windows.Forms.Button join;
+        private System.Windows.Forms.ListBox serverList;
+        private System.Windows.Forms.Button refresh;
     }
 }
