@@ -61,6 +61,7 @@
     <Compile Include="DiceGraphics\DiceRow.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="EngineTest.cs" />
+    <Compile Include="PlayerDisplay\PlayerBlock.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

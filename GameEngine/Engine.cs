@@ -1,4 +1,5 @@
 ﻿using GameEngine.DiceGraphics;
+using GameEngine.PlayerDisplay;
 using GamePieces.Dice;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,10 +16,23 @@ namespace GameEngine {
         public static Dictionary<string, Texture2D> textureList;
         bool firstUpdate;
         DiceRow diceRow;
+        SpriteFont font;
+        Texture2D cth;
+
+        PlayerBlock pb;
+
+        int screenHeight;
+        int screenWidth;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            IsMouseVisible = true;
+
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.IsFullScreen = false;
         }
 
         /// <summary>
@@ -28,6 +42,7 @@ namespace GameEngine {
 
             textureList = new Dictionary<string, Texture2D>();
             diceRow = new DiceRow();
+            
             firstUpdate = true;
 
             base.Initialize();
@@ -40,6 +55,10 @@ namespace GameEngine {
         protected override void LoadContent() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             loadDice();
+            loadMonsters();
+            font = Content.Load<SpriteFont>("NewSpriteFont");
+            textureList.TryGetValue("cthulhu", out cth);
+            pb = new PlayerBlock(cth, font, new Vector2(100, 400));
 
         }
 
@@ -91,25 +110,30 @@ namespace GameEngine {
             textureList.TryGetValue("dice1", out toDraw);
             spriteBatch.Begin();
             diceRow.Draw(spriteBatch);
+            pb.draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
-        public void AddTexture(string name)
+        public void AddTexture(string filePath, string name)
         {
-            Texture2D toAdd = Content.Load<Texture2D>("diceImages\\"+name);
+            Texture2D toAdd = Content.Load<Texture2D>(filePath);
             textureList.Add(name, toAdd);
         }
 
         protected void loadDice()
         {
-            AddTexture("dice1");
-            AddTexture("dice2");
-            AddTexture("dice3");
-            AddTexture("diceAttack");
-            AddTexture("diceHealth");
-            AddTexture("diceEnergy");
+            AddTexture("diceImages\\dice1", "dice1");
+            AddTexture("diceImages\\dice2", "dice2");
+            AddTexture("diceImages\\dice3", "dice3");
+            AddTexture("diceImages\\diceAttack", "diceAttack");
+            AddTexture("diceImages\\diceHealth", "diceHealth");
+            AddTexture("diceImages\\diceEnergy", "diceEnergy");
+        }
+        protected void loadMonsters()
+        {
+            AddTexture("monsterImages\\cthulhu", "cthulhu");
         }
     }
 }
