@@ -22,6 +22,7 @@ namespace LoginScreenWinForm
         public ServerListForm()
         {
             InitializeComponent();
+            join.Enabled = false;
             formListServers();
         }
 
@@ -36,6 +37,11 @@ namespace LoginScreenWinForm
             MainMenuForm main = new MainMenuForm();
             main.Show();
             this.Dispose();
+        }
+
+        private void serverList_ItemSelectionChanged(object sender, EventArgs e)
+        {
+            join.Enabled = true;
         }
 
         private void formListServers()
