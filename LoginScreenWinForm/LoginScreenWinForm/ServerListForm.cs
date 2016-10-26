@@ -48,9 +48,8 @@ namespace LoginScreenWinForm
             {
                 Console.WriteLine(data);
                 server = data.ToString();
-                server = server.Split(':')[1];
-                server.Trim(' ');
-                Console.WriteLine("Space?" + server);
+                server = server.Split(':',' ')[4];
+                client.conn = server;
             }
             join.Enabled = true;
             join.BackColor = Color.LightGray;

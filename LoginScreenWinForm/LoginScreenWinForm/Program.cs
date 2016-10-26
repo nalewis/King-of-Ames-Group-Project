@@ -67,10 +67,9 @@ namespace LoginScreenWinForm
 
         public Host()
         {
-            Console.WriteLine("hello!");
             hostIP = GetLocalIPAddress();
             hostName = "TestHost";
-            var config = new NetPeerConfiguration("King of Ames") { Port = 6969 };
+            var config = new NetPeerConfiguration("King of Ames"){Port = 6969};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
             _server.Start();
@@ -86,7 +85,7 @@ namespace LoginScreenWinForm
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
             //this won't be the case for other clients
-            _client.Connect("localhost", 6969, outMsg);
+            _client.Connect(hostIP, 6969, outMsg);
         }
 
         public void serverStop()
@@ -118,6 +117,7 @@ namespace LoginScreenWinForm
 
                             NetOutgoingMessage outMsg = _server.CreateMessage();
                             outMsg.Write((byte)PacketTypes.Welcome);
+                            outMsg.Write("WELCOME TO SERVER");
                             _server.SendMessage(outMsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
 
                             Console.WriteLine("Approved new connection");
@@ -131,20 +131,37 @@ namespace LoginScreenWinForm
                         //can only call readByte once, otherwise it continues reading the following bytes
                         var type = inc.ReadByte();
 
-                        /*if (type == (byte)PacketTypes.NewUser)
+                        if (type == (byte)PacketTypes.ListUsers)
                         {
-                            Console.WriteLine("New user request.");
-                            var name = inc.ReadString();
-                            Console.WriteLine("Name: " + name);
-
-                            var ip = inc.ReadString();
-                            Console.WriteLine("IP: " + ip);
-                            newUser(name, ip);
-                        }*/
+                            listUsers();
+                        }
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+            }
+        }
+
+        public static void listUsers()
+        {
+            NameValueCollection data = new NameValueCollection();
+            //COMMAND is what the php looks for to determine it's actions
+            data.Add("COMMAND", "listUsers");
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
+                var encresult = Encoding.ASCII.GetString(result);
+                Console.WriteLine("\nResponse received was :\n{0}", encresult);
+                NetOutgoingMessage outMsg = _client.CreateMessage();
+                outMsg.Write((byte)PacketTypes.ListUsers);
+                string[] tbl = encresult.Split('\n');
+
+                for (int i = 0; i < tbl.Length; i++)
+                {
+                    outMsg.Write(tbl[i]);
+                }
+                _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -226,9 +243,10 @@ namespace LoginScreenWinForm
     {
         public string myIP = "";
         public string myName = "";
-        public string connectingTo = "";
         public bool isConnecting = false;
+        public string conn = "";
         private static NetClient _client;
+        private List<string> others = new List<string>();
         public Client()
         {
             myIP = GetLocalIPAddress();
@@ -241,8 +259,13 @@ namespace LoginScreenWinForm
 
         public bool connect()
         {
-            bool result = true;
-            return result;
+            var outMsg = _client.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Login);
+            Thread loop = new Thread(recieveLoop);
+            loop.Start();
+            _client.Connect(conn, 6969, outMsg);
+          //  if(_client.ConnectionStatus == NetConnectionStatus.Disconnected) { return false; }
+            return true;
         }
 
         public void recieveLoop()
@@ -257,9 +280,22 @@ namespace LoginScreenWinForm
                         Console.WriteLine(inc.ToString());
                         break;
                     case NetIncomingMessageType.StatusChanged:
+                        Console.WriteLine("Connected to Server.");
                         break;
                     case NetIncomingMessageType.Data:
-                        var type = inc.ReadByte();  
+                        var type = inc.ReadByte(); 
+                        if(type == (byte)PacketTypes.Welcome)
+                        {
+                            Console.WriteLine(inc.ReadString());
+                        }
+                        else if(type==(byte)PacketTypes.ListUsers)
+                        {
+                            while(inc.PeekString() != null)
+                            {
+                                others.Add(inc.ReadString());
+                            }
+                            Console.WriteLine("Recieved Users");
+                        }
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -288,6 +324,11 @@ namespace LoginScreenWinForm
                 }
                 return servers;
             }
+        }
+
+        public List<string> getOthers()
+        {
+            return others;
         }
 
         public void clientStop()
