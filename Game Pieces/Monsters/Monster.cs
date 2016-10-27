@@ -8,6 +8,9 @@ namespace GamePieces.Monsters
 {
     public class Monster : Observable<Monster>
     {
+        //Player ID
+        public int PlayerId { get; }
+
         //Location & Neighbors
         private readonly int _index;
 
@@ -125,9 +128,11 @@ namespace GamePieces.Monsters
         /// <summary>
         /// The monster game piece
         /// </summary>
+        /// <param name="playerId">Player ID</param>
         /// <param name="name">The name of the monster</param>
-        public Monster(string name = "")
+        public Monster(int playerId, string name = "")
         {
+            PlayerId = playerId;
             Name = name;
             Energy = 0;
             NumberOfCards = 0;
