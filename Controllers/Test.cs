@@ -5,6 +5,8 @@ using System.Web.Script.Serialization;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using System.Collections.Specialized;
+using System.Text;
 
 namespace Controllers.test
 {
@@ -29,6 +31,14 @@ namespace Controllers.test
             return serializer.Serialize(obj);
         }
 
+        //Doesn't work yet
+        public static Nick FromJSON(string json)
+        {
+            JavaScriptSerializer deserializer = new JavaScriptSerializer();
+            var list = deserializer.Deserialize<Nick>(json);
+            return list;
+        }
+
         //Took from stack overflow
         public static string GetLocalIPAddress()
         {
@@ -42,6 +52,31 @@ namespace Controllers.test
             }
             throw new Exception("Local IP Address Not Found!");
         }
+
+        public static string WebMessage(NameValueCollection data)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
+                return Encoding.ASCII.GetString(result);
+                //Console.WriteLine("\nResponse received was :\n{0}", encresult);
+            }
+        }
+    }
+
+    public class PlayerDetails
+    {
+        public string name = "";
+        public string ip = "";
+        public string character = "";
+    }
+
+    public class Nick
+    {
+        public string hostname { get; set; }
+        public string hostip { get; set; }
+        //public string character = "";
     }
 
 }

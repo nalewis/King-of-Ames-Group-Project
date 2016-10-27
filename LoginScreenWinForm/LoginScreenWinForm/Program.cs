@@ -68,10 +68,20 @@ namespace LoginScreenWinForm
         private static NetServer _server;
         private static NetClient _client;
 
+        PlayerDetails playerDetails;
+
         public Host()
         {
             hostIP = Helpers.GetLocalIPAddress();
             hostName = "TestHost";
+
+            //initialize player details object to be placed in server list array
+            playerDetails = new PlayerDetails();
+            playerDetails.name = hostName;
+            playerDetails.character = "";
+            playerDetails.ip = hostIP;
+
+
             var config = new NetPeerConfiguration("King of Ames"){Port = 6969};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
@@ -176,25 +186,20 @@ namespace LoginScreenWinForm
             NameValueCollection data = new NameValueCollection();
             //COMMAND is what the php looks for to determine it's actions
             data.Add("COMMAND", "addServer");
-            //TODO how to pass object this far?
+            data.Add("playerDetails", Helpers.ToJSON(playerDetails));
             data.Add("hostname", hostName);
             data.Add("hostip", hostIP);
-            data.Add("playerDetails", hostName);
-            using (WebClient wc = new WebClient())
+
+            var response = Helpers.WebMessage(data);
+            if (response.Contains("INVALID"))
             {
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-                var encresult = Encoding.ASCII.GetString(result);
-                Console.WriteLine("\nResponse received was :\n{0}", encresult);
-                if (encresult.Contains("INVALID"))
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return false;
+            } else
+            {
+                return true;
             }
+
+
         }
 
         public void delServer()
@@ -204,13 +209,9 @@ namespace LoginScreenWinForm
             data.Add("COMMAND", "delServer");
             data.Add("hostname", hostName);
             data.Add("hostip", hostIP);
-            using (WebClient wc = new WebClient())
-            {
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-                var encresult = Encoding.ASCII.GetString(result);
-                Console.WriteLine("\nResponse received was :\n{0}", encresult);
-            }
+
+            var response = Helpers.WebMessage(data);
+            Console.WriteLine("\nResponse received was :\n{0}", response);
         }
 
         enum PacketTypes
@@ -238,10 +239,17 @@ namespace LoginScreenWinForm
         public string conn = "";
         private static NetClient _client;
         private List<string> others = new List<string>();
+
+        PlayerDetails playerDetails;
+
         public Client()
         {
             myIP = Helpers.GetLocalIPAddress();
             myName = "TempName";
+
+            playerDetails = new PlayerDetails();
+            playerDetails.name = myName;
+            playerDetails.ip = myIP;
 
             _client = new NetClient(new NetPeerConfiguration("King of Ames"));
             _client.Start();
@@ -303,18 +311,31 @@ namespace LoginScreenWinForm
             {
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                 var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-                var table = Encoding.ASCII.GetString(result);
-                //Console.WriteLine("\nResponse received was :\n{0}", table);
+                var jsonObj = Helpers.FromJSON(Encoding.ASCII.GetString(result));
+                Console.WriteLine("\nResponse received was :\n{0}", jsonObj);
 
                 //Trying to put the result into a list of strings
-                List<string> servers = new List<string>();
+                /*List<string> servers = new List<string>();
                 string[] tbl = table.Split('\n');
                 for(int i = 0; i<tbl.Length;i++)
                 {
                     servers.Add(tbl[i]);
-                }
-                return servers;
+                }*/
+                return null;
             }
+        }
+
+        public void joinServer(string serverIP)
+        {
+            NameValueCollection data = new NameValueCollection();
+            data.Add("COMMAND", "updateServer");
+            //will update sql with player data
+            data.Add("ACTION", "addPlayer");
+            data.Add("playerDetails", Helpers.ToJSON(playerDetails));
+            data.Add("serverIP", serverIP);
+
+            var response = Helpers.WebMessage(data);
+            Console.WriteLine("\nResponse received was :\n{0}", response);
         }
 
         public List<string> getOthers()

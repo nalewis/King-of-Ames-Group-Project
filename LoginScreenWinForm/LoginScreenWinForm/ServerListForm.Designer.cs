@@ -30,8 +30,12 @@
         {
             this.mainMenu = new System.Windows.Forms.Button();
             this.join = new System.Windows.Forms.Button();
-            this.serverList = new System.Windows.Forms.ListBox();
             this.refresh = new System.Windows.Forms.Button();
+            this.serverList = new System.Windows.Forms.ListView();
+            this.hostName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.IP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.players = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // mainMenu
@@ -57,15 +61,6 @@
             this.join.UseVisualStyleBackColor = false;
             this.join.Click += new System.EventHandler(this.join_Click);
             // 
-            // serverList
-            // 
-            this.serverList.FormattingEnabled = true;
-            this.serverList.Location = new System.Drawing.Point(28, 12);
-            this.serverList.Name = "serverList";
-            this.serverList.Size = new System.Drawing.Size(230, 173);
-            this.serverList.TabIndex = 6;
-            this.serverList.Click += new System.EventHandler(this.serverList_Click);
-            // 
             // refresh
             // 
             this.refresh.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
@@ -77,13 +72,46 @@
             this.refresh.UseVisualStyleBackColor = true;
             this.refresh.Click += new System.EventHandler(this.refresh_Click);
             // 
+            // serverList
+            // 
+            this.serverList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.hostName,
+            this.IP,
+            this.players,
+            this.status});
+            this.serverList.GridLines = true;
+            this.serverList.Location = new System.Drawing.Point(28, 32);
+            this.serverList.MultiSelect = false;
+            this.serverList.Name = "serverList";
+            this.serverList.Size = new System.Drawing.Size(230, 165);
+            this.serverList.TabIndex = 8;
+            this.serverList.UseCompatibleStateImageBehavior = false;
+            this.serverList.View = System.Windows.Forms.View.Details;
+            this.serverList.SelectedIndexChanged += new System.EventHandler(this.serverList_SelectedIndexChanged);
+            // 
+            // hostName
+            // 
+            this.hostName.Text = "Host";
+            // 
+            // IP
+            // 
+            this.IP.Text = "ip";
+            // 
+            // players
+            // 
+            this.players.Text = "Players";
+            // 
+            // status
+            // 
+            this.status.Text = "Status";
+            // 
             // ServerListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.refresh);
             this.Controls.Add(this.serverList);
+            this.Controls.Add(this.refresh);
             this.Controls.Add(this.join);
             this.Controls.Add(this.mainMenu);
             this.Name = "ServerListForm";
@@ -95,7 +123,11 @@
         #endregion
         private System.Windows.Forms.Button mainMenu;
         private System.Windows.Forms.Button join;
-        private System.Windows.Forms.ListBox serverList;
         private System.Windows.Forms.Button refresh;
+        private System.Windows.Forms.ListView serverList;
+        private System.Windows.Forms.ColumnHeader hostName;
+        private System.Windows.Forms.ColumnHeader IP;
+        private System.Windows.Forms.ColumnHeader players;
+        private System.Windows.Forms.ColumnHeader status;
     }
 }

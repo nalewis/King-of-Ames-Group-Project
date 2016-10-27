@@ -9,6 +9,11 @@ $conn = mysqli_connect($servername, $username, $password, $dbname);
 if(!$conn) {
 	die("Connection failed: " . mysqli_connect_error());
 }
+//var_dump("hi");
+//$json = json_encode('{"name":"TestHost","ip":"10.65.211.228","character":""}');
+//var_dump('{"name":"TestHost","ip":"10.65.211.228","character":""}');
+//var_dump($json);
+//$sql = "INSERT INTO Server_List (hostname, hostip, playerDetails, status) VALUES ('testname', 'testip', '{name:', 'Creating')";
 /*
 //Lists all entries in the table
 if($_POST['COMMAND'] == "ListPlayers"){
@@ -85,7 +90,7 @@ if($_POST['COMMAND'] == "createUser"){
 if($_POST['COMMAND'] == "addServer"){
         $hostname = $_POST['hostname'];
         $hostip = $_POST['hostip'];
-		$playerDetails = $_POST['playerDetails'];
+	$playerDetails = $_POST['playerDetails'];
 
         $sql = "INSERT INTO Server_List (hostname, hostip, playerDetails, status) VALUES ('$hostname', '$hostip', '$playerDetails', 'Creating')";
         if($conn->query($sql) === TRUE){
@@ -98,12 +103,10 @@ if($_POST['COMMAND'] == "addServer"){
 //This command will handle the adding and remocing of players, changing their details, etc
 if($_POST['COMMAND'] == "updateServer"){
 	if($_POST['ACTION'] == "addPlayer"){
-		$name = $_POST['hostname'];
-        $ip = $_POST['hostip'];
-		$character = $_POST['players'];
+		$newPlayerDetails = $_POST['playerDetails'];
+        	$sql = "INSERT INTO Server_List () VALUES ('$hostname', '$hostip', '$players', 'Creating')";
 	}
 
-        $sql = "INSERT INTO Server_List (hostname, hostip, players, status) VALUES ('$hostname', '$hostip', '$players', 'Creating')";
         if($conn->query($sql) === TRUE){
                 echo "Successfully created record\r\n";
         } else {
@@ -113,14 +116,20 @@ if($_POST['COMMAND'] == "updateServer"){
 
 //Lists all servers in the table
 if($_POST['COMMAND'] == "listServers"){
-		$sql = "select * from Server_List";
+	$sql = "select * from Server_List";
         $result =  $conn->query($sql);
+
+	$servers = [];
+	$entry = [];
 
         if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
-                	echo $row["hostname"]. " - IP: " . $row["hostip"] . "\r\n";
+			$entry = ["hostname" => $row["hostname"], "hostip" => $row["hostip"]];
+//	               	echo $row["hostname"]. " - IP: " . $row["hostip"] . "\r\n";
+			$servers[] = $entry;
                 }
-				echo "\0";
+		echo json_encode($servers);
+//				echo "\0";
         } else {
                 echo "0 results\r\n";
         }

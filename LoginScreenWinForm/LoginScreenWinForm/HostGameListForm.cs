@@ -35,19 +35,20 @@ namespace LoginScreenWinForm
         private void timer_Tick(object sender, EventArgs e)
         {
 
-            playerList.Items.Clear();
+            //playerList.Items.Clear();
 
 
             foreach (ListViewItem item in playerList.Items)
             {
+                //TODO one of these prints out the text data for all the entries in the listview
                 //Console.WriteLine(item.Text);
                 //Console.WriteLine(item.SubItems);
-                Console.WriteLine(item.SubItems[0]);
+                //Console.WriteLine(item.SubItems[0]);
                 //Console.WriteLine(item.SubItems[0].Text);
             }
                 //refresh here...
-                playerList.Items.Add("Hi");
-            Console.WriteLine(playerList.Items.ToString());
+                //playerList.Items.Add("Hi");
+            //Console.WriteLine(playerList.Items.ToString());
         }
 
         private List<string> updatePlayers()
