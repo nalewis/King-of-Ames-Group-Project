@@ -8,6 +8,9 @@ using System.Collections.Specialized;
 using System.Text;
 using System.Collections.Generic;
 
+//This allows us to use the classes in The Controllers - test.cs file (needed to add Controllers to References)
+using Controllers.test;
+
 namespace LoginScreenWinForm
 {
     static class Program
@@ -67,24 +70,26 @@ namespace LoginScreenWinForm
 
         public Host()
         {
-            hostIP = GetLocalIPAddress();
+            hostIP = Helpers.GetLocalIPAddress();
             hostName = "TestHost";
             var config = new NetPeerConfiguration("King of Ames"){Port = 6969};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
             _server.Start();
             Console.WriteLine("Server started...");
+
+            //add server to the SQL database with the current details
             addServer();
 
             // Starts thread to handle input from clients
             Thread recieve = new Thread(recieveLoop);
             recieve.Start();
 
+            //The host contains a client to behave like a user
             _client = new NetClient(new NetPeerConfiguration("King of Ames"));
             _client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
-            //this won't be the case for other clients
             _client.Connect(hostIP, 6969, outMsg);
         }
 
@@ -174,7 +179,7 @@ namespace LoginScreenWinForm
             //TODO how to pass object this far?
             data.Add("hostname", hostName);
             data.Add("hostip", hostIP);
-            data.Add("players", hostName);
+            data.Add("playerDetails", hostName);
             using (WebClient wc = new WebClient())
             {
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
@@ -208,20 +213,6 @@ namespace LoginScreenWinForm
             }
         }
 
-        //Took from stack overflow
-        public static string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("Local IP Address Not Found!");
-        }
-
         enum PacketTypes
         {
             Login,
@@ -249,7 +240,7 @@ namespace LoginScreenWinForm
         private List<string> others = new List<string>();
         public Client()
         {
-            myIP = GetLocalIPAddress();
+            myIP = Helpers.GetLocalIPAddress();
             myName = "TempName";
 
             _client = new NetClient(new NetPeerConfiguration("King of Ames"));
@@ -336,19 +327,6 @@ namespace LoginScreenWinForm
             _client.Shutdown("Closed");
         }
 
-        //Took from stack overflow
-        public static string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            throw new Exception("Local IP Address Not Found!");
-        }
         enum PacketTypes
         {
             Login,

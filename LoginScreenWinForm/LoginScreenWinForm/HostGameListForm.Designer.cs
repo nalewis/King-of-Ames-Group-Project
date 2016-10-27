@@ -29,17 +29,38 @@
         private void InitializeComponent()
         {
             this.playerList = new System.Windows.Forms.ListView();
+            this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.winLoss = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.leaveGame = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // playerList
             // 
+            this.playerList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.playerName,
+            this.character,
+            this.winLoss});
+            this.playerList.FullRowSelect = true;
+            this.playerList.GridLines = true;
             this.playerList.Location = new System.Drawing.Point(12, 12);
             this.playerList.Name = "playerList";
             this.playerList.Size = new System.Drawing.Size(260, 194);
             this.playerList.TabIndex = 0;
             this.playerList.UseCompatibleStateImageBehavior = false;
-            this.playerList.View = System.Windows.Forms.View.List;
+            this.playerList.View = System.Windows.Forms.View.Details;
+            // 
+            // playerName
+            // 
+            this.playerName.Text = "Player Name";
+            // 
+            // character
+            // 
+            this.character.Text = "Character";
+            // 
+            // winLoss
+            // 
+            this.winLoss.Text = "Win/Loss";
             // 
             // leaveGame
             // 
@@ -69,5 +90,8 @@
 
         private System.Windows.Forms.ListView playerList;
         private System.Windows.Forms.Button leaveGame;
+        private System.Windows.Forms.ColumnHeader playerName;
+        private System.Windows.Forms.ColumnHeader character;
+        private System.Windows.Forms.ColumnHeader winLoss;
     }
 }

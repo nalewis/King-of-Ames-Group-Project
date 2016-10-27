@@ -9,7 +9,7 @@ $conn = mysqli_connect($servername, $username, $password, $dbname);
 if(!$conn) {
 	die("Connection failed: " . mysqli_connect_error());
 }
-
+/*
 //Lists all entries in the table
 if($_POST['COMMAND'] == "ListPlayers"){
 	$sql = "select * from Nick_Test";
@@ -46,7 +46,7 @@ if($_POST['COMMAND'] == "DelPlayer"){
 	} else {
 		echo "Error deleting record\r\n";
 	}
-}
+}*/
 
 if($_POST['COMMAND'] == "login"){
 	$name = $_POST['name'];
@@ -85,7 +85,23 @@ if($_POST['COMMAND'] == "createUser"){
 if($_POST['COMMAND'] == "addServer"){
         $hostname = $_POST['hostname'];
         $hostip = $_POST['hostip'];
-		$players = $_POST['players'];
+		$playerDetails = $_POST['playerDetails'];
+
+        $sql = "INSERT INTO Server_List (hostname, hostip, playerDetails, status) VALUES ('$hostname', '$hostip', '$playerDetails', 'Creating')";
+        if($conn->query($sql) === TRUE){
+                echo "Successfully created record\r\n";
+        } else {
+                echo "Error creating record\r\n";
+        }
+}
+
+//This command will handle the adding and remocing of players, changing their details, etc
+if($_POST['COMMAND'] == "updateServer"){
+	if($_POST['ACTION'] == "addPlayer"){
+		$name = $_POST['hostname'];
+        $ip = $_POST['hostip'];
+		$character = $_POST['players'];
+	}
 
         $sql = "INSERT INTO Server_List (hostname, hostip, players, status) VALUES ('$hostname', '$hostip', '$players', 'Creating')";
         if($conn->query($sql) === TRUE){
