@@ -9,6 +9,8 @@ $conn = mysqli_connect($servername, $username, $password, $dbname);
 if(!$conn) {
 	die("Connection failed: " . mysqli_connect_error());
 }
+
+
 //var_dump("hi");
 //$json = json_encode('{"name":"TestHost","ip":"10.65.211.228","character":""}');
 //var_dump('{"name":"TestHost","ip":"10.65.211.228","character":""}');
@@ -16,6 +18,7 @@ if(!$conn) {
 //$sql = "INSERT INTO Server_List (hostname, hostip, playerDetails, status) VALUES ('testname', 'testip', '{name:', 'Creating')";
 /*
 //Lists all entries in the table
+        if($conn->query($sql) === TRUE){
 if($_POST['COMMAND'] == "ListPlayers"){
 	$sql = "select * from Nick_Test";
         $result =  $conn->query($sql);
@@ -104,13 +107,29 @@ if($_POST['COMMAND'] == "addServer"){
 if($_POST['COMMAND'] == "updateServer"){
 	if($_POST['ACTION'] == "addPlayer"){
 		$newPlayerDetails = $_POST['playerDetails'];
-        	$sql = "INSERT INTO Server_List () VALUES ('$hostname', '$hostip', '$players', 'Creating')";
-	}
+		$hostip = $_POST['hostIP'];
+		$hostname = $_POST['hostname'];
+		$sql = "SELECT playerDetails FROM Server_List WHERE hostip = '$hostip' AND hostname = '$hostname'";
+		$result = $conn->query($sql);
+		$players = [];
+		if($result->num_rows > 0){
+		        //Should only be one row
+		        $row = $result->fetch_assoc();
+		        $players = $row['playerDetails'];
+		        $players = json_decode($players);
+		        $players[] = json_decode($newPlayerDetails);
+		        $players = json_encode($players);
+		
+			$sql = "UPDATE Server_List SET playerDetails = '$players' WHERE hostip = '$hostip'";
+			if($conn->query($sql) === TRUE){
+                		echo "Successfully updated record\r\n";
+			} else {
+                		echo "Error updating record\r\n";
+			}
+		} else {
+			echo "No server found\r\n";
+		}
 
-        if($conn->query($sql) === TRUE){
-                echo "Successfully created record\r\n";
-        } else {
-                echo "Error creating record\r\n";
         }
 }
 
@@ -124,7 +143,7 @@ if($_POST['COMMAND'] == "listServers"){
 
         if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
-			$entry = ["hostname" => $row["hostname"], "hostip" => $row["hostip"]];
+			$entry = ["hostname" => $row["hostname"], "hostip" => $row["hostip"], "players" => $row["playerDetails"]];
 //	               	echo $row["hostname"]. " - IP: " . $row["hostip"] . "\r\n";
 			$servers[] = $entry;
                 }
