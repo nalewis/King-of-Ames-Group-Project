@@ -302,27 +302,13 @@ namespace LoginScreenWinForm
             }
         }
 
-        public List<string> listServers()
+        public ServerDetails[] listServers()
         {
             NameValueCollection data = new NameValueCollection();
             //COMMAND is what the php looks for to determine it's actions
             data.Add("COMMAND", "listServers");
-            using (WebClient wc = new WebClient())
-            {
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-                var jsonObj = Helpers.FromJSON(Encoding.ASCII.GetString(result));
-                Console.WriteLine("\nResponse received was :\n{0}", jsonObj);
-
-                //Trying to put the result into a list of strings
-                /*List<string> servers = new List<string>();
-                string[] tbl = table.Split('\n');
-                for(int i = 0; i<tbl.Length;i++)
-                {
-                    servers.Add(tbl[i]);
-                }*/
-                return null;
-            }
+            var servers = Helpers.FromJSON(Helpers.WebMessage(data));
+            return servers;
         }
 
         public void joinServer(string serverIP)

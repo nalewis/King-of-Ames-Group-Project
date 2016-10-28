@@ -31,11 +31,12 @@ namespace Controllers.test
             return serializer.Serialize(obj);
         }
 
-        //Doesn't work yet
-        public static Nick FromJSON(string json)
+        //specifically made for the listServers function at the moment
+        public static ServerDetails[] FromJSON(string json)
         {
             JavaScriptSerializer deserializer = new JavaScriptSerializer();
-            var list = deserializer.Deserialize<Nick>(json);
+            ServerDetails[] list = deserializer.Deserialize<ServerDetails[]>(json);
+            Console.WriteLine(list.ToString());
             return list;
         }
 
@@ -67,16 +68,16 @@ namespace Controllers.test
 
     public class PlayerDetails
     {
+
         public string name = "";
         public string ip = "";
         public string character = "";
     }
 
-    public class Nick
+    public class ServerDetails
     {
         public string hostname { get; set; }
         public string hostip { get; set; }
-        //public string character = "";
     }
 
 }

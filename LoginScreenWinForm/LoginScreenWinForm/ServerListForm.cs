@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using Controllers.test;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Lidgren.Network;
-using System.Threading;
-using System.Net.Sockets;
-using System.Net;
-using System.Collections.Specialized;
 
 
 namespace LoginScreenWinForm
@@ -57,11 +47,15 @@ namespace LoginScreenWinForm
 
         private void formListServers()
         {
-            List<string> servers = client.listServers();
-            /*for (int i = 0; i < servers.Count; i++)
+            ServerDetails[] servers = client.listServers();
+            foreach (ServerDetails server in servers)
             {
-                serverList.Items.Add(servers.ElementAt(i));
-            }*/
+                ListViewItem listItem = new ListViewItem(server.hostname);
+                listItem.SubItems.Add(server.hostip);
+
+                //Add the row entry to the listview
+                serverList.Items.Add(listItem);
+            }
         }
 
         private void serverList_SelectedIndexChanged(object sender, EventArgs e)
