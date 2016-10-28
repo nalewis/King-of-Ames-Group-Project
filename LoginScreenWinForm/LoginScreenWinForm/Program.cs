@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 //This allows us to use the classes in The Controllers - test.cs file (needed to add Controllers to References)
 using Controllers.test;
+using Controllers.User;
 
 namespace LoginScreenWinForm
 {
@@ -62,8 +63,8 @@ namespace LoginScreenWinForm
 
     class Host
     {
-        public string hostName = "";
-        public string hostIP = "";
+        public string hostName = User.username;
+        public string hostIP = User.localIp;
         public static List<string> players = new List<string>(); 
         private static NetServer _server;
         private static NetClient _client;
@@ -72,9 +73,6 @@ namespace LoginScreenWinForm
 
         public Host()
         {
-            hostIP = Helpers.GetLocalIPAddress();
-            hostName = "TestHost";
-
             //initialize player details object to be placed in server list array
             playerDetails = new PlayerDetails();
             playerDetails.name = hostName;
@@ -233,8 +231,8 @@ namespace LoginScreenWinForm
     }
     class Client
     {
-        public string myIP = "";
-        public string myName = "";
+        public string myIP = User.localIp;
+        public string myName = User.username;
         public bool isConnecting = false;
         public string conn = "";
         private static NetClient _client;
@@ -244,16 +242,12 @@ namespace LoginScreenWinForm
 
         public Client()
         {
-            myIP = Helpers.GetLocalIPAddress();
-            myName = "TempName";
-
             playerDetails = new PlayerDetails();
             playerDetails.name = myName;
             playerDetails.ip = myIP;
 
             _client = new NetClient(new NetPeerConfiguration("King of Ames"));
             _client.Start();
-            //_client.Connect("localhost", 6969, outMsg);
         }
 
         public bool connect()
@@ -311,14 +305,15 @@ namespace LoginScreenWinForm
             return servers;
         }
 
-        public void joinServer(string serverIP)
+        public void joinServer(string hostname, string hostIP)
         {
             NameValueCollection data = new NameValueCollection();
             data.Add("COMMAND", "updateServer");
             //will update sql with player data
             data.Add("ACTION", "addPlayer");
             data.Add("playerDetails", Helpers.ToJSON(playerDetails));
-            data.Add("serverIP", serverIP);
+            data.Add("hostIP", hostIP);
+            data.Add("hostname", hostname);
 
             var response = Helpers.WebMessage(data);
             Console.WriteLine("\nResponse received was :\n{0}", response);

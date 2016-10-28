@@ -39,7 +39,8 @@ namespace LoginScreenWinForm
                 if(conn)
                 {
                     Console.WriteLine("Connected");
-                    //client.joinServer();
+                    Console.WriteLine(serverList.SelectedItems[0].SubItems[0].Text + " : " + serverList.SelectedItems[0].SubItems[1].Text);
+                    client.joinServer(serverList.SelectedItems[0].SubItems[0].Text, serverList.SelectedItems[0].SubItems[1].Text);
                 }
                 else { Console.WriteLine("Couldn't Connect"); }
             }
@@ -52,6 +53,7 @@ namespace LoginScreenWinForm
             {
                 ListViewItem listItem = new ListViewItem(server.hostname);
                 listItem.SubItems.Add(server.hostip);
+                //listItem.SubItems.Add(server.playerDetails.ToString());
 
                 //Add the row entry to the listview
                 serverList.Items.Add(listItem);
@@ -60,15 +62,10 @@ namespace LoginScreenWinForm
 
         private void serverList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var data = serverList.SelectedItems[0].Text;
+            //selected items[0] is the row, subitems[1] is the ip
+            var data = serverList.SelectedItems[0].SubItems[1].Text;
             Console.WriteLine("Selected game's IP is: " + data);
-            /*if(data != null && data.ToString().Contains("IP"))
-            {
-                Console.WriteLine(data);
-                server = data.ToString();
-                server = server.Split(':',' ')[4];
-                client.conn = server;
-            }*/
+            client.conn = data;
             join.Enabled = true;
             join.BackColor = Color.LightGray;
         }

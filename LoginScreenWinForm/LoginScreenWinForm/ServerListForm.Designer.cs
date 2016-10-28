@@ -79,6 +79,7 @@
             this.IP,
             this.players,
             this.status});
+            this.serverList.FullRowSelect = true;
             this.serverList.GridLines = true;
             this.serverList.Location = new System.Drawing.Point(28, 32);
             this.serverList.MultiSelect = false;

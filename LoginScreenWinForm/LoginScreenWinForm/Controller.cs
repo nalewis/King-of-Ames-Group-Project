@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Controllers.test;
+using Controllers.User;
+using System;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
@@ -22,20 +24,18 @@ public class LoginController
         data.Add("COMMAND", "login");
         data.Add("name", user);
         data.Add("pass", pass);
-        using (WebClient wc = new WebClient())
+        var response = Helpers.WebMessage(data);
+        Console.WriteLine("\nResponse received was :\n{0}", response);
+        if (response.Contains("INVALID"))
         {
-            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-            var encresult = Encoding.ASCII.GetString(result);
-            Console.WriteLine("\nResponse received was :\n{0}", encresult);
-            if (encresult.Contains("INVALID"))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return false;
+        }
+        else
+        {
+            //Set the static user class to have player information available globally
+            User.username = user;
+            User.localIp = Helpers.GetLocalIPAddress();
+            return true;
         }
     }
 }
@@ -59,11 +59,6 @@ public class NewUserController
         data.Add("COMMAND", "createUser");
         data.Add("name", user);
         data.Add("pass", pass);
-        using (WebClient wc = new WebClient())
-        {
-            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-            Console.WriteLine("\nResponse received was :\n{0}", Encoding.ASCII.GetString(result));
-        }
+        Helpers.WebMessage(data);
     }
 }

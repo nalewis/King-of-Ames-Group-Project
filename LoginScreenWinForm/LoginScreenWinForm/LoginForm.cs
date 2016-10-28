@@ -19,6 +19,7 @@ namespace LoginScreenWinForm
             if(usernameBox.TextLength > 0 && passwordBox.TextLength > 0)
             {
                 errorLabel.Hide();
+                //TODO encrypt password
                 LoginStuff.handleUserInput(usernameBox.Lines[0], passwordBox.Lines[0], this, errorLabel);
             }
         }

@@ -36,7 +36,7 @@ namespace Controllers.test
         {
             JavaScriptSerializer deserializer = new JavaScriptSerializer();
             ServerDetails[] list = deserializer.Deserialize<ServerDetails[]>(json);
-            Console.WriteLine(list.ToString());
+            //Console.WriteLine(list[0].playerDetails);
             return list;
         }
 
@@ -76,8 +76,26 @@ namespace Controllers.test
 
     public class ServerDetails
     {
+        /*public ServerDetails(string json)
+        {
+            JObject jObject = JObject.Parse(json);
+            JToken jUser = jObject["user"];
+            name = (string)jUser["name"];
+        }*/
+
         public string hostname { get; set; }
         public string hostip { get; set; }
+        //TODO
+        //public Array playerDetails { get; set; }
     }
 
+}
+
+namespace Controllers.User
+{
+    public static class User
+    {
+        public static string username = "";
+        public static string localIp = "";
+    }
 }
