@@ -9,7 +9,7 @@ namespace GamePieces.Session
     public static class Game
     {
         //Monsters
-        public static Monster Current { get; set; }
+        public static Monster Current { get; private set; }
 
         public static readonly List<Monster>
             Monsters = new List<Monster>(),

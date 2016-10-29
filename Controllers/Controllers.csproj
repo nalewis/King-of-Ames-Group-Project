@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CardController.cs" />
+    <Compile Include="LobbyController.cs" />
     <Compile Include="MonsterController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
