@@ -58,7 +58,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Engine.cs" />
-    <Compile Include="EngineTest.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
