@@ -26,10 +26,9 @@ namespace Controllers
         {
             for (var i = 0; i < Players.Count; i++)
             {
-                if (Players[i].Item1 == playerId)
-                {
-                    Players.RemoveAt(i);
-                }
+                if (Players[i].Item1 != playerId) continue;
+                Players.RemoveAt(i);
+                return;
             }
         }
 

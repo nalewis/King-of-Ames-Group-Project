@@ -1,6 +1,4 @@
-﻿
-
-namespace ConsoleTesting
+﻿namespace ConsoleTesting
 {
     class Program
     {
