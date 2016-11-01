@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Networking;
+using Controllers.test;
 
 namespace LoginScreenWinForm
 {
@@ -24,7 +26,9 @@ namespace LoginScreenWinForm
             {
                 //hide label from previous failures
                 errorLabel.Hide();
-                NewUser.handleUserInput(newUsername.Lines[0], newPassword.Lines[0], errorLabel);
+                //NewUser.handleUserInput(newUsername.Lines[0], newPassword.Lines[0], errorLabel);
+                var result = NetworkClasses.createUser(newUsername.Lines[0], newPassword.Lines[0], Helpers.GetLocalIPAddress());
+                Console.WriteLine(result);
             }
         }
 

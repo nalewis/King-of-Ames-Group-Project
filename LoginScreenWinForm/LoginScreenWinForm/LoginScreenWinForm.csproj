@@ -128,6 +128,10 @@
       <Project>{f89a1b8f-e86d-45f3-8547-2315b87e1dc8}</Project>
       <Name>Controllers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Networking\Networking.csproj">
+      <Project>{0b0e035a-cb84-49f4-8e84-32cf744b1aac}</Project>
+      <Name>Networking</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
