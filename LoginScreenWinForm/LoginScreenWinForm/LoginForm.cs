@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using Networking;
+using Controllers.Helpers;
 
 namespace LoginScreenWinForm
 {
@@ -20,7 +22,8 @@ namespace LoginScreenWinForm
             {
                 errorLabel.Hide();
                 //TODO encrypt password
-                LoginStuff.handleUserInput(usernameBox.Lines[0], passwordBox.Lines[0], this, errorLabel);
+                //LoginStuff.handleUserInput(usernameBox.Lines[0], passwordBox.Lines[0], this, errorLabel);
+                NetworkClasses.login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIPAddress());
             }
         }
 

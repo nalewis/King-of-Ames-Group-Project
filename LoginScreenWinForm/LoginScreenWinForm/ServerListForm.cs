@@ -40,7 +40,7 @@ namespace LoginScreenWinForm
                 {
                     Console.WriteLine("Connected");
                     Console.WriteLine(serverList.SelectedItems[0].SubItems[0].Text + " : " + serverList.SelectedItems[0].SubItems[1].Text);
-                    client.joinServer(serverList.SelectedItems[0].SubItems[0].Text, serverList.SelectedItems[0].SubItems[1].Text);
+                    //client.joinServer(serverList.SelectedItems[0].SubItems[0].Text, serverList.SelectedItems[0].SubItems[1].Text);
                 }
                 else { Console.WriteLine("Couldn't Connect"); }
             }
@@ -48,8 +48,8 @@ namespace LoginScreenWinForm
 
         private void formListServers()
         {
-            ServerDetails[] servers = client.listServers();
-            foreach (ServerDetails server in servers)
+            //ServerDetails[] servers = client.listServers();
+            /*foreach (ServerDetails server in servers)
             {
                 ListViewItem listItem = new ListViewItem(server.hostname);
                 listItem.SubItems.Add(server.hostip);
@@ -57,7 +57,7 @@ namespace LoginScreenWinForm
 
                 //Add the row entry to the listview
                 serverList.Items.Add(listItem);
-            }
+            }*/
         }
 
         private void serverList_SelectedIndexChanged(object sender, EventArgs e)

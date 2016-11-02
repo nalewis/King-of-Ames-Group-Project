@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers.cs" />
     <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -49,10 +50,6 @@
     <ProjectReference Include="..\Game Pieces\Game Pieces.csproj">
       <Project>{B38A16C3-74C0-4A57-BCD9-6000681C06B1}</Project>
       <Name>Game Pieces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Networking\Networking.csproj">
-      <Project>{0B0E035A-CB84-49F4-8E84-32CF744B1AAC}</Project>
-      <Name>Networking</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

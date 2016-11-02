@@ -9,7 +9,7 @@ using System.Text;
 using System.Collections.Generic;
 
 //This allows us to use the classes in The Controllers - test.cs file (needed to add Controllers to References)
-using Controllers.test;
+using Controllers.Helpers;
 using Controllers.User;
 
 namespace LoginScreenWinForm
@@ -28,39 +28,6 @@ namespace LoginScreenWinForm
         }
     }
 
-    class LoginStuff
-    {
-
-        public static void handleUserInput(string user, string pass, Form form, Label resultLabel)
-        {
-            //Console.WriteLine(user + " : " + pass);
-            LoginController control = new LoginController(user, pass);
-            if (control.login())
-            {
-                Form mainMenu = new MainMenuForm();
-                mainMenu.Show();
-                form.Hide();
-            }
-            else
-            {
-                resultLabel.Show();
-            }
-            //This method is called when clicking the button so I suppose login logic goes here? not really sure though.
-        }
-
-    }
-
-    class NewUser
-    {
-        public static void handleUserInput(string user, string pass, Label resultLabel)
-        {
-            resultLabel.Show();
-            NewUserController control = new NewUserController(user, pass);
-            control.createUser();
-            //This method is called when clicking the button so I suppose login logic goes here? not really sure though.
-        }
-    }
-
     class Host
     {
         public string hostName = User.username;
@@ -69,15 +36,9 @@ namespace LoginScreenWinForm
         private static NetServer _server;
         private static NetClient _client;
 
-        PlayerDetails playerDetails;
 
         public Host()
         {
-            //initialize player details object to be placed in server list array
-            playerDetails = new PlayerDetails();
-            playerDetails.name = hostName;
-            playerDetails.character = "";
-            playerDetails.ip = hostIP;
 
 
             var config = new NetPeerConfiguration("King of Ames"){Port = 6969};
@@ -87,7 +48,7 @@ namespace LoginScreenWinForm
             Console.WriteLine("Server started...");
 
             //add server to the SQL database with the current details
-            addServer();
+            //addServer();
 
             // Starts thread to handle input from clients
             Thread recieve = new Thread(recieveLoop);
@@ -179,7 +140,7 @@ namespace LoginScreenWinForm
         }
 
         //Asks the webserver to create a new user with the given info
-        public bool addServer()
+        /*public bool addServer()
         {
             NameValueCollection data = new NameValueCollection();
             //COMMAND is what the php looks for to determine it's actions
@@ -198,7 +159,7 @@ namespace LoginScreenWinForm
             }
 
 
-        }
+        }*/
 
         public void delServer()
         {
@@ -238,13 +199,8 @@ namespace LoginScreenWinForm
         private static NetClient _client;
         private List<string> others = new List<string>();
 
-        PlayerDetails playerDetails;
-
         public Client()
         {
-            playerDetails = new PlayerDetails();
-            playerDetails.name = myName;
-            playerDetails.ip = myIP;
 
             _client = new NetClient(new NetPeerConfiguration("King of Ames"));
             _client.Start();
@@ -294,34 +250,6 @@ namespace LoginScreenWinForm
                         throw new ArgumentOutOfRangeException();
                 }
             }
-        }
-
-        public ServerDetails[] listServers()
-        {
-            NameValueCollection data = new NameValueCollection();
-            //COMMAND is what the php looks for to determine it's actions
-            data.Add("COMMAND", "listServers");
-            var servers = Helpers.FromJSON(Helpers.WebMessage(data));
-            return servers;
-        }
-
-        public void joinServer(string hostname, string hostIP)
-        {
-            NameValueCollection data = new NameValueCollection();
-            data.Add("COMMAND", "updateServer");
-            //will update sql with player data
-            data.Add("ACTION", "addPlayer");
-            data.Add("playerDetails", Helpers.ToJSON(playerDetails));
-            data.Add("hostIP", hostIP);
-            data.Add("hostname", hostname);
-
-            var response = Helpers.WebMessage(data);
-            Console.WriteLine("\nResponse received was :\n{0}", response);
-        }
-
-        public List<string> getOthers()
-        {
-            return others;
         }
 
         public void clientStop()
