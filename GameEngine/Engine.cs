@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace GameEngine {
     /// <summary>
@@ -9,10 +10,18 @@ namespace GameEngine {
     public class Engine : Game {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        public static Dictionary<string, Texture2D> textureList;
+        SpriteFont font;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            IsMouseVisible = true;
+
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.IsFullScreen = false;
         }
 
         /// <summary>
@@ -23,6 +32,8 @@ namespace GameEngine {
         /// </summary>
         protected override void Initialize() {
             // TODO: Add your initialization logic here
+            textureList = new Dictionary<string, Texture2D>();
+            //diceRow = new DiceRow();
 
             base.Initialize();
         }
@@ -34,6 +45,7 @@ namespace GameEngine {
         protected override void LoadContent() {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            font = Content.Load<SpriteFont>("NewSpriteFont");
 
             // TODO: use this.Content to load your game content here
         }
@@ -52,7 +64,7 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
@@ -68,6 +80,9 @@ namespace GameEngine {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.DrawString(font, "BACK TO COOL RUNNINGS!", new Vector2(600, 300), Color.BlanchedAlmond);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
