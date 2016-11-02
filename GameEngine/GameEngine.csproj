@@ -57,11 +57,8 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DiceGraphics\DiceImage.cs" />
-    <Compile Include="DiceGraphics\DiceRow.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="EngineTest.cs" />
-    <Compile Include="PlayerDisplay\PlayerBlock.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
@@ -86,10 +83,6 @@
     <ProjectReference Include="..\Controllers\Controllers.csproj">
       <Project>{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}</Project>
       <Name>Controllers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Game Pieces\Game Pieces.csproj">
-      <Project>{B38A16C3-74C0-4A57-BCD9-6000681C06B1}</Project>
-      <Name>Game Pieces</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

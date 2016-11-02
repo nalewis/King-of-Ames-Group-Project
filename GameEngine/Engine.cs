@@ -1,49 +1,28 @@
-﻿using GameEngine.DiceGraphics;
-using GameEngine.PlayerDisplay;
-using GamePieces.Dice;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 
 namespace GameEngine {
     /// <summary>
-    /// This is the main type for the engine
+    /// This is the main type for your game.
     /// </summary>
     public class Engine : Game {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        public static Dictionary<string, Texture2D> textureList;
-        bool firstUpdate;
-        DiceRow diceRow;
-        SpriteFont font;
-        Texture2D cth;
-
-        PlayerBlock pb;
-
-        int screenHeight;
-        int screenWidth;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-            IsMouseVisible = true;
-
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.IsFullScreen = false;
         }
 
         /// <summary>
-        /// Initialization logic for the game engine. 
+        /// Allows the game to perform any initialization it needs to before starting to run.
+        /// This is where it can query for any required services and load any non-graphic
+        /// related content.  Calling base.Initialize will enumerate through any components
+        /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-
-            textureList = new Dictionary<string, Texture2D>();
-            diceRow = new DiceRow();
-            
-            firstUpdate = true;
+            // TODO: Add your initialization logic here
 
             base.Initialize();
         }
@@ -53,13 +32,10 @@ namespace GameEngine {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
+            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            loadDice();
-            loadMonsters();
-            font = Content.Load<SpriteFont>("NewSpriteFont");
-            textureList.TryGetValue("cthulhu", out cth);
-            pb = new PlayerBlock(cth, font, new Vector2(100, 400));
 
+            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -68,7 +44,6 @@ namespace GameEngine {
         /// </summary>
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
-            Content.Unload();
         }
 
         /// <summary>
@@ -77,25 +52,10 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            if (firstUpdate)
-            {
-                Controllers.Test.StartTurn();
-                Controllers.Test.Roll();
-
-                foreach (Die die in Controllers.Test.GetDice())
-                {
-                    diceRow.addDie(die);
-                }
-                firstUpdate = false;
-            }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
-                Controllers.Test.Roll();
-
-            diceRow.UpdateDice();
+            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
@@ -105,35 +65,11 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
-            Texture2D toDraw;
-            textureList.TryGetValue("dice1", out toDraw);
-            spriteBatch.Begin();
-            diceRow.Draw(spriteBatch);
-            pb.draw(spriteBatch);
-            spriteBatch.End();
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
-        }
-
-        public void AddTexture(string filePath, string name)
-        {
-            Texture2D toAdd = Content.Load<Texture2D>(filePath);
-            textureList.Add(name, toAdd);
-        }
-
-        protected void loadDice()
-        {
-            AddTexture("diceImages\\dice1", "dice1");
-            AddTexture("diceImages\\dice2", "dice2");
-            AddTexture("diceImages\\dice3", "dice3");
-            AddTexture("diceImages\\diceAttack", "diceAttack");
-            AddTexture("diceImages\\diceHealth", "diceHealth");
-            AddTexture("diceImages\\diceEnergy", "diceEnergy");
-        }
-        protected void loadMonsters()
-        {
-            AddTexture("monsterImages\\cthulhu", "cthulhu");
         }
     }
 }

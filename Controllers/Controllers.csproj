@@ -4,7 +4,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}</ProjectGuid>
+    <ProjectGuid>{C6FA0BCF-9885-4D4F-9301-92ACCF61DC85}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Controllers</RootNamespace>
@@ -38,7 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test.cs" />
+    <Compile Include="CardController.cs" />
+    <Compile Include="LobbyController.cs" />
+    <Compile Include="MonsterController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Structures\Data Structures.csproj">
@@ -53,9 +57,10 @@
       <Project>{0B0E035A-CB84-49F4-8E84-32CF744B1AAC}</Project>
       <Name>Networking</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\Views\Views.csproj">
+      <Project>{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}</Project>
+      <Name>Views</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
