@@ -3,9 +3,8 @@ using System.Windows.Forms;
 using Networking;
 using Controllers.Helpers;
 
-namespace LoginScreenWinForm
+namespace Views
 {
-    //TODO add error message checking
     public partial class LoginForm : Form
     {
         public LoginForm()
@@ -15,15 +14,25 @@ namespace LoginScreenWinForm
 
         private void loginButton_Click(object sender, EventArgs e)
         {
-            // Login Button Clicked
-            // username = usernameBox.Lines[0]
-            // password = passwordBox.Lines[0]
             if(usernameBox.TextLength > 0 && passwordBox.TextLength > 0)
             {
                 errorLabel.Hide();
                 //TODO encrypt password
                 //LoginStuff.handleUserInput(usernameBox.Lines[0], passwordBox.Lines[0], this, errorLabel);
-                NetworkClasses.login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIPAddress());
+                if(NetworkClasses.login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIPAddress()))
+                {
+                    Form form = new MainMenuForm();
+                    form.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    errorLabel.Show();
+                }
+            }
+            else
+            {
+                errorLabel.Show();
             }
         }
 

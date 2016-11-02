@@ -1,4 +1,4 @@
-﻿namespace LoginScreenWinForm
+﻿namespace Views
 {
     partial class LoginForm
     {
@@ -111,9 +111,9 @@
             this.errorLabel.AutoSize = true;
             this.errorLabel.Location = new System.Drawing.Point(101, 215);
             this.errorLabel.Name = "errorLabel";
-            this.errorLabel.Size = new System.Drawing.Size(195, 13);
+            this.errorLabel.Size = new System.Drawing.Size(170, 13);
             this.errorLabel.TabIndex = 8;
-            this.errorLabel.Text = "Username and/or password do not exist";
+            this.errorLabel.Text = "Invalid username and/or password";
             this.errorLabel.Visible = false;
             // 
             // LoginForm

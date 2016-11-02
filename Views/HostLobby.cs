@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Windows.Forms;
+using Controllers.User;
 
-namespace LoginScreenWinForm
+namespace Views
 {
     public partial class HostGameListForm : Form
     {
@@ -19,14 +13,14 @@ namespace LoginScreenWinForm
             InitializeComponent();
 
             //First row entry is host
-            ListViewItem hostItem = new ListViewItem(host.hostName);
-            hostItem.SubItems.Add(host.hostIP);
+            ListViewItem hostItem = new ListViewItem(User.username);
+            hostItem.SubItems.Add(User.localIp);
 
             //Add the row entry to the listview
             playerList.Items.Add(hostItem);
 
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            Timer timer = new Timer();
             timer.Interval = (10 * 1000); // 10 secs
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
@@ -61,7 +55,6 @@ namespace LoginScreenWinForm
             MainMenuForm main = new MainMenuForm();
             main.Show();
             this.Dispose();
-            host.delServer();
             host.serverStop();
         }
     }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LoginScreenWinForm
+namespace Views
 {
     public partial class MainMenuForm : Form
     {

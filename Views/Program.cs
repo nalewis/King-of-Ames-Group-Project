@@ -11,8 +11,9 @@ using System.Collections.Generic;
 //This allows us to use the classes in The Controllers - test.cs file (needed to add Controllers to References)
 using Controllers.Helpers;
 using Controllers.User;
+using Networking;
 
-namespace LoginScreenWinForm
+namespace Views
 {
     static class Program
     {
@@ -22,16 +23,26 @@ namespace LoginScreenWinForm
         [STAThread]
         static void Main()
         {
+            //Handler for deleting a server entry if the user suddenly quits
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new LoginForm());
+        }
+        //WIP TODO
+        static void OnProcessExit(object sender, EventArgs e)
+        {
+            Console.WriteLine("hi");
+            if (NetworkClasses.isHosting(User.id))
+            {
+                NetworkClasses.deleteServer(User.id);
+            }
         }
     }
 
     class Host
     {
-        public string hostName = User.username;
-        public string hostIP = User.localIp;
         public static List<string> players = new List<string>(); 
         private static NetServer _server;
         private static NetClient _client;
@@ -39,8 +50,6 @@ namespace LoginScreenWinForm
 
         public Host()
         {
-
-
             var config = new NetPeerConfiguration("King of Ames"){Port = 6969};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
@@ -48,7 +57,7 @@ namespace LoginScreenWinForm
             Console.WriteLine("Server started...");
 
             //add server to the SQL database with the current details
-            //addServer();
+            NetworkClasses.createServer(User.id, User.localIp);
 
             // Starts thread to handle input from clients
             Thread recieve = new Thread(recieveLoop);
@@ -59,11 +68,12 @@ namespace LoginScreenWinForm
             _client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
-            _client.Connect(hostIP, 6969, outMsg);
+            _client.Connect(User.localIp, 6969, outMsg);
         }
 
         public void serverStop()
         {
+            NetworkClasses.deleteServer(User.id);
             _server.Shutdown("Closed");
         }
 
@@ -137,40 +147,6 @@ namespace LoginScreenWinForm
                 }
                 _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             }
-        }
-
-        //Asks the webserver to create a new user with the given info
-        /*public bool addServer()
-        {
-            NameValueCollection data = new NameValueCollection();
-            //COMMAND is what the php looks for to determine it's actions
-            data.Add("COMMAND", "addServer");
-            data.Add("playerDetails", Helpers.ToJSON(playerDetails));
-            data.Add("hostname", hostName);
-            data.Add("hostip", hostIP);
-
-            var response = Helpers.WebMessage(data);
-            if (response.Contains("INVALID"))
-            {
-                return false;
-            } else
-            {
-                return true;
-            }
-
-
-        }*/
-
-        public void delServer()
-        {
-            NameValueCollection data = new NameValueCollection();
-            //COMMAND is what the php looks for to determine it's actions
-            data.Add("COMMAND", "delServer");
-            data.Add("hostname", hostName);
-            data.Add("hostip", hostIP);
-
-            var response = Helpers.WebMessage(data);
-            Console.WriteLine("\nResponse received was :\n{0}", response);
         }
 
         enum PacketTypes

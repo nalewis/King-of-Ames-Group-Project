@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Networking;
 using Controllers.Helpers;
 
-namespace LoginScreenWinForm
+namespace Views
 {
     //TODO add error message checking
     public partial class NewUserForm : Form

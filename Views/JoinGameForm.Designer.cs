@@ -1,4 +1,4 @@
-﻿namespace LoginScreenWinForm
+﻿namespace Views
 {
     partial class ServerListForm
     {

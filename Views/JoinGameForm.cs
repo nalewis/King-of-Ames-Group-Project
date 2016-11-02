@@ -3,12 +3,11 @@ using System.Drawing;
 using System.Windows.Forms;
 
 
-namespace LoginScreenWinForm
+namespace Views
 {
     public partial class ServerListForm : Form
     {
         Client client = new Client();
-        string server;
         public ServerListForm()
         {
             InitializeComponent();

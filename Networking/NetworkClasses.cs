@@ -53,6 +53,7 @@ namespace Networking
                 {
                     User.username = ds.Tables[0].Rows[0]["Username"].ToString();
                     User.localIp = Helpers.GetLocalIPAddress();
+                    User.id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
                     connection.Close();
                     return true;
                 }
@@ -65,6 +66,37 @@ namespace Networking
             return false;
         }
 
+        //Check if the player id is the host of a server (for use by the exit function)
+        public static bool isHosting(string hostid)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Server_List WHERE Host = @hostid";
+                command.Parameters.AddWithValue("@hostid", hostid);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+                connection.Close();
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public static bool createServer(string hostid, string hostip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -73,9 +105,10 @@ namespace Networking
             try
             {
                 command = connection.CreateCommand();
-                command.CommandText = "INSERT INTO Server_List (Host, Host_IP) VALUES (@hostid, @hostip, 'Creating')";
+                command.CommandText = "INSERT INTO Server_List (Host, Host_IP, Status) VALUES (@hostid, @hostip, 'Creating')";
                 command.Parameters.AddWithValue("@hostid", hostid);
                 command.Parameters.AddWithValue("@hostip", hostip);
+                command.ExecuteNonQuery();
             }
             catch (Exception)
             {
@@ -104,6 +137,31 @@ namespace Networking
 
             connection.Close();
             return true;
+        }
+
+        public static DataSet getServer(string hostid, string hostip)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Server_List WHERE Host = @hostid AND Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostid", hostid);
+                command.Parameters.AddWithValue("@hostip", hostip);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return ds;
         }
 
         //Returns the details of all the players in the server hosted by hostname w/ hostip
