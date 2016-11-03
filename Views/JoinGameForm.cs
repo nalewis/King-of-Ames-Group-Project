@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-
+using Networking;
+using System.Data;
 
 namespace Views
 {
@@ -46,16 +47,19 @@ namespace Views
 
         private void formListServers()
         {
-            //ServerDetails[] servers = client.listServers();
-            /*foreach (ServerDetails server in servers)
+            DataSet ds = NetworkClasses.getServers();
+            foreach(DataRow row in ds.Tables[0].Rows)
             {
-                ListViewItem listItem = new ListViewItem(server.hostname);
-                listItem.SubItems.Add(server.hostip);
-                //listItem.SubItems.Add(server.playerDetails.ToString());
+                DataSet grabber = NetworkClasses.getPlayer(Int32.Parse(row["Host"].ToString()));
+
+                ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["Local_IP"].ToString());
+                listItem.SubItems.Add(NetworkClasses.getNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
+                listItem.SubItems.Add(row["Status"].ToString());
 
                 //Add the row entry to the listview
                 serverList.Items.Add(listItem);
-            }*/
+            }
         }
 
         private void serverList_SelectedIndexChanged(object sender, EventArgs e)
