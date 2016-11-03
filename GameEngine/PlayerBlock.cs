@@ -16,7 +16,13 @@ namespace GameEngine
         Vector2 pointsTextPos;
         Vector2 nameTextPos;
 
+        int textLimit = 10;
+        string testString = "Health: 10";
+
         int padding = 10;
+
+        public float X;
+        public float Y;
 
         public PlayerBlock(Texture2D texture, SpriteFont font, string name)
         {
@@ -46,13 +52,16 @@ namespace GameEngine
             energyTextPos = getEnergyTextPos();
             pointsTextPos = getPointsTextPos();
 
+            X = playerPortrait.Width + padding + displayFont.MeasureString(testString).X;
+            Y = playerPortrait.Height + displayFont.MeasureString(testString).Y + padding;
+
         }
 
         protected Vector2 getHealthTextPos()
         {
             return new Vector2(
                 portraitPos.X + playerPortrait.Width + padding,
-                nameTextPos.Y + displayFont.MeasureString(playerName).Y + padding
+                portraitPos.Y
                 );
         }
 
@@ -75,14 +84,22 @@ namespace GameEngine
         protected Vector2 getNameTextPos()
         {
             return new Vector2(
-                portraitPos.X + playerPortrait.Width + padding,
-                portraitPos.Y);
+                portraitPos.X,
+                portraitPos.Y + playerPortrait.Height + padding);
         }
 
         public void draw(SpriteBatch sb)
         {
             sb.Draw(playerPortrait, portraitPos, Color.White);
-            sb.DrawString(displayFont, playerName, nameTextPos, Color.Red);
+            if(playerName.Length < textLimit)
+            {
+                sb.DrawString(displayFont, playerName, nameTextPos, Color.Red);
+            }
+            else
+            {
+                sb.DrawString(displayFont, playerName.Substring(0, textLimit), nameTextPos, Color.Red);
+            }
+           
             sb.DrawString(displayFont, "Health: " + "0", healthTextPos, Color.Blue);
             sb.DrawString(displayFont, "Energy: 0", energyTextPos, Color.Blue);
             sb.DrawString(displayFont, "Points: 0", pointsTextPos, Color.Blue);

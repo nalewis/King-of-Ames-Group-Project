@@ -15,7 +15,15 @@ namespace GameEngine {
         public static Dictionary<string, Texture2D> textureList;
         public static Dictionary<string, SpriteFont> fontList;
 
-        PlayerBlock pb;
+        PlayerBlock pb1;
+        PlayerBlock pb2;
+        PlayerBlock pb3;
+        PlayerBlock pb4;
+        PlayerBlock pb5;
+        PlayerBlock pb6;
+
+        int screenWidth;
+        int screenHeight;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
@@ -23,8 +31,8 @@ namespace GameEngine {
 
             IsMouseVisible = true;
 
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720; //1080
+            graphics.PreferredBackBufferWidth = 1280; //1920
             graphics.IsFullScreen = false;
         }
 
@@ -40,6 +48,8 @@ namespace GameEngine {
             textureList = new Dictionary<string, Texture2D>();
             fontList = new Dictionary<string, SpriteFont>();
 
+            screenWidth = graphics.GraphicsDevice.Viewport.Width;
+            screenHeight = graphics.GraphicsDevice.Viewport.Y;
             //diceRow = new DiceRow();
 
             base.Initialize();
@@ -79,6 +89,8 @@ namespace GameEngine {
                 Exit();
 
             // TODO: Add your update logic here
+            screenWidth = graphics.GraphicsDevice.Viewport.Width;
+            screenHeight = graphics.GraphicsDevice.Viewport.Height;
 
             base.Update(gameTime);
         }
@@ -97,11 +109,21 @@ namespace GameEngine {
             textureList.TryGetValue("cthulhu", out cth);
             fontList.TryGetValue("BigFont", out font);
 
-            pb = new PlayerBlock(cth, font, new Vector2(100, 400), "Fuckface");
+            pb1 = new PlayerBlock(cth, font, new Vector2(10, 10), "block 1");
+            pb2 = new PlayerBlock(cth, font, new Vector2((screenWidth/2) - (pb1.X/2), 10), "block 2");
+            pb3 = new PlayerBlock(cth, font, new Vector2(screenWidth - 10 - pb1.X, 10), "block 3");
+            pb4 = new PlayerBlock(cth, font, new Vector2(10, (screenHeight / 2) - (pb1.Y / 2)), "block 4");
+            pb5 = new PlayerBlock(cth, font, new Vector2(screenWidth - 10 - pb1.X, ((screenHeight/2) - (pb1.Y/2))), "block 5");
+            pb6 = new PlayerBlock(cth, font, new Vector2((screenWidth / 2) - (pb1.X / 2), screenHeight - pb1.Y), "block 6");
 
-            spriteBatch.DrawString(font, "BACK TO COOL RUNNINGS!", new Vector2(400, 300), Color.BlanchedAlmond);
+            spriteBatch.DrawString(font, "screenHeight: " + screenHeight + " screenWidth: " + screenWidth, new Vector2(400, 300), Color.BlanchedAlmond);
 
-            pb.draw(spriteBatch);
+            pb1.draw(spriteBatch);
+            pb2.draw(spriteBatch);
+            pb3.draw(spriteBatch);
+            pb4.draw(spriteBatch);
+            pb5.draw(spriteBatch);
+            pb6.draw(spriteBatch);
 
             spriteBatch.End();
 
