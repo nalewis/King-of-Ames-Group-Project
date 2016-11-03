@@ -245,7 +245,7 @@ namespace Networking
             {
                 command = connection.CreateCommand();
                 command.CommandText = "UPDATE User_List SET _Character = @character WHERE Player_ID = @playerid";
-                command.Parameters.AddWithValue("@character", character);
+                command.Parameters.AddWithValue("@character", character); 
                 command.Parameters.AddWithValue("@playerid", playerid);
                 command.ExecuteNonQuery();
             }
