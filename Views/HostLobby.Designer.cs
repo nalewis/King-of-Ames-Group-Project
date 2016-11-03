@@ -83,6 +83,7 @@
             this.Name = "HostGameListForm";
             this.Text = "ServerListForm";
             this.ResumeLayout(false);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HostGameListForm_Closing);
 
         }
 

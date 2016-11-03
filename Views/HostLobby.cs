@@ -50,6 +50,16 @@ namespace Views
             return null;
         }
 
+        public void HostGameListForm_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                this.Dispose();
+                host.serverStop();
+                Environment.Exit(0);
+            }
+        }
+
         private void leaveGame_Click(object sender, EventArgs e)
         {
             MainMenuForm main = new MainMenuForm();
