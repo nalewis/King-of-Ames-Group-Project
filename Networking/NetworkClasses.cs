@@ -261,24 +261,31 @@ namespace Networking
         public static bool joinServer(string hostip, string playerid)
         {
             var openSpot = getNextAvailableSpot(hostip);
-            MySqlConnection connection = new MySqlConnection(connectString);
-            MySqlCommand command;
-            connection.Open();
-            try
+            if (openSpot != -1)
             {
-                command = connection.CreateCommand();
-                command.CommandText = "UPDATE Server_List SET Player_" + openSpot + " = @playerid WHERE Host_IP = @hostip";
-                command.Parameters.AddWithValue("@hostip", hostip);
-                command.Parameters.AddWithValue("@playerid", playerid);
-                command.ExecuteNonQuery();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+                MySqlConnection connection = new MySqlConnection(connectString);
+                MySqlCommand command;
+                connection.Open();
+                try
+                {
+                    command = connection.CreateCommand();
+                    command.CommandText = "UPDATE Server_List SET Player_" + openSpot + " = @playerid WHERE Host_IP = @hostip";
+                    command.Parameters.AddWithValue("@hostip", hostip);
+                    command.Parameters.AddWithValue("@playerid", playerid);
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
 
-            connection.Close();
-            return true;
+                connection.Close();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static int getNextAvailableSpot(string hostip)
@@ -290,35 +297,43 @@ namespace Networking
             try
             {
                 MySqlCommand command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = '" + hostip + "'";
+                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostip", hostip);
                 MySqlDataAdapter adapter = new MySqlDataAdapter(command);
                 ds = new DataSet();
                 adapter.Fill(ds);
-                connection.Close();
                 if (ds.Tables[0].Rows.Count != 0)
                 {
-                    if(String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
+                    var stuff = String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString());
+                    var thing = ds.Tables[0].Rows[0]["Player_2"].ToString();
+                    if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
                     {
+                        connection.Close();
                         return 2;
                     }
                     else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_3"].ToString()))
                     {
+                        connection.Close();
                         return 3;
                     }
                     else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_4"].ToString()))
                     {
+                        connection.Close();
                         return 4;
                     }
                     else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_5"].ToString()))
                     {
+                        connection.Close();
                         return 5;
                     }
                     else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_6"].ToString()))
                     {
+                        connection.Close();
                         return 6;
                     }
                     else
                     {
+                        connection.Close();
                         return -1;
                     }
                 }

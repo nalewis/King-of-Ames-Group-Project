@@ -214,7 +214,7 @@ namespace Views
                             {
                                 others.Add(inc.ReadString());
                             }
-                            Console.WriteLine("Recieved Users");
+                            Console.WriteLine("Received Users");
                         }
                         break;
                     default:
