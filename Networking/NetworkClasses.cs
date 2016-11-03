@@ -54,7 +54,7 @@ namespace Networking
                     User.username = ds.Tables[0].Rows[0]["Username"].ToString();
                     User.localIp = Helpers.GetLocalIPAddress();
                     User.id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
-                    User.character = ds.Tables[0].Rows[0]["Character"].ToString();
+                    User.character = ds.Tables[0].Rows[0]["_Character"].ToString();
                     connection.Close();
                     return true;
                 }
@@ -165,6 +165,30 @@ namespace Networking
             return ds;
         }
 
+        public static DataSet getServer(string hostip)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostip", hostip);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return ds;
+        }
+
         public static DataSet getServers()
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -210,6 +234,28 @@ namespace Networking
 
             connection.Close();
             return ds;
+        }
+
+        public static bool updateCharacter(string playerid, string character)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            MySqlCommand command;
+            connection.Open();
+            try
+            {
+                command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_List SET _Character = @character WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@character", character);
+                command.Parameters.AddWithValue("@playerid", playerid);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return true;
         }
 
         public static bool joinServer(string hostip, string playerid)
