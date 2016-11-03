@@ -122,6 +122,7 @@
             this.Name = "ServerListForm";
             this.Text = "ServerList";
             this.ResumeLayout(false);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerListForm_Closing);
 
         }
 

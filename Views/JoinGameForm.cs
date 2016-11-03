@@ -21,6 +21,16 @@ namespace Views
             formListServers();
         }
 
+        public void ServerListForm_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                this.Dispose();
+                Client.clientStop();
+                Environment.Exit(0);
+            }
+        }
+
         private void mainMenu_Click(object sender, EventArgs e)
         {
             MainMenuForm main = new MainMenuForm();

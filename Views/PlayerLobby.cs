@@ -33,10 +33,5 @@ namespace Views
                 Environment.Exit(0);
             }
         }
-
-        private void playerList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
     }
 }

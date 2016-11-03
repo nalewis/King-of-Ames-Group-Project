@@ -17,6 +17,16 @@ namespace Views
             InitializeComponent();
         }
 
+        public void MainMenuForm_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                this.Dispose();
+                Client.clientStop();
+                Environment.Exit(0);
+            }
+        }
+
         private void HostButton_Click(object sender, EventArgs e)
         {
             Form gameList = new HostGameListForm();

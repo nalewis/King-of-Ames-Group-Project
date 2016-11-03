@@ -84,6 +84,7 @@
             this.Name = "MainMenuForm";
             this.Text = "MainMenuForm";
             this.ResumeLayout(false);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainMenuForm_Closing);
 
         }
 
