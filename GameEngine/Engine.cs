@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GameEngine.DiceGraphics;
+using GamePieces.Dice;
+using Controllers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
@@ -15,6 +18,8 @@ namespace GameEngine {
         public static Dictionary<string, Texture2D> textureList;
         public static Dictionary<string, SpriteFont> fontList;
 
+        DiceRow diceRow;
+
         PlayerBlock pb1;
         PlayerBlock pb2;
         PlayerBlock pb3;
@@ -22,8 +27,15 @@ namespace GameEngine {
         PlayerBlock pb5;
         PlayerBlock pb6;
 
+        Vector2[] playerPositions;
+
         int screenWidth;
         int screenHeight;
+
+        bool firstUpdate;
+
+        KeyboardState oldState;
+        KeyboardState newState;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
@@ -49,9 +61,20 @@ namespace GameEngine {
             fontList = new Dictionary<string, SpriteFont>();
 
             screenWidth = graphics.GraphicsDevice.Viewport.Width;
-            screenHeight = graphics.GraphicsDevice.Viewport.Y;
-            //diceRow = new DiceRow();
+            screenHeight = graphics.GraphicsDevice.Viewport.Height;
+            diceRow = new DiceRow(new Vector2(400, 350));
 
+            playerPositions = new Vector2[] {
+                new Vector2(10, 10),
+                new Vector2((screenWidth/2) - (300/2), 10),
+                new Vector2(screenWidth - 10 - 300, 10),
+                new Vector2(10, ((screenHeight / 2) - (200 / 2))),
+                new Vector2(screenWidth - 10 - 300, ((screenHeight/2) - (200/2))),
+                new Vector2((screenWidth / 2) - (300 / 2), screenHeight - 200)
+
+            };
+
+            firstUpdate = true;
             base.Initialize();
         }
 
@@ -88,10 +111,32 @@ namespace GameEngine {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            newState = Keyboard.GetState();
+
             // TODO: Add your update logic here
             screenWidth = graphics.GraphicsDevice.Viewport.Width;
             screenHeight = graphics.GraphicsDevice.Viewport.Height;
 
+            if (firstUpdate)
+            {
+                GamePieces.Session.Game.StartTurn();
+                GamePieces.Session.Game.Roll();
+                
+                foreach(Die die in DiceController.getDice())
+                {
+                    diceRow.addDie(die);
+                }
+                firstUpdate = false;
+            }
+
+            if (newState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+                DiceController.roll();
+
+            diceRow.UpdateDice();
+
+
+
+            oldState = newState;
             base.Update(gameTime);
         }
 
@@ -100,7 +145,7 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
@@ -109,14 +154,15 @@ namespace GameEngine {
             textureList.TryGetValue("cthulhu", out cth);
             fontList.TryGetValue("BigFont", out font);
 
-            pb1 = new PlayerBlock(cth, font, new Vector2(10, 10), "block 1");
-            pb2 = new PlayerBlock(cth, font, new Vector2((screenWidth/2) - (pb1.X/2), 10), "block 2");
-            pb3 = new PlayerBlock(cth, font, new Vector2(screenWidth - 10 - pb1.X, 10), "block 3");
-            pb4 = new PlayerBlock(cth, font, new Vector2(10, (screenHeight / 2) - (pb1.Y / 2)), "block 4");
-            pb5 = new PlayerBlock(cth, font, new Vector2(screenWidth - 10 - pb1.X, ((screenHeight/2) - (pb1.Y/2))), "block 5");
-            pb6 = new PlayerBlock(cth, font, new Vector2((screenWidth / 2) - (pb1.X / 2), screenHeight - pb1.Y), "block 6");
 
-            spriteBatch.DrawString(font, "screenHeight: " + screenHeight + " screenWidth: " + screenWidth, new Vector2(400, 300), Color.BlanchedAlmond);
+            pb1 = new PlayerBlock(cth, font, playerPositions[0], "block 1");
+            pb2 = new PlayerBlock(cth, font, playerPositions[1], "block 2");
+            pb3 = new PlayerBlock(cth, font, playerPositions[2], "block 3");
+            pb4 = new PlayerBlock(cth, font, playerPositions[3], "block 4");
+            pb5 = new PlayerBlock(cth, font, playerPositions[4], "block 5");
+            pb6 = new PlayerBlock(cth, font, playerPositions[5], "block 6");
+
+            spriteBatch.DrawString(font, "screenHeight: " + screenHeight + " screenWidth: " + screenWidth + " pb1.X: " + pb1.Y, new Vector2(400, 300), Microsoft.Xna.Framework.Color.BlanchedAlmond);
 
             pb1.draw(spriteBatch);
             pb2.draw(spriteBatch);
@@ -124,6 +170,8 @@ namespace GameEngine {
             pb4.draw(spriteBatch);
             pb5.draw(spriteBatch);
             pb6.draw(spriteBatch);
+
+            diceRow.Draw(spriteBatch);
 
             spriteBatch.End();
 

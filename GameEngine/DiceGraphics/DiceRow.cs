@@ -17,6 +17,13 @@ namespace GameEngine.DiceGraphics
             positon = new Vector2();
             filled = 0;
         }
+
+        public DiceRow(Vector2 pos)
+        {
+            diceRow = new DiceImage[6];
+            positon = pos;
+            filled = 0;
+        }
        
         public void addDie(Die die)
         {

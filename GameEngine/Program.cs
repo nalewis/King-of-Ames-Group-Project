@@ -1,4 +1,5 @@
 ﻿using System;
+using Controllers;
 
 namespace GameEngine
 {
@@ -8,6 +9,9 @@ namespace GameEngine
         [STAThread]
         public static void Main()
         {
+            LobbyController.AddPlayer(0, "Bill");
+            LobbyController.AddPlayer(1, "Ted");
+            LobbyController.StartGame();
             using (var game = new Engine())
                 game.Run();
         }

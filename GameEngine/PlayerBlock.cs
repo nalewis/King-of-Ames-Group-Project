@@ -21,7 +21,7 @@ namespace GameEngine
 
         int padding = 10;
 
-        public float X;
+        public float X = 300;
         public float Y;
 
         public PlayerBlock(Texture2D texture, SpriteFont font, string name)
@@ -52,7 +52,6 @@ namespace GameEngine
             energyTextPos = getEnergyTextPos();
             pointsTextPos = getPointsTextPos();
 
-            X = playerPortrait.Width + padding + displayFont.MeasureString(testString).X;
             Y = playerPortrait.Height + displayFont.MeasureString(testString).Y + padding;
 
         }
