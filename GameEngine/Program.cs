@@ -3,10 +3,10 @@
 namespace GameEngine
 {
 #if WINDOWS || LINUX
-    public static class EngineTest
+    public static class Program
     {
         [STAThread]
-        static void Main()
+        public static void Main()
         {
             using (var game = new Engine())
                 game.Run();

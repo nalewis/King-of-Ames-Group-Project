@@ -4,7 +4,8 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}</ProjectGuid>
+    <ProjectGuid>{C6FA0BCF-9885-4D4F-9301-92ACCF61DC85}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Controllers</RootNamespace>
@@ -40,7 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers.cs" />
-    <Compile Include="Test.cs" />
+    <Compile Include="CardController.cs" />
+    <Compile Include="LobbyController.cs" />
+    <Compile Include="MonsterController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Data Structures\Data Structures.csproj">

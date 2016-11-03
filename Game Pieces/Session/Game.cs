@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GamePieces.Cards;
 using GamePieces.Monsters;
@@ -8,7 +9,7 @@ namespace GamePieces.Session
     public static class Game
     {
         //Monsters
-        public static Monster Current { get; set; }
+        public static Monster Current { get; private set; }
 
         public static readonly List<Monster>
             Monsters = new List<Monster>(),
@@ -29,13 +30,14 @@ namespace GamePieces.Session
         public static Stack<Card> Deck;
         public static readonly List<Card> CardsForSale = new List<Card>();
 
-        public static void StartGame(List<string> names)
+        public static void StartGame(List<int> playerIds, List<string> names)
         {
+            if (playerIds.Count != names.Count) throw new Exception("Player IDs and Names must have the same count");
             Deck = new Stack<Card>(Card.GetCards());
             for (var i = 0; i < 3; i++) if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
             Monsters.Clear();
             Dead.Clear();
-            names.ForEach(name => Monsters.Add(new Monster(name)));
+            for(var i = 0; i < playerIds.Count; i++) Monsters.Add(new Monster(playerIds[i], names[i]));
             Current = Monsters.First();
             Board.Reset();
         }

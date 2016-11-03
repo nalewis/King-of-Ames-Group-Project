@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Testing;
-
-namespace ConsoleTesting
+﻿namespace ConsoleTesting
 {
     class Program
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GamePieces.Session;
 
-namespace Testing
+namespace ConsoleTesting
 {
     public class ConsoleGame
     {
@@ -11,7 +11,7 @@ namespace Testing
         {
             while (true)
             {
-                Game.StartGame(new List<string>() {"Godzilla", "King Kong"});
+                Game.StartGame(new List<int>(){0, 1}, new List<string>() {"Godzilla", "King Kong"});
 
                 while (Game.Winner == null)
                 {
