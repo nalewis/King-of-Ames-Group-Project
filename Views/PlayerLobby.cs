@@ -1,4 +1,5 @@
-﻿using Networking;
+﻿using Controllers.User;
+using Networking;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,6 +35,7 @@ namespace Views
         {
             MainMenuForm main = new MainMenuForm();
             main.Show();
+            NetworkClasses.updateCharacter(User.id, null);
             this.Dispose();
         }
 
@@ -50,7 +52,6 @@ namespace Views
         private void updateList()
         {
             playerList.Items.Clear();
-
             DataSet ds = NetworkClasses.getServer(Client.conn);
             DataRow row = ds.Tables[0].Rows[0];
 
@@ -104,6 +105,11 @@ namespace Views
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
                 playerList.Items.Add(listItem);
             }
+        }
+
+        private void select_char_Click(object sender, EventArgs e)
+        {
+            NetworkClasses.updateCharacter(User.id, char_list.SelectedItem.ToString());
         }
     }
 }

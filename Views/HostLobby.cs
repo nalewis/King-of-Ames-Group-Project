@@ -29,14 +29,14 @@ namespace Views
 
         public void HostGameListForm_Closing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
+            //if (e.CloseReason == CloseReason.UserClosing)
+            //{
                 timer.Stop();
                 this.Dispose();
                 Client.clientStop();
                 host.serverStop();
                 Environment.Exit(0);
-            }
+            //}
         }
 
         private void leaveGame_Click(object sender, EventArgs e)

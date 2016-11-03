@@ -100,6 +100,7 @@
             this.select_char.TabIndex = 6;
             this.select_char.Text = "Select Character";
             this.select_char.UseVisualStyleBackColor = true;
+            this.select_char.Click += new System.EventHandler(this.select_char_Click);
             // 
             // char_label
             // 
