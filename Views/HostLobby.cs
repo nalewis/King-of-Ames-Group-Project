@@ -33,6 +33,7 @@ namespace Views
             {
                 timer.Stop();
                 this.Dispose();
+                Client.clientStop();
                 host.serverStop();
                 Environment.Exit(0);
             }
@@ -44,6 +45,7 @@ namespace Views
             MainMenuForm main = new MainMenuForm();
             main.Show();
             this.Dispose();
+            NetworkClasses.updateCharacter(User.id, null);
             host.serverStop();
         }
 

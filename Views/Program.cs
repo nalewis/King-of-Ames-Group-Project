@@ -226,6 +226,7 @@ namespace Views
         public static void clientStop()
         {
             _client.Shutdown("Closed");
+            NetworkClasses.updateCharacter(User.id, null);
         }
 
         enum PacketTypes
