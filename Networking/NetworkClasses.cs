@@ -245,7 +245,7 @@ namespace Networking
             {
                 command = connection.CreateCommand();
                 command.CommandText = "UPDATE User_List SET _Character = @character WHERE Player_ID = @playerid";
-                command.Parameters.AddWithValue("@character", character); 
+                command.Parameters.AddWithValue("@character", character);
                 command.Parameters.AddWithValue("@playerid", playerid);
                 command.ExecuteNonQuery();
             }
@@ -304,8 +304,8 @@ namespace Networking
                 adapter.Fill(ds);
                 if (ds.Tables[0].Rows.Count != 0)
                 {
-                    var stuff = String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString());
-                    var thing = ds.Tables[0].Rows[0]["Player_2"].ToString();
+                    //var stuff = String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString());
+                    //var thing = ds.Tables[0].Rows[0]["Player_2"].ToString();
                     if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
                     {
                         connection.Close();
@@ -345,6 +345,85 @@ namespace Networking
 
             connection.Close();
             return -1;
+        }
+
+        public static void findRemovePlayer(string hostip, string playerid)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+            int remove = -1;
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostip", hostip);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+                if (ds.Tables[0].Rows.Count != 0)
+                {
+                    //var stuff = String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString());
+                    //var thing = ds.Tables[0].Rows[0]["Player_2"].ToString();
+                    if (String.Compare(ds.Tables[0].Rows[0]["Player_2"].ToString(), playerid) == 0)
+                    {
+                        connection.Close();
+                        remove = 2;
+                    }
+                    else if (String.Compare(ds.Tables[0].Rows[0]["Player_3"].ToString(), playerid) == 0)
+                    {
+                        connection.Close();
+                        remove = 3;
+                    }
+                    else if (String.Compare(ds.Tables[0].Rows[0]["Player_4"].ToString(), playerid) == 0)
+                    {
+                        connection.Close();
+                        remove = 4;
+                    }
+                    else if (String.Compare(ds.Tables[0].Rows[0]["Player_5"].ToString(), playerid) == 0)
+                    {
+                        connection.Close();
+                        remove = 5;
+                    }
+                    else if (String.Compare(ds.Tables[0].Rows[0]["Player_6"].ToString(), playerid) == 0)
+                    {
+                        connection.Close();
+                        remove = 6;
+                    }
+                    else
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            removePlayer(hostip, remove);
+        }
+
+        public static void removePlayer(string hostip, int playerPosition)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = '' WHERE Host_IP = @hostip";//TODO maybe set to null?
+                command.Parameters.AddWithValue("@hostip", hostip);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
         }
 
         public static int getNumPlayers(int Server_ID)
