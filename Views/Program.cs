@@ -28,6 +28,7 @@ namespace Views
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Client._client.Start();
             Application.Run(new LoginForm());
         }
         //WIP TODO
@@ -166,23 +167,17 @@ namespace Views
         }
 
     }
-    class Client
+    static class Client
     {
-        public string myIP = User.localIp;
-        public string myName = User.username;
-        public bool isConnecting = false;
-        public string conn = "";
-        private static NetClient _client;
-        private List<string> others = new List<string>();
+        public static string myIP = User.localIp;
+        public static string myName = User.username;
+        public static bool isConnecting = false;
+        public static string conn = "";
+        public static NetClient _client = new NetClient(new NetPeerConfiguration("King of Ames"));
+        private static List<string> others = new List<string>();
 
-        public Client()
-        {
 
-            _client = new NetClient(new NetPeerConfiguration("King of Ames"));
-            _client.Start();
-        }
-
-        public bool connect()
+        public static bool connect()
         {
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
@@ -193,7 +188,7 @@ namespace Views
             return true;
         }
 
-        public void recieveLoop()
+        public static void recieveLoop()
         {
             while (true)
             {
@@ -228,7 +223,7 @@ namespace Views
             }
         }
 
-        public void clientStop()
+        public static void clientStop()
         {
             _client.Shutdown("Closed");
         }

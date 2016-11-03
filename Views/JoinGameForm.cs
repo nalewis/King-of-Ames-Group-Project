@@ -7,7 +7,6 @@ namespace Views
 {
     public partial class ServerListForm : Form
     {
-        Client client = new Client();
         public ServerListForm()
         {
             InitializeComponent();
@@ -24,7 +23,7 @@ namespace Views
         private void mainMenu_Click(object sender, EventArgs e)
         {
             MainMenuForm main = new MainMenuForm();
-            client.clientStop();
+            Client.clientStop();
             main.Show();
             this.Dispose();
         }
@@ -33,7 +32,7 @@ namespace Views
         {
             if(join.Enabled)
             {
-                bool conn = client.connect();
+                bool conn = Client.connect();
                 if(conn)
                 {
                     Console.WriteLine("Connected");
@@ -63,7 +62,7 @@ namespace Views
             //selected items[0] is the row, subitems[1] is the ip
             var data = serverList.SelectedItems[0].SubItems[1].Text;
             Console.WriteLine("Selected game's IP is: " + data);
-            client.conn = data;
+            Client.conn = data;
             join.Enabled = true;
             join.BackColor = Color.LightGray;
         }
