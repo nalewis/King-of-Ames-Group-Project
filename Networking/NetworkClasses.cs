@@ -54,6 +54,7 @@ namespace Networking
                     User.username = ds.Tables[0].Rows[0]["Username"].ToString();
                     User.localIp = Helpers.GetLocalIPAddress();
                     User.id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
+                    User.character = ds.Tables[0].Rows[0]["Character"].ToString();
                     connection.Close();
                     return true;
                 }

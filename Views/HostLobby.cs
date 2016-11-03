@@ -14,7 +14,8 @@ namespace Views
 
             //First row entry is host
             ListViewItem hostItem = new ListViewItem(User.username);
-            hostItem.SubItems.Add(User.localIp);
+            hostItem.SubItems.Add(User.character);
+
 
             //Add the row entry to the listview
             playerList.Items.Add(hostItem);
@@ -66,6 +67,11 @@ namespace Views
             main.Show();
             this.Dispose();
             host.serverStop();
+        }
+
+        private void select_char_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

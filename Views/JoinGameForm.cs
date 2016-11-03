@@ -51,6 +51,9 @@ namespace Views
                     Console.WriteLine("Connected");
                     Console.WriteLine(serverList.SelectedItems[0].SubItems[0].Text + " : " + serverList.SelectedItems[0].SubItems[1].Text);
                     //client.joinServer(serverList.SelectedItems[0].SubItems[0].Text, serverList.SelectedItems[0].SubItems[1].Text);
+                    PlayerLobby lobby = new PlayerLobby();
+                    lobby.Show();
+                    this.Dispose();
                 }
                 else { Console.WriteLine("Couldn't Connect"); }
             }
