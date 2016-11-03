@@ -1,4 +1,4 @@
-﻿namespace Views
+namespace Views
 {
     partial class ServerListForm
     {

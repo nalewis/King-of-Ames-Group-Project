@@ -221,7 +221,8 @@ namespace Networking
             {
                 command = connection.CreateCommand();
                 command.CommandText = "UPDATE Server_List SET Player_" + openSpot + " = @playerid WHERE Host_IP = @hostip";
-                command.Parameters.AddWithValue("@Host_IP", hostip);
+                command.Parameters.AddWithValue("@hostip", hostip);
+                command.Parameters.AddWithValue("@playerid", playerid);
                 command.ExecuteNonQuery();
             }
             catch (Exception)
@@ -242,8 +243,7 @@ namespace Networking
             try
             {
                 MySqlCommand command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
-                command.Parameters.AddWithValue("@Host_IP", hostip);
+                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = '" + hostip + "'";
                 MySqlDataAdapter adapter = new MySqlDataAdapter(command);
                 ds = new DataSet();
                 adapter.Fill(ds);
