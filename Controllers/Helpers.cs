@@ -52,5 +52,6 @@ namespace Controllers.User
         public static string username = "";
         public static string localIp = "";
         public static string id = "";
+        public static string character = "";
     }
 }

@@ -184,7 +184,7 @@ namespace Views
             Thread loop = new Thread(recieveLoop);
             loop.Start();
             _client.Connect(conn, 6969, outMsg);
-           if(_client.ConnectionStatus == NetConnectionStatus.Disconnected) { return false; }
+           //if(_client.ConnectionStatus == NetConnectionStatus.Disconnected) { return false; }
             return true;
         }
 

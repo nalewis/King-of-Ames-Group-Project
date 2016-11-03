@@ -33,12 +33,15 @@
             this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.winLoss = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.char_list = new System.Windows.Forms.ComboBox();
+            this.select_char = new System.Windows.Forms.Button();
+            this.char_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // leaveGame
             // 
             this.leaveGame.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.leaveGame.Location = new System.Drawing.Point(83, 212);
+            this.leaveGame.Location = new System.Drawing.Point(160, 239);
             this.leaveGame.Name = "leaveGame";
             this.leaveGame.Size = new System.Drawing.Size(112, 23);
             this.leaveGame.TabIndex = 4;
@@ -73,16 +76,55 @@
             // 
             this.winLoss.Text = "Win/Loss";
             // 
+            // char_list
+            // 
+            this.char_list.FormattingEnabled = true;
+            this.char_list.Items.AddRange(new object[] {
+            "Alienoid",
+            "Cyber Bunny",
+            "Giga Zaur",
+            "Kraken",
+            "Mecha Dragon",
+            "The King"});
+            this.char_list.Location = new System.Drawing.Point(88, 212);
+            this.char_list.Name = "char_list";
+            this.char_list.Size = new System.Drawing.Size(131, 21);
+            this.char_list.TabIndex = 5;
+            // 
+            // select_char
+            // 
+            this.select_char.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.select_char.Location = new System.Drawing.Point(12, 239);
+            this.select_char.Name = "select_char";
+            this.select_char.Size = new System.Drawing.Size(112, 23);
+            this.select_char.TabIndex = 6;
+            this.select_char.Text = "Select Character";
+            this.select_char.UseVisualStyleBackColor = true;
+            // 
+            // char_label
+            // 
+            this.char_label.AutoSize = true;
+            this.char_label.Location = new System.Drawing.Point(26, 215);
+            this.char_label.Name = "char_label";
+            this.char_label.Size = new System.Drawing.Size(56, 13);
+            this.char_label.TabIndex = 7;
+            this.char_label.Text = "Character:";
+            // 
             // PlayerLobby
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(284, 272);
+            this.Controls.Add(this.char_label);
+            this.Controls.Add(this.select_char);
+            this.Controls.Add(this.char_list);
             this.Controls.Add(this.leaveGame);
             this.Controls.Add(this.playerList);
             this.Name = "PlayerLobby";
             this.Text = "PlayerLobby";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerLobby_Closing);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -93,5 +135,8 @@
         private System.Windows.Forms.ColumnHeader playerName;
         private System.Windows.Forms.ColumnHeader character;
         private System.Windows.Forms.ColumnHeader winLoss;
+        private System.Windows.Forms.ComboBox char_list;
+        private System.Windows.Forms.Button select_char;
+        private System.Windows.Forms.Label char_label;
     }
 }
