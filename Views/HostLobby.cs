@@ -2,58 +2,36 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Controllers.User;
+using Networking;
+using System.Data;
 
 namespace Views
 {
     public partial class HostGameListForm : Form
     {
         Host host = new Host();
+        Timer timer;
         public HostGameListForm()
         {
             InitializeComponent();
 
-            //First row entry is host
-            ListViewItem hostItem = new ListViewItem(User.username);
-            hostItem.SubItems.Add(User.localIp);
-
-            //Add the row entry to the listview
-            playerList.Items.Add(hostItem);
-
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            Timer timer = new Timer();
-            timer.Interval = (10 * 1000); // 10 secs
+            timer = new Timer();
+            timer.Interval = (5 * 1000); // 5 secs
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
-
-            //playerList.Items.Clear();
-
-
-            foreach (ListViewItem item in playerList.Items)
-            {
-                //TODO one of these prints out the text data for all the entries in the listview
-                //Console.WriteLine(item.Text);
-                //Console.WriteLine(item.SubItems);
-                //Console.WriteLine(item.SubItems[0]);
-                //Console.WriteLine(item.SubItems[0].Text);
-            }
-                //refresh here...
-                //playerList.Items.Add("Hi");
-            //Console.WriteLine(playerList.Items.ToString());
-        }
-
-        private List<string> updatePlayers()
-        {
-            return null;
+            updateList();
         }
 
         public void HostGameListForm_Closing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
+                timer.Stop();
                 this.Dispose();
                 host.serverStop();
                 Environment.Exit(0);
@@ -62,10 +40,65 @@ namespace Views
 
         private void leaveGame_Click(object sender, EventArgs e)
         {
+            timer.Stop();
             MainMenuForm main = new MainMenuForm();
             main.Show();
             this.Dispose();
             host.serverStop();
+        }
+
+        private void updateList()
+        {
+            playerList.Items.Clear();
+
+            DataSet ds = NetworkClasses.getServer(User.id, User.localIp);
+            DataRow row = ds.Tables[0].Rows[0];
+
+            DataSet grabber = NetworkClasses.getPlayer(Int32.Parse(row["Host"].ToString()));
+
+            //Host
+            ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+            //listItem.SubItems.Add(grabber.Tables[0].Rows[0]["Local_IP"].ToString());
+            //listItem.SubItems.Add(NetworkClasses.getNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
+            //listItem.SubItems.Add(row["Status"].ToString());
+
+            //Add the row entry to the listview
+            playerList.Items.Add(listItem);
+
+            if (!String.IsNullOrEmpty(row["Player_2"].ToString()))
+            {
+                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_2"].ToString()));
+                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                playerList.Items.Add(listItem);
+            }
+
+            if (!String.IsNullOrEmpty(row["Player_3"].ToString()))
+            {
+                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_3"].ToString()));
+                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                playerList.Items.Add(listItem);
+            }
+
+            if (!String.IsNullOrEmpty(row["Player_4"].ToString()))
+            {
+                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_4"].ToString()));
+                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                playerList.Items.Add(listItem);
+            }
+
+            if (!String.IsNullOrEmpty(row["Player_5"].ToString()))
+            {
+                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_5"].ToString()));
+                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                playerList.Items.Add(listItem);
+            }
+
+            if (!String.IsNullOrEmpty(row["Player_6"].ToString()))
+            {
+                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_6"].ToString()));
+                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                playerList.Items.Add(listItem);
+            }
         }
     }
 }
