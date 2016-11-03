@@ -164,8 +164,7 @@ namespace Networking
             return ds;
         }
 
-        //Returns the details of all the players in the server hosted by hostname w/ hostip
-        public DataSet getServers()
+        public static DataSet getServers()
         {
             MySqlConnection connection = new MySqlConnection(connectString);
             connection.Open();
@@ -186,6 +185,155 @@ namespace Networking
 
             connection.Close();
             return ds;
+        }
+
+        public static DataSet getPlayer(int Player_ID)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @Player_ID";
+                command.Parameters.AddWithValue("@Player_ID", Player_ID);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return ds;
+        }
+
+        public static bool joinServer(string hostip, string playerid)
+        {
+            var openSpot = getNextAvailableSpot(hostip);
+            MySqlConnection connection = new MySqlConnection(connectString);
+            MySqlCommand command;
+            connection.Open();
+            try
+            {
+                command = connection.CreateCommand();
+                command.CommandText = "UPDATE Server_List SET Player_" + openSpot + " = @playerid WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@Host_IP", hostip);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return true;
+        }
+
+        public static int getNextAvailableSpot(string hostip)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@Host_IP", hostip);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+                connection.Close();
+                if (ds.Tables[0].Rows.Count != 0)
+                {
+                    if(String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
+                    {
+                        return 2;
+                    }
+                    else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_3"].ToString()))
+                    {
+                        return 3;
+                    }
+                    else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_4"].ToString()))
+                    {
+                        return 4;
+                    }
+                    else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_5"].ToString()))
+                    {
+                        return 5;
+                    }
+                    else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_6"].ToString()))
+                    {
+                        return 6;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return -1;
+        }
+
+        public static int getNumPlayers(int Server_ID)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+            int count = -1;
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Server_List WHERE Server_ID = @Server_ID";
+                command.Parameters.AddWithValue("@Server_ID", Server_ID);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+                connection.Close();
+
+                if (ds.Tables[0].Rows.Count != 0)
+                {
+                    count = 1;
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
+                    {
+                        count++;
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_3"].ToString()))
+                    {
+                        count++;
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_4"].ToString()))
+                    {
+                        count++;
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_5"].ToString()))
+                    {
+                        count++;
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_6"].ToString()))
+                    {
+                        count++;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return count;
         }
     }
 }
