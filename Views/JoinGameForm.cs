@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Networking;
 using System.Data;
+using Controllers.User;
 
 namespace Views
 {
@@ -37,6 +38,7 @@ namespace Views
                 bool conn = client.connect();
                 if(conn)
                 {
+                    NetworkClasses.joinServer(serverList.SelectedItems[0].SubItems[1].Text, User.id);
                     Console.WriteLine("Connected");
                     Console.WriteLine(serverList.SelectedItems[0].SubItems[0].Text + " : " + serverList.SelectedItems[0].SubItems[1].Text);
                     //client.joinServer(serverList.SelectedItems[0].SubItems[0].Text, serverList.SelectedItems[0].SubItems[1].Text);
