@@ -8,10 +8,14 @@ namespace GameEngine {
     /// This is the main type for your game.
     /// </summary>
     public class Engine : Game {
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
         public static Dictionary<string, Texture2D> textureList;
-        SpriteFont font;
+        public static Dictionary<string, SpriteFont> fontList;
+
+        PlayerBlock pb;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
@@ -32,7 +36,10 @@ namespace GameEngine {
         /// </summary>
         protected override void Initialize() {
             // TODO: Add your initialization logic here
+
             textureList = new Dictionary<string, Texture2D>();
+            fontList = new Dictionary<string, SpriteFont>();
+
             //diceRow = new DiceRow();
 
             base.Initialize();
@@ -45,7 +52,11 @@ namespace GameEngine {
         protected override void LoadContent() {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            font = Content.Load<SpriteFont>("NewSpriteFont");
+
+            LoadTextures();
+            LoadFonts();
+
+           
 
             // TODO: use this.Content to load your game content here
         }
@@ -81,10 +92,52 @@ namespace GameEngine {
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.DrawString(font, "BACK TO COOL RUNNINGS!", new Vector2(600, 300), Color.BlanchedAlmond);
+            SpriteFont font;
+            Texture2D cth;
+            textureList.TryGetValue("cthulhu", out cth);
+            fontList.TryGetValue("BigFont", out font);
+
+            pb = new PlayerBlock(cth, font, new Vector2(100, 400), "Fuckface");
+
+            spriteBatch.DrawString(font, "BACK TO COOL RUNNINGS!", new Vector2(400, 300), Color.BlanchedAlmond);
+
+            pb.draw(spriteBatch);
+
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+
+        private void AddTexture(string filePath, string name)
+        {
+            Texture2D toAdd = Content.Load<Texture2D>(filePath);
+            textureList.Add(name, toAdd);
+        }
+
+        private void AddFont(string filePath, string name)
+        {
+            SpriteFont toAdd = Content.Load<SpriteFont>(filePath);
+            fontList.Add(name, toAdd);
+        }
+
+        private void LoadTextures()
+        {
+            //Load monster sprites
+            AddTexture("monsterTextures\\cthulhu", "cthulhu");
+
+            //Load dice sprites
+            AddTexture("diceTextures\\dice1", "dice1");
+            AddTexture("diceTextures\\dice2", "dice2");
+            AddTexture("diceTextures\\dice3", "dice3");
+            AddTexture("diceTextures\\diceAttack", "diceAttack");
+            AddTexture("diceTextures\\diceHealth", "diceHealth");
+            AddTexture("diceTextures\\diceEnergy", "diceEnergy");
+        }
+
+        private void LoadFonts()
+        {
+            AddFont("Fonts\\BigFont", "BigFont");
+        }
+
     }
 }
