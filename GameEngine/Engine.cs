@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 
 namespace GameEngine {
     /// <summary>
@@ -20,12 +21,17 @@ namespace GameEngine {
 
         DiceRow diceRow;
 
+        List<PlayerBlock> pBlocks;
+        List<GamePieces.Monsters.Monster> players;
+
+        /*
         PlayerBlock pb1;
         PlayerBlock pb2;
         PlayerBlock pb3;
         PlayerBlock pb4;
         PlayerBlock pb5;
         PlayerBlock pb6;
+        */
 
         Vector2[] playerPositions;
 
@@ -73,6 +79,12 @@ namespace GameEngine {
                 new Vector2((screenWidth / 2) - (300 / 2), screenHeight - 200)
 
             };
+
+            pBlocks = new List<PlayerBlock>();
+            players = GamePieces.Session.Game.Monsters;
+
+
+
 
             firstUpdate = true;
             base.Initialize();
@@ -154,22 +166,39 @@ namespace GameEngine {
             textureList.TryGetValue("cthulhu", out cth);
             fontList.TryGetValue("BigFont", out font);
 
+            int cnt = 0;
+            foreach(GamePieces.Monsters.Monster player in players)
+            {
+                PlayerBlock pb = new PlayerBlock(cth, font, playerPositions[cnt], player);
+                pBlocks.Add(pb);
+                cnt++;
+            }
 
+/*
             pb1 = new PlayerBlock(cth, font, playerPositions[0], "block 1");
             pb2 = new PlayerBlock(cth, font, playerPositions[1], "block 2");
             pb3 = new PlayerBlock(cth, font, playerPositions[2], "block 3");
             pb4 = new PlayerBlock(cth, font, playerPositions[3], "block 4");
             pb5 = new PlayerBlock(cth, font, playerPositions[4], "block 5");
             pb6 = new PlayerBlock(cth, font, playerPositions[5], "block 6");
+*/
 
-            spriteBatch.DrawString(font, "screenHeight: " + screenHeight + " screenWidth: " + screenWidth + " pb1.X: " + pb1.Y, new Vector2(400, 300), Microsoft.Xna.Framework.Color.BlanchedAlmond);
+            spriteBatch.DrawString(font, "screenHeight: " + screenHeight + " screenWidth: " + screenWidth, new Vector2(400, 300), Microsoft.Xna.Framework.Color.BlanchedAlmond);
 
+            foreach(PlayerBlock pb in pBlocks)
+            {
+                pb.draw(spriteBatch);
+            }
+
+            /*
             pb1.draw(spriteBatch);
             pb2.draw(spriteBatch);
             pb3.draw(spriteBatch);
             pb4.draw(spriteBatch);
             pb5.draw(spriteBatch);
             pb6.draw(spriteBatch);
+
+    */
 
             diceRow.Draw(spriteBatch);
 

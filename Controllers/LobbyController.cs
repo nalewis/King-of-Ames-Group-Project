@@ -32,6 +32,11 @@ namespace Controllers
             }
         }
 
+        public static List<Tuple<int, string>> getPlayers()
+        {
+            return Players;
+        }
+
         /// <summary>
         /// Start the game
         /// </summary>

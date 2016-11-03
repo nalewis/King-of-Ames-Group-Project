@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GamePieces.Monsters;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GameEngine
@@ -9,6 +10,8 @@ namespace GameEngine
         SpriteFont displayFont;
 
         string playerName;
+
+        Monster monster;
 
         Vector2 portraitPos;
         Vector2 healthTextPos;
@@ -35,13 +38,15 @@ namespace GameEngine
 
         }
 
-        public PlayerBlock(Texture2D texture, SpriteFont font, Vector2 pos, string name)
+        public PlayerBlock(Texture2D texture, SpriteFont font, Vector2 pos, Monster mon)
         {
+            monster = mon;
             playerPortrait = texture;
             displayFont = font;
-            playerName = name;
+            playerName = mon.Name;
             portraitPos = pos;
             setTextPositions();
+
             
         }
 
@@ -99,9 +104,9 @@ namespace GameEngine
                 sb.DrawString(displayFont, playerName.Substring(0, textLimit), nameTextPos, Color.Red);
             }
            
-            sb.DrawString(displayFont, "Health: " + "0", healthTextPos, Color.Blue);
-            sb.DrawString(displayFont, "Energy: 0", energyTextPos, Color.Blue);
-            sb.DrawString(displayFont, "Points: 0", pointsTextPos, Color.Blue);
+            sb.DrawString(displayFont, "Health: " + monster.Health, healthTextPos, Color.Blue);
+            sb.DrawString(displayFont, "Energy: " + monster.Energy, energyTextPos, Color.Blue);
+            sb.DrawString(displayFont, "Points: " + monster.VictroyPoints, pointsTextPos, Color.Blue);
         }
     }
 }
