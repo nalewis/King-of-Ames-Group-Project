@@ -34,7 +34,6 @@ namespace Views
         //WIP TODO
         static void OnProcessExit(object sender, EventArgs e)
         {
-            Console.WriteLine("hi");
             if (NetworkClasses.isHosting(User.id))
             {
                 NetworkClasses.deleteServer(User.id);

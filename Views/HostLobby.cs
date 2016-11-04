@@ -112,5 +112,11 @@ namespace Views
         {
             NetworkClasses.updateCharacter(User.id, char_list.SelectedItem.ToString());
         }
+
+        private void start_game_Click(object sender, EventArgs e)
+        {
+            //TODO
+            //Start the game...?
+        }
     }
 }

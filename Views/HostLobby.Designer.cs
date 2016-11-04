@@ -36,6 +36,7 @@
             this.char_label = new System.Windows.Forms.Label();
             this.select_char = new System.Windows.Forms.Button();
             this.char_list = new System.Windows.Forms.ComboBox();
+            this.start_game = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // playerList
@@ -79,7 +80,7 @@
             // char_label
             // 
             this.char_label.AutoSize = true;
-            this.char_label.Location = new System.Drawing.Point(25, 215);
+            this.char_label.Location = new System.Drawing.Point(12, 215);
             this.char_label.Name = "char_label";
             this.char_label.Size = new System.Drawing.Size(56, 13);
             this.char_label.TabIndex = 11;
@@ -88,11 +89,11 @@
             // select_char
             // 
             this.select_char.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.select_char.Location = new System.Drawing.Point(11, 239);
+            this.select_char.Location = new System.Drawing.Point(182, 212);
             this.select_char.Name = "select_char";
-            this.select_char.Size = new System.Drawing.Size(112, 23);
+            this.select_char.Size = new System.Drawing.Size(90, 23);
             this.select_char.TabIndex = 10;
-            this.select_char.Text = "Select Character";
+            this.select_char.Text = "Select";
             this.select_char.UseVisualStyleBackColor = true;
             this.select_char.Click += new System.EventHandler(this.select_char_Click);
             // 
@@ -106,16 +107,28 @@
             "Kraken",
             "Mecha Dragon",
             "The King"});
-            this.char_list.Location = new System.Drawing.Point(87, 212);
+            this.char_list.Location = new System.Drawing.Point(74, 212);
             this.char_list.Name = "char_list";
-            this.char_list.Size = new System.Drawing.Size(131, 21);
+            this.char_list.Size = new System.Drawing.Size(102, 21);
             this.char_list.TabIndex = 9;
+            // 
+            // start_game
+            // 
+            this.start_game.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.start_game.Location = new System.Drawing.Point(15, 239);
+            this.start_game.Name = "start_game";
+            this.start_game.Size = new System.Drawing.Size(112, 23);
+            this.start_game.TabIndex = 12;
+            this.start_game.Text = "Start Game";
+            this.start_game.UseVisualStyleBackColor = true;
+            this.start_game.Click += new System.EventHandler(this.start_game_Click);
             // 
             // HostGameListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 271);
+            this.Controls.Add(this.start_game);
             this.Controls.Add(this.char_label);
             this.Controls.Add(this.select_char);
             this.Controls.Add(this.char_list);
@@ -139,5 +152,6 @@
         private System.Windows.Forms.Label char_label;
         private System.Windows.Forms.Button select_char;
         private System.Windows.Forms.ComboBox char_list;
+        private System.Windows.Forms.Button start_game;
     }
 }
