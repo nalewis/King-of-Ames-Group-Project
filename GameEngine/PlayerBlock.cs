@@ -1,7 +1,6 @@
 ﻿using GamePieces.Monsters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace GameEngine
 {
@@ -46,7 +45,7 @@ namespace GameEngine
 
         public void Update()
         {
-
+            setTextPositions();
         }
 
         public void draw(SpriteBatch sb)

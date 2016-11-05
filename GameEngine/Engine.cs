@@ -22,6 +22,7 @@ namespace GameEngine {
         DiceRow diceRow;
 
         List<PlayerBlock> pBlocks;
+        List<TextPrompt> textPrompts;
 
         List<GamePieces.Monsters.Monster> players;
 
@@ -76,7 +77,7 @@ namespace GameEngine {
 
             pBlocks = new List<PlayerBlock>();
             players = GamePieces.Session.Game.Monsters;
-
+            textPrompts = new List<TextPrompt>();
 
 
 
@@ -127,12 +128,28 @@ namespace GameEngine {
                 GamePieces.Session.Game.StartTurn();
                 GamePieces.Session.Game.Roll();
 
+                textPrompts.Add(new TextPrompt("Fuck Yeah!", new Vector2(300, 300)));
+
                 int index = 0;
                 foreach(Die die in DiceController.GetDice())
                 {
                     diceRow.addDie(die, index);
                     index++;
                 }
+
+                //////////////////////////////////////
+                Texture2D cth;
+                textureList.TryGetValue("cthulhu", out cth);
+
+                int cnt = 0;
+                foreach (GamePieces.Monsters.Monster player in players)
+                {
+                    PlayerBlock pb = new PlayerBlock(cth, playerPositions[cnt], player);
+                    pBlocks.Add(pb);
+                    cnt++;
+                }
+                //////////////////////////////////////
+
                 firstUpdate = false;
             }
 
@@ -172,21 +189,6 @@ namespace GameEngine {
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            SpriteFont font;
-            Texture2D cth;
-            textureList.TryGetValue("cthulhu", out cth);
-            fontList.TryGetValue("BigFont", out font);
-
-            int cnt = 0;
-            foreach(GamePieces.Monsters.Monster player in players)
-            {
-                PlayerBlock pb = new PlayerBlock(cth, playerPositions[cnt], player);
-                pBlocks.Add(pb);
-                cnt++;
-            }
-
-            spriteBatch.DrawString(font, "screenHeight: " + screenHeight + " screenWidth: " + screenWidth, new Vector2(400, 300), Microsoft.Xna.Framework.Color.BlanchedAlmond);
-
             foreach(PlayerBlock pb in pBlocks)
             {
                 pb.draw(spriteBatch);
@@ -195,6 +197,11 @@ namespace GameEngine {
             foreach (DiceSprite ds in diceRow.getDiceSprites())
             {
                 ds.Draw(spriteBatch);
+            }
+
+            foreach(TextPrompt tp in textPrompts)
+            {
+                tp.Draw(spriteBatch);
             }
 
             spriteBatch.End();

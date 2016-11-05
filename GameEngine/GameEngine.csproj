@@ -63,6 +63,7 @@
     <Compile Include="PlayerBlock.cs" />
     <Compile Include="OldEngine.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="TextPrompt.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
