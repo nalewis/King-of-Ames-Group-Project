@@ -123,11 +123,16 @@ namespace GameEngine {
             {
                 GamePieces.Session.Game.StartTurn();
 
+                int index = 0;
+                foreach (Die die in DiceController.GetDice())
+                {
+                    diceRow.addDie(die, index);
+                    index++;
+                }
 
                 //////////////////////////////////////
                 Texture2D cth;
                 textureList.TryGetValue("cthulhu", out cth);
-
                 int cnt = 0;
                 foreach (GamePieces.Monsters.Monster player in players)
                 {
@@ -151,23 +156,9 @@ namespace GameEngine {
                 }
             }
 
-            if(MonsterController.RollsRemaining(currentPlayerID) < 3)
+            if (freshKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space))
             {
-                if (freshKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space))
-                {
-                    DiceController.Roll();
-                    int index = 0;
-                    foreach (Die die in DiceController.GetDice())
-                    {
-                        diceRow.addDie(die, index);
-                        index++;
-                    }
-                }
-            }
-            else
-            {
-                DiceController.EndRolling();
-                diceRow.clear();
+                DiceController.Roll();
             }
 
             foreach(DiceSprite ds in diceRow.getDiceSprites())
