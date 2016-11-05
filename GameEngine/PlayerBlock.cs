@@ -36,7 +36,7 @@ namespace GameEngine
         {
             _nameTextPos = new Vector2(DisplayPosition.X, DisplayPosition.Y + PlayerPortrait.Height + Padding);
        
-            _healthTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y); ;
+            _healthTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y);
             _energyTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y + YPad);
             _pointsTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y + 2*YPad);
         }
