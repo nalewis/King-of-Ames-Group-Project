@@ -134,7 +134,7 @@ namespace GameEngine {
                 GamePieces.Session.Game.StartTurn();
                 GamePieces.Session.Game.Roll();
                 
-                foreach(Die die in DiceController.getDice())
+                foreach(Die die in DiceController.GetDice())
                 {
                     diceRow.addDie(die);
                 }
@@ -142,7 +142,7 @@ namespace GameEngine {
             }
 
             if (newState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
-                DiceController.roll();
+                DiceController.Roll();
 
             diceRow.UpdateDice();
 
