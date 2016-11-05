@@ -1,111 +1,74 @@
 ﻿using GamePieces.Monsters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace GameEngine
 {
     class PlayerBlock
     {
         Texture2D playerPortrait;
-        SpriteFont displayFont;
 
         string playerName;
 
         Monster monster;
 
-        Vector2 portraitPos;
+        Vector2 position;
+        Vector2 nameTextPos;
         Vector2 healthTextPos;
         Vector2 energyTextPos;
         Vector2 pointsTextPos;
-        Vector2 nameTextPos;
 
         int textLimit = 10;
-        string testString = "Health: 10";
 
         int padding = 10;
 
-        public float X = 300;
-        public float Y;
+        int yPad = 25;
 
-        public PlayerBlock(Texture2D texture, SpriteFont font, string name)
+        public PlayerBlock(Texture2D texture, Vector2 pos, Monster mon)
         {
             playerPortrait = texture;
-            displayFont = font;
-            playerName = name;
-            portraitPos = new Vector2();
-            setTextPositions();
-        }
-
-        public PlayerBlock(Texture2D texture, SpriteFont font, Vector2 pos, Monster mon)
-        {
+            position = pos;
             monster = mon;
-            playerPortrait = texture;
-            displayFont = font;
             playerName = mon.Name;
-            portraitPos = pos;
             setTextPositions();
-
-            
         }
 
         protected void setTextPositions()
         {
-            nameTextPos = getNameTextPos();
-            healthTextPos = getHealthTextPos();
-            energyTextPos = getEnergyTextPos();
-            pointsTextPos = getPointsTextPos();
+            nameTextPos = new Vector2(position.X, position.Y + playerPortrait.Height + padding);
 
-            Y = playerPortrait.Height + displayFont.MeasureString(testString).Y + padding;
-
-        }
-
-        protected Vector2 getHealthTextPos()
-        {
-            return new Vector2(
-                portraitPos.X + playerPortrait.Width + padding,
-                portraitPos.Y
-                );
-        }
-
-        protected Vector2 getEnergyTextPos()
-        {
-            return new Vector2(
-                portraitPos.X + playerPortrait.Width + padding,
-                healthTextPos.Y + displayFont.MeasureString("String").Y + padding
-                );
-        }
-
-        protected Vector2 getPointsTextPos()
-        {
-            return new Vector2(
-                portraitPos.X + playerPortrait.Width + padding,
-                energyTextPos.Y + displayFont.MeasureString("String").Y + padding
-                );
+            healthTextPos = new Vector2(position.X + playerPortrait.Width + padding, position.Y); ;
+            energyTextPos = new Vector2(position.X + playerPortrait.Width + padding, position.Y + yPad);
+            pointsTextPos = new Vector2(position.X + playerPortrait.Width + padding, position.Y + 2*yPad);
         }
 
 
-        protected Vector2 getNameTextPos()
+        public void Update()
         {
-            return new Vector2(
-                portraitPos.X,
-                portraitPos.Y + playerPortrait.Height + padding);
+
         }
 
         public void draw(SpriteBatch sb)
         {
-            sb.Draw(playerPortrait, portraitPos, Color.White);
+            SpriteFont font;
+            Engine.fontList.TryGetValue("BigFont", out font);
+
+            sb.Draw(playerPortrait, position, Color.White);
+
             if(playerName.Length < textLimit)
             {
-                sb.DrawString(displayFont, playerName, nameTextPos, Color.Red);
+                sb.DrawString(font, playerName, nameTextPos, Color.Red);
             }
             else
             {
-                sb.DrawString(displayFont, playerName.Substring(0, textLimit), nameTextPos, Color.Red);
+                sb.DrawString(font, playerName.Substring(0, textLimit), nameTextPos, Color.Red);
             }
            
-            sb.DrawString(displayFont, "Health: " + monster.Health, healthTextPos, Color.Blue);
-            sb.DrawString(displayFont, "Energy: " + monster.Energy, energyTextPos, Color.Blue);
-            sb.DrawString(displayFont, "Points: " + monster.VictroyPoints, pointsTextPos, Color.Blue);
+            sb.DrawString(font, "Health: " + monster.Health, healthTextPos, Color.Blue);
+            sb.DrawString(font, "Energy: " + monster.Energy, energyTextPos, Color.Blue);
+            sb.DrawString(font, "Points: " + monster.VictroyPoints, pointsTextPos, Color.Blue);
         }
+
     }
 }

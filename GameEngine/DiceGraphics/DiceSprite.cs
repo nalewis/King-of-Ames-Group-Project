@@ -83,9 +83,16 @@ namespace GameEngine.DiceGraphics
             }
         }
 
-        public void SaveDie()
+        public void Click()
         {
-            Controllers.DiceController.SaveDie(index);
+            if (die.Save)
+            {
+                Controllers.DiceController.UnSaveDie(index);
+            }
+            else
+            {
+                Controllers.DiceController.SaveDie(index);
+            }
         }
 
     }

@@ -136,13 +136,13 @@ namespace GameEngine {
                 firstUpdate = false;
             }
 
-            if (freshMouseState.LeftButton == ButtonState.Pressed)
+            if (freshMouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
             {
                 foreach (DiceSprite ds in diceRow.getDiceSprites())
                 {
                     if (ds.mouseOver(freshMouseState))
                     {
-                        ds.SaveDie();
+                        ds.Click();
                     }
                 }
             }
@@ -180,7 +180,7 @@ namespace GameEngine {
             int cnt = 0;
             foreach(GamePieces.Monsters.Monster player in players)
             {
-                PlayerBlock pb = new PlayerBlock(cth, font, playerPositions[cnt], player);
+                PlayerBlock pb = new PlayerBlock(cth, playerPositions[cnt], player);
                 pBlocks.Add(pb);
                 cnt++;
             }
