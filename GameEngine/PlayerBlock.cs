@@ -26,8 +26,9 @@ namespace GameEngine
         {
             PlayerPortrait = texture;
             _defaultPos = pos;
-            DisplayPosition = pos;
             Monster = mon;
+
+            DisplayPosition = _defaultPos;
             PlayerName = mon.Name;
             SetTextPositions();
         }

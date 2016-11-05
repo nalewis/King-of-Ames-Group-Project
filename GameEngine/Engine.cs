@@ -1,5 +1,4 @@
 ﻿using GameEngine.DiceGraphics;
-using GamePieces.Dice;
 using Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,12 +12,13 @@ namespace GameEngine {
     /// </summary>
     public class Engine : Game
     {
+        private InputManager _inputManager;
         private const int PlayerBlockLength = 300;
         private const int PlayerBlockHeight = 200;
         private const int DefaultPadding = 10;
 
-        GraphicsDeviceManager graphics;
-        SpriteBatch _spriteBatch;
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
 
         public static Dictionary<string, Texture2D> TextureList;
         public static Dictionary<string, SpriteFont> FontList;
@@ -32,22 +32,17 @@ namespace GameEngine {
         private int _screenWidth;
         private int _screenHeight;
 
-        KeyboardState _freshKeyboardState;
-        KeyboardState _oldKeyboardState;
-        MouseState _freshMouseState;
-        MouseState _oldMouseState;
-
-        bool _firstUpdate;
+        private bool _firstUpdate;
 
         public Engine() {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             IsMouseVisible = true;
 
-            graphics.PreferredBackBufferHeight = 720; //1080
-            graphics.PreferredBackBufferWidth = 1280; //1920
-            graphics.IsFullScreen = false;
+            _graphics.PreferredBackBufferHeight = 720; //1080
+            _graphics.PreferredBackBufferWidth = 1280; //1920
+            _graphics.IsFullScreen = false;
         }
 
         /// <summary>
@@ -57,21 +52,19 @@ namespace GameEngine {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            // TODO: Add your initialization logic here
+            _screenWidth = _graphics.GraphicsDevice.Viewport.Width;
+            _screenHeight = _graphics.GraphicsDevice.Viewport.Height;
+            PositionList = InitializePositions();
 
             TextureList = new Dictionary<string, Texture2D>();
             FontList = new Dictionary<string, SpriteFont>();
-
-            _screenWidth = graphics.GraphicsDevice.Viewport.Width;
-            _screenHeight = graphics.GraphicsDevice.Viewport.Height;
-
-            PositionList = InitializePositions();
-
             _diceRow = new DiceRow(PositionList["DicePos"]);
             _pBlocks = new List<PlayerBlock>();
             _textPrompts = new List<TextPrompt>();
 
-            _firstUpdate = true;
+            _firstUpdate = true; //Stupid and needs to be removed
+
+            _inputManager = new InputManager(this);
             base.Initialize();
         }
 
@@ -102,12 +95,10 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            _screenWidth = graphics.GraphicsDevice.Viewport.Width;
-            _screenHeight = graphics.GraphicsDevice.Viewport.Height;
-            _freshKeyboardState = Keyboard.GetState();
-            _freshMouseState = Mouse.GetState();
+            _screenWidth = _graphics.GraphicsDevice.Viewport.Width;
+            _screenHeight = _graphics.GraphicsDevice.Viewport.Height;
 
-            if (_freshKeyboardState.IsKeyDown(Keys.Escape))
+            if (_inputManager.KeyPressed(Keys.Escape))
                 Exit();
 
             if (_firstUpdate)
@@ -116,21 +107,23 @@ namespace GameEngine {
 
                 _diceRow.AddDice(DiceController.GetDice());
 
+                _textPrompts.Add(new TextPrompt("Some Text", PositionList["TextPrompt1"]));
+
                 _firstUpdate = false;
             }
 
-            if (_freshMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
+            if (_inputManager.LeftClick())
             {
                 foreach (var ds in _diceRow.DiceSprites)
                 {
-                    if (ds.mouseOver(_freshMouseState))
+                    if (ds.mouseOver(_inputManager.FreshMouseState))
                     {
                         ds.Click();
                     }
                 }
             }
 
-            if (_freshKeyboardState.IsKeyDown(Keys.Space) && _oldKeyboardState.IsKeyUp(Keys.Space))
+            if (_inputManager.KeyPressed(Keys.Space))
             {
                 DiceController.Roll();
             }
@@ -145,10 +138,6 @@ namespace GameEngine {
                 pb.Update();
             }
 
-
-            _oldMouseState = _freshMouseState;
-            _oldKeyboardState = _freshKeyboardState;
-
             base.Update(gameTime);
         }
 
@@ -157,7 +146,7 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
 
@@ -226,11 +215,12 @@ namespace GameEngine {
                 {"BottomCenter", new Vector2((_screenWidth/2) - (PlayerBlockLength/2), _screenHeight - PlayerBlockHeight)},
                 {"TokyoCity", new Vector2() },
                 {"TokyoBay", new Vector2() },
-                {"DicePos", new Vector2(DefaultPadding, _screenHeight - PlayerBlockHeight)}
+                {"DicePos", new Vector2(DefaultPadding, _screenHeight - PlayerBlockHeight)},
+                {"TextPrompt1", new Vector2(400, 400) }
             };
         }
 
-        private List<PlayerBlock> InitializePlayerBlocks()
+        private static List<PlayerBlock> InitializePlayerBlocks()
         {
             var tempTexture = TextureList["cthulhu"];
             var monList = GamePieces.Session.Game.Monsters;
