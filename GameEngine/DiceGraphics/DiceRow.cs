@@ -1,55 +1,32 @@
 ﻿using GamePieces.Dice;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace GameEngine.DiceGraphics
 {
     class DiceRow
     {
-        protected DiceImage[] diceRow;
-        Vector2 positon;
+        private List<DiceSprite> diceSprites;
+        Vector2 position;
         int padding = 75;
-        int filled;
-        
-        public DiceRow()
-        {
-            diceRow = new DiceImage[6];
-            positon = new Vector2();
-            filled = 0;
-        }
 
         public DiceRow(Vector2 pos)
         {
-            diceRow = new DiceImage[6];
-            positon = pos;
-            filled = 0;
+            diceSprites = new List<DiceSprite>();
+            position = pos;
         }
        
-        public void addDie(Die die)
+        public void addDie(Die die, int index)
         {
-            DiceImage di = new DiceImage(die);
-            if(filled < 6)
-            {
-                diceRow[filled] = di;
-                filled++;
-            }
-        }
-        public void Draw(SpriteBatch sb)
-        {
-            Vector2 drawPos = positon;
-            foreach (DiceImage dI in diceRow)
-            {
-                sb.Draw(dI.getCurrentFace(), drawPos, Microsoft.Xna.Framework.Color.White);
-                drawPos.X += padding;
-            }
-        }
-        public void UpdateDice()
-        {
-            foreach(DiceImage dI in diceRow)
-            {
-                dI.updateFromDie();
-            }
+            Vector2 dicePos = new Vector2(position.X + (diceSprites.Count * padding), position.Y);
+            DiceSprite di = new DiceSprite(die, dicePos, index);
+            diceSprites.Add(di);
         }
 
+        public List<DiceSprite> getDiceSprites()
+        {
+            return diceSprites;
+        }
     }
 }

@@ -57,7 +57,7 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DiceGraphics\DiceImage.cs" />
+    <Compile Include="DiceGraphics\DiceSprite.cs" />
     <Compile Include="DiceGraphics\DiceRow.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="PlayerBlock.cs" />

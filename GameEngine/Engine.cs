@@ -22,26 +22,20 @@ namespace GameEngine {
         DiceRow diceRow;
 
         List<PlayerBlock> pBlocks;
-        List<GamePieces.Monsters.Monster> players;
 
-        /*
-        PlayerBlock pb1;
-        PlayerBlock pb2;
-        PlayerBlock pb3;
-        PlayerBlock pb4;
-        PlayerBlock pb5;
-        PlayerBlock pb6;
-        */
+        List<GamePieces.Monsters.Monster> players;
 
         Vector2[] playerPositions;
 
         int screenWidth;
         int screenHeight;
 
-        bool firstUpdate;
+        KeyboardState freshKeyboardState;
+        KeyboardState oldKeyboardState;
+        MouseState freshMouseState;
+        MouseState oldMouseState;
 
-        KeyboardState oldState;
-        KeyboardState newState;
+        bool firstUpdate;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
@@ -120,35 +114,51 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
-            newState = Keyboard.GetState();
-
-            // TODO: Add your update logic here
             screenWidth = graphics.GraphicsDevice.Viewport.Width;
             screenHeight = graphics.GraphicsDevice.Viewport.Height;
+            freshKeyboardState = Keyboard.GetState();
+            freshMouseState = Mouse.GetState();
+
+            if (freshKeyboardState.IsKeyDown(Keys.Escape))
+                Exit();
 
             if (firstUpdate)
             {
                 GamePieces.Session.Game.StartTurn();
                 GamePieces.Session.Game.Roll();
-                
+
+                int index = 0;
                 foreach(Die die in DiceController.GetDice())
                 {
-                    diceRow.addDie(die);
+                    diceRow.addDie(die, index);
+                    index++;
                 }
                 firstUpdate = false;
             }
 
-            if (newState.IsKeyDown(Keys.Space) && oldState.IsKeyUp(Keys.Space))
+            if (freshMouseState.LeftButton == ButtonState.Pressed)
+            {
+                foreach (DiceSprite ds in diceRow.getDiceSprites())
+                {
+                    if (ds.mouseOver(freshMouseState))
+                    {
+                        ds.SaveDie();
+                    }
+                }
+            }
+
+            if (freshKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space))
                 DiceController.Roll();
 
-            diceRow.UpdateDice();
+            foreach(DiceSprite ds in diceRow.getDiceSprites())
+            {
+                ds.Update();
+            }
 
 
+            oldMouseState = freshMouseState;
+            oldKeyboardState = freshKeyboardState;
 
-            oldState = newState;
             base.Update(gameTime);
         }
 
@@ -161,6 +171,7 @@ namespace GameEngine {
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+
             SpriteFont font;
             Texture2D cth;
             textureList.TryGetValue("cthulhu", out cth);
@@ -174,15 +185,6 @@ namespace GameEngine {
                 cnt++;
             }
 
-/*
-            pb1 = new PlayerBlock(cth, font, playerPositions[0], "block 1");
-            pb2 = new PlayerBlock(cth, font, playerPositions[1], "block 2");
-            pb3 = new PlayerBlock(cth, font, playerPositions[2], "block 3");
-            pb4 = new PlayerBlock(cth, font, playerPositions[3], "block 4");
-            pb5 = new PlayerBlock(cth, font, playerPositions[4], "block 5");
-            pb6 = new PlayerBlock(cth, font, playerPositions[5], "block 6");
-*/
-
             spriteBatch.DrawString(font, "screenHeight: " + screenHeight + " screenWidth: " + screenWidth, new Vector2(400, 300), Microsoft.Xna.Framework.Color.BlanchedAlmond);
 
             foreach(PlayerBlock pb in pBlocks)
@@ -190,17 +192,10 @@ namespace GameEngine {
                 pb.draw(spriteBatch);
             }
 
-            /*
-            pb1.draw(spriteBatch);
-            pb2.draw(spriteBatch);
-            pb3.draw(spriteBatch);
-            pb4.draw(spriteBatch);
-            pb5.draw(spriteBatch);
-            pb6.draw(spriteBatch);
-
-    */
-
-            diceRow.Draw(spriteBatch);
+            foreach (DiceSprite ds in diceRow.getDiceSprites())
+            {
+                ds.Draw(spriteBatch);
+            }
 
             spriteBatch.End();
 
