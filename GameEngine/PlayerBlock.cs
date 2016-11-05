@@ -34,8 +34,6 @@ namespace GameEngine
             playerName = name;
             portraitPos = new Vector2();
             setTextPositions();
-            
-
         }
 
         public PlayerBlock(Texture2D texture, SpriteFont font, Vector2 pos, Monster mon)
@@ -84,6 +82,7 @@ namespace GameEngine
                 energyTextPos.Y + displayFont.MeasureString("String").Y + padding
                 );
         }
+
 
         protected Vector2 getNameTextPos()
         {

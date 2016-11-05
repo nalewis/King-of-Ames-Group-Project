@@ -61,10 +61,14 @@ namespace GameEngine.DiceGraphics
 
         public void Draw(SpriteBatch sb)
         {
-            if (die.Save)
-                sb.Draw(currentFace, position, colour.Yellow);
+            if (die.Save == true)
+            {
+                sb.Draw(currentFace, position, colour.Red);
+            }
             else
+            {
                 sb.Draw(currentFace, position, colour.White);
+            }
         }
 
         public bool mouseOver(MouseState mouse)
