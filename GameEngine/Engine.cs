@@ -5,25 +5,29 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 
 namespace GameEngine {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
-    public class Engine : Game {
+    public class Engine : Game
+    {
+        private const int PlayerBlockLength = 300;
+        private const int PlayerBlockHeight = 200;
+        private const int DefaultPadding = 10;
 
         GraphicsDeviceManager graphics;
         SpriteBatch _spriteBatch;
 
         public static Dictionary<string, Texture2D> TextureList;
         public static Dictionary<string, SpriteFont> FontList;
+        public static Dictionary<string, Vector2> PositionList;
 
-        DiceRow _diceRow;
+        private DiceRow _diceRow;
 
-        List<PlayerBlock> _pBlocks;
-        List<TextPrompt> _textPrompts;
-
-        Vector2[] _playerPositions;
+        private List<PlayerBlock> _pBlocks;
+        private List<TextPrompt> _textPrompts;
 
         private int _screenWidth;
         private int _screenHeight;
@@ -60,27 +64,12 @@ namespace GameEngine {
 
             _screenWidth = graphics.GraphicsDevice.Viewport.Width;
             _screenHeight = graphics.GraphicsDevice.Viewport.Height;
-            _diceRow = new DiceRow(new Vector2(400, 350));
 
-            _playerPositions = new Vector2[] {
-                new Vector2(10, 10),
-                new Vector2((_screenWidth/2) - (300/2), 10),
-                new Vector2(_screenWidth - 10 - 300, 10),
-                new Vector2(10, ((_screenHeight / 2) - (200 / 2))),
-                new Vector2(_screenWidth - 10 - 300, ((_screenHeight/2) - (200/2))),
-                new Vector2((_screenWidth / 2) - (300 / 2), _screenHeight - 200)
+            PositionList = InitializePositions();
 
-            };
-            _textPrompts = new List<TextPrompt>();
+            _diceRow = new DiceRow(PositionList["DicePos"]);
             _pBlocks = new List<PlayerBlock>();
-
-            int cnt = 0;
-            foreach (var mon in GamePieces.Session.Game.Monsters)
-            {
-                var pb = new PlayerBlock(Content.Load<Texture2D>("monsterTextures\\cthulhu"), _playerPositions[cnt], mon);
-                _pBlocks.Add(pb);
-                cnt++;
-            }
+            _textPrompts = new List<TextPrompt>();
 
             _firstUpdate = true;
             base.Initialize();
@@ -95,6 +84,8 @@ namespace GameEngine {
 
             LoadTextures();
             LoadFonts();
+
+            _pBlocks = InitializePlayerBlocks();
         }
 
         /// <summary>
@@ -123,19 +114,14 @@ namespace GameEngine {
             {
                 GamePieces.Session.Game.StartTurn();
 
-                var index = 0;
-                foreach (var die in DiceController.GetDice())
-                {
-                    _diceRow.addDie(die, index);
-                    index++;
-                }
+                _diceRow.AddDice(DiceController.GetDice());
 
                 _firstUpdate = false;
             }
 
             if (_freshMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
             {
-                foreach (var ds in _diceRow.getDiceSprites())
+                foreach (var ds in _diceRow.DiceSprites)
                 {
                     if (ds.mouseOver(_freshMouseState))
                     {
@@ -149,9 +135,14 @@ namespace GameEngine {
                 DiceController.Roll();
             }
 
-            foreach(var ds in _diceRow.getDiceSprites())
+            foreach(var ds in _diceRow.DiceSprites)
             {
                 ds.Update();
+            }
+
+            foreach (var pb in _pBlocks)
+            {
+                pb.Update();
             }
 
 
@@ -170,17 +161,17 @@ namespace GameEngine {
 
             _spriteBatch.Begin();
 
-            foreach(PlayerBlock pb in _pBlocks)
+            foreach(var pb in _pBlocks)
             {
                 pb.Draw(_spriteBatch);
             }
 
-            foreach (DiceSprite ds in _diceRow.getDiceSprites())
+            foreach (var ds in _diceRow.DiceSprites)
             {
                 ds.Draw(_spriteBatch);
             }
 
-            foreach(TextPrompt tp in _textPrompts)
+            foreach(var tp in _textPrompts)
             {
                 tp.Draw(_spriteBatch);
             }
@@ -221,6 +212,68 @@ namespace GameEngine {
         private void LoadFonts()
         {
             AddFont("Fonts\\BigFont", "BigFont");
+        }
+
+        private Dictionary<string, Vector2> InitializePositions()
+        {
+            return new Dictionary<string, Vector2>
+            {
+                {"TopLeft", new Vector2(DefaultPadding, DefaultPadding)},
+                {"TopCenter", new Vector2((_screenWidth/2) - (PlayerBlockLength/2), DefaultPadding)},
+                {"TopRight", new Vector2(_screenWidth - DefaultPadding - PlayerBlockLength, DefaultPadding)},
+                {"MidLeft", new Vector2(10, ((_screenHeight/2) - (PlayerBlockHeight/2)))},
+                {"MidRight", new Vector2(_screenWidth - DefaultPadding - PlayerBlockLength, ((_screenHeight/2) - (PlayerBlockHeight/2)))},
+                {"BottomCenter", new Vector2((_screenWidth/2) - (PlayerBlockLength/2), _screenHeight - PlayerBlockHeight)},
+                {"TokyoCity", new Vector2() },
+                {"TokyoBay", new Vector2() },
+                {"DicePos", new Vector2(DefaultPadding, _screenHeight - PlayerBlockHeight)}
+            };
+        }
+
+        private List<PlayerBlock> InitializePlayerBlocks()
+        {
+            var tempTexture = TextureList["cthulhu"];
+            var monList = GamePieces.Session.Game.Monsters;
+            var toReturn = new List<PlayerBlock>();
+
+            switch (monList.Count)
+            {
+                case 2:
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopCenter"], monList[1]));
+                    break;
+                case 3:
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[2]));
+                    break;
+                case 4:
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[2]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[3]));
+                    break;
+                case 5:
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[2]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[3]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[4]));
+                    break;
+                case 6:
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopCenter"], monList[2]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[3]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[4]));
+                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[5]));
+                    break;
+                default:
+                    Console.WriteLine("Something went wrong.");
+                    break;
+            }
+
+            return toReturn;
         }
 
     }

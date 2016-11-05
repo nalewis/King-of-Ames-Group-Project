@@ -6,17 +6,17 @@ namespace GameEngine
 {
     internal class PlayerBlock
     {
-        private Texture2D PlayerPortrait { get; }
+        private readonly Vector2 _defaultPos;
 
+        public Vector2 DisplayPosition { get; set; }
+        private Texture2D PlayerPortrait { get; }
+        private Monster Monster { get; }
         private string PlayerName { get; }
 
-        private Monster Monster { get; }
-
-        Vector2 _position;
-        Vector2 _nameTextPos;
-        Vector2 _healthTextPos;
-        Vector2 _energyTextPos;
-        Vector2 _pointsTextPos;
+        private Vector2 _nameTextPos;
+        private Vector2 _healthTextPos;
+        private Vector2 _energyTextPos;
+        private Vector2 _pointsTextPos;
 
         private const int TextLimit = 10;
         private const int Padding = 10;
@@ -25,7 +25,8 @@ namespace GameEngine
         public PlayerBlock(Texture2D texture, Vector2 pos, Monster mon)
         {
             PlayerPortrait = texture;
-            _position = pos;
+            _defaultPos = pos;
+            DisplayPosition = pos;
             Monster = mon;
             PlayerName = mon.Name;
             SetTextPositions();
@@ -33,16 +34,31 @@ namespace GameEngine
 
         protected void SetTextPositions()
         {
-            _nameTextPos = new Vector2(_position.X, _position.Y + PlayerPortrait.Height + Padding);
+            _nameTextPos = new Vector2(DisplayPosition.X, DisplayPosition.Y + PlayerPortrait.Height + Padding);
        
-            _healthTextPos = new Vector2(_position.X + PlayerPortrait.Width + Padding, _position.Y); ;
-            _energyTextPos = new Vector2(_position.X + PlayerPortrait.Width + Padding, _position.Y + YPad);
-            _pointsTextPos = new Vector2(_position.X + PlayerPortrait.Width + Padding, _position.Y + 2*YPad);
+            _healthTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y); ;
+            _energyTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y + YPad);
+            _pointsTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y + 2*YPad);
         }
 
 
         public void Update()
         {
+            switch (Monster.Location)
+            {
+                case Location.TokyoCity:
+                    DisplayPosition = Engine.PositionList["TokyoCity"];
+                    break;
+                case Location.TokyoBay:
+                    DisplayPosition = Engine.PositionList["TokyoBay"];
+                    break;
+                case Location.Default:
+                    break;
+                default:
+                    DisplayPosition = _defaultPos;
+                    break;
+            }
+
             SetTextPositions();
         }
 
@@ -51,7 +67,7 @@ namespace GameEngine
             SpriteFont font;
             Engine.FontList.TryGetValue("BigFont", out font);
 
-            sb.Draw(PlayerPortrait, _position, Color.White);
+            sb.Draw(PlayerPortrait, DisplayPosition, Color.White);
 
             sb.DrawString(font, PlayerName.Length < TextLimit ? PlayerName : PlayerName.Substring(0, TextLimit),
                 _nameTextPos, Color.Red);

@@ -9,22 +9,22 @@ namespace GameEngine.DiceGraphics
 {
     class DiceSprite
     {
-        protected Texture2D currentFace;
-        protected Die die;
-        protected Vector2 position;
-        protected int index;
+        protected Texture2D CurrentFace;
+        protected Die Die;
+        protected Vector2 Position;
+        protected int Index;
 
         public DiceSprite(Die die, Vector2 pos, int index)
         {
-            this.die = die;
-            this.index = index;
-            position = pos;
+            Die = die;
+            Index = index;
+            Position = pos;
             Update();
         }
 
         public void Update()
         {
-            switch (die.Symbol)
+            switch (Die.Symbol)
             {
                 case Symbol.One:
                     changeFace("dice1");
@@ -56,27 +56,20 @@ namespace GameEngine.DiceGraphics
         {
             Texture2D getTexture;
             Engine.TextureList.TryGetValue(newFace, out getTexture);
-            currentFace = getTexture;
+            CurrentFace = getTexture;
         }
 
         public void Draw(SpriteBatch sb)
         {
-            if (die.Save == true)
-            {
-                sb.Draw(currentFace, position, colour.Red);
-            }
-            else
-            {
-                sb.Draw(currentFace, position, colour.White);
-            }
+            sb.Draw(CurrentFace, Position, Die.Save ? colour.Red : colour.White);
         }
 
         public bool mouseOver(MouseState mouse)
         {
-            if (mouse.Position.X > position.X &&
-                mouse.Position.X < position.X + currentFace.Width &&
-                mouse.Position.Y > position.Y &&
-                mouse.Position.Y < position.Y + currentFace.Height) { return true; }
+            if (mouse.Position.X > Position.X &&
+                mouse.Position.X < Position.X + CurrentFace.Width &&
+                mouse.Position.Y > Position.Y &&
+                mouse.Position.Y < Position.Y + CurrentFace.Height) { return true; }
             else
             {
                 return false;
@@ -85,13 +78,13 @@ namespace GameEngine.DiceGraphics
 
         public void Click()
         {
-            if (die.Save)
+            if (Die.Save)
             {
-                Controllers.DiceController.UnSaveDie(index);
+                Controllers.DiceController.UnSaveDie(Index);
             }
             else
             {
-                Controllers.DiceController.SaveDie(index);
+                Controllers.DiceController.SaveDie(Index);
             }
         }
 

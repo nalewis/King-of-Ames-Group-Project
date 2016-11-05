@@ -6,31 +6,28 @@ namespace GameEngine.DiceGraphics
 {
     class DiceRow
     {
-        private List<DiceSprite> diceSprites;
-        Vector2 position;
-        int padding = 75;
+        public List<DiceSprite> DiceSprites { get; }
+        private Vector2 _position;
+        private const int Padding = 75;
 
         public DiceRow(Vector2 pos)
         {
-            diceSprites = new List<DiceSprite>();
-            position = pos;
+            DiceSprites = new List<DiceSprite>();
+            _position = pos;
         }
        
-        public void addDie(Die die, int index)
+        public void AddDice(List<Die> dL)
         {
-            Vector2 dicePos = new Vector2(position.X + (diceSprites.Count * padding), position.Y);
-            DiceSprite di = new DiceSprite(die, dicePos, index);
-            diceSprites.Add(di);
+            foreach (var die in dL)
+            {
+                var diePos = new Vector2(_position.X + (DiceSprites.Count * Padding), _position.Y);
+                DiceSprites.Add(new DiceSprite(die, diePos, DiceSprites.Count));
+            }
         }
 
-        public List<DiceSprite> getDiceSprites()
+        public void Clear()
         {
-            return diceSprites;
-        }
-
-        public void clear()
-        {
-            diceSprites.Clear();
+            DiceSprites.Clear();
         }
     }
 }
