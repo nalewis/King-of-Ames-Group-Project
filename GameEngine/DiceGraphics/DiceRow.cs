@@ -1,7 +1,6 @@
 ﻿using GamePieces.Dice;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using System.Collections;
 
 namespace GameEngine.DiceGraphics
 {

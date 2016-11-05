@@ -4,69 +4,61 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameEngine
 {
-    class PlayerBlock
+    internal class PlayerBlock
     {
-        Texture2D playerPortrait;
+        private Texture2D PlayerPortrait { get; }
 
-        string playerName;
+        private string PlayerName { get; }
 
-        Monster monster;
+        private Monster Monster { get; }
 
-        Vector2 position;
-        Vector2 nameTextPos;
-        Vector2 healthTextPos;
-        Vector2 energyTextPos;
-        Vector2 pointsTextPos;
+        Vector2 _position;
+        Vector2 _nameTextPos;
+        Vector2 _healthTextPos;
+        Vector2 _energyTextPos;
+        Vector2 _pointsTextPos;
 
-        int textLimit = 10;
-
-        int padding = 10;
-
-        int yPad = 25;
+        private const int TextLimit = 10;
+        private const int Padding = 10;
+        private const int YPad = 25;
 
         public PlayerBlock(Texture2D texture, Vector2 pos, Monster mon)
         {
-            playerPortrait = texture;
-            position = pos;
-            monster = mon;
-            playerName = mon.Name;
-            setTextPositions();
+            PlayerPortrait = texture;
+            _position = pos;
+            Monster = mon;
+            PlayerName = mon.Name;
+            SetTextPositions();
         }
 
-        protected void setTextPositions()
+        protected void SetTextPositions()
         {
-            nameTextPos = new Vector2(position.X, position.Y + playerPortrait.Height + padding);
-
-            healthTextPos = new Vector2(position.X + playerPortrait.Width + padding, position.Y); ;
-            energyTextPos = new Vector2(position.X + playerPortrait.Width + padding, position.Y + yPad);
-            pointsTextPos = new Vector2(position.X + playerPortrait.Width + padding, position.Y + 2*yPad);
+            _nameTextPos = new Vector2(_position.X, _position.Y + PlayerPortrait.Height + Padding);
+       
+            _healthTextPos = new Vector2(_position.X + PlayerPortrait.Width + Padding, _position.Y); ;
+            _energyTextPos = new Vector2(_position.X + PlayerPortrait.Width + Padding, _position.Y + YPad);
+            _pointsTextPos = new Vector2(_position.X + PlayerPortrait.Width + Padding, _position.Y + 2*YPad);
         }
 
 
         public void Update()
         {
-            setTextPositions();
+            SetTextPositions();
         }
 
-        public void draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb)
         {
             SpriteFont font;
-            Engine.fontList.TryGetValue("BigFont", out font);
+            Engine.FontList.TryGetValue("BigFont", out font);
 
-            sb.Draw(playerPortrait, position, Color.White);
+            sb.Draw(PlayerPortrait, _position, Color.White);
 
-            if(playerName.Length < textLimit)
-            {
-                sb.DrawString(font, playerName, nameTextPos, Color.Red);
-            }
-            else
-            {
-                sb.DrawString(font, playerName.Substring(0, textLimit), nameTextPos, Color.Red);
-            }
-           
-            sb.DrawString(font, "Health: " + monster.Health, healthTextPos, Color.Blue);
-            sb.DrawString(font, "Energy: " + monster.Energy, energyTextPos, Color.Blue);
-            sb.DrawString(font, "Points: " + monster.VictroyPoints, pointsTextPos, Color.Blue);
+            sb.DrawString(font, PlayerName.Length < TextLimit ? PlayerName : PlayerName.Substring(0, TextLimit),
+                _nameTextPos, Color.Red);
+
+            sb.DrawString(font, "Health: " + Monster.Health, _healthTextPos, Color.Blue);
+            sb.DrawString(font, "Energy: " + Monster.Energy, _energyTextPos, Color.Blue);
+            sb.DrawString(font, "Points: " + Monster.VictroyPoints, _pointsTextPos, Color.Blue);
         }
 
     }

@@ -55,7 +55,7 @@ namespace GameEngine.DiceGraphics
         private void changeFace(string newFace)
         {
             Texture2D getTexture;
-            Engine.textureList.TryGetValue(newFace, out getTexture);
+            Engine.TextureList.TryGetValue(newFace, out getTexture);
             currentFace = getTexture;
         }
 

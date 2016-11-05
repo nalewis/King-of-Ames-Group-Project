@@ -13,31 +13,27 @@ namespace GameEngine {
     public class Engine : Game {
 
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        SpriteBatch _spriteBatch;
 
-        public static Dictionary<string, Texture2D> textureList;
-        public static Dictionary<string, SpriteFont> fontList;
+        public static Dictionary<string, Texture2D> TextureList;
+        public static Dictionary<string, SpriteFont> FontList;
 
-        DiceRow diceRow;
+        DiceRow _diceRow;
 
-        List<PlayerBlock> pBlocks;
-        List<TextPrompt> textPrompts;
+        List<PlayerBlock> _pBlocks;
+        List<TextPrompt> _textPrompts;
 
-        List<GamePieces.Monsters.Monster> players;
+        Vector2[] _playerPositions;
 
-        Vector2[] playerPositions;
+        private int _screenWidth;
+        private int _screenHeight;
 
-        int screenWidth;
-        int screenHeight;
+        KeyboardState _freshKeyboardState;
+        KeyboardState _oldKeyboardState;
+        MouseState _freshMouseState;
+        MouseState _oldMouseState;
 
-        KeyboardState freshKeyboardState;
-        KeyboardState oldKeyboardState;
-        MouseState freshMouseState;
-        MouseState oldMouseState;
-
-        bool firstUpdate;
-
-        int currentPlayerID;
+        bool _firstUpdate;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
@@ -59,30 +55,34 @@ namespace GameEngine {
         protected override void Initialize() {
             // TODO: Add your initialization logic here
 
-            textureList = new Dictionary<string, Texture2D>();
-            fontList = new Dictionary<string, SpriteFont>();
+            TextureList = new Dictionary<string, Texture2D>();
+            FontList = new Dictionary<string, SpriteFont>();
 
-            screenWidth = graphics.GraphicsDevice.Viewport.Width;
-            screenHeight = graphics.GraphicsDevice.Viewport.Height;
-            diceRow = new DiceRow(new Vector2(400, 350));
+            _screenWidth = graphics.GraphicsDevice.Viewport.Width;
+            _screenHeight = graphics.GraphicsDevice.Viewport.Height;
+            _diceRow = new DiceRow(new Vector2(400, 350));
 
-            playerPositions = new Vector2[] {
+            _playerPositions = new Vector2[] {
                 new Vector2(10, 10),
-                new Vector2((screenWidth/2) - (300/2), 10),
-                new Vector2(screenWidth - 10 - 300, 10),
-                new Vector2(10, ((screenHeight / 2) - (200 / 2))),
-                new Vector2(screenWidth - 10 - 300, ((screenHeight/2) - (200/2))),
-                new Vector2((screenWidth / 2) - (300 / 2), screenHeight - 200)
+                new Vector2((_screenWidth/2) - (300/2), 10),
+                new Vector2(_screenWidth - 10 - 300, 10),
+                new Vector2(10, ((_screenHeight / 2) - (200 / 2))),
+                new Vector2(_screenWidth - 10 - 300, ((_screenHeight/2) - (200/2))),
+                new Vector2((_screenWidth / 2) - (300 / 2), _screenHeight - 200)
 
             };
+            _textPrompts = new List<TextPrompt>();
+            _pBlocks = new List<PlayerBlock>();
 
-            pBlocks = new List<PlayerBlock>();
-            players = GamePieces.Session.Game.Monsters;
-            textPrompts = new List<TextPrompt>();
+            int cnt = 0;
+            foreach (var mon in GamePieces.Session.Game.Monsters)
+            {
+                var pb = new PlayerBlock(Content.Load<Texture2D>("monsterTextures\\cthulhu"), _playerPositions[cnt], mon);
+                _pBlocks.Add(pb);
+                cnt++;
+            }
 
-            currentPlayerID = 0;
-
-            firstUpdate = true;
+            _firstUpdate = true;
             base.Initialize();
         }
 
@@ -91,7 +91,7 @@ namespace GameEngine {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             LoadTextures();
             LoadFonts();
@@ -111,64 +111,52 @@ namespace GameEngine {
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
-            screenWidth = graphics.GraphicsDevice.Viewport.Width;
-            screenHeight = graphics.GraphicsDevice.Viewport.Height;
-            freshKeyboardState = Keyboard.GetState();
-            freshMouseState = Mouse.GetState();
+            _screenWidth = graphics.GraphicsDevice.Viewport.Width;
+            _screenHeight = graphics.GraphicsDevice.Viewport.Height;
+            _freshKeyboardState = Keyboard.GetState();
+            _freshMouseState = Mouse.GetState();
 
-            if (freshKeyboardState.IsKeyDown(Keys.Escape))
+            if (_freshKeyboardState.IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (firstUpdate)
+            if (_firstUpdate)
             {
                 GamePieces.Session.Game.StartTurn();
 
-                int index = 0;
-                foreach (Die die in DiceController.GetDice())
+                var index = 0;
+                foreach (var die in DiceController.GetDice())
                 {
-                    diceRow.addDie(die, index);
+                    _diceRow.addDie(die, index);
                     index++;
                 }
 
-                //////////////////////////////////////
-                Texture2D cth;
-                textureList.TryGetValue("cthulhu", out cth);
-                int cnt = 0;
-                foreach (GamePieces.Monsters.Monster player in players)
-                {
-                    PlayerBlock pb = new PlayerBlock(cth, playerPositions[cnt], player);
-                    pBlocks.Add(pb);
-                    cnt++;
-                }
-                //////////////////////////////////////
-
-                firstUpdate = false;
+                _firstUpdate = false;
             }
 
-            if (freshMouseState.LeftButton == ButtonState.Pressed && oldMouseState.LeftButton == ButtonState.Released)
+            if (_freshMouseState.LeftButton == ButtonState.Pressed && _oldMouseState.LeftButton == ButtonState.Released)
             {
-                foreach (DiceSprite ds in diceRow.getDiceSprites())
+                foreach (var ds in _diceRow.getDiceSprites())
                 {
-                    if (ds.mouseOver(freshMouseState))
+                    if (ds.mouseOver(_freshMouseState))
                     {
                         ds.Click();
                     }
                 }
             }
 
-            if (freshKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space))
+            if (_freshKeyboardState.IsKeyDown(Keys.Space) && _oldKeyboardState.IsKeyUp(Keys.Space))
             {
                 DiceController.Roll();
             }
 
-            foreach(DiceSprite ds in diceRow.getDiceSprites())
+            foreach(var ds in _diceRow.getDiceSprites())
             {
                 ds.Update();
             }
 
 
-            oldMouseState = freshMouseState;
-            oldKeyboardState = freshKeyboardState;
+            _oldMouseState = _freshMouseState;
+            _oldKeyboardState = _freshKeyboardState;
 
             base.Update(gameTime);
         }
@@ -180,24 +168,24 @@ namespace GameEngine {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            _spriteBatch.Begin();
 
-            foreach(PlayerBlock pb in pBlocks)
+            foreach(PlayerBlock pb in _pBlocks)
             {
-                pb.draw(spriteBatch);
+                pb.Draw(_spriteBatch);
             }
 
-            foreach (DiceSprite ds in diceRow.getDiceSprites())
+            foreach (DiceSprite ds in _diceRow.getDiceSprites())
             {
-                ds.Draw(spriteBatch);
+                ds.Draw(_spriteBatch);
             }
 
-            foreach(TextPrompt tp in textPrompts)
+            foreach(TextPrompt tp in _textPrompts)
             {
-                tp.Draw(spriteBatch);
+                tp.Draw(_spriteBatch);
             }
 
-            spriteBatch.End();
+            _spriteBatch.End();
             base.Draw(gameTime);
         }
 
@@ -206,14 +194,14 @@ namespace GameEngine {
 
         private void AddTexture(string filePath, string name)
         {
-            Texture2D toAdd = Content.Load<Texture2D>(filePath);
-            textureList.Add(name, toAdd);
+            var toAdd = Content.Load<Texture2D>(filePath);
+            TextureList.Add(name, toAdd);
         }
 
         private void AddFont(string filePath, string name)
         {
-            SpriteFont toAdd = Content.Load<SpriteFont>(filePath);
-            fontList.Add(name, toAdd);
+            var toAdd = Content.Load<SpriteFont>(filePath);
+            FontList.Add(name, toAdd);
         }
 
         private void LoadTextures()
