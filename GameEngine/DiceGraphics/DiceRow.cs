@@ -28,5 +28,10 @@ namespace GameEngine.DiceGraphics
         {
             return diceSprites;
         }
+
+        public void clear()
+        {
+            diceSprites.Clear();
+        }
     }
 }

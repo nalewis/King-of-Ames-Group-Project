@@ -19,7 +19,7 @@ namespace GameEngine.DiceGraphics
             this.die = die;
             this.index = index;
             position = pos;
-            changeFace("dice1");
+            Update();
         }
 
         public void Update()

@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System;
 
 namespace GameEngine {
     /// <summary>
@@ -37,6 +36,8 @@ namespace GameEngine {
         MouseState oldMouseState;
 
         bool firstUpdate;
+
+        int currentPlayerID;
 
         public Engine() {
             graphics = new GraphicsDeviceManager(this);
@@ -79,7 +80,7 @@ namespace GameEngine {
             players = GamePieces.Session.Game.Monsters;
             textPrompts = new List<TextPrompt>();
 
-
+            currentPlayerID = 0;
 
             firstUpdate = true;
             base.Initialize();
@@ -90,15 +91,10 @@ namespace GameEngine {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             LoadTextures();
             LoadFonts();
-
-           
-
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -126,16 +122,7 @@ namespace GameEngine {
             if (firstUpdate)
             {
                 GamePieces.Session.Game.StartTurn();
-                GamePieces.Session.Game.Roll();
 
-                textPrompts.Add(new TextPrompt("Fuck Yeah!", new Vector2(300, 300)));
-
-                int index = 0;
-                foreach(Die die in DiceController.GetDice())
-                {
-                    diceRow.addDie(die, index);
-                    index++;
-                }
 
                 //////////////////////////////////////
                 Texture2D cth;
@@ -164,8 +151,24 @@ namespace GameEngine {
                 }
             }
 
-            if (freshKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space))
-                DiceController.Roll();
+            if(MonsterController.RollsRemaining(currentPlayerID) < 3)
+            {
+                if (freshKeyboardState.IsKeyDown(Keys.Space) && oldKeyboardState.IsKeyUp(Keys.Space))
+                {
+                    DiceController.Roll();
+                    int index = 0;
+                    foreach (Die die in DiceController.GetDice())
+                    {
+                        diceRow.addDie(die, index);
+                        index++;
+                    }
+                }
+            }
+            else
+            {
+                DiceController.EndRolling();
+                diceRow.clear();
+            }
 
             foreach(DiceSprite ds in diceRow.getDiceSprites())
             {
@@ -186,7 +189,6 @@ namespace GameEngine {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
 
             foreach(PlayerBlock pb in pBlocks)
@@ -205,9 +207,11 @@ namespace GameEngine {
             }
 
             spriteBatch.End();
-
             base.Draw(gameTime);
         }
+
+   
+        ////////Content Helpers Below//////////
 
         private void AddTexture(string filePath, string name)
         {

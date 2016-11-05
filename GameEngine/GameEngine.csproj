@@ -89,6 +89,10 @@
       <Project>{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}</Project>
       <Name>Controllers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Data Structures\Data Structures.csproj">
+      <Project>{B20265A0-2010-4E1C-AB32-8E441DEF08F7}</Project>
+      <Name>Data Structures</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Game Pieces\Game Pieces.csproj">
       <Project>{b38a16c3-74c0-4a57-bcd9-6000681c06b1}</Project>
       <Name>Game Pieces</Name>
