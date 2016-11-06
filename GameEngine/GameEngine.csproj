@@ -60,6 +60,9 @@
     <Compile Include="DiceGraphics\DiceSprite.cs" />
     <Compile Include="DiceGraphics\DiceRow.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="GameScreens\GameScreen.cs" />
+    <Compile Include="GameScreens\MainGameScreen.cs" />
+    <Compile Include="GameScreens\TestScreen.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="PlayerBlock.cs" />
     <Compile Include="OldEngine.cs" />

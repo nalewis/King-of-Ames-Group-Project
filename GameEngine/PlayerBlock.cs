@@ -1,4 +1,5 @@
-﻿using GamePieces.Monsters;
+﻿using GameEngine.GameScreens;
+using GamePieces.Monsters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -48,10 +49,10 @@ namespace GameEngine
             switch (Monster.Location)
             {
                 case Location.TokyoCity:
-                    DisplayPosition = Engine.PositionList["TokyoCity"];
+                    DisplayPosition = MainGameScreen.PositionList["TokyoCity"];
                     break;
                 case Location.TokyoBay:
-                    DisplayPosition = Engine.PositionList["TokyoBay"];
+                    DisplayPosition = MainGameScreen.PositionList["TokyoBay"];
                     break;
                 case Location.Default:
                     break;

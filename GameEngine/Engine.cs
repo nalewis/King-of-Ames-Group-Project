@@ -1,10 +1,7 @@
-﻿using GameEngine.DiceGraphics;
-using Controllers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System;
+using GameEngine.GameScreens;
 
 namespace GameEngine {
     /// <summary>
@@ -12,27 +9,16 @@ namespace GameEngine {
     /// </summary>
     public class Engine : Game
     {
-        private InputManager _inputManager;
-        private const int PlayerBlockLength = 300;
-        private const int PlayerBlockHeight = 200;
-        private const int DefaultPadding = 10;
-
         private readonly GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
 
+        public static InputManager InputManager;
+        public static SpriteBatch SpriteBatch;
+        public static List<GameScreen> ScreenList;
         public static Dictionary<string, Texture2D> TextureList;
         public static Dictionary<string, SpriteFont> FontList;
-        public static Dictionary<string, Vector2> PositionList;
 
-        private DiceRow _diceRow;
-
-        private List<PlayerBlock> _pBlocks;
-        private List<TextPrompt> _textPrompts;
-
-        private int _screenWidth;
-        private int _screenHeight;
-
-        private bool _firstUpdate;
+        public static int ScreenWidth;
+        public static int ScreenHeight;
 
         public Engine() {
             _graphics = new GraphicsDeviceManager(this);
@@ -52,19 +38,13 @@ namespace GameEngine {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            _screenWidth = _graphics.GraphicsDevice.Viewport.Width;
-            _screenHeight = _graphics.GraphicsDevice.Viewport.Height;
-            PositionList = InitializePositions();
+            ScreenWidth = _graphics.GraphicsDevice.Viewport.Width;
+            ScreenHeight = _graphics.GraphicsDevice.Viewport.Height;
 
             TextureList = new Dictionary<string, Texture2D>();
             FontList = new Dictionary<string, SpriteFont>();
-            _diceRow = new DiceRow(PositionList["DicePos"]);
-            _pBlocks = new List<PlayerBlock>();
-            _textPrompts = new List<TextPrompt>();
+            InputManager = new InputManager(this);
 
-            _firstUpdate = true; //Stupid and needs to be removed
-
-            _inputManager = new InputManager(this);
             base.Initialize();
         }
 
@@ -73,12 +53,12 @@ namespace GameEngine {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             LoadTextures();
             LoadFonts();
 
-            _pBlocks = InitializePlayerBlocks();
+            AddScreen(new MainGameScreen());
         }
 
         /// <summary>
@@ -86,7 +66,14 @@ namespace GameEngine {
         /// game-specific content.
         /// </summary>
         protected override void UnloadContent() {
-            // TODO: Unload any non ContentManager content here
+            foreach (var screen in ScreenList)
+            {
+                screen.UnloadAssets();
+            }
+            TextureList.Clear();
+            FontList.Clear();
+            ScreenList.Clear();
+            Content.Unload();
         }
 
         /// <summary>
@@ -94,49 +81,22 @@ namespace GameEngine {
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime) {
-            _screenWidth = _graphics.GraphicsDevice.Viewport.Width;
-            _screenHeight = _graphics.GraphicsDevice.Viewport.Height;
-
-            if (_inputManager.KeyPressed(Keys.Escape))
-                Exit();
-
-            if (_firstUpdate)
+        protected override void Update(GameTime gameTime)
+        {
+            var index = ScreenList.Count - 1;
+            while (ScreenList[index].IsPopup &&
+                   ScreenList[index].IsActive)
             {
-                GamePieces.Session.Game.StartTurn();
-
-                _diceRow.AddDice(DiceController.GetDice());
-
-                _textPrompts.Add(new TextPrompt("Some Text", PositionList["TextPrompt1"]));
-
-                _firstUpdate = false;
+                index--;
             }
 
-            if (_inputManager.LeftClick())
+            for (var i = index; i < ScreenList.Count; i++)
             {
-                foreach (var ds in _diceRow.DiceSprites)
-                {
-                    if (ds.mouseOver(_inputManager.FreshMouseState))
-                    {
-                        ds.Click();
-                    }
-                }
+                ScreenList[i].Update(gameTime);
             }
 
-            if (_inputManager.KeyPressed(Keys.Space))
-            {
-                DiceController.Roll();
-            }
-
-            foreach(var ds in _diceRow.DiceSprites)
-            {
-                ds.Update();
-            }
-
-            foreach (var pb in _pBlocks)
-            {
-                pb.Update();
-            }
+            ScreenWidth = _graphics.GraphicsDevice.Viewport.Width;
+            ScreenHeight = _graphics.GraphicsDevice.Viewport.Height;
 
             base.Update(gameTime);
         }
@@ -145,27 +105,21 @@ namespace GameEngine {
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            _spriteBatch.Begin();
-
-            foreach(var pb in _pBlocks)
+        protected override void Draw(GameTime gameTime)
+        {
+            var index = ScreenList.Count - 1;
+            while (ScreenList[index].IsPopup)
             {
-                pb.Draw(_spriteBatch);
+                index--;
             }
 
-            foreach (var ds in _diceRow.DiceSprites)
+            GraphicsDevice.Clear(ScreenList[index].BackgroundColor);
+
+            for (var i = index; i < ScreenList.Count; i++)
             {
-                ds.Draw(_spriteBatch);
+                ScreenList[i].Draw(gameTime);
             }
 
-            foreach(var tp in _textPrompts)
-            {
-                tp.Draw(_spriteBatch);
-            }
-
-            _spriteBatch.End();
             base.Draw(gameTime);
         }
 
@@ -182,6 +136,26 @@ namespace GameEngine {
         {
             var toAdd = Content.Load<SpriteFont>(filePath);
             FontList.Add(name, toAdd);
+        }
+
+        public static void AddScreen(GameScreen screen)
+        {
+            if (ScreenList == null) { ScreenList = new List<GameScreen>(); }
+            ScreenList.Add(screen);
+            screen.LoadAssets();
+        }
+
+        public static void RemoveScreen(GameScreen screen)
+        {
+            screen.UnloadAssets();
+            ScreenList.Remove(screen);
+            if(ScreenList.Count < 1) { AddScreen(new TestScreen());}
+        }
+
+        public static void ChangeScreens(GameScreen currentScreen, GameScreen nextScreen)
+        {
+            RemoveScreen(currentScreen);
+            AddScreen(nextScreen);
         }
 
         private void LoadTextures()
@@ -203,68 +177,8 @@ namespace GameEngine {
             AddFont("Fonts\\BigFont", "BigFont");
         }
 
-        private Dictionary<string, Vector2> InitializePositions()
-        {
-            return new Dictionary<string, Vector2>
-            {
-                {"TopLeft", new Vector2(DefaultPadding, DefaultPadding)},
-                {"TopCenter", new Vector2((_screenWidth/2) - (PlayerBlockLength/2), DefaultPadding)},
-                {"TopRight", new Vector2(_screenWidth - DefaultPadding - PlayerBlockLength, DefaultPadding)},
-                {"MidLeft", new Vector2(10, ((_screenHeight/2) - (PlayerBlockHeight/2)))},
-                {"MidRight", new Vector2(_screenWidth - DefaultPadding - PlayerBlockLength, ((_screenHeight/2) - (PlayerBlockHeight/2)))},
-                {"BottomCenter", new Vector2((_screenWidth/2) - (PlayerBlockLength/2), _screenHeight - PlayerBlockHeight)},
-                {"TokyoCity", new Vector2() },
-                {"TokyoBay", new Vector2() },
-                {"DicePos", new Vector2(DefaultPadding, _screenHeight - PlayerBlockHeight)},
-                {"TextPrompt1", new Vector2(400, 400) }
-            };
-        }
+        
 
-        private static List<PlayerBlock> InitializePlayerBlocks()
-        {
-            var tempTexture = TextureList["cthulhu"];
-            var monList = GamePieces.Session.Game.Monsters;
-            var toReturn = new List<PlayerBlock>();
-
-            switch (monList.Count)
-            {
-                case 2:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopCenter"], monList[1]));
-                    break;
-                case 3:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[2]));
-                    break;
-                case 4:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[3]));
-                    break;
-                case 5:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[3]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[4]));
-                    break;
-                case 6:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopCenter"], monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[3]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[4]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[5]));
-                    break;
-                default:
-                    Console.WriteLine("Something went wrong.");
-                    break;
-            }
-
-            return toReturn;
-        }
 
     }
 }
