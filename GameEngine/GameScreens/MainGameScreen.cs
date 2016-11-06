@@ -4,20 +4,32 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using GameEngine.GraphicPieces;
+using GamePieces.Monsters;
 
 namespace GameEngine.GameScreens
 {
     class MainGameScreen : GameScreen
     {
-        private List<PlayerBlock> _pBlocks;
-        private List<TextPrompt> _textPrompts;
+        private readonly List<PlayerBlock> _pBlocks;
+        private readonly List<TextPrompt> _textPrompts;
         public static Dictionary<string, Vector2> PositionList { get; private set; }
         private DiceRow _diceRow;
         private bool _firstUpdate = true;
+        private readonly Monster _currentMonster;
 
         private const int PlayerBlockLength = 300;
         private const int PlayerBlockHeight = 200;
         private const int DefaultPadding = 10;
+
+        public MainGameScreen()
+        {
+            _currentMonster = GamePieces.Session.Game.Current;
+            _textPrompts = new List<TextPrompt>();
+            PositionList = CalculatePositions();
+            _diceRow = new DiceRow(PositionList["DicePos"]);
+            _pBlocks = InitializePlayerBlocks();
+
+        }
 
         public override void Update(GameTime gameTime)
         {
@@ -27,13 +39,19 @@ namespace GameEngine.GameScreens
             {
                 GamePieces.Session.Game.StartTurn();
                 _diceRow.AddDice(DiceController.GetDice());
-                _textPrompts.Add(new TextPrompt("Some Text", PositionList["TextPrompt1"]));
+                _textPrompts.Add(new TextPrompt(_currentMonster.Name + " it's your turn! Press R to roll.", PositionList["TextPrompt1"]));
                 _firstUpdate = false;
             }
 
             if (Engine.InputManager.KeyPressed(Keys.P))
             {
                 Engine.AddScreen(new PauseMenu());
+            }
+
+            if (Engine.InputManager.KeyPressed(Keys.R))
+            {
+                DiceController.Roll();
+                _diceRow.Hidden = false;
             }
 
             if (Engine.InputManager.LeftClick())
@@ -47,20 +65,7 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            if (Engine.InputManager.KeyPressed(Keys.Space))
-            {
-                DiceController.Roll();
-            }
-
-            foreach (var ds in _diceRow.DiceSprites)
-            {
-                ds.Update();
-            }
-
-            foreach (var pb in _pBlocks)
-            {
-                pb.Update();
-            }
+            UpdateGraphicsPieces();
 
             base.Update(gameTime);
         }
@@ -68,31 +73,9 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            foreach (var pb in _pBlocks)
-            {
-                pb.Draw(Engine.SpriteBatch);
-            }
-
-            foreach (var ds in _diceRow.DiceSprites)
-            {
-                ds.Draw(Engine.SpriteBatch);
-            }
-
-            foreach (var tp in _textPrompts)
-            {
-                tp.Draw(Engine.SpriteBatch);
-            }
+            DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
-        }
-
-        public override void LoadAssets()
-        {
-            _textPrompts = new List<TextPrompt>();
-            PositionList = CalculatePositions();
-            _diceRow = new DiceRow(PositionList["DicePos"]);
-            _pBlocks = InitializePlayerBlocks();
-            base.LoadAssets();
         }
 
         public override void UnloadAssets()
@@ -119,7 +102,7 @@ namespace GameEngine.GameScreens
                 {"TokyoCity", new Vector2() },
                 {"TokyoBay", new Vector2() },
                 {"DicePos", new Vector2(DefaultPadding, height - PlayerBlockHeight)},
-                {"TextPrompt1", new Vector2(400, 400) }
+                {"TextPrompt1", new Vector2(450, 400) }
             };
         }
 
@@ -167,6 +150,29 @@ namespace GameEngine.GameScreens
             }
 
             return toReturn;
+        }
+
+        private void UpdateGraphicsPieces()
+        {
+            foreach (var ds in _diceRow.DiceSprites)
+                ds.Update();
+            foreach (var pb in _pBlocks)
+                pb.Update();
+        }
+
+        private void DrawGraphicsPieces()
+        {
+            foreach (var pb in _pBlocks)
+                pb.Draw(Engine.SpriteBatch);
+
+            if (!_diceRow.Hidden)
+            {
+                foreach (var ds in _diceRow.DiceSprites)
+                    ds.Draw(Engine.SpriteBatch);
+            }
+
+            foreach (var tp in _textPrompts)
+                tp.Draw(Engine.SpriteBatch);
         }
     }
 }

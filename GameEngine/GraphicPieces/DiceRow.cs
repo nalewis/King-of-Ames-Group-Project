@@ -10,10 +10,13 @@ namespace GameEngine.GraphicPieces
         private Vector2 _position;
         private const int Padding = 75;
 
+        public bool Hidden { get; set; }
+
         public DiceRow(Vector2 pos)
         {
             DiceSprites = new List<DiceSprite>();
             _position = pos;
+            Hidden = true;
         }
        
         public void AddDice(List<Die> dL)

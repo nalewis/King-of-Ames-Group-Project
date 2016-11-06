@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using GameEngine.GameScreens;
-using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine {
     /// <summary>
@@ -27,9 +26,7 @@ namespace GameEngine {
         public Engine() {
             GraffixMngr = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
             IsMouseVisible = true;
-
             GraffixMngr.PreferredBackBufferHeight = 720; //1080
             GraffixMngr.PreferredBackBufferWidth = 1280; //1920
             GraffixMngr.IsFullScreen = false;
@@ -87,7 +84,7 @@ namespace GameEngine {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if(InputManager.KeyPressed(Keys.Escape)) AddScreen(new PauseMenu());
+            //if(InputManager.KeyPressed(Keys.Escape)) AddScreen(new PauseMenu());
 
             var index = ScreenList.Count - 1;
             while (ScreenList[index].IsPopup &&
@@ -146,8 +143,8 @@ namespace GameEngine {
             }
             GraffixMngr.ApplyChanges();
         }
-        
-        ////////Content Helpers Below//////////
+
+        #region ContentHelpers
 
         private void AddTexture(string filePath, string name)
         {
@@ -159,27 +156,6 @@ namespace GameEngine {
         {
             var toAdd = Content.Load<SpriteFont>(filePath);
             FontList.Add(name, toAdd);
-        }
-
-        public static void AddScreen(GameScreen newScreen)
-        {
-            if (ScreenList == null) { ScreenList = new List<GameScreen>(); }
-            if (ScreenList.Any(screen => screen.GetType() == newScreen.GetType())) { return; }
-            ScreenList.Add(newScreen);
-            newScreen.LoadAssets();
-        }
-
-        public static void RemoveScreen(GameScreen screen)
-        {
-            screen.UnloadAssets();
-            ScreenList.Remove(screen);
-            if(ScreenList.Count < 1) { AddScreen(new TestScreen());}
-        }
-
-        public static void ChangeScreens(GameScreen currentScreen, GameScreen nextScreen)
-        {
-            RemoveScreen(currentScreen);
-            AddScreen(nextScreen);
         }
 
         private void LoadTextures()
@@ -202,8 +178,32 @@ namespace GameEngine {
             AddFont("Fonts\\MenuFont", "MenuFont");
         }
 
-        
+        #endregion
 
+        #region GameScreenHelpers
+
+        public static void AddScreen(GameScreen newScreen)
+        {
+            if (ScreenList == null) { ScreenList = new List<GameScreen>(); }
+            if (ScreenList.Any(screen => screen.GetType() == newScreen.GetType())) { return; }
+            ScreenList.Add(newScreen);
+            newScreen.LoadAssets();
+        }
+
+        public static void RemoveScreen(GameScreen screen)
+        {
+            screen.UnloadAssets();
+            ScreenList.Remove(screen);
+            if (ScreenList.Count < 1) { AddScreen(new TestScreen()); }
+        }
+
+        public static void ChangeScreens(GameScreen currentScreen, GameScreen nextScreen)
+        {
+            RemoveScreen(currentScreen);
+            AddScreen(nextScreen);
+        }
+
+        #endregion
 
     }
 }
