@@ -3,16 +3,16 @@ using GamePieces.Monsters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GameEngine
+namespace GameEngine.GraphicPieces
 {
     internal class PlayerBlock
     {
-        private readonly Vector2 _defaultPos;
 
         public Vector2 DisplayPosition { get; set; }
         private Texture2D PlayerPortrait { get; }
         private Monster Monster { get; }
         private string PlayerName { get; }
+        private readonly string _positionString;
 
         private Vector2 _nameTextPos;
         private Vector2 _healthTextPos;
@@ -23,13 +23,13 @@ namespace GameEngine
         private const int Padding = 10;
         private const int YPad = 25;
 
-        public PlayerBlock(Texture2D texture, Vector2 pos, Monster mon)
+        public PlayerBlock(Texture2D texture, string positionString, Monster mon)
         {
             PlayerPortrait = texture;
-            _defaultPos = pos;
+            _positionString = positionString;
             Monster = mon;
 
-            DisplayPosition = _defaultPos;
+            DisplayPosition = MainGameScreen.PositionList[positionString];
             PlayerName = mon.Name;
             SetTextPositions();
         }
@@ -57,7 +57,7 @@ namespace GameEngine
                 case Location.Default:
                     break;
                 default:
-                    DisplayPosition = _defaultPos;
+                    DisplayPosition = MainGameScreen.PositionList[_positionString];
                     break;
             }
 
@@ -78,6 +78,5 @@ namespace GameEngine
             sb.DrawString(font, "Energy: " + Monster.Energy, _energyTextPos, Color.Blue);
             sb.DrawString(font, "Points: " + Monster.VictroyPoints, _pointsTextPos, Color.Blue);
         }
-
     }
 }

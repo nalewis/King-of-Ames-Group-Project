@@ -57,8 +57,8 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DiceGraphics\DiceSprite.cs" />
-    <Compile Include="DiceGraphics\DiceRow.cs" />
+    <Compile Include="GraphicPieces\DiceSprite.cs" />
+    <Compile Include="GraphicPieces\DiceRow.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="GameScreens\GameScreen.cs" />
     <Compile Include="GameScreens\MainGameScreen.cs" />
@@ -66,9 +66,9 @@
     <Compile Include="GameScreens\PauseMenu.cs" />
     <Compile Include="GameScreens\TestScreen.cs" />
     <Compile Include="InputManager.cs" />
-    <Compile Include="PlayerBlock.cs" />
+    <Compile Include="GraphicPieces\PlayerBlock.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="TextPrompt.cs" />
+    <Compile Include="GraphicPieces\TextPrompt.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">

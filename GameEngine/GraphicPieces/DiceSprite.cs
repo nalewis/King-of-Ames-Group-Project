@@ -2,10 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using colour = Microsoft.Xna.Framework.Color;
 
-namespace GameEngine.DiceGraphics
+namespace GameEngine.GraphicPieces
 {
     class DiceSprite
     {
@@ -27,32 +26,32 @@ namespace GameEngine.DiceGraphics
             switch (Die.Symbol)
             {
                 case Symbol.One:
-                    changeFace("dice1");
+                    ChangeFace("dice1");
                     break;
 
                 case Symbol.Two:
-                    changeFace("dice2");
+                    ChangeFace("dice2");
                     break;
 
                 case Symbol.Three:
-                    changeFace("dice3");
+                    ChangeFace("dice3");
                     break;
 
                 case Symbol.Heal:
-                    changeFace("diceHealth");
+                    ChangeFace("diceHealth");
                     break;
 
                 case Symbol.Attack:
-                    changeFace("diceAttack");
+                    ChangeFace("diceAttack");
                     break;
 
                 case Symbol.Energy:
-                    changeFace("diceEnergy");
+                    ChangeFace("diceEnergy");
                     break;
             }
         }
 
-        private void changeFace(string newFace)
+        private void ChangeFace(string newFace)
         {
             Texture2D getTexture;
             Engine.TextureList.TryGetValue(newFace, out getTexture);
@@ -64,16 +63,12 @@ namespace GameEngine.DiceGraphics
             sb.Draw(CurrentFace, Position, Die.Save ? colour.Red : colour.White);
         }
 
-        public bool mouseOver(MouseState mouse)
+        public bool MouseOver(MouseState mouse)
         {
-            if (mouse.Position.X > Position.X &&
-                mouse.Position.X < Position.X + CurrentFace.Width &&
-                mouse.Position.Y > Position.Y &&
-                mouse.Position.Y < Position.Y + CurrentFace.Height) { return true; }
-            else
-            {
-                return false;
-            }
+            return mouse.Position.X > Position.X &&
+                   mouse.Position.X < Position.X + CurrentFace.Width &&
+                   mouse.Position.Y > Position.Y &&
+                   mouse.Position.Y < Position.Y + CurrentFace.Height;
         }
 
         public void Click()

@@ -1,8 +1,8 @@
-﻿using GamePieces.Dice;
+﻿using System.Collections.Generic;
+using GamePieces.Dice;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 
-namespace GameEngine.DiceGraphics
+namespace GameEngine.GraphicPieces
 {
     class DiceRow
     {
@@ -24,6 +24,7 @@ namespace GameEngine.DiceGraphics
                 DiceSprites.Add(new DiceSprite(die, diePos, DiceSprites.Count));
             }
         }
+
 
         public void Clear()
         {

@@ -11,7 +11,7 @@ namespace GameEngine {
     /// </summary>
     public class Engine : Game
     {
-        private static GraphicsDeviceManager _graphicsMngr;
+        public static GraphicsDeviceManager GraffixMngr;
 
         public static bool ExitGame = false;
 
@@ -25,14 +25,14 @@ namespace GameEngine {
         public static int ScreenHeight;
 
         public Engine() {
-            _graphicsMngr = new GraphicsDeviceManager(this);
+            GraffixMngr = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             IsMouseVisible = true;
 
-            _graphicsMngr.PreferredBackBufferHeight = 720; //1080
-            _graphicsMngr.PreferredBackBufferWidth = 1280; //1920
-            _graphicsMngr.IsFullScreen = false;
+            GraffixMngr.PreferredBackBufferHeight = 720; //1080
+            GraffixMngr.PreferredBackBufferWidth = 1280; //1920
+            GraffixMngr.IsFullScreen = false;
         }
 
         /// <summary>
@@ -42,8 +42,8 @@ namespace GameEngine {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            ScreenWidth = _graphicsMngr.GraphicsDevice.Viewport.Width;
-            ScreenHeight = _graphicsMngr.GraphicsDevice.Viewport.Height;
+            ScreenWidth = GraffixMngr.GraphicsDevice.Viewport.Width;
+            ScreenHeight = GraffixMngr.GraphicsDevice.Viewport.Height;
 
             TextureList = new Dictionary<string, Texture2D>();
             FontList = new Dictionary<string, SpriteFont>();
@@ -104,8 +104,8 @@ namespace GameEngine {
             if (ExitGame)
                 Exit();
 
-            ScreenWidth = _graphicsMngr.GraphicsDevice.Viewport.Width;
-            ScreenHeight = _graphicsMngr.GraphicsDevice.Viewport.Height;
+            ScreenWidth = GraffixMngr.GraphicsDevice.Viewport.Width;
+            ScreenHeight = GraffixMngr.GraphicsDevice.Viewport.Height;
 
             base.Update(gameTime);
         }
@@ -136,15 +136,15 @@ namespace GameEngine {
         {
             if (res.Equals("1280x720"))
             {
-                _graphicsMngr.PreferredBackBufferWidth = 1280;
-                _graphicsMngr.PreferredBackBufferHeight = 720;
+                GraffixMngr.PreferredBackBufferWidth = 1280;
+                GraffixMngr.PreferredBackBufferHeight = 720;
             }
             else if (res.Equals("1920x1080"))
             {
-                _graphicsMngr.PreferredBackBufferWidth = 1920;
-                _graphicsMngr.PreferredBackBufferHeight = 1080;
+                GraffixMngr.PreferredBackBufferWidth = 1920;
+                GraffixMngr.PreferredBackBufferHeight = 1080;
             }
-            _graphicsMngr.ApplyChanges();
+            GraffixMngr.ApplyChanges();
         }
         
         ////////Content Helpers Below//////////

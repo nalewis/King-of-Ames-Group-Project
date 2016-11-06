@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Controllers;
-using GameEngine.DiceGraphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using GameEngine.GraphicPieces;
 
 namespace GameEngine.GameScreens
 {
@@ -21,6 +21,8 @@ namespace GameEngine.GameScreens
 
         public override void Update(GameTime gameTime)
         {
+            CalculatePositions();
+            
             if (_firstUpdate)
             {
                 GamePieces.Session.Game.StartTurn();
@@ -38,7 +40,7 @@ namespace GameEngine.GameScreens
             {
                 foreach (var ds in _diceRow.DiceSprites)
                 {
-                    if (ds.mouseOver(Engine.InputManager.FreshMouseState))
+                    if (ds.MouseOver(Engine.InputManager.FreshMouseState))
                     {
                         ds.Click();
                     }
@@ -87,7 +89,7 @@ namespace GameEngine.GameScreens
         public override void LoadAssets()
         {
             _textPrompts = new List<TextPrompt>();
-            PositionList = InitializePositions();
+            PositionList = CalculatePositions();
             _diceRow = new DiceRow(PositionList["DicePos"]);
             _pBlocks = InitializePlayerBlocks();
             base.LoadAssets();
@@ -102,19 +104,21 @@ namespace GameEngine.GameScreens
             base.UnloadAssets();
         }
 
-        private static Dictionary<string, Vector2> InitializePositions()
+        private static Dictionary<string, Vector2> CalculatePositions()
         {
+            var width = Engine.GraffixMngr.GraphicsDevice.Viewport.Width;
+            var height = Engine.GraffixMngr.GraphicsDevice.Viewport.Height;
             return new Dictionary<string, Vector2>
             {
                 {"TopLeft", new Vector2(DefaultPadding, DefaultPadding)},
-                {"TopCenter", new Vector2((Engine.ScreenWidth/2) - (PlayerBlockLength/2), DefaultPadding)},
-                {"TopRight", new Vector2(Engine.ScreenWidth - DefaultPadding - PlayerBlockLength, DefaultPadding)},
-                {"MidLeft", new Vector2(10, ((Engine.ScreenHeight/2) - (PlayerBlockHeight/2)))},
-                {"MidRight", new Vector2(Engine.ScreenWidth - DefaultPadding - PlayerBlockLength, ((Engine.ScreenHeight/2) - (PlayerBlockHeight/2)))},
-                {"BottomCenter", new Vector2((Engine.ScreenWidth/2) - (PlayerBlockLength/2), Engine.ScreenHeight - PlayerBlockHeight)},
+                {"TopCenter", new Vector2((width/2) - (PlayerBlockLength/2), DefaultPadding)},
+                {"TopRight", new Vector2(width - DefaultPadding - PlayerBlockLength, DefaultPadding)},
+                {"MidLeft", new Vector2(10, ((height/2) - (PlayerBlockHeight/2)))},
+                {"MidRight", new Vector2(width - DefaultPadding - PlayerBlockLength, ((height/2) - (PlayerBlockHeight/2)))},
+                {"BottomCenter", new Vector2((width/2) - (PlayerBlockLength/2), height - PlayerBlockHeight)},
                 {"TokyoCity", new Vector2() },
                 {"TokyoBay", new Vector2() },
-                {"DicePos", new Vector2(DefaultPadding, Engine.ScreenHeight - PlayerBlockHeight)},
+                {"DicePos", new Vector2(DefaultPadding, height - PlayerBlockHeight)},
                 {"TextPrompt1", new Vector2(400, 400) }
             };
         }
@@ -128,34 +132,34 @@ namespace GameEngine.GameScreens
             switch (monList.Count)
             {
                 case 2:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopCenter"], monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopCenter", monList[1]));
                     break;
                 case 3:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[2]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[2]));
                     break;
                 case 4:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[3]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "MidLeft", monList[2]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "MidRight", monList[3]));
                     break;
                 case 5:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[3]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[4]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[2]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "MidLeft", monList[3]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "MidRight", monList[4]));
                     break;
                 case 6:
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["BottomCenter"], monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopLeft"], monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopCenter"], monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["TopRight"], monList[3]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidLeft"], monList[4]));
-                    toReturn.Add(new PlayerBlock(tempTexture, PositionList["MidRight"], monList[5]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[1]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopCenter", monList[2]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[3]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "MidLeft", monList[4]));
+                    toReturn.Add(new PlayerBlock(tempTexture, "MidRight", monList[5]));
                     break;
                 default:
                     Console.WriteLine("Something went wrong.");
