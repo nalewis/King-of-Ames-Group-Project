@@ -27,7 +27,7 @@ namespace Views
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 this.Dispose();
-                Client.clientStop();
+                //Client.clientStop();
                 Environment.Exit(0);
             }
         }
@@ -35,7 +35,7 @@ namespace Views
         private void mainMenu_Click(object sender, EventArgs e)
         {
             MainMenuForm main = new MainMenuForm();
-            Client.clientStop();
+            //Client.clientStop();
             main.Show();
             this.Dispose();
         }
