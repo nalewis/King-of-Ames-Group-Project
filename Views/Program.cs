@@ -173,14 +173,17 @@ namespace Views
         public static bool isConnecting = false;
         public static string conn = "";
         public static NetClient _client = new NetClient(new NetPeerConfiguration("King of Ames"));
-        private static List<string> others = new List<string>();
+        private static Thread loop;
+        private static bool shouldStop = false;
 
 
         public static bool connect()
         {
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
-            Thread loop = new Thread(recieveLoop);
+            //resets the receive thread
+            shouldStop = false;
+            loop = new Thread(recieveLoop);
             loop.Start();
             _client.Connect(conn, 6969, outMsg);
            //if(_client.ConnectionStatus == NetConnectionStatus.Disconnected) { return false; }
@@ -189,7 +192,7 @@ namespace Views
 
         public static void recieveLoop()
         {
-            while (true)
+            while (!shouldStop)
             {
                 NetIncomingMessage inc;
                 if ((inc = _client.ReadMessage()) == null) continue;
@@ -207,14 +210,14 @@ namespace Views
                         {
                             Console.WriteLine(inc.ReadString());
                         }
-                        else if(type==(byte)PacketTypes.ListUsers)
+                        /*else if(type==(byte)PacketTypes.ListUsers)
                         {
                             while(inc.PeekString() != null)
                             {
                                 others.Add(inc.ReadString());
                             }
                             Console.WriteLine("Received Users");
-                        }
+                        }*/
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -225,6 +228,8 @@ namespace Views
         public static void clientStop()
         {
             _client.Shutdown("Closed");
+            //ends the receive loop
+            shouldStop = true;
             NetworkClasses.updateCharacter(User.id, null);
             NetworkClasses.findRemovePlayer(Client.conn, User.id);
         }
