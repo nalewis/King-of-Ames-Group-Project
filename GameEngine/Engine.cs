@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 using GameEngine.GameScreens;
+using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine {
     /// <summary>
@@ -9,7 +11,9 @@ namespace GameEngine {
     /// </summary>
     public class Engine : Game
     {
-        private readonly GraphicsDeviceManager _graphics;
+        private static GraphicsDeviceManager _graphicsMngr;
+
+        public static bool ExitGame = false;
 
         public static InputManager InputManager;
         public static SpriteBatch SpriteBatch;
@@ -21,14 +25,14 @@ namespace GameEngine {
         public static int ScreenHeight;
 
         public Engine() {
-            _graphics = new GraphicsDeviceManager(this);
+            _graphicsMngr = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
             IsMouseVisible = true;
 
-            _graphics.PreferredBackBufferHeight = 720; //1080
-            _graphics.PreferredBackBufferWidth = 1280; //1920
-            _graphics.IsFullScreen = false;
+            _graphicsMngr.PreferredBackBufferHeight = 720; //1080
+            _graphicsMngr.PreferredBackBufferWidth = 1280; //1920
+            _graphicsMngr.IsFullScreen = false;
         }
 
         /// <summary>
@@ -38,8 +42,8 @@ namespace GameEngine {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-            ScreenWidth = _graphics.GraphicsDevice.Viewport.Width;
-            ScreenHeight = _graphics.GraphicsDevice.Viewport.Height;
+            ScreenWidth = _graphicsMngr.GraphicsDevice.Viewport.Width;
+            ScreenHeight = _graphicsMngr.GraphicsDevice.Viewport.Height;
 
             TextureList = new Dictionary<string, Texture2D>();
             FontList = new Dictionary<string, SpriteFont>();
@@ -83,6 +87,8 @@ namespace GameEngine {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            if(InputManager.KeyPressed(Keys.Escape)) AddScreen(new PauseMenu());
+
             var index = ScreenList.Count - 1;
             while (ScreenList[index].IsPopup &&
                    ScreenList[index].IsActive)
@@ -95,8 +101,11 @@ namespace GameEngine {
                 ScreenList[i].Update(gameTime);
             }
 
-            ScreenWidth = _graphics.GraphicsDevice.Viewport.Width;
-            ScreenHeight = _graphics.GraphicsDevice.Viewport.Height;
+            if (ExitGame)
+                Exit();
+
+            ScreenWidth = _graphicsMngr.GraphicsDevice.Viewport.Width;
+            ScreenHeight = _graphicsMngr.GraphicsDevice.Viewport.Height;
 
             base.Update(gameTime);
         }
@@ -123,7 +132,21 @@ namespace GameEngine {
             base.Draw(gameTime);
         }
 
-   
+        public static void ChangeResolution(string res)
+        {
+            if (res.Equals("1280x720"))
+            {
+                _graphicsMngr.PreferredBackBufferWidth = 1280;
+                _graphicsMngr.PreferredBackBufferHeight = 720;
+            }
+            else if (res.Equals("1920x1080"))
+            {
+                _graphicsMngr.PreferredBackBufferWidth = 1920;
+                _graphicsMngr.PreferredBackBufferHeight = 1080;
+            }
+            _graphicsMngr.ApplyChanges();
+        }
+        
         ////////Content Helpers Below//////////
 
         private void AddTexture(string filePath, string name)
@@ -138,11 +161,12 @@ namespace GameEngine {
             FontList.Add(name, toAdd);
         }
 
-        public static void AddScreen(GameScreen screen)
+        public static void AddScreen(GameScreen newScreen)
         {
             if (ScreenList == null) { ScreenList = new List<GameScreen>(); }
-            ScreenList.Add(screen);
-            screen.LoadAssets();
+            if (ScreenList.Any(screen => screen.GetType() == newScreen.GetType())) { return; }
+            ScreenList.Add(newScreen);
+            newScreen.LoadAssets();
         }
 
         public static void RemoveScreen(GameScreen screen)
@@ -175,6 +199,7 @@ namespace GameEngine {
         private void LoadFonts()
         {
             AddFont("Fonts\\BigFont", "BigFont");
+            AddFont("Fonts\\MenuFont", "MenuFont");
         }
 
         

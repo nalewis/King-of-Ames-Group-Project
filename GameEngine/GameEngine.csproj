@@ -62,10 +62,11 @@
     <Compile Include="Engine.cs" />
     <Compile Include="GameScreens\GameScreen.cs" />
     <Compile Include="GameScreens\MainGameScreen.cs" />
+    <Compile Include="GameScreens\OptionsMenu.cs" />
+    <Compile Include="GameScreens\PauseMenu.cs" />
     <Compile Include="GameScreens\TestScreen.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="PlayerBlock.cs" />
-    <Compile Include="OldEngine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TextPrompt.cs" />
   </ItemGroup>

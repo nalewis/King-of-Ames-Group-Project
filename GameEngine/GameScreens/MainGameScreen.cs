@@ -4,7 +4,6 @@ using GameEngine.DiceGraphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace GameEngine.GameScreens
 {
@@ -15,6 +14,7 @@ namespace GameEngine.GameScreens
         public static Dictionary<string, Vector2> PositionList { get; private set; }
         private DiceRow _diceRow;
         private bool _firstUpdate = true;
+
         private const int PlayerBlockLength = 300;
         private const int PlayerBlockHeight = 200;
         private const int DefaultPadding = 10;
@@ -27,6 +27,11 @@ namespace GameEngine.GameScreens
                 _diceRow.AddDice(DiceController.GetDice());
                 _textPrompts.Add(new TextPrompt("Some Text", PositionList["TextPrompt1"]));
                 _firstUpdate = false;
+            }
+
+            if (Engine.InputManager.KeyPressed(Keys.P))
+            {
+                Engine.AddScreen(new PauseMenu());
             }
 
             if (Engine.InputManager.LeftClick())
@@ -42,9 +47,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Space))
             {
-                //DiceController.Roll();
-
-                Engine.AddScreen(new TestScreen());
+                DiceController.Roll();
             }
 
             foreach (var ds in _diceRow.DiceSprites)
