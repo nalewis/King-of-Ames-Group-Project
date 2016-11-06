@@ -12,12 +12,14 @@ namespace GameEngine.GraphicPieces
         protected Die Die;
         protected Vector2 Position;
         protected int Index;
+        private DiceRow _diceRow;
 
-        public DiceSprite(Die die, Vector2 pos, int index)
+        public DiceSprite(Die die, Vector2 pos, int index, DiceRow diceRow)
         {
             Die = die;
             Index = index;
             Position = pos;
+            _diceRow = diceRow;
             Update();
         }
 
@@ -73,6 +75,7 @@ namespace GameEngine.GraphicPieces
 
         public void Click()
         {
+            if (_diceRow.Hidden) return;
             if (Die.Save)
             {
                 Controllers.DiceController.UnSaveDie(Index);

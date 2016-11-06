@@ -29,7 +29,7 @@ namespace GameEngine.GraphicPieces
             _positionString = positionString;
             Monster = mon;
 
-            DisplayPosition = MainGameScreen.PositionList[positionString];
+            DisplayPosition = MainGameScreen.GetPosition(positionString);
             PlayerName = mon.Name;
             SetTextPositions();
         }
@@ -49,15 +49,13 @@ namespace GameEngine.GraphicPieces
             switch (Monster.Location)
             {
                 case Location.TokyoCity:
-                    DisplayPosition = MainGameScreen.PositionList["TokyoCity"];
+                    DisplayPosition = MainGameScreen.GetPosition("TokyoCity");
                     break;
                 case Location.TokyoBay:
-                    DisplayPosition = MainGameScreen.PositionList["TokyoBay"];
+                    DisplayPosition = MainGameScreen.GetPosition("TokyoBay");
                     break;
                 case Location.Default:
-                    break;
-                default:
-                    DisplayPosition = MainGameScreen.PositionList[_positionString];
+                    DisplayPosition = MainGameScreen.GetPosition(_positionString);
                     break;
             }
 

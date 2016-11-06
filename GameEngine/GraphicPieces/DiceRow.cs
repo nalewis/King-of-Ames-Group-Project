@@ -24,7 +24,7 @@ namespace GameEngine.GraphicPieces
             foreach (var die in dL)
             {
                 var diePos = new Vector2(_position.X + (DiceSprites.Count * Padding), _position.Y);
-                DiceSprites.Add(new DiceSprite(die, diePos, DiceSprites.Count));
+                DiceSprites.Add(new DiceSprite(die, diePos, DiceSprites.Count, this));
             }
         }
 
