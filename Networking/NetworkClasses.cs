@@ -51,8 +51,11 @@ namespace Networking
                 adapter.Fill(ds);
                 if(ds.Tables[0].Rows.Count != 0)
                 {
+                    //update the players ip
+                    updateIP(ds.Tables[0].Rows[0]["Player_ID"].ToString(), ip);
+
                     User.username = ds.Tables[0].Rows[0]["Username"].ToString();
-                    User.localIp = Helpers.GetLocalIPAddress();
+                    User.localIp = ds.Tables[0].Rows[0]["Local_IP"].ToString();
                     User.id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
                     User.character = ds.Tables[0].Rows[0]["_Character"].ToString();
                     connection.Close();
@@ -65,6 +68,28 @@ namespace Networking
             }
 
             return false;
+        }
+
+        public static bool updateIP(string playerid, string ip)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            MySqlCommand command;
+            connection.Open();
+            try
+            {
+                command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_List SET Local_IP = @ip WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@ip", ip);
+                command.Parameters.AddWithValue("@playerid", playerid);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return true;
         }
 
         //Check if the player id is the host of a server (for use by the exit function)
