@@ -439,7 +439,7 @@ namespace Networking
             try
             {
                 MySqlCommand command = connection.CreateCommand();
-                command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = '' WHERE Host_IP = @hostip";//TODO maybe set to null?
+                command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";//TODO maybe set to null?
                 command.Parameters.AddWithValue("@hostip", hostip);
                 command.ExecuteNonQuery();
             }

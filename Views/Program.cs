@@ -226,6 +226,7 @@ namespace Views
         {
             _client.Shutdown("Closed");
             NetworkClasses.updateCharacter(User.id, null);
+            NetworkClasses.findRemovePlayer(Client.conn, User.id);
         }
 
         enum PacketTypes

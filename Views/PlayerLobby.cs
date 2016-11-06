@@ -36,6 +36,7 @@ namespace Views
             MainMenuForm main = new MainMenuForm();
             main.Show();
             NetworkClasses.updateCharacter(User.id, null);
+            NetworkClasses.findRemovePlayer(Client.conn, User.id);
             this.Dispose();
         }
 
