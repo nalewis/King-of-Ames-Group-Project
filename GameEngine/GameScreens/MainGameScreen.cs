@@ -166,7 +166,6 @@ namespace GameEngine.GameScreens
 
         private void BuyScreen()
         {
-            int i;
             Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
         }
 
