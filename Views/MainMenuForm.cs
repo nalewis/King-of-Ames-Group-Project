@@ -37,6 +37,7 @@ namespace Views
         private void JoinButton_Click(object sender, EventArgs e)
         {
             Form serverList = new ServerListForm();
+            Client._client.Start();
             serverList.Show();
             this.Dispose();
         }

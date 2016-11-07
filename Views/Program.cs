@@ -28,7 +28,7 @@ namespace Views
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Client._client.Start();
+            //Client._client.Start();
             Application.Run(new LoginForm());
         }
         //WIP TODO
@@ -180,7 +180,7 @@ namespace Views
 
         public static bool connect()
         {
-            _client.Start();
+            //_client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
             
