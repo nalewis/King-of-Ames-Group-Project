@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Controllers.Helpers;
 using Controllers.User;
 using Networking;
+using Controllers;
 
 namespace Views
 {
@@ -28,7 +29,6 @@ namespace Views
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Client._client.Start();
             Application.Run(new LoginForm());
         }
         //WIP TODO

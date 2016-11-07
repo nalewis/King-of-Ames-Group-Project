@@ -49,7 +49,7 @@ namespace Networking
                 MySqlDataAdapter adapter = new MySqlDataAdapter(command);
                 ds = new DataSet();
                 adapter.Fill(ds);
-                if(ds.Tables[0].Rows.Count != 0)
+                if (ds.Tables[0].Rows.Count != 0)
                 {
                     //update the players ip
                     updateIP(ds.Tables[0].Rows[0]["Player_ID"].ToString(), ip);
@@ -500,6 +500,58 @@ namespace Networking
 
             connection.Close();
             return count;
+        }
+
+        public static int[] getPlayerIDs(string hostip)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            DataSet ds;
+            int[] players = new int[6] { -1, -1, -1, -1, -1, -1 };
+
+            try
+            {
+                MySqlCommand command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostip", hostip);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                ds = new DataSet();
+                adapter.Fill(ds);
+                connection.Close();
+
+                if (ds.Tables[0].Rows.Count != 0)
+                {
+                    players[0] = Int32.Parse(ds.Tables[0].Rows[0]["Host"].ToString());
+
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
+                    {
+                        players[1] = Int32.Parse(ds.Tables[0].Rows[0]["Player_2"].ToString());
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_3"].ToString()))
+                    {
+                        players[2] = Int32.Parse(ds.Tables[0].Rows[0]["Player_3"].ToString());
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_4"].ToString()))
+                    {
+                        players[3] = Int32.Parse(ds.Tables[0].Rows[0]["Player_4"].ToString());
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_5"].ToString()))
+                    {
+                        players[4] = Int32.Parse(ds.Tables[0].Rows[0]["Player_5"].ToString());
+                    }
+                    if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_6"].ToString()))
+                    {
+                        players[5] = Int32.Parse(ds.Tables[0].Rows[0]["Player_6"].ToString());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
+            return players;
         }
     }
 }

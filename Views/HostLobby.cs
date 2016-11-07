@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Controllers.User;
 using Networking;
 using System.Data;
+using Controllers;
 
 namespace Views
 {
@@ -116,7 +117,16 @@ namespace Views
         private void start_game_Click(object sender, EventArgs e)
         {
             //TODO
-            //Start the game...?
+            int[] players = NetworkClasses.getPlayerIDs(User.localIp);
+            for(var i = 0; i < players.Length; i++)
+            {
+                if(players[i] != -1)
+                {
+                    DataSet ds = NetworkClasses.getPlayer(players[i]);
+                    LobbyController.AddPlayer(players[i], ds.Tables[0].Rows[0]["_Character"].ToString());
+                }
+            }
+            LobbyController.StartGame();
         }
     }
 }
