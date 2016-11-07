@@ -3,7 +3,6 @@ using Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 using GamePieces.Session;
@@ -97,12 +96,19 @@ namespace GameEngine.GameScreens
             if (_currentMonster.RemainingRolls == 0)
             {
                 _diceRow.Clear();
-                _textPrompts.Clear();
                 DiceController.EndRolling();
-                if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield) { _gameState = GameState.AskYieldCity; }
-                else if(Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield) { _gameState = GameState.AskYieldBay; }
-                else { StartNextTurn(); }
-                return;
+                if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
+                {
+                    _gameState = GameState.AskYieldCity;
+                    return;
+                }
+                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
+                {
+                    _gameState = GameState.AskYieldBay;
+                    return;
+                }
+                _textPrompts.Clear();
+                StartNextTurn();
             }
 
             if (Engine.InputManager.KeyPressed(Keys.R))
@@ -122,7 +128,8 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            _textPrompts.RemoveAt(_textPrompts.Count - 1);
+            if(_textPrompts.Count > 0)
+                _textPrompts.RemoveAt(_textPrompts.Count - 1);
             _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", _positionList["RollsLeft"]));
         }
 
@@ -137,15 +144,19 @@ namespace GameEngine.GameScreens
                 if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
                 {
                     _gameState = GameState.AskYieldBay;
+                    return;
                 }
                 StartNextTurn();
             }
-            if (!Engine.InputManager.KeyPressed(Keys.N)) return;
-            if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
+            if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                _gameState = GameState.AskYieldBay;
+                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
+                {
+                    _gameState = GameState.AskYieldBay;
+                    return;
+                }
+                StartNextTurn();
             }
-            StartNextTurn();
         }
 
         private void AskYieldBay()
@@ -189,6 +200,7 @@ namespace GameEngine.GameScreens
         private void StartNextTurn()
         {
             KoTGame.EndTurn();
+            _diceRow.Hidden = true;
             _gameState = GameState.StartTurn;
         }
 
