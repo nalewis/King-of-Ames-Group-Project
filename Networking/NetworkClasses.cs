@@ -1,6 +1,7 @@
 ﻿using System;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Collections.Generic;
 using Controllers.User;
 using Controllers.Helpers;
 
@@ -449,6 +450,20 @@ namespace Networking
             }
 
             connection.Close();
+        }
+
+        public static bool checkReady(List<int> players)
+        {
+            List<DataSet> players_list = new List<DataSet>();
+            foreach (int player in players)
+            {
+                players_list.Add(getPlayer(player));
+            }
+            foreach (DataSet player in players_list)
+            {
+                if(String.IsNullOrEmpty(player.Tables[0].Rows[0]["_Character"].ToString())) { return false; }
+            }
+            return true;
         }
 
         public static int getNumPlayers(int Server_ID)

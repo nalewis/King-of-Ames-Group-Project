@@ -47,7 +47,7 @@ namespace Controllers
                 playerIds.Add(player.Item1);
                 monsterNames.Add(player.Item2);
             }
-            Players.Clear();
+            //Players.Clear();
             Game.StartGame(playerIds, monsterNames);
         }
     }

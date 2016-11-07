@@ -114,6 +114,7 @@
             // 
             // start_game
             // 
+            this.start_game.Enabled = false;
             this.start_game.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.start_game.Location = new System.Drawing.Point(15, 239);
             this.start_game.Name = "start_game";
