@@ -55,7 +55,7 @@ namespace Networking
                     updateIP(ds.Tables[0].Rows[0]["Player_ID"].ToString(), ip);
 
                     User.username = ds.Tables[0].Rows[0]["Username"].ToString();
-                    User.localIp = ds.Tables[0].Rows[0]["Local_IP"].ToString();
+                    User.localIp = ip;
                     User.id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
                     User.character = ds.Tables[0].Rows[0]["_Character"].ToString();
                     connection.Close();

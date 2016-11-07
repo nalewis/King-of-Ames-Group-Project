@@ -33,10 +33,12 @@ namespace Views
 
         private void leaveGame_Click(object sender, EventArgs e)
         {
+            timer.Stop();
             MainMenuForm main = new MainMenuForm();
             main.Show();
             NetworkClasses.updateCharacter(User.id, null);
             NetworkClasses.findRemovePlayer(Client.conn, User.id);
+            Client.clientStop();
             this.Dispose();
         }
 
@@ -44,7 +46,10 @@ namespace Views
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
+                timer.Stop();
                 this.Dispose();
+                NetworkClasses.updateCharacter(User.id, null);
+                NetworkClasses.findRemovePlayer(Client.conn, User.id);
                 Client.clientStop();
                 Environment.Exit(0);
             }

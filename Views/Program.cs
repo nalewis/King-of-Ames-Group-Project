@@ -166,6 +166,7 @@ namespace Views
         }
 
     }
+
     static class Client
     {
         public static string myIP = User.localIp;
@@ -179,14 +180,16 @@ namespace Views
 
         public static bool connect()
         {
+            _client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
+            
             //resets the receive thread
             shouldStop = false;
             loop = new Thread(recieveLoop);
             loop.Start();
+
             _client.Connect(conn, 6969, outMsg);
-           //if(_client.ConnectionStatus == NetConnectionStatus.Disconnected) { return false; }
             return true;
         }
 
@@ -227,11 +230,15 @@ namespace Views
 
         public static void clientStop()
         {
+            //reset variables to make sure they're up to date
+            conn = "";
+            myIP = User.localIp;
+            myName = User.username;
+
             _client.Shutdown("Closed");
+
             //ends the receive loop
             shouldStop = true;
-            NetworkClasses.updateCharacter(User.id, null);
-            NetworkClasses.findRemovePlayer(Client.conn, User.id);
         }
 
         enum PacketTypes
@@ -247,7 +254,6 @@ namespace Views
             leave,
             close,
             Welcome,
-
         }
     }
 }
