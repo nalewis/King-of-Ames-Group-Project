@@ -3,7 +3,6 @@ using Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 using GamePieces.Session;
@@ -189,6 +188,7 @@ namespace GameEngine.GameScreens
         private void StartNextTurn()
         {
             KoTGame.EndTurn();
+            _diceRow.Hidden = true;
             _gameState = GameState.StartTurn;
         }
 
