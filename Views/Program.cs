@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Controllers.Helpers;
 using Controllers.User;
 using Networking;
+using Controllers;
 
 namespace Views
 {
@@ -28,7 +29,6 @@ namespace Views
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Client._client.Start();
             Application.Run(new LoginForm());
         }
         //WIP TODO
@@ -184,7 +184,7 @@ namespace Views
 
         public static bool connect()
         {
-            //_client.Start();
+            _client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
             outMsg.Write(Int32.Parse(User.id));
@@ -244,7 +244,6 @@ namespace Views
             outMsg.Write((byte)PacketTypes.leave);
             outMsg.Write(Int32.Parse(User.id));
             _client.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
-
             _client.Shutdown("Closed");
 
             //ends the receive loop

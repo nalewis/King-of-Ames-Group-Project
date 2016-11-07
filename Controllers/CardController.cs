@@ -41,5 +41,29 @@ namespace Controllers
         {
             return Game.CardsForSale.Count > 2 ? Game.CardsForSale[2] : null;
         }
+
+        /// <summary>
+        /// Buy the first card
+        /// </summary>
+        public static void BuyCardOne()
+        {
+            if(CardForSaleOne() != null) Game.BuyCard(0);
+        }
+
+        /// <summary>
+        /// Buy the second card
+        /// </summary>
+        public static void BuyCardTwo()
+        {
+            if(CardForSaleTwo() != null) Game.BuyCard(1);
+        }
+
+        /// <summary>
+        /// Buy the third card
+        /// </summary>
+        public static void BuyCardThree()
+        {
+            if(CardForSaleThree() != null) Game.BuyCard(2);
+        }
     }
 }
