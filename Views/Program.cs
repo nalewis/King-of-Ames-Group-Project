@@ -43,7 +43,7 @@ namespace Views
 
     class Host
     {
-        public static List<string> players = new List<string>(); 
+        public static List<int> players = new List<int>(); 
         private static NetServer _server;
         private static NetClient _client;
 
@@ -68,6 +68,7 @@ namespace Views
             _client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
+            outMsg.Write(Int32.Parse(User.id));
             _client.Connect(User.localIp, 6969, outMsg);
         }
 
@@ -88,8 +89,7 @@ namespace Views
                     case NetIncomingMessageType.Error:
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Client status changed: " + inc.SenderConnection.Status);
-                        break;
+                        Console.WriteLine("Client status changed: " + inc.SenderConnection.Status);                        break;
                     case NetIncomingMessageType.ConnectionApproval:
                         //Initially approves connecting clients based on their login byte
                         if (inc.ReadByte() == (byte)PacketTypes.Login)
@@ -97,7 +97,7 @@ namespace Views
                             Console.WriteLine(inc.MessageType);
 
                             inc.SenderConnection.Approve();
-                            players.Add(inc.SenderConnection.ToString());
+                            players.Add(inc.ReadInt32());
 
                             NetOutgoingMessage outMsg = _server.CreateMessage();
                             outMsg.Write((byte)PacketTypes.Welcome);
@@ -118,6 +118,10 @@ namespace Views
                         if (type == (byte)PacketTypes.ListUsers)
                         {
                             listUsers();
+                        }
+                        if(type == (byte)PacketTypes.leave)
+                        {
+                            players.Remove(inc.ReadInt32());
                         }
                         break;
                     default:
@@ -183,6 +187,7 @@ namespace Views
             //_client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
+            outMsg.Write(Int32.Parse(User.id));
             
             //resets the receive thread
             shouldStop = false;
@@ -234,6 +239,11 @@ namespace Views
             conn = "";
             myIP = User.localIp;
             myName = User.username;
+
+            var outMsg = _client.CreateMessage();
+            outMsg.Write((byte)PacketTypes.leave);
+            outMsg.Write(Int32.Parse(User.id));
+            _client.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
 
             _client.Shutdown("Closed");
 

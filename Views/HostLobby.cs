@@ -14,6 +14,7 @@ namespace Views
         public HostGameListForm()
         {
             InitializeComponent();
+            start_game.Enabled = false;
             updateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
             timer = new Timer();
@@ -25,6 +26,12 @@ namespace Views
         private void timer_Tick(object sender, EventArgs e)
         {
             updateList();
+            foreach (int player in Host.players)
+                {
+                Console.WriteLine(player);
+            }
+            //TODO check if all players have selected a character
+            //if (checkReady(Host.players)) { start_game.Enabled = true; }
         }
 
         public void HostGameListForm_Closing(object sender, FormClosingEventArgs e)
@@ -116,7 +123,8 @@ namespace Views
         private void start_game_Click(object sender, EventArgs e)
         {
             //TODO
-            //Start the game...?
+            //Populate LobbyController
+            //
         }
     }
 }

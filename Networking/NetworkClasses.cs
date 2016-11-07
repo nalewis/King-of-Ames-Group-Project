@@ -1,6 +1,7 @@
 ﻿using System;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Collections.Generic;
 using Controllers.User;
 using Controllers.Helpers;
 
@@ -449,6 +450,12 @@ namespace Networking
             }
 
             connection.Close();
+        }
+
+        public static bool checkReady(List<int> players)
+        {
+            
+            return false;
         }
 
         public static int getNumPlayers(int Server_ID)
