@@ -195,13 +195,13 @@ namespace GameEngine.GameScreens
                 {"MidLeft", new Vector2(10, ((height/2) - (PlayerBlockHeight/2)))},
                 {"MidRight", new Vector2(width - DefaultPadding - PlayerBlockLength, ((height/2) - (PlayerBlockHeight/2)))},
                 {"BottomCenter", new Vector2((width/2) - (PlayerBlockLength/2), height - PlayerBlockHeight)},
-                {"TokyoCity", new Vector2(490, 225) },
-                {"TokyoBay", new Vector2() },
+                {"TokyoCity", new Vector2(400, 225) },
+                {"TokyoBay", new Vector2(650, 300) },
                 {"DicePos", new Vector2(DefaultPadding, height - PlayerBlockHeight)},
-                {"TextPrompt1", new Vector2(175, 250) },
-                {"TextPrompt2", new Vector2(175, 400) },
-                {"RollsLeft", new Vector2(175, 275) },
-                {"WinText", new Vector2(300, 400) }
+                {"TextPrompt1", new Vector2(width - 400, 550) },
+                {"TextPrompt2", new Vector2(width - 400, 575) },
+                {"RollsLeft", new Vector2(width - 400, 600) },
+                {"WinText", new Vector2(width - 400, 550) }
             };
         }
 
