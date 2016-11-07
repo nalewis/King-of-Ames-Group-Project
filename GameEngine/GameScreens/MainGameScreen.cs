@@ -18,7 +18,6 @@ namespace GameEngine.GameScreens
         private readonly DiceRow _diceRow;
 
         private Monster _currentMonster;
-        private int _rollsLeft;
 
         private GameState _gameState;
 
@@ -39,39 +38,34 @@ namespace GameEngine.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            if (KoTGame.Winner == null)
-            {
-
-                //Here in case they moved, but should probably change this
-                CalculatePositions();
-
-                //Make sure we're on current monster
-                _currentMonster = KoTGame.Current;
-
-                switch (_gameState)
-                {
-                    case GameState.StartTurn:
-                        StartPlayersTurn();
-                        break;
-                    case GameState.Rolling:
-                        Rolling();
-                        break;
-                    case GameState.AskYieldCity:
-                        AskYieldCity();
-                        break;
-                    case GameState.AskYieldBay:
-                        AskYieldBay();
-                        break;
-                    default:
-                        throw new Exception("Haven't implemented this player state yet!");
-                }
-            }
-            else
+            if (KoTGame.Winner != null)
             {
                 _textPrompts.Clear();
                 _textPrompts.Add(new TextPrompt(KoTGame.Winner.Name + " WINS!!", GetPosition("WinText")));
             }
 
+            CalculatePositions();
+
+            _currentMonster = KoTGame.Current;
+
+            switch (_gameState)
+            {
+                case GameState.StartTurn:
+                    StartPlayersTurn();
+                    break;
+                case GameState.Rolling:
+                    Rolling();
+                    break;
+                case GameState.AskYieldCity:
+                    AskYieldCity();
+                    break;
+                case GameState.AskYieldBay:
+                    AskYieldBay();
+                    break;
+                default:
+                    throw new Exception("Haven't implemented this player state yet!");
+            }
+        
             if (Engine.InputManager.KeyPressed(Keys.P))
             {
                 Engine.AddScreen(new PauseMenu());
@@ -90,30 +84,20 @@ namespace GameEngine.GameScreens
             _diceRow.AddDice(DiceController.GetDice());
             _textPrompts.Add(new TextPrompt("Your Turn " + _currentMonster.Name, _positionList["TextPrompt1"]));
             _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", _positionList["TextPrompt2"]));
-            _textPrompts.Add(new TextPrompt(_rollsLeft + " Rolls Left!", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", _positionList["RollsLeft"]));
             _gameState = GameState.Rolling;
         }
 
         private void Rolling()
         {
-            _rollsLeft = _currentMonster.RemainingRolls;
-            if (_rollsLeft == 0)
+            if (_currentMonster.RemainingRolls == 0)
             {
                 _diceRow.Clear();
                 _textPrompts.Clear();
                 DiceController.EndRolling();
-                if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
-                {
-                    _gameState = GameState.AskYieldCity;
-                }
-                else if(Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
-                {
-                    _gameState = GameState.AskYieldBay;
-                }
-                else
-                {
-                    StartNextTurn();
-                }
+                if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield) { _gameState = GameState.AskYieldCity; }
+                else if(Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield) { _gameState = GameState.AskYieldBay; }
+                else { StartNextTurn(); }
                 return;
             }
 
@@ -135,9 +119,8 @@ namespace GameEngine.GameScreens
             }
 
             _textPrompts.RemoveAt(_textPrompts.Count - 1);
-            _textPrompts.Add(new TextPrompt(_rollsLeft + " Rolls Left!", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", _positionList["RollsLeft"]));
         }
-
 
         private void AskYieldCity()
         {
@@ -153,14 +136,12 @@ namespace GameEngine.GameScreens
                 }
                 StartNextTurn();
             }
-            if (Engine.InputManager.KeyPressed(Keys.N))
+            if (!Engine.InputManager.KeyPressed(Keys.N)) return;
+            if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
             {
-                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
-                {
-                    _gameState = GameState.AskYieldBay;
-                }
-                StartNextTurn();
+                _gameState = GameState.AskYieldBay;
             }
+            StartNextTurn();
         }
 
         private void AskYieldBay()
@@ -173,18 +154,11 @@ namespace GameEngine.GameScreens
                 Board.TokyoBay.Yield();
                 StartNextTurn();
             }
-            else if (Engine.InputManager.KeyPressed(Keys.N))
+            if (Engine.InputManager.KeyPressed(Keys.N))
             {
                 StartNextTurn();
             }
         }
-
-        private void StartNextTurn()
-        {
-            KoTGame.EndTurn();
-            _gameState = GameState.StartTurn;
-        }
-        
 
         public override void Draw(GameTime gameTime)
         {
@@ -201,6 +175,12 @@ namespace GameEngine.GameScreens
             _positionList.Clear();
             _diceRow.Clear();
             base.UnloadAssets();
+        }
+
+        private void StartNextTurn()
+        {
+            KoTGame.EndTurn();
+            _gameState = GameState.StartTurn;
         }
 
         private static Dictionary<string, Vector2> CalculatePositions()
