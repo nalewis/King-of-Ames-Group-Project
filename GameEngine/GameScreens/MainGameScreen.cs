@@ -48,9 +48,7 @@ namespace GameEngine.GameScreens
                 //Make sure we're on current monster
                 _currentMonster = KoTGame.Current;
 
-                var gameState = _gameState;
-
-                switch (gameState)
+                switch (_gameState)
                 {
                     case GameState.StartTurn:
                         StartPlayersTurn();
@@ -58,8 +56,11 @@ namespace GameEngine.GameScreens
                     case GameState.Rolling:
                         Rolling();
                         break;
-                    case GameState.AskYield:
-                        AskYield();
+                    case GameState.AskYieldCity:
+                        AskYieldCity();
+                        break;
+                    case GameState.AskYieldBay:
+                        AskYieldBay();
                         break;
                     default:
                         throw new Exception("Haven't implemented this player state yet!");
@@ -82,9 +83,10 @@ namespace GameEngine.GameScreens
 
         private void StartPlayersTurn()
         {
+            _diceRow.Clear();
+            _textPrompts.Clear();
+
             _currentMonster.StartTurn();
-            //Check so we don't keep adding!
-            if (_textPrompts.Count != 0 || _diceRow.DiceSprites.Count != 0) return;
             _diceRow.AddDice(DiceController.GetDice());
             _textPrompts.Add(new TextPrompt("Your Turn " + _currentMonster.Name, _positionList["TextPrompt1"]));
             _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", _positionList["TextPrompt2"]));
@@ -99,16 +101,18 @@ namespace GameEngine.GameScreens
             {
                 _diceRow.Clear();
                 _textPrompts.Clear();
-                KoTGame.EndRolling();
                 DiceController.EndRolling();
-                if (Board.TokyoCityIsOccupied || Board.TokyoBayIsOccupied)
+                if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
                 {
-                    _gameState = GameState.AskYield;
+                    _gameState = GameState.AskYieldCity;
+                }
+                else if(Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
+                {
+                    _gameState = GameState.AskYieldBay;
                 }
                 else
                 {
-                    KoTGame.EndTurn();
-                    _gameState = GameState.StartTurn;
+                    StartNextTurn();
                 }
                 return;
             }
@@ -134,44 +138,52 @@ namespace GameEngine.GameScreens
             _textPrompts.Add(new TextPrompt(_rollsLeft + " Rolls Left!", _positionList["RollsLeft"]));
         }
 
-        private void AskYield()
+
+        private void AskYieldCity()
         {
             _textPrompts.Clear();
-            if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
+            _textPrompts.Add(new TextPrompt(Board.TokyoCity.Name + ": Yield? Y/N", _positionList["TextPrompt1"]));
+
+            if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                _textPrompts.Add(new TextPrompt(Board.TokyoCity.Name + ": Yield? Y/N", _positionList["TextPrompt1"]));
-                if (Engine.InputManager.KeyPressed(Keys.Y))
+                Board.TokyoCity.Yield();
+                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
                 {
-                    Board.TokyoCity.Yield();
+                    _gameState = GameState.AskYieldBay;
                 }
-                else if (Engine.InputManager.KeyPressed(Keys.N))
-                {
-                    _textPrompts.Clear();
-                    KoTGame.EndTurn();
-                    _gameState = GameState.StartTurn;
-                }
+                StartNextTurn();
             }
-            else
+            if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                KoTGame.EndTurn();
-                _gameState = GameState.StartTurn;
-            }
-            /*
-            if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
-            {
-                _textPrompts.Add(new TextPrompt(Board.TokyoBay.Name + ": Yield? Y/n", _positionList["TextPrompt2"]));
-                if (Engine.InputManager.KeyPressed(Keys.Y))
+                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
                 {
-                    Board.TokyoBay.Yield();
+                    _gameState = GameState.AskYieldBay;
                 }
-                else if (Engine.InputManager.KeyPressed(Keys.N))
-                {
-                    _gameState = GameState.StartTurn;
-                }
+                StartNextTurn();
             }
-            */
         }
 
+        private void AskYieldBay()
+        {
+            _textPrompts.Clear();
+            _textPrompts.Add(new TextPrompt(Board.TokyoBay.Name + ": Yield? Y/N", _positionList["TextPrompt1"]));
+
+            if (Engine.InputManager.KeyPressed(Keys.Y))
+            {
+                Board.TokyoBay.Yield();
+                StartNextTurn();
+            }
+            else if (Engine.InputManager.KeyPressed(Keys.N))
+            {
+                StartNextTurn();
+            }
+        }
+
+        private void StartNextTurn()
+        {
+            KoTGame.EndTurn();
+            _gameState = GameState.StartTurn;
+        }
         
 
         public override void Draw(GameTime gameTime)
@@ -291,7 +303,8 @@ namespace GameEngine.GameScreens
         {
             StartTurn,
             Rolling,
-            AskYield,
+            AskYieldBay,
+            AskYieldCity
 
         }
     }
