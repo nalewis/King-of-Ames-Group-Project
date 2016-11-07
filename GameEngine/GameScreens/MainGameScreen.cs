@@ -3,6 +3,7 @@ using Controllers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 using GamePieces.Session;
@@ -61,6 +62,9 @@ namespace GameEngine.GameScreens
                     break;
                 case GameState.AskYieldBay:
                     AskYieldBay();
+                    break;
+                case GameState.BuyCards:
+                    BuyScreen();
                     break;
                 default:
                     throw new Exception("Haven't implemented this player state yet!");
@@ -158,6 +162,12 @@ namespace GameEngine.GameScreens
             {
                 StartNextTurn();
             }
+        }
+
+        private void BuyScreen()
+        {
+            int i;
+            Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
         }
 
         public override void Draw(GameTime gameTime)
@@ -284,7 +294,8 @@ namespace GameEngine.GameScreens
             StartTurn,
             Rolling,
             AskYieldBay,
-            AskYieldCity
+            AskYieldCity,
+            BuyCards
 
         }
     }
