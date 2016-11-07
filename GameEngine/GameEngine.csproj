@@ -57,8 +57,20 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameScreens\BuyCards.cs" />
+    <Compile Include="GraphicPieces\DiceSprite.cs" />
+    <Compile Include="GraphicPieces\DiceRow.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="GameScreens\GameScreen.cs" />
+    <Compile Include="GameScreens\MainGameScreen.cs" />
+    <Compile Include="GameScreens\OptionsMenu.cs" />
+    <Compile Include="GameScreens\PauseMenu.cs" />
+    <Compile Include="GameScreens\TestScreen.cs" />
+    <Compile Include="InputManager.cs" />
+    <Compile Include="GraphicPieces\PlayerBlock.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="GraphicPieces\TextPrompt.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
@@ -83,6 +95,14 @@
     <ProjectReference Include="..\Controllers\Controllers.csproj">
       <Project>{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}</Project>
       <Name>Controllers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data Structures\Data Structures.csproj">
+      <Project>{B20265A0-2010-4E1C-AB32-8E441DEF08F7}</Project>
+      <Name>Data Structures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Game Pieces\Game Pieces.csproj">
+      <Project>{b38a16c3-74c0-4a57-bcd9-6000681c06b1}</Project>
+      <Name>Game Pieces</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

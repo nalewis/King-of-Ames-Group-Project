@@ -47,7 +47,10 @@ namespace Controllers
         /// </summary>
         public static void BuyCardOne()
         {
+<<<<<<< HEAD
             if(CardForSaleOne() != null) Game.BuyCard(0);
+=======
+>>>>>>> palmer_develop
         }
 
         /// <summary>
@@ -55,7 +58,11 @@ namespace Controllers
         /// </summary>
         public static void BuyCardTwo()
         {
+<<<<<<< HEAD
             if(CardForSaleTwo() != null) Game.BuyCard(1);
+=======
+            if (CardForSaleTwo() != null) Game.BuyCard(1);
+>>>>>>> palmer_develop
         }
 
         /// <summary>
@@ -63,7 +70,11 @@ namespace Controllers
         /// </summary>
         public static void BuyCardThree()
         {
+<<<<<<< HEAD
             if(CardForSaleThree() != null) Game.BuyCard(2);
+=======
+            if (CardForSaleThree() != null) Game.BuyCard(2);
+>>>>>>> palmer_develop
         }
     }
 }
