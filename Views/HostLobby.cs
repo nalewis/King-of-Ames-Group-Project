@@ -19,20 +19,18 @@ namespace Views
             updateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
             timer = new Timer();
-            timer.Interval = (5 * 1000); // 5 secs
+            timer.Interval = (3 * 1000); // 3 secs
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            start_game.Enabled = NetworkClasses.checkReady(Host.players);
             updateList();
-            foreach (int player in Host.players)
-                {
-                Console.WriteLine(player);
-            }
             //TODO check if all players have selected a character
-            //if (checkReady(Host.players)) { start_game.Enabled = true; }
+            //if (NetworkClasses.checkReady(Host.players)) { start_game.Enabled = true; }
+            //else { start_game.Enabled = false; }
         }
 
         public void HostGameListForm_Closing(object sender, FormClosingEventArgs e)
@@ -60,6 +58,7 @@ namespace Views
         private void updateList()
         {
             playerList.Items.Clear();
+
 
             DataSet ds = NetworkClasses.getServer(User.id, User.localIp);
             DataRow row = ds.Tables[0].Rows[0];

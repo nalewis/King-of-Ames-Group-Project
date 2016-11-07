@@ -454,8 +454,16 @@ namespace Networking
 
         public static bool checkReady(List<int> players)
         {
-            
-            return false;
+            List<DataSet> players_list = new List<DataSet>();
+            foreach (int player in players)
+            {
+                players_list.Add(getPlayer(player));
+            }
+            foreach (DataSet player in players_list)
+            {
+                if(String.IsNullOrEmpty(player.Tables[0].Rows[0]["_Character"].ToString())) { return false; }
+            }
+            return true;
         }
 
         public static int getNumPlayers(int Server_ID)

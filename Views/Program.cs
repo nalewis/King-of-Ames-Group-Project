@@ -184,7 +184,6 @@ namespace Views
 
         public static bool connect()
         {
-            _client.Start();
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
             outMsg.Write(Int32.Parse(User.id));

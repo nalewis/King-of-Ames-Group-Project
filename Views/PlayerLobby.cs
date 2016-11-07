@@ -21,7 +21,7 @@ namespace Views
             updateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
             timer = new Timer();
-            timer.Interval = (5 * 1000); // 5 secs
+            timer.Interval = (3 * 1000); // 3 secs
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
