@@ -69,7 +69,6 @@
     <Compile Include="GameScreens\TestScreen.cs" />
     <Compile Include="InputManager.cs" />
     <Compile Include="GraphicPieces\PlayerBlock.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="GraphicPieces\TextPrompt.cs" />
   </ItemGroup>
   <ItemGroup>
