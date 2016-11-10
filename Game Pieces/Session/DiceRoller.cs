@@ -32,7 +32,7 @@ namespace GamePieces.Session
         /// Setup the dice for the turn
         /// </summary>
         /// <param name="dice">Number of dice to roll</param>
-        public static void Setup(int dice)
+        internal static void Setup(int dice)
         {
             Array.Clear(Tally, 0, Tally.Length);
             Rolling.ForEach(die => die.Save = false);
@@ -50,7 +50,7 @@ namespace GamePieces.Session
         /// <summary>
         /// Roll all of the dice
         /// </summary>
-        public static void Roll()
+        internal static void Roll()
         {
             Array.Clear(Tally, 0, Tally.Length);
             foreach (var die in Rolling)
@@ -64,7 +64,7 @@ namespace GamePieces.Session
         /// Stop rolling for this turn and transfer the tally to the rolling monster
         /// </summary>
         /// <param name="monster">Rolling monster</param>
-        public static void EndRolling(Monster monster)
+        internal static void EndRolling(Monster monster)
         {
             monster.AttackPoints += Attack;
             monster.Energy += Energy;

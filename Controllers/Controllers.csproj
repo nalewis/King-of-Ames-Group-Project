@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="CardController.cs" />
     <Compile Include="DiceController.cs" />
+    <Compile Include="GameStateController.cs" />
     <Compile Include="LobbyController.cs" />
     <Compile Include="MonsterController.cs" />
   </ItemGroup>
