@@ -7,11 +7,21 @@ using Controllers.Helpers;
 
 namespace Networking
 {
+    /// <summary>
+    /// This class contains the various functions for access the MySQL database
+    /// </summary>
     public class NetworkClasses
     {
+        //Information to access the MySQL database
         static string connectString = "Server=10.25.71.66;Database=db309yt01;Uid=dbu309yt01;Pwd=ZuuYea5cBtZ;";
-
-        public static bool createUser(string user, string pass, string ip)
+        
+        /// <summary>
+        /// Using the inputs from the signup form, opens a connection to the database, check if username exists, if not, adds user to list
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="pass"></param>
+        /// <param name="ip"></param>
+        public static void createUser(string user, string pass, string ip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
             MySqlCommand command;
@@ -32,9 +42,17 @@ namespace Networking
             }
 
             connection.Close();
-            return true;
+
         }
 
+        /// <summary>
+        /// Using inputs from the login form, opens a connection to the database, checks if username exsits, if it does, checks if password is correct
+        /// Returns false if any checks fail
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="pass"></param>
+        /// <param name="ip"></param>
+        /// <returns></returns>
         public static bool login(string user, string pass, string ip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -71,6 +89,13 @@ namespace Networking
             return false;
         }
 
+        /// <summary>
+        /// Updates the players IP in the database
+        /// This is called when the user succesfully logs in
+        /// </summary>
+        /// <param name="playerid"></param>
+        /// <param name="ip"></param>
+        /// <returns></returns>
         public static bool updateIP(string playerid, string ip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -93,7 +118,11 @@ namespace Networking
             return true;
         }
 
-        //Check if the player id is the host of a server (for use by the exit function)
+        /// <summary>
+        /// Checks if the player id is the host of a server (for use by the exit function)
+        /// </summary>
+        /// <param name="hostid"></param>
+        /// <returns></returns>
         public static bool isHosting(string hostid)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -124,6 +153,12 @@ namespace Networking
             }
         }
 
+        /// <summary>
+        /// Creates a new server entry in the database when a user hosts a game
+        /// </summary>
+        /// <param name="hostid"></param>
+        /// <param name="hostip"></param>
+        /// <returns></returns>
         public static bool createServer(string hostid, string hostip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -146,6 +181,11 @@ namespace Networking
             return true;
         }
 
+        /// <summary>
+        /// Deletes server entry from the database when the host closes the server
+        /// </summary>
+        /// <param name="hostid"></param>
+        /// <returns></returns>
         public static bool deleteServer(string hostid)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -166,6 +206,12 @@ namespace Networking
             return true;
         }
 
+        /// <summary>
+        /// Gets the server information from the database using a host ID&IP
+        /// </summary>
+        /// <param name="hostid"></param>
+        /// <param name="hostip"></param>
+        /// <returns>Dataset containing the server ID, host ID, host IP, and connected player IDs</returns>
         public static DataSet getServer(string hostid, string hostip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -191,6 +237,11 @@ namespace Networking
             return ds;
         }
 
+        /// <summary>
+        /// Gets the server information from the database using a host IP
+        /// </summary>
+        /// <param name="hostip"></param>
+        /// <returns>>Dataset containing the server ID, host ID, host IP, and connected player IDs</returns>
         public static DataSet getServer(string hostip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -215,6 +266,10 @@ namespace Networking
             return ds;
         }
 
+        /// <summary>
+        /// Gets the server info of all servers in the database
+        /// </summary>
+        /// <returns>Dataset containing server info of all servers</returns>
         public static DataSet getServers()
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -238,6 +293,11 @@ namespace Networking
             return ds;
         }
 
+        /// <summary>
+        /// Gets player info using a given player ID
+        /// </summary>
+        /// <param name="Player_ID"></param>
+        /// <returns>Dataset containing player info</returns>
         public static DataSet getPlayer(int Player_ID)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -262,7 +322,12 @@ namespace Networking
             return ds;
         }
 
-        public static bool updateCharacter(string playerid, string character)
+        /// <summary>
+        /// Updates the players character field to the input
+        /// </summary>
+        /// <param name="playerid"></param>
+        /// <param name="character"></param>
+        public static void updateCharacter(string playerid, string character)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
             MySqlCommand command;
@@ -281,9 +346,14 @@ namespace Networking
             }
 
             connection.Close();
-            return true;
         }
 
+        /// <summary>
+        /// Adds the new player into the server info
+        /// </summary>
+        /// <param name="hostip"></param>
+        /// <param name="playerid"></param>
+        /// <returns></returns>
         public static bool joinServer(string hostip, string playerid)
         {
             var openSpot = getNextAvailableSpot(hostip);
@@ -314,6 +384,11 @@ namespace Networking
             }
         }
 
+        /// <summary>
+        /// Gets the lowest numbered available spot from the server information
+        /// </summary>
+        /// <param name="hostip"></param>
+        /// <returns>lowest spot in server 2-6</returns>
         public static int getNextAvailableSpot(string hostip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -373,6 +448,11 @@ namespace Networking
             return -1;
         }
 
+        /// <summary>
+        /// Finds the player in the server list to be removed
+        /// </summary>
+        /// <param name="hostip"></param>
+        /// <param name="playerid"></param>
         public static void findRemovePlayer(string hostip, string playerid)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -432,6 +512,11 @@ namespace Networking
             removePlayer(hostip, remove);
         }
 
+        /// <summary>
+        /// Removes player with matching ID from the server information
+        /// </summary>
+        /// <param name="hostip"></param>
+        /// <param name="playerPosition"></param>
         public static void removePlayer(string hostip, int playerPosition)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -452,6 +537,11 @@ namespace Networking
             connection.Close();
         }
 
+        /// <summary>
+        /// Checks that every player in the server has selected a character
+        /// </summary>
+        /// <param name="players"></param>
+        /// <returns>false if any player hasn't selected a character, true otherwise</returns>
         public static bool checkReady(List<int> players)
         {
             List<DataSet> players_list = new List<DataSet>();
@@ -466,6 +556,11 @@ namespace Networking
             return true;
         }
 
+        /// <summary>
+        /// Gets the current number of players in the server
+        /// </summary>
+        /// <param name="Server_ID"></param>
+        /// <returns>number of players in the server</returns>
         public static int getNumPlayers(int Server_ID)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
@@ -517,6 +612,11 @@ namespace Networking
             return count;
         }
 
+        /// <summary>
+        /// Gets an int array of the player IDs currently connected to the Host
+        /// </summary>
+        /// <param name="hostip"></param>
+        /// <returns></returns>
         public static int[] getPlayerIDs(string hostip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);

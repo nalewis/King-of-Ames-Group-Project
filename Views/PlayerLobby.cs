@@ -12,6 +12,9 @@ using System.Windows.Forms;
 
 namespace Views
 {
+    /// <summary>
+    /// Form to list the players currently in the lobby and select character
+    /// </summary>
     public partial class PlayerLobby : Form
     {
         Timer timer;
@@ -21,24 +24,34 @@ namespace Views
             updateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
             timer = new Timer();
-            timer.Interval = (3 * 1000); // 3 secs
+            timer.Interval = (2 * 1000); // 2 secs
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
 
+        /// <summary>
+        /// Updates the list of players and their characters every 2 seconds
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
             updateList();
         }
 
+        /// <summary>
+        /// On click, resets character to null, removes player from server, stops NetClient, and takes user back to main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void leaveGame_Click(object sender, EventArgs e)
         {
             timer.Stop();
-            MainMenuForm main = new MainMenuForm();
-            main.Show();
             NetworkClasses.updateCharacter(User.id, null);
             NetworkClasses.findRemovePlayer(Client.conn, User.id);
             Client.clientStop();
+            MainMenuForm main = new MainMenuForm();
+            main.Show();
             this.Dispose();
         }
 
@@ -55,6 +68,9 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Updates the list of players with the current information about the server via the database
+        /// </summary>
         private void updateList()
         {
             playerList.Items.Clear();
@@ -113,6 +129,11 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Sends the selected character to the database update function
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void select_char_Click(object sender, EventArgs e)
         {
             NetworkClasses.updateCharacter(User.id, char_list.SelectedItem.ToString());

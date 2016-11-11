@@ -41,16 +41,14 @@ namespace Views
         }
     }
 
-    class Host
+    static class Host
     {
         public static List<int> players = new List<int>(); 
         private static NetServer _server;
-        private static NetClient _client;
 
-
-        public Host()
+        public static void serverStart()
         {
-            var config = new NetPeerConfiguration("King of Ames"){Port = 6969};
+            var config = new NetPeerConfiguration("King of Ames") { Port = 6969 };
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
             _server.Start();
@@ -64,17 +62,15 @@ namespace Views
             recieve.Start();
 
             //The host contains a client to behave like a user
-            _client = new NetClient(new NetPeerConfiguration("King of Ames"));
-            _client.Start();
-            var outMsg = _client.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Login);
-            outMsg.Write(Int32.Parse(User.id));
-            _client.Connect(User.localIp, 6969, outMsg);
+            Client.conn = User.localIp;
+            Client._client.Start();
+            Client.connect();
         }
 
-        public void serverStop()
+        public static void serverStop()
         {
             NetworkClasses.deleteServer(User.id);
+            Client.clientStop();
             _server.Shutdown("Closed");
         }
 
@@ -89,7 +85,8 @@ namespace Views
                     case NetIncomingMessageType.Error:
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Client status changed: " + inc.SenderConnection.Status);                        break;
+                        Console.WriteLine("Client status changed: " + inc.SenderConnection.Status);
+                        break;
                     case NetIncomingMessageType.ConnectionApproval:
                         //Initially approves connecting clients based on their login byte
                         if (inc.ReadByte() == (byte)PacketTypes.Login)
@@ -98,11 +95,6 @@ namespace Views
 
                             inc.SenderConnection.Approve();
                             players.Add(inc.ReadInt32());
-
-                            NetOutgoingMessage outMsg = _server.CreateMessage();
-                            outMsg.Write((byte)PacketTypes.Welcome);
-                            outMsg.Write("WELCOME TO SERVER");
-                            _server.SendMessage(outMsg, inc.SenderConnection, NetDeliveryMethod.ReliableOrdered, 0);
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection.ToString() + " has connected");
@@ -114,11 +106,8 @@ namespace Views
                     case NetIncomingMessageType.Data:
                         //can only call readByte once, otherwise it continues reading the following bytes
                         var type = inc.ReadByte();
+                        Console.WriteLine("Data recieved by server");
 
-                        if (type == (byte)PacketTypes.ListUsers)
-                        {
-                            listUsers();
-                        }
                         if(type == (byte)PacketTypes.leave)
                         {
                             players.Remove(inc.ReadInt32());
@@ -127,29 +116,6 @@ namespace Views
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-            }
-        }
-
-        public static void listUsers()
-        {
-            NameValueCollection data = new NameValueCollection();
-            //COMMAND is what the php looks for to determine it's actions
-            data.Add("COMMAND", "listUsers");
-            using (WebClient wc = new WebClient())
-            {
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-                var encresult = Encoding.ASCII.GetString(result);
-                Console.WriteLine("\nResponse received was :\n{0}", encresult);
-                NetOutgoingMessage outMsg = _client.CreateMessage();
-                outMsg.Write((byte)PacketTypes.ListUsers);
-                string[] tbl = encresult.Split('\n');
-
-                for (int i = 0; i < tbl.Length; i++)
-                {
-                    outMsg.Write(tbl[i]);
-                }
-                _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -173,9 +139,6 @@ namespace Views
 
     static class Client
     {
-        public static string myIP = User.localIp;
-        public static string myName = User.username;
-        public static bool isConnecting = false;
         public static string conn = "";
         public static NetClient _client = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread loop;
@@ -184,6 +147,7 @@ namespace Views
 
         public static bool connect()
         {
+            //Sends login request to Host, with player ID attached
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
             outMsg.Write(Int32.Parse(User.id));
@@ -217,14 +181,6 @@ namespace Views
                         {
                             Console.WriteLine(inc.ReadString());
                         }
-                        /*else if(type==(byte)PacketTypes.ListUsers)
-                        {
-                            while(inc.PeekString() != null)
-                            {
-                                others.Add(inc.ReadString());
-                            }
-                            Console.WriteLine("Received Users");
-                        }*/
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -234,20 +190,15 @@ namespace Views
 
         public static void clientStop()
         {
-            //reset variables to make sure they're up to date
-            conn = "";
-            myIP = User.localIp;
-            myName = User.username;
-
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.leave);
             outMsg.Write(Int32.Parse(User.id));
-
             _client.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+            _client.WaitMessage(2000);
             _client.Shutdown("Closed");
-
             //ends the receive loop
             shouldStop = true;
+            conn = "";
         }
 
         enum PacketTypes

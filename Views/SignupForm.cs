@@ -10,9 +10,13 @@ using System.Windows.Forms;
 using Networking;
 using Controllers.Helpers;
 
+//TODO add error message checking
+
 namespace Views
 {
-    //TODO add error message checking
+    /// <summary>
+    /// Form to handle creation of a new user
+    /// </summary>
     public partial class NewUserForm : Form
     {
         public NewUserForm()
@@ -20,23 +24,32 @@ namespace Views
             InitializeComponent();
         }
 
+        /// <summary>
+        /// On click, sends username,password, and IP to createUser function
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void newUserButton_Click(object sender, EventArgs e)
         {
+            //Check that the inputs are not empty
             if (newUsername.TextLength > 0 && newPassword.TextLength > 0)
             {
                 //hide label from previous failures
                 errorLabel.Hide();
-                //NewUser.handleUserInput(newUsername.Lines[0], newPassword.Lines[0], errorLabel);
-                var result = NetworkClasses.createUser(newUsername.Lines[0], newPassword.Lines[0], Helpers.GetLocalIPAddress());
-                Console.WriteLine(result);
+                NetworkClasses.createUser(newUsername.Lines[0], newPassword.Lines[0], Helpers.GetLocalIPAddress()); 
             }
         }
 
+        /// <summary>
+        /// On click, sends user back to sign-in menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void loginLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Form form = new LoginForm();
             form.Show();
-            this.Hide();
+            this.Dispose();
         }
     }
 }

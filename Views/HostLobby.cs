@@ -8,9 +8,11 @@ using Controllers;
 
 namespace Views
 {
+    /// <summary>
+    /// Form to list the players currently in the lobby and select character w/ ability to start the game
+    /// </summary>
     public partial class HostGameListForm : Form
     {
-        Host host = new Host();
         Timer timer;
         public HostGameListForm()
         {
@@ -19,11 +21,16 @@ namespace Views
             updateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
             timer = new Timer();
-            timer.Interval = (3 * 1000); // 3 secs
+            timer.Interval = (2 * 1000); // 2 secs
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
 
+        /// <summary>
+        /// Automatic update of the list of players and their characters every 2 seconds
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
             start_game.Enabled = NetworkClasses.checkReady(Host.players);
@@ -32,38 +39,45 @@ namespace Views
                 Console.WriteLine(player);
             }
             updateList();
-            //TODO check if all players have selected a character
-            //if (NetworkClasses.checkReady(Host.players)) { start_game.Enabled = true; }
-            //else { start_game.Enabled = false; }
         }
 
+        /// <summary>
+        /// When the window is closed, the server is stopped, and the application is closed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void HostGameListForm_Closing(object sender, FormClosingEventArgs e)
         {
             //if (e.CloseReason == CloseReason.UserClosing)
             //{
                 timer.Stop();
                 this.Dispose();
-                Client.clientStop();
-                host.serverStop();
+                Host.serverStop();
                 Environment.Exit(0);
             //}
         }
 
+        /// <summary>
+        /// On click, resets character to null, stops NetServer, and takes user back to main menu
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void leaveGame_Click(object sender, EventArgs e)
         {
             timer.Stop();
+            NetworkClasses.updateCharacter(User.id, null);
+            Host.serverStop();
             MainMenuForm main = new MainMenuForm();
             main.Show();
             this.Dispose();
-            NetworkClasses.updateCharacter(User.id, null);
-            host.serverStop();
         }
 
+        /// <summary>
+        /// Updates the list of players with the current information about the server via the database
+        /// </summary>
         private void updateList()
         {
             playerList.Items.Clear();
-
-
             DataSet ds = NetworkClasses.getServer(User.id, User.localIp);
             DataRow row = ds.Tables[0].Rows[0];
 
@@ -119,11 +133,21 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Sends the selected character to the database update function
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void select_char_Click(object sender, EventArgs e)
         {
             NetworkClasses.updateCharacter(User.id, char_list.SelectedItem.ToString());
         }
 
+        /// <summary>
+        /// Once all players are ready, adds players to the Game controller and starts the game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void start_game_Click(object sender, EventArgs e)
         {
             //TODO
