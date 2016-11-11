@@ -242,6 +242,7 @@ namespace Views
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.leave);
             outMsg.Write(Int32.Parse(User.id));
+
             _client.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
             _client.Shutdown("Closed");
 

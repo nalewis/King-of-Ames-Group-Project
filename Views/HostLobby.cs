@@ -27,6 +27,10 @@ namespace Views
         private void timer_Tick(object sender, EventArgs e)
         {
             start_game.Enabled = NetworkClasses.checkReady(Host.players);
+            foreach(int player in Host.players)
+            {
+                Console.WriteLine(player);
+            }
             updateList();
             //TODO check if all players have selected a character
             //if (NetworkClasses.checkReady(Host.players)) { start_game.Enabled = true; }
