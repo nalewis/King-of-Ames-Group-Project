@@ -175,7 +175,7 @@ namespace Views
             loop.Start();
 
             _client.Connect(conn, 6969, outMsg);
-            if(_client.ConnectionStatus != NetConnectionStatus.Connected) { return false; }
+           // if(_client.ConnectionStatus != NetConnectionStatus.Connected) { return false; }
             return true;
         }
 
@@ -218,7 +218,7 @@ namespace Views
             outMsg.Write((byte)PacketTypes.leave);
             outMsg.Write(Int32.Parse(User.id));
             _client.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
-            _client.WaitMessage(500);
+            _client.WaitMessage(1000);
             _client.Shutdown("Closed");
             //ends the receive loop
             shouldStop = true;

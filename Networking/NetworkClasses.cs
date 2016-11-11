@@ -279,7 +279,7 @@ namespace Networking
             try
             {
                 MySqlCommand command = connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Server_List";
+                command.CommandText = "SELECT * FROM Server_List WHERE Status ='Creating'";
                 MySqlDataAdapter adapter = new MySqlDataAdapter(command);
                 ds = new DataSet();
                 adapter.Fill(ds);
