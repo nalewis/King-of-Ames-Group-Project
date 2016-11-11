@@ -41,11 +41,17 @@ namespace Views
         }
     }
 
+    /// <summary>
+    /// Host class is where the NetServer from Lidgren is located
+    /// </summary>
     static class Host
     {
         public static List<int> players = new List<int>(); 
         private static NetServer _server;
 
+        /// <summary>
+        /// Initializes the server, starts the reiceve loop, creates a NetClient and connects it to the server
+        /// </summary>
         public static void serverStart()
         {
             var config = new NetPeerConfiguration("King of Ames") { Port = 6969 };
@@ -67,6 +73,9 @@ namespace Views
             Client.connect();
         }
 
+        /// <summary>
+        /// Deletes the server from the database, and stop the NetServer
+        /// </summary>
         public static void serverStop()
         {
             NetworkClasses.deleteServer(User.id);
@@ -74,6 +83,9 @@ namespace Views
             _server.Shutdown("Closed");
         }
 
+        /// <summary>
+        /// Main loop to recieve messages from clients
+        /// </summary>
         public static void recieveLoop()
         {
             while (true)
@@ -106,7 +118,6 @@ namespace Views
                     case NetIncomingMessageType.Data:
                         //can only call readByte once, otherwise it continues reading the following bytes
                         var type = inc.ReadByte();
-                        Console.WriteLine("Data recieved by server");
 
                         if(type == (byte)PacketTypes.leave)
                         {
@@ -137,6 +148,9 @@ namespace Views
 
     }
 
+    /// <summary>
+    /// Client class holds the NetClient from Lidgren
+    /// </summary>
     static class Client
     {
         public static string conn = "";
@@ -144,7 +158,10 @@ namespace Views
         private static Thread loop;
         private static bool shouldStop = false;
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>returns true if connected, false otherwise</returns>
         public static bool connect()
         {
             //Sends login request to Host, with player ID attached
@@ -158,9 +175,13 @@ namespace Views
             loop.Start();
 
             _client.Connect(conn, 6969, outMsg);
+            if(_client.ConnectionStatus != NetConnectionStatus.Connected) { return false; }
             return true;
         }
 
+        /// <summary>
+        /// Main loop to recieve messages from the server
+        /// </summary>
         public static void recieveLoop()
         {
             while (!shouldStop)
@@ -188,13 +209,16 @@ namespace Views
             }
         }
 
+        /// <summary>
+        /// Tells the server to delete it from list, stops loop and shuts down NetClient
+        /// </summary>
         public static void clientStop()
         {
             var outMsg = _client.CreateMessage();
             outMsg.Write((byte)PacketTypes.leave);
             outMsg.Write(Int32.Parse(User.id));
             _client.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
-            _client.WaitMessage(2000);
+            _client.WaitMessage(500);
             _client.Shutdown("Closed");
             //ends the receive loop
             shouldStop = true;
