@@ -42,6 +42,7 @@ namespace Views
         private void HostButton_Click(object sender, EventArgs e)
         {
             Host.serverStart();
+            
             Form gameList = new HostGameListForm();
             gameList.Show();
             this.Dispose();

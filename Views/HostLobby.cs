@@ -24,6 +24,7 @@ namespace Views
             timer.Interval = (2 * 1000); // 2 secs
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
+
         }
 
         /// <summary>
@@ -76,14 +77,18 @@ namespace Views
             playerList.Items.Clear();
             DataSet ds = NetworkClasses.getServer(User.id, User.localIp);
             DataRow row = ds.Tables[0].Rows[0];
-            List<int> pings = Host.getPing();
 
             DataSet grabber = NetworkClasses.getPlayer(Int32.Parse(row["Host"].ToString()));
+            List<int> pings = new List<int>();
+            while(pings.Count < 1)
+            {
+                pings = Host.getPing();
+            }
 
             //Host
             ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
             listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-            listItem.SubItems.Add(pings[0].ToString());
+            listItem.SubItems.Add(pings[0].ToString() + " ms");
             //listItem.SubItems.Add(NetworkClasses.getNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
             //listItem.SubItems.Add(row["Status"].ToString());
 
@@ -95,7 +100,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_2"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[1].ToString());
+                listItem.SubItems.Add(pings[1].ToString() + " ms");
                 playerList.Items.Add(listItem);
             }
 
@@ -104,7 +109,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_3"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[2].ToString());
+                listItem.SubItems.Add(pings[2].ToString() + " ms");
                 playerList.Items.Add(listItem);
             }
 
@@ -113,7 +118,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_4"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[3].ToString());
+                listItem.SubItems.Add(pings[3].ToString() + " ms");
                 playerList.Items.Add(listItem);
             }
 
@@ -122,7 +127,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_5"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[4].ToString());
+                listItem.SubItems.Add(pings[4].ToString() + " ms");
                 playerList.Items.Add(listItem);
             }
 
@@ -131,7 +136,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_6"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[5].ToString());
+                listItem.SubItems.Add(pings[5].ToString() + " ms");
                 playerList.Items.Add(listItem);
             }
         }
