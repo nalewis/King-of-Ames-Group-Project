@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Net.NetworkInformation;
 using Lidgren.Network;
 using System.Threading;
 using System.Net.Sockets;
@@ -130,6 +131,16 @@ namespace Views
             }
         }
 
+        public static List<int> getPing()
+        {
+            List<int> pings = new List<int>();
+            foreach(NetConnection conn in _server.Connections)
+            {
+                pings.Add((int)(conn.AverageRoundtripTime*1000));
+            }
+            return pings;
+        }
+
         enum PacketTypes
         {
             Login,
@@ -139,6 +150,7 @@ namespace Views
             ListUsers,
             newGame,
             joinGame,
+            Ping,
             chat,
             leave,
             close,

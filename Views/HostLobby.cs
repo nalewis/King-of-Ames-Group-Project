@@ -34,10 +34,6 @@ namespace Views
         private void timer_Tick(object sender, EventArgs e)
         {
             start_game.Enabled = NetworkClasses.checkReady(Host.players);
-            foreach(int player in Host.players)
-            {
-                Console.WriteLine(player);
-            }
             updateList();
         }
 
@@ -80,12 +76,14 @@ namespace Views
             playerList.Items.Clear();
             DataSet ds = NetworkClasses.getServer(User.id, User.localIp);
             DataRow row = ds.Tables[0].Rows[0];
+            List<int> pings = Host.getPing();
 
             DataSet grabber = NetworkClasses.getPlayer(Int32.Parse(row["Host"].ToString()));
 
             //Host
             ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
             listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+            listItem.SubItems.Add(pings[0].ToString());
             //listItem.SubItems.Add(NetworkClasses.getNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
             //listItem.SubItems.Add(row["Status"].ToString());
 
@@ -97,6 +95,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_2"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                listItem.SubItems.Add(pings[1].ToString());
                 playerList.Items.Add(listItem);
             }
 
@@ -105,6 +104,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_3"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                listItem.SubItems.Add(pings[2].ToString());
                 playerList.Items.Add(listItem);
             }
 
@@ -113,6 +113,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_4"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                listItem.SubItems.Add(pings[3].ToString());
                 playerList.Items.Add(listItem);
             }
 
@@ -121,6 +122,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_5"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                listItem.SubItems.Add(pings[4].ToString());
                 playerList.Items.Add(listItem);
             }
 
@@ -129,6 +131,7 @@ namespace Views
                 grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_6"].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                listItem.SubItems.Add(pings[5].ToString());
                 playerList.Items.Add(listItem);
             }
         }
