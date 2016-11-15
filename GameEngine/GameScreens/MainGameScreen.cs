@@ -148,7 +148,7 @@ namespace GameEngine.GameScreens
                 }
                 StartNextTurn();
             }
-            if (Engine.InputManager.KeyPressed(Keys.N))
+            else if (Engine.InputManager.KeyPressed(Keys.N))
             {
                 if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
                 {
@@ -169,7 +169,7 @@ namespace GameEngine.GameScreens
                 Board.TokyoBay.Yield();
                 StartNextTurn();
             }
-            if (Engine.InputManager.KeyPressed(Keys.N))
+            else if (Engine.InputManager.KeyPressed(Keys.N))
             {
                 StartNextTurn();
             }
@@ -199,7 +199,7 @@ namespace GameEngine.GameScreens
 
         private void StartNextTurn()
         {
-            KoTGame.EndTurn();
+            GameStateController.EndTurn();
             _diceRow.Hidden = true;
             _gameState = GameState.StartTurn;
         }
