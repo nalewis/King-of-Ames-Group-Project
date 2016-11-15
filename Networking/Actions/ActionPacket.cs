@@ -1,5 +1,8 @@
-﻿namespace Networking.Actions
+﻿using System;
+
+namespace Networking.Actions
 {
+    [Serializable]
     public struct ActionPacket
     {
         public int PlayerId { get; }

@@ -199,7 +199,7 @@ namespace GameEngine.GameScreens
 
         private void StartNextTurn()
         {
-            GameStateController.EndTurn();
+            //GameStateController.EndTurn();
             _diceRow.Hidden = true;
             _gameState = GameState.StartTurn;
         }
