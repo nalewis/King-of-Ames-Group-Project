@@ -1,4 +1,7 @@
-﻿using GamePieces.Cards;
+﻿using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
+using GamePieces.Cards;
 using GamePieces.Session;
 using Networking.Actions;
 

@@ -1,7 +1,9 @@
-﻿using GamePieces.Cards;
+﻿using System;
+using GamePieces.Cards;
 
 namespace GamePieces.Monsters
 {
+    [Serializable]
     public struct MonsterDataPacket
     {
         public int PlayerId { get; }
