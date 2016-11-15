@@ -283,6 +283,8 @@ namespace GamePieces.Monsters
             if (InTokyo) Board.LeaveTokyo(this);
             Cards.Clear();
             Game.Monsters.Remove(this);
+            foreach (var monster in Game.Monsters)
+                if (monster.Index > Index) monster.Index--;
             Game.Dead.Add(this);
             State = State.Dead;
         }
