@@ -14,7 +14,7 @@ namespace GameEngine
             LobbyController.AddPlayer(2, "Three");
             LobbyController.AddPlayer(3, "Four");
             LobbyController.AddPlayer(4, "Five");
-            LobbyController.AddPlayer(1, "Six");
+            LobbyController.AddPlayer(5, "Six");
             using (var game = new Engine())
                 game.Run();
         }

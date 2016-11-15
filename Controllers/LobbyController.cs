@@ -6,7 +6,7 @@ namespace Controllers
 {
     public static class LobbyController
     {
-        private static readonly List<Tuple<int, string>> Players = new List<Tuple<int, string>>();
+        public static List<Tuple<int, string>> Players { get; }= new List<Tuple<int, string>>();
 
         /// <summary>
         /// Add player to lobby
@@ -31,10 +31,7 @@ namespace Controllers
                 return;
             }
         }
-        public static List<Tuple<int, string>> getPlayers()
-        {
-            return Players;
-        }
+
         /// <summary>
         /// Start the game
         /// </summary>

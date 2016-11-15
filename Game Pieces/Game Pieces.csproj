@@ -82,6 +82,7 @@
     <Compile Include="Dice\Symbol.cs" />
     <Compile Include="Monsters\Location.cs" />
     <Compile Include="Monsters\Monster.cs" />
+    <Compile Include="Monsters\MonsterDataPacket.cs" />
     <Compile Include="Monsters\State.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Session\Board.cs" />

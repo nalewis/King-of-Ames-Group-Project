@@ -19,7 +19,7 @@ namespace GamePieces.Session
         /// Move the given monster into Tokyo
         /// </summary>
         /// <param name="monster">Monster</param>
-        public static void MoveIntoTokyo(Monster monster)
+        internal static void MoveIntoTokyo(Monster monster)
         {
             if(monster.InTokyo) return;
             if (!TokyoCityIsOccupied)
@@ -40,7 +40,7 @@ namespace GamePieces.Session
         /// Have the given monster leave Tokyo
         /// </summary>
         /// <param name="monster">Monster</param>
-        public static void LeaveTokyo(Monster monster)
+        internal static void LeaveTokyo(Monster monster)
         {
             if (TokyoCityIsOccupied && monster.Equals(TokyoCity))
             {
@@ -58,7 +58,7 @@ namespace GamePieces.Session
         /// Update the board based on the number of players
         /// Tokyo Bay cannot be used if there are less than five players
         /// </summary>
-        public static void Update()
+        internal static void Update()
         {
             if (UseTokyoBay || !TokyoBayIsOccupied) return;
             TokyoBay.Location = Location.Default;
@@ -68,7 +68,7 @@ namespace GamePieces.Session
         /// <summary>
         /// Reset the board to the default state
         /// </summary>
-        public static void Reset()
+        internal static void Reset()
         {
             LeaveTokyo(TokyoCity);
             LeaveTokyo(TokyoBay);
