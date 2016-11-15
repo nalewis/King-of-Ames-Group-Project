@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GamePieces.Monsters;
 using GamePieces.Session;
 
 namespace Controllers
@@ -35,17 +36,24 @@ namespace Controllers
         /// <summary>
         /// Start the game
         /// </summary>
-        public static void StartGame()
+        public static void StartGame(MonsterDataPacket[] dataPackets = null)
         {
-            var playerIds = new List<int>();
-            var monsterNames = new List<string>();
-            foreach (var player in Players)
+            if (dataPackets == null)
             {
-                playerIds.Add(player.Item1);
-                monsterNames.Add(player.Item2);
+                var playerIds = new List<int>();
+                var monsterNames = new List<string>();
+                foreach (var player in Players)
+                {
+                    playerIds.Add(player.Item1);
+                    monsterNames.Add(player.Item2);
+                }
+                Players.Clear();
+                Game.StartGame(playerIds, monsterNames);
             }
-            Players.Clear();
-            Game.StartGame(playerIds, monsterNames);
+            else
+            {
+                Game.StartGame(dataPackets);
+            }
         }
     }
 }
