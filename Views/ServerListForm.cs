@@ -15,7 +15,7 @@ namespace Views
         {
             InitializeComponent();
             join.Enabled = false;
-            listServers();
+            ListServers();
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Views
         private void refresh_Click(object sender, EventArgs e)
         {
             serverList.Items.Clear();
-            listServers();
+            ListServers();
         }
 
         /// <summary>
@@ -36,12 +36,10 @@ namespace Views
         /// <param name="e"></param>
         public void ServerListForm_Closing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                this.Dispose();
-                Client.clientStop();
-                Environment.Exit(0);
-            }
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            Dispose();
+            Client.ClientStop();
+            Environment.Exit(0);
         }
 
         /// <summary>
@@ -52,9 +50,9 @@ namespace Views
         private void mainMenu_Click(object sender, EventArgs e)
         {
             MainMenuForm main = new MainMenuForm();
-            Client.clientStop();
+            Client.ClientStop();
             main.Show();
-            this.Dispose();
+            Dispose();
         }
 
         /// <summary>
@@ -67,14 +65,14 @@ namespace Views
         {
             if(join.Enabled)
             {
-                bool goodConnection = Client.connect();
+                bool goodConnection = Client.Connect();
                 if(goodConnection)
                 {
-                    NetworkClasses.joinServer(serverList.SelectedItems[0].SubItems[1].Text, User.id);
-                    NetworkClasses.updatePlayerStat(User.id, "Games_Joined", 1);
+                    NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.Id);
+                    NetworkClasses.UpdatePlayerStat(User.Id, "Games_Joined", 1);
                     PlayerLobby lobby = new PlayerLobby();
                     lobby.Show();
-                    this.Dispose();
+                    Dispose();
                 }
                 else { Console.WriteLine("Couldn't Connect"); }
             }
@@ -83,17 +81,17 @@ namespace Views
         /// <summary>
         /// Updates the form view with the current list of servers in the database
         /// </summary>
-        private void listServers()
+        private void ListServers()
         {
-            DataSet ds = NetworkClasses.getServers();
+            DataSet ds = NetworkClasses.GetServers();
 
             foreach(DataRow row in ds.Tables[0].Rows)
             {
-                DataSet grabber = NetworkClasses.getPlayer(Int32.Parse(row["Host"].ToString()));
+                DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
 
                 ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["Local_IP"].ToString());
-                listItem.SubItems.Add(NetworkClasses.getNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
+                listItem.SubItems.Add(NetworkClasses.GetNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
                 listItem.SubItems.Add(row["Status"].ToString());
 
                 //Add the row entry to the listview
@@ -110,7 +108,7 @@ namespace Views
         {
             //selected items[0] is the row, subitems[1] is the ip
             var data = serverList.SelectedItems[0].SubItems[1].Text;
-            Client.conn = data;
+            Client.Conn = data;
             join.Enabled = true;
             join.BackColor = Color.LightGray;
         }

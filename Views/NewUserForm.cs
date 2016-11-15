@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Networking;
 
@@ -33,12 +26,12 @@ namespace Views
             {
                 //hide label from previous failures
                 errorLabel.Hide();
-                bool good = NetworkClasses.createUser(newUsername.Lines[0], newPassword.Lines[0], Helpers.GetLocalIPAddress());
+                bool good = NetworkClasses.CreateUser(newUsername.Lines[0], newPassword.Lines[0], Helpers.GetLocalIpAddress());
                 if (good)
                 {
                     Form form = new LoginForm();
                     form.Show();
-                    this.Dispose();
+                    Dispose();
                 }
                 else
                 {
@@ -62,14 +55,14 @@ namespace Views
         {
             Form form = new LoginForm();
             form.Show();
-            this.Dispose();
+            Dispose();
         }
 
         private void NewUserForm_Closing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                this.Dispose();
+                Dispose();
                 Environment.Exit(0);
             }
         }

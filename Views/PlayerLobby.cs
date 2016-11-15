@@ -1,12 +1,6 @@
 ﻿using Networking;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Views
@@ -16,16 +10,16 @@ namespace Views
     /// </summary>
     public partial class PlayerLobby : Form
     {
-        Timer timer;
+        readonly Timer _timer;
         public PlayerLobby()
         {
             InitializeComponent();
-            updateList();
+            UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            timer = new Timer();
-            timer.Interval = (2 * 1000); // 2 secs
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Start();
+            _timer = new Timer {Interval = (2*1000)};
+            // 2 secs
+            _timer.Tick += timer_Tick;
+            _timer.Start();
         }
 
         /// <summary>
@@ -35,7 +29,7 @@ namespace Views
         /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
-            updateList();
+            UpdateList();
         }
 
         /// <summary>
@@ -45,24 +39,24 @@ namespace Views
         /// <param name="e"></param>
         private void leaveGame_Click(object sender, EventArgs e)
         {
-            timer.Stop();
-            NetworkClasses.updateCharacter(User.id, null);
-            NetworkClasses.findRemovePlayer(Client.conn, User.id);
-            Client.clientStop();
+            _timer.Stop();
+            NetworkClasses.UpdateCharacter(User.Id, null);
+            NetworkClasses.FindRemovePlayer(Client.Conn, User.Id);
+            Client.ClientStop();
             MainMenuForm main = new MainMenuForm();
             main.Show();
-            this.Dispose();
+            Dispose();
         }
 
         public void PlayerLobby_Closing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                timer.Stop();
-                this.Dispose();
-                NetworkClasses.updateCharacter(User.id, null);
-                NetworkClasses.findRemovePlayer(Client.conn, User.id);
-                Client.clientStop();
+                _timer.Stop();
+                Dispose();
+                NetworkClasses.UpdateCharacter(User.Id, null);
+                NetworkClasses.FindRemovePlayer(Client.Conn, User.Id);
+                Client.ClientStop();
                 Environment.Exit(0);
             }
         }
@@ -70,13 +64,13 @@ namespace Views
         /// <summary>
         /// Updates the list of players with the current information about the server via the database
         /// </summary>
-        private void updateList()
+        private void UpdateList()
         {
             playerList.Items.Clear();
-            DataSet ds = NetworkClasses.getServer(Client.conn);
+            DataSet ds = NetworkClasses.GetServer(Client.Conn);
             DataRow row = ds.Tables[0].Rows[0];
 
-            DataSet grabber = NetworkClasses.getPlayer(Int32.Parse(row["Host"].ToString()));
+            DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
 
             //Host
             ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
@@ -88,7 +82,7 @@ namespace Views
             {
                 if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
                 {
-                    grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_" + i].ToString()));
+                    grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
                     listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                     listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
                     //listItem.SubItems.Add(pings[i - 1].ToString() + " ms");
@@ -105,7 +99,7 @@ namespace Views
         /// <param name="e"></param>
         private void select_char_Click(object sender, EventArgs e)
         {
-            NetworkClasses.updateCharacter(User.id, char_list.SelectedItem.ToString());
+            NetworkClasses.UpdateCharacter(User.Id, char_list.SelectedItem.ToString());
         }
     }
 }

@@ -12,17 +12,17 @@ namespace Views
     /// </summary>
     public partial class HostGameListForm : Form
     {
-        Timer timer;
+        readonly Timer _timer;
         public HostGameListForm()
         {
             InitializeComponent();
             start_game.Enabled = false;
-            updateList();
+            UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            timer = new Timer();
-            timer.Interval = (2 * 1000); // 2 secs
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Start();
+            _timer = new Timer {Interval = (2*1000)};
+            // 2 secs
+            _timer.Tick += timer_Tick;
+            _timer.Start();
 
         }
 
@@ -33,8 +33,8 @@ namespace Views
         /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
-            start_game.Enabled = NetworkClasses.checkReady(Host.players);
-            updateList();
+            start_game.Enabled = NetworkClasses.CheckReady(Host.Players);
+            UpdateList();
         }
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace Views
         {
             //if (e.CloseReason == CloseReason.UserClosing)
             //{
-                timer.Stop();
-                this.Dispose();
-                Host.serverStop();
+                _timer.Stop();
+                Dispose();
+                Host.ServerStop();
                 Environment.Exit(0);
             //}
         }
@@ -60,28 +60,28 @@ namespace Views
         /// <param name="e"></param>
         private void leaveGame_Click(object sender, EventArgs e)
         {
-            timer.Stop();
-            NetworkClasses.updateCharacter(User.id, null);
-            Host.serverStop();
+            _timer.Stop();
+            NetworkClasses.UpdateCharacter(User.Id, null);
+            Host.ServerStop();
             MainMenuForm main = new MainMenuForm();
             main.Show();
-            this.Dispose();
+            Dispose();
         }
 
         /// <summary>
         /// Updates the list of players with the current information about the server via the database
         /// </summary>
-        private void updateList()
+        private void UpdateList()
         {
             playerList.Items.Clear();
-            DataSet ds = NetworkClasses.getServer(User.id, User.localIp);
+            DataSet ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
             DataRow row = ds.Tables[0].Rows[0];
 
-            DataSet grabber = NetworkClasses.getPlayer(Int32.Parse(row["Host"].ToString()));
+            DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
             List<int> pings = new List<int>();
             while(pings.Count < 1)
             {
-                pings = Host.getPing();
+                pings = Host.GetPing();
             }
 
             //Host
@@ -95,7 +95,7 @@ namespace Views
             {
                 if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
                 {
-                    grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_" + i].ToString()));
+                    grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
                     listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                     listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
                     listItem.SubItems.Add(pings[i-1].ToString() + " ms");
@@ -111,7 +111,7 @@ namespace Views
         /// <param name="e"></param>
         private void select_char_Click(object sender, EventArgs e)
         {
-            NetworkClasses.updateCharacter(User.id, char_list.SelectedItem.ToString());
+            NetworkClasses.UpdateCharacter(User.Id, char_list.SelectedItem.ToString());
         }
 
         /// <summary>
@@ -121,7 +121,24 @@ namespace Views
         /// <param name="e"></param>
         private void start_game_Click(object sender, EventArgs e)
         {
-            //TODO
+            DataSet ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
+            DataRow row = ds.Tables[0].Rows[0];
+
+            DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
+
+            //Host
+            LobbyController.AddPlayer(Int32.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
+
+            for (int i = 2; i <= 6; i++)
+            {
+                if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
+                {
+                    grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
+                    LobbyController.AddPlayer(Int32.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["Character"].ToString());
+                }
+            }
+            LobbyController.StartGame();
+            Hide();
         }
     }
 }

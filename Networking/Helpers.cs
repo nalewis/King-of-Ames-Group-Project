@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Specialized;
@@ -12,7 +9,7 @@ namespace Networking
     public static class Helpers
     {
         //Took from stack overflow
-        public static string GetLocalIPAddress()
+        public static string GetLocalIpAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
@@ -42,9 +39,9 @@ namespace Networking
 {
     public static class User
     {
-        public static string username = "";
-        public static string localIp = "";
-        public static string id = "";
-        public static string character = "";
+        public static string Username = "";
+        public static string LocalIp = "";
+        public static string Id = "";
+        public static string Character = "";
     }
 }

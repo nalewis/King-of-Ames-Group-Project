@@ -1,17 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Net.NetworkInformation;
 using Lidgren.Network;
 using System.Threading;
-using System.Net.Sockets;
-using System.Net;
-using System.Collections.Specialized;
-using System.Text;
 using System.Collections.Generic;
 
 //This allows us to use the classes in The Controllers - test.cs file (needed to add Controllers to References)
 using Networking;
-using Controllers;
 
 namespace Views
 {
@@ -32,14 +26,6 @@ namespace Views
             form.Show();
             Application.Run();
         }
-        //WIP TODO
-        static void OnProcessExit(object sender, EventArgs e)
-        {
-            if (NetworkClasses.isHosting(User.id))
-            {
-                NetworkClasses.deleteServer(User.id);
-            }
-        }
     }
 
     /// <summary>
@@ -47,13 +33,13 @@ namespace Views
     /// </summary>
     static class Host
     {
-        public static List<int> players = new List<int>(); 
+        public static List<int> Players = new List<int>(); 
         private static NetServer _server;
 
         /// <summary>
         /// Initializes the server, starts the reiceve loop, creates a NetClient and connects it to the server
         /// </summary>
-        public static void serverStart()
+        public static void ServerStart()
         {
             var config = new NetPeerConfiguration("King of Ames") { Port = 6969 };
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
@@ -62,32 +48,32 @@ namespace Views
             Console.WriteLine("Server started...");
 
             //add server to the SQL database with the current details
-            NetworkClasses.createServer(User.id, User.localIp);
+            NetworkClasses.CreateServer(User.Id, User.LocalIp);
 
             // Starts thread to handle input from clients
-            Thread recieve = new Thread(recieveLoop);
+            Thread recieve = new Thread(RecieveLoop);
             recieve.Start();
 
             //The host contains a client to behave like a user
-            Client.conn = User.localIp;
-            Client._client.Start();
-            Client.connect();
+            Client.Conn = User.LocalIp;
+            Client.NetClient.Start();
+            Client.Connect();
         }
 
         /// <summary>
         /// Deletes the server from the database, and stop the NetServer
         /// </summary>
-        public static void serverStop()
+        public static void ServerStop()
         {
-            NetworkClasses.deleteServer(User.id);
-            Client.clientStop();
+            NetworkClasses.DeleteServer(User.Id);
+            Client.ClientStop();
             _server.Shutdown("Closed");
         }
 
         /// <summary>
         /// Main loop to recieve messages from clients
         /// </summary>
-        public static void recieveLoop()
+        public static void RecieveLoop()
         {
             while (true)
             {
@@ -107,10 +93,10 @@ namespace Views
                             Console.WriteLine(inc.MessageType);
 
                             inc.SenderConnection.Approve();
-                            players.Add(inc.ReadInt32());
+                            Players.Add(inc.ReadInt32());
 
                             Console.WriteLine("Approved new connection");
-                            Console.WriteLine(inc.SenderConnection.ToString() + " has connected");
+                            Console.WriteLine(inc.SenderConnection + " has connected");
                         }
 
                         break;
@@ -120,9 +106,9 @@ namespace Views
                         //can only call readByte once, otherwise it continues reading the following bytes
                         var type = inc.ReadByte();
 
-                        if(type == (byte)PacketTypes.leave)
+                        if(type == (byte)PacketTypes.Leave)
                         {
-                            players.Remove(inc.ReadInt32());
+                            Players.Remove(inc.ReadInt32());
                         }
                         break;
                     default:
@@ -131,7 +117,7 @@ namespace Views
             }
         }
 
-        public static List<int> getPing()
+        public static List<int> GetPing()
         {
             List<int> pings = new List<int>();
             foreach(NetConnection conn in _server.Connections)
@@ -144,17 +130,7 @@ namespace Views
         enum PacketTypes
         {
             Login,
-            LoginInfo,
-            NewUser,
-            delUser,
-            ListUsers,
-            newGame,
-            joinGame,
-            Ping,
-            chat,
-            leave,
-            close,
-            Welcome,
+            Leave,
 
         }
 
@@ -165,41 +141,41 @@ namespace Views
     /// </summary>
     static class Client
     {
-        public static string conn = "";
-        public static NetClient _client = new NetClient(new NetPeerConfiguration("King of Ames"));
-        private static Thread loop;
-        private static bool shouldStop = false;
+        public static string Conn = "";
+        public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
+        private static Thread _loop;
+        private static bool _shouldStop;
 
         /// <summary>
-        /// 
+        /// Connects the client to the server using the current ip
         /// </summary>
         /// <returns>returns true if connected, false otherwise</returns>
-        public static bool connect()
+        public static bool Connect()
         {
             //Sends login request to Host, with player ID attached
-            var outMsg = _client.CreateMessage();
+            var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
-            outMsg.Write(Int32.Parse(User.id));
+            outMsg.Write(Int32.Parse(User.Id));
             
             //resets the receive thread
-            shouldStop = false;
-            loop = new Thread(recieveLoop);
-            loop.Start();
+            _shouldStop = false;
+            _loop = new Thread(RecieveLoop);
+            _loop.Start();
 
-            _client.Connect(conn, 6969, outMsg);
-           // if(_client.ConnectionStatus != NetConnectionStatus.Connected) { return false; }
+            NetClient.Connect(Conn, 6969, outMsg);
+           // if(NetClient.ConnectionStatus != NetConnectionStatus.Connected) { return false; }
             return true;
         }
 
         /// <summary>
         /// Main loop to recieve messages from the server
         /// </summary>
-        public static void recieveLoop()
+        public static void RecieveLoop()
         {
-            while (!shouldStop)
+            while (!_shouldStop)
             {
                 NetIncomingMessage inc;
-                if ((inc = _client.ReadMessage()) == null) continue;
+                if ((inc = NetClient.ReadMessage()) == null) continue;
                 switch (inc.MessageType)
                 {
                     case NetIncomingMessageType.Error:
@@ -224,31 +200,23 @@ namespace Views
         /// <summary>
         /// Tells the server to delete it from list, stops loop and shuts down NetClient
         /// </summary>
-        public static void clientStop()
+        public static void ClientStop()
         {
-            var outMsg = _client.CreateMessage();
-            outMsg.Write((byte)PacketTypes.leave);
-            outMsg.Write(Int32.Parse(User.id));
-            _client.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
-            _client.WaitMessage(1000);
-            _client.Shutdown("Closed");
+            var outMsg = NetClient.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Leave);
+            outMsg.Write(Int32.Parse(User.Id));
+            NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+            NetClient.WaitMessage(1000);
+            NetClient.Shutdown("Closed");
             //ends the receive loop
-            shouldStop = true;
-            conn = "";
+            _shouldStop = true;
+            Conn = "";
         }
 
         enum PacketTypes
         {
             Login,
-            LoginInfo,
-            NewUser,
-            delUser,
-            ListUsers,
-            newGame,
-            joinGame,
-            chat,
-            leave,
-            close,
+            Leave,
             Welcome,
         }
     }
