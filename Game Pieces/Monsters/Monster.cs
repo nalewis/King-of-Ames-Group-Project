@@ -1,4 +1,5 @@
-﻿﻿using System.Collections.Generic;
+﻿﻿
+using System.Collections.Generic;
 using System.Linq;
 using DataStructures.Observer_Pattern;
 using GamePieces.Cards;
@@ -9,19 +10,19 @@ namespace GamePieces.Monsters
     public class Monster : Observable<Monster>
     {
         //Player ID
-        public int PlayerId { get; }
+        public int PlayerId { get; private set; }
 
         //Location & Neighbors
-        private readonly int _index;
+        private int Index { get; set; }
 
         public Monster Previous =>
-            Game.Players == 1 ? this : _index != 0 ? Game.Monsters[_index - 1] : Game.Monsters.Last();
+            Game.Players == 1 ? this : Index != 0 ? Game.Monsters[Index - 1] : Game.Monsters.Last();
 
         public Monster Next =>
-            Game.Players == 1 ? this : _index != Game.Players - 1 ? Game.Monsters[_index + 1] : Game.Monsters.First();
+            Game.Players == 1 ? this : Index != Game.Players - 1 ? Game.Monsters[Index + 1] : Game.Monsters.First();
 
         //Name
-        public string Name { get; }
+        public string Name { get; private set; }
 
         //State
         public State State
@@ -41,7 +42,7 @@ namespace GamePieces.Monsters
         public bool CanYield => InTokyo && Game.Attacked.Contains(this);
 
         //Cards
-        public readonly List<Card> Cards = new List<Card>();
+        public List<Card> Cards = new List<Card>();
 
         public int NumberOfCards
         {
@@ -140,8 +141,17 @@ namespace GamePieces.Monsters
             Health = MaximumHealth;
             Location = Location.Default;
             RemainingRolls = 0;
-            _index = Game.Players;
+            Index = Game.Players;
             State = State.EndOfTurn;
+        }
+
+        /// <summary>
+        /// Creates a new monster from a data packet.
+        /// </summary>
+        /// <param name="packet">Data Packet</param>
+        public Monster(MonsterDataPacket packet)
+        {
+            AcceptPacket(packet);
         }
 
         /// <summary>
@@ -275,6 +285,44 @@ namespace GamePieces.Monsters
             Game.Monsters.Remove(this);
             Game.Dead.Add(this);
             State = State.Dead;
+        }
+
+        /// <summary>
+        /// Makes a data packet for this monster.
+        /// </summary>
+        /// <returns>Data Packet</returns>
+        public MonsterDataPacket GetPacket()
+        {
+            return new MonsterDataPacket(PlayerId, Index, Name, State, Location, Cards.ToArray(), NumberOfCards,
+                PreviousNumberOfCards, Energy, PreviousEnergy, VictroyPoints, PreviousVictroyPoints, Health,
+                PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls);
+        }
+
+        /// <summary>
+        /// Change the values of this monster to the values in the data packet.
+        /// </summary>
+        /// <param name="packet">Data Packet</param>
+        public void AcceptPacket(MonsterDataPacket packet)
+        {
+            PlayerId = packet.PlayerId;
+            Index = packet.Index;
+            Name = packet.Name;
+            State = packet.State;
+            Location = packet.Location;
+            Cards = packet.Cards.ToList();
+            NumberOfCards = packet.NumberOfCards;
+            PreviousNumberOfCards = packet.PreviousNumberOfCards;
+            Energy = packet.Energy;
+            PreviousEnergy = packet.PreviousEnergy;
+            VictroyPoints = packet.VictoryPoints;
+            PreviousVictroyPoints = packet.PreviousVictroyPoints;
+            Health = packet.Health;
+            PreviousHealth = packet.PreviousHealth;
+            MaximumHealth = packet.MaximumHealth;
+            AttackPoints = packet.AttackPoints;
+            Dice = packet.Dice;
+            MaximumRolls = packet.MaximumRolls;
+            RemainingRolls = packet.RemainingRolls;
         }
     }
 }

@@ -9,6 +9,33 @@ namespace Controllers
 {
     public static class MonsterController
     {
+
+        /// <summary>
+        /// Get all monster data packets for the current game state.
+        /// </summary>
+        /// <returns>Data Packets</returns>
+        public static MonsterDataPacket[] GetDataPackets()
+        {
+            var dataPackets = new MonsterDataPacket[Game.Monsters.Count];
+            for (var i = 0; i < dataPackets.Length; i++)
+            {
+                dataPackets[i] = Game.Monsters[i].GetPacket();
+            }
+            return dataPackets;
+        }
+
+        /// <summary>
+        /// Change the monsters in the game state using the given data packets.
+        /// </summary>
+        /// <param name="dataPackets">Data Packets</param>
+        public static void AcceptDataPackets(MonsterDataPacket[] dataPackets)
+        {
+            for (var i = 0; i < dataPackets.Length; i++)
+            {
+                Game.Monsters[i].AcceptPacket(dataPackets[i]);
+            }
+        }
+
         /// <summary>
         /// Player's monster name
         /// </summary>

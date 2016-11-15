@@ -25,6 +25,8 @@ namespace GamePieces.Session
                     ? Monsters.Where(monster => monster.VictroyPoints >= 20).ToList().First()
                     : null;
 
+        public static bool Host { get; private set; }
+
 
         //Cards
         public static Stack<Card> Deck;
@@ -40,6 +42,15 @@ namespace GamePieces.Session
             for(var i = 0; i < playerIds.Count; i++) Monsters.Add(new Monster(playerIds[i], names[i]));
             Current = Monsters.First();
             Board.Reset();
+            Host = true;
+        }
+
+        public static void StartGame(MonsterDataPacket[] dataPackets)
+        {
+            Monsters.Clear();
+            foreach (var dataPacket in dataPackets)
+                Monsters.Add(new Monster(dataPacket));
+            Host = false;
         }
 
         public static void StartTurn()
@@ -60,11 +71,18 @@ namespace GamePieces.Session
 
         public static void BuyCard(int index)
         {
-            if (index < 0 || index >= CardsForSale.Count) return;
-            var card = CardsForSale[index];
-            CardsForSale.RemoveAt(index);
-            Current.BuyCard(card);
-            if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
+            if (Host)
+            {
+                if (index < 0 || index >= CardsForSale.Count) return;
+                var card = CardsForSale[index];
+                CardsForSale.RemoveAt(index);
+                Current.BuyCard(card);
+                if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
+            }
+            else
+            {
+                //TODO ASK HOST TO BUY CARD
+            }
         }
 
         public static void SellCard(Monster monster, Card card)
