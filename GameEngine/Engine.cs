@@ -15,8 +15,8 @@ namespace GameEngine {
         public static bool ExitGame = false;
 
         public static InputManager InputManager;
+        public static ScreenManager ScreenManager;
         public static SpriteBatch SpriteBatch;
-        public static List<GameScreen> ScreenList;
         public static Dictionary<string, Texture2D> TextureList;
         public static Dictionary<string, SpriteFont> FontList;
 
@@ -45,6 +45,7 @@ namespace GameEngine {
             TextureList = new Dictionary<string, Texture2D>();
             FontList = new Dictionary<string, SpriteFont>();
             InputManager = new InputManager(this);
+            ScreenManager = new ScreenManager(this);
 
             base.Initialize();
         }
@@ -58,8 +59,6 @@ namespace GameEngine {
 
             LoadTextures();
             LoadFonts();
-
-            AddScreen(new MainGameScreen());
         }
 
         /// <summary>
@@ -67,13 +66,9 @@ namespace GameEngine {
         /// game-specific content.
         /// </summary>
         protected override void UnloadContent() {
-            foreach (var screen in ScreenList)
-            {
-                screen.UnloadAssets();
-            }
+            ScreenManager.Unload();
             TextureList.Clear();
             FontList.Clear();
-            ScreenList.Clear();
             Content.Unload();
         }
 
@@ -85,18 +80,6 @@ namespace GameEngine {
         protected override void Update(GameTime gameTime)
         {
             //if(InputManager.KeyPressed(Keys.Escape)) AddScreen(new PauseMenu());
-
-            var index = ScreenList.Count - 1;
-            while (ScreenList[index].IsPopup &&
-                   ScreenList[index].IsActive)
-            {
-                index--;
-            }
-
-            for (var i = index; i < ScreenList.Count; i++)
-            {
-                ScreenList[i].Update(gameTime);
-            }
 
             if (ExitGame)
                 Exit();
@@ -113,17 +96,17 @@ namespace GameEngine {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            var index = ScreenList.Count - 1;
-            while (ScreenList[index].IsPopup)
+            var index = ScreenManager.ScreenList.Count - 1;
+            while (ScreenManager.ScreenList[index].IsPopup)
             {
                 index--;
             }
 
-            GraphicsDevice.Clear(ScreenList[index].BackgroundColor);
+            GraphicsDevice.Clear(ScreenManager.ScreenList[index].BackgroundColor);
 
-            for (var i = index; i < ScreenList.Count; i++)
+            for (var i = index; i < ScreenManager.ScreenList.Count; i++)
             {
-                ScreenList[i].Draw(gameTime);
+                ScreenManager.ScreenList[i].Draw(gameTime);
             }
 
             base.Draw(gameTime);
@@ -181,31 +164,6 @@ namespace GameEngine {
         {
             AddFont("Fonts\\BigFont", "BigFont");
             AddFont("Fonts\\MenuFont", "MenuFont");
-        }
-
-        #endregion
-
-        #region GameScreenHelpers
-
-        public static void AddScreen(GameScreen newScreen)
-        {
-            if (ScreenList == null) { ScreenList = new List<GameScreen>(); }
-            if (ScreenList.Any(screen => screen.GetType() == newScreen.GetType())) { return; }
-            ScreenList.Add(newScreen);
-            newScreen.LoadAssets();
-        }
-
-        public static void RemoveScreen(GameScreen screen)
-        {
-            screen.UnloadAssets();
-            ScreenList.Remove(screen);
-            if (ScreenList.Count < 1) { AddScreen(new TestScreen()); }
-        }
-
-        public static void ChangeScreens(GameScreen currentScreen, GameScreen nextScreen)
-        {
-            RemoveScreen(currentScreen);
-            AddScreen(nextScreen);
         }
 
         #endregion
