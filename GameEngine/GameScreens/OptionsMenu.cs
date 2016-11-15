@@ -91,7 +91,7 @@ namespace GameEngine.GameScreens
 
         public override void LoadAssets()
         {
-            _menuItems = new[] { Engine.getResolution(), "Back" };
+            _menuItems = new[] { Engine.GetResolution(), "Back" };
             _font = Engine.FontList["MenuFont"];
             _position = new Vector2(200);
             _stateIndex = 0;

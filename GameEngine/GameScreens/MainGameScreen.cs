@@ -41,10 +41,10 @@ namespace GameEngine.GameScreens
             if (KoTGame.Winner != null)
             {
                 _textPrompts.Clear();
-                _textPrompts.Add(new TextPrompt(KoTGame.Winner.Name + " WINS!!", GetPosition("WinText")));
+                _textPrompts.Add(new TextPrompt(KoTGame.Winner.Name + " WINS!!", "WinText", GetPosition("WinText")));
             }
 
-            CalculatePositions();
+           UpdatePositions();
 
             _currentMonster = KoTGame.Current;
 
@@ -85,9 +85,9 @@ namespace GameEngine.GameScreens
 
             _currentMonster.StartTurn();
             _diceRow.AddDice(DiceController.GetDice());
-            _textPrompts.Add(new TextPrompt("Your Turn " + _currentMonster.Name, _positionList["TextPrompt1"]));
-            _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", _positionList["TextPrompt2"]));
-            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt("Your Turn " + _currentMonster.Name, "TextPrompt1", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", "TextPrompt2", _positionList["TextPrompt2"]));
+            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
             _gameState = GameState.Rolling;
         }
 
@@ -130,13 +130,13 @@ namespace GameEngine.GameScreens
 
             if(_textPrompts.Count > 0)
                 _textPrompts.RemoveAt(_textPrompts.Count - 1);
-            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
         }
 
         private void AskYieldCity()
         {
             _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(Board.TokyoCity.Name + ": Yield? Y/N", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt(Board.TokyoCity.Name + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
@@ -162,7 +162,7 @@ namespace GameEngine.GameScreens
         private void AskYieldBay()
         {
             _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(Board.TokyoBay.Name + ": Yield? Y/N", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt(Board.TokyoBay.Name + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
@@ -219,11 +219,21 @@ namespace GameEngine.GameScreens
                 {"TokyoCity", new Vector2(400, 225) },
                 {"TokyoBay", new Vector2(650, 300) },
                 {"DicePos", new Vector2(DefaultPadding, height - PlayerBlockHeight)},
-                {"TextPrompt1", new Vector2(width - 400, 550) },
-                {"TextPrompt2", new Vector2(width - 400, 575) },
-                {"RollsLeft", new Vector2(width - 400, 600) },
-                {"WinText", new Vector2(width - 400, 550) }
+                {"TextPrompt1", new Vector2(width - 400, height - 100) },
+                {"TextPrompt2", new Vector2(width - 400, height - 75) },
+                {"RollsLeft", new Vector2(width - 400, height - 200) },
+                {"WinText", new Vector2(width - 400, height - 100) }
             };
+        }
+
+        private void UpdatePositions()
+        {
+            _positionList = CalculatePositions();
+            foreach (var tp in _textPrompts)
+            {
+                tp.Position = GetPosition(tp.Name);
+            }
+            _diceRow.setPosition(GetPosition("DicePos"));
         }
 
         private static List<PlayerBlock> InitializePlayerBlocks()

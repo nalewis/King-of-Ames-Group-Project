@@ -129,7 +129,7 @@ namespace GameEngine {
             base.Draw(gameTime);
         }
 
-        public static string getResolution()
+        public static string GetResolution()
         {
             return GraffixMngr.PreferredBackBufferWidth == 1280 ? "1280x720" : "1920x1080";
         }
