@@ -6,11 +6,13 @@ namespace GameEngine.GraphicPieces
     internal class TextPrompt
     {
         private readonly string _text;
+        public string Name { get; }
         public Vector2 Position { get; set; }
 
-        public TextPrompt(string text, Vector2 position)
+        public TextPrompt(string text, string name, Vector2 position)
         {
             _text = text;
+            Name = name;
             Position = position;
         }
 

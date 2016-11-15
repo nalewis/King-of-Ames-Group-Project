@@ -28,6 +28,10 @@ namespace GameEngine.GraphicPieces
             }
         }
 
+        public void setPosition(Vector2 pos)
+        {
+            _position = pos;
+        }
 
         public void Clear()
         {
