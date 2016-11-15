@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using GamePieces.Monsters;
 using GamePieces.Session;
@@ -38,7 +38,7 @@ namespace Controllers
         /// </summary>
         public static void StartGame(MonsterDataPacket[] dataPackets = null)
         {
-            if (Game.Host)
+            if (dataPackets == null)
             {
                 var playerIds = new List<int>();
                 var monsterNames = new List<string>();
