@@ -1,6 +1,7 @@
 ﻿﻿using System;
 using System.Collections.Generic;
-using GamePieces.Monsters;
+ using DataStructures.Annotations;
+ using GamePieces.Monsters;
 using GamePieces.Session;
 
 namespace Controllers
