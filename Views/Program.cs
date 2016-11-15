@@ -3,9 +3,12 @@ using System.Windows.Forms;
 using Lidgren.Network;
 using System.Threading;
 using System.Collections.Generic;
+using Controllers;
+using GamePieces.Monsters;
 
 //This allows us to use the classes in The Controllers - test.cs file (needed to add Controllers to References)
 using Networking;
+using Newtonsoft.Json;
 
 namespace Views
 {
@@ -117,6 +120,20 @@ namespace Views
             }
         }
 
+        public static void StartGame()
+        {
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Start);
+            outMsg.Write((Int32)Players.Count);
+            var packets = MonsterController.GetDataPackets();
+            for (int i = 0; i < Players.Count; i++)
+            {
+                var json = JsonConvert.SerializeObject(packets[i]);
+                outMsg.Write(json);
+            }
+            _server.SendToAll(outMsg,NetDeliveryMethod.ReliableOrdered);
+        }
+
         public static List<int> GetPing()
         {
             List<int> pings = new List<int>();
@@ -131,7 +148,7 @@ namespace Views
         {
             Login,
             Leave,
-
+            Start
         }
 
     }
@@ -186,9 +203,13 @@ namespace Views
                         break;
                     case NetIncomingMessageType.Data:
                         var type = inc.ReadByte(); 
-                        if(type == (byte)PacketTypes.Welcome)
+                        if(type == (byte)PacketTypes.Start)
                         {
-                            Console.WriteLine(inc.ReadString());
+                            for (int i = 0; i < inc.ReadInt32(); i++)
+                            {
+                                var packet = JsonConvert.DeserializeObject<MonsterDataPacket>(inc.ReadString());
+                                if (packet.PlayerId == Int32.Parse(User.Id)) Console.WriteLine("Fuckin");
+                            }
                         }
                         break;
                     default:
@@ -217,7 +238,7 @@ namespace Views
         {
             Login,
             Leave,
-            Welcome,
+            Start,
         }
     }
 }

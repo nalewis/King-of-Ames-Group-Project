@@ -138,7 +138,7 @@ namespace Views
                 }
             }
             LobbyController.StartGame();
-            Hide();
+            Host.StartGame();
         }
     }
 }
