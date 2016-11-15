@@ -211,7 +211,7 @@ namespace Controllers
         /// <param name="playerId">Player ID</param>
         /// <returns>Monster</returns>
         /// <exception cref="Exception"></exception>
-        private static Monster GetById(int playerId)
+        public static Monster GetById(int playerId)
         {
             if (!Game.Monsters.Exists(monster => monster.PlayerId == playerId))
             {
