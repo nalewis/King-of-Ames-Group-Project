@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using Networking;
-using Controllers.Helpers;
 
 //TODO encrypt password
 

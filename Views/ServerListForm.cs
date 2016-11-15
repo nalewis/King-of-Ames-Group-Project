@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using Networking;
 using System.Data;
-using Controllers.User;
 
 namespace Views
 {

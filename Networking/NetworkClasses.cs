@@ -2,8 +2,6 @@
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
-using Controllers.User;
-using Controllers.Helpers;
 
 namespace Networking
 {

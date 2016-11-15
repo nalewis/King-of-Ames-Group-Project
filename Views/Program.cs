@@ -10,8 +10,6 @@ using System.Text;
 using System.Collections.Generic;
 
 //This allows us to use the classes in The Controllers - test.cs file (needed to add Controllers to References)
-using Controllers.Helpers;
-using Controllers.User;
 using Networking;
 using Controllers;
 
