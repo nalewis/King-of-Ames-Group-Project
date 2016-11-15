@@ -36,7 +36,7 @@ namespace Views
                 {
                     Form form = new MainMenuForm();
                     form.Show();
-                    this.Hide();
+                    this.Dispose();
                 }
                 else
                 {
@@ -49,16 +49,20 @@ namespace Views
             }
         }
 
-        /// <summary>
-        /// On click, takes user to user creation form
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void createAccount_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LoginForm_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                this.Dispose();
+                Environment.Exit(0);
+            }
+        }
+
+        private void createUser_Click(object sender, EventArgs e)
         {
             Form form = new NewUserForm();
             form.Show();
-            this.Hide();
+            this.Dispose();
         }
     }
 }

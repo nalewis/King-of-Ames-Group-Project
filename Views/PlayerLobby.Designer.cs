@@ -32,7 +32,7 @@
             this.playerList = new System.Windows.Forms.ListView();
             this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.winLoss = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.char_list = new System.Windows.Forms.ComboBox();
             this.select_char = new System.Windows.Forms.Button();
             this.char_label = new System.Windows.Forms.Label();
@@ -54,7 +54,7 @@
             this.playerList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.playerName,
             this.character,
-            this.winLoss});
+            this.ping});
             this.playerList.FullRowSelect = true;
             this.playerList.GridLines = true;
             this.playerList.Location = new System.Drawing.Point(12, 12);
@@ -72,9 +72,9 @@
             // 
             this.character.Text = "Character";
             // 
-            // winLoss
+            // ping
             // 
-            this.winLoss.Text = "Win/Loss";
+            this.ping.Text = "Ping";
             // 
             // char_list
             // 
@@ -122,6 +122,7 @@
             this.Controls.Add(this.leaveGame);
             this.Controls.Add(this.playerList);
             this.Name = "PlayerLobby";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PlayerLobby";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerLobby_Closing);
             this.ResumeLayout(false);
@@ -135,9 +136,9 @@
         private System.Windows.Forms.ListView playerList;
         private System.Windows.Forms.ColumnHeader playerName;
         private System.Windows.Forms.ColumnHeader character;
-        private System.Windows.Forms.ColumnHeader winLoss;
         private System.Windows.Forms.ComboBox char_list;
         private System.Windows.Forms.Button select_char;
         private System.Windows.Forms.Label char_label;
+        private System.Windows.Forms.ColumnHeader ping;
     }
 }

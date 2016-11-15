@@ -82,9 +82,10 @@
             this.Controls.Add(this.JoinButton);
             this.Controls.Add(this.HostButton);
             this.Name = "MainMenuForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainMenuForm";
-            this.ResumeLayout(false);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainMenuForm_Closing);
+            this.ResumeLayout(false);
 
         }
 

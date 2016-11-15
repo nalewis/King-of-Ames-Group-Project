@@ -26,11 +26,13 @@ namespace Views
         static void Main()
         {
             //Handler for deleting a server entry if the user suddenly quits
-            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
+            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginForm());
+            Form form = new LoginForm();
+            form.Show();
+            Application.Run();
         }
         //WIP TODO
         static void OnProcessExit(object sender, EventArgs e)

@@ -34,8 +34,8 @@
             this.passwordLabel = new System.Windows.Forms.Label();
             this.loginButton = new System.Windows.Forms.Button();
             this.Title = new System.Windows.Forms.Label();
-            this.createAccount = new System.Windows.Forms.LinkLabel();
             this.errorLabel = new System.Windows.Forms.Label();
+            this.createUser = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // usernameBox
@@ -77,7 +77,7 @@
             this.loginButton.BackColor = System.Drawing.Color.Chocolate;
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.loginButton.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.loginButton.Location = new System.Drawing.Point(165, 189);
+            this.loginButton.Location = new System.Drawing.Point(190, 189);
             this.loginButton.Name = "loginButton";
             this.loginButton.Size = new System.Drawing.Size(75, 23);
             this.loginButton.TabIndex = 5;
@@ -95,26 +95,28 @@
             this.Title.TabIndex = 6;
             this.Title.Text = "King of Ames Login";
             // 
-            // createAccount
-            // 
-            this.createAccount.AutoSize = true;
-            this.createAccount.Location = new System.Drawing.Point(165, 167);
-            this.createAccount.Name = "createAccount";
-            this.createAccount.Size = new System.Drawing.Size(81, 13);
-            this.createAccount.TabIndex = 7;
-            this.createAccount.TabStop = true;
-            this.createAccount.Text = "Create Account";
-            this.createAccount.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.createAccount_LinkClicked);
-            // 
             // errorLabel
             // 
             this.errorLabel.AutoSize = true;
-            this.errorLabel.Location = new System.Drawing.Point(101, 215);
+            this.errorLabel.Location = new System.Drawing.Point(101, 163);
             this.errorLabel.Name = "errorLabel";
             this.errorLabel.Size = new System.Drawing.Size(170, 13);
             this.errorLabel.TabIndex = 8;
             this.errorLabel.Text = "Invalid username and/or password";
             this.errorLabel.Visible = false;
+            // 
+            // createUser
+            // 
+            this.createUser.BackColor = System.Drawing.Color.Chocolate;
+            this.createUser.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.createUser.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.createUser.Location = new System.Drawing.Point(104, 189);
+            this.createUser.Name = "createUser";
+            this.createUser.Size = new System.Drawing.Size(75, 23);
+            this.createUser.TabIndex = 9;
+            this.createUser.Text = "New User?";
+            this.createUser.UseVisualStyleBackColor = false;
+            this.createUser.Click += new System.EventHandler(this.createUser_Click);
             // 
             // LoginForm
             // 
@@ -122,8 +124,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(384, 261);
+            this.Controls.Add(this.createUser);
             this.Controls.Add(this.errorLabel);
-            this.Controls.Add(this.createAccount);
             this.Controls.Add(this.Title);
             this.Controls.Add(this.loginButton);
             this.Controls.Add(this.passwordLabel);
@@ -134,7 +136,9 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "LoginForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoginForm_Closing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,8 +151,8 @@
         private System.Windows.Forms.Label passwordLabel;
         private System.Windows.Forms.Button loginButton;
         private System.Windows.Forms.Label Title;
-        private System.Windows.Forms.LinkLabel createAccount;
         private System.Windows.Forms.Label errorLabel;
+        private System.Windows.Forms.Button createUser;
     }
 }
 

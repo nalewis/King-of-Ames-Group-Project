@@ -21,7 +21,7 @@ namespace Networking
         /// <param name="user"></param>
         /// <param name="pass"></param>
         /// <param name="ip"></param>
-        public static void createUser(string user, string pass, string ip)
+        public static bool createUser(string user, string pass, string ip)
         {
             MySqlConnection connection = new MySqlConnection(connectString);
             MySqlCommand command;
@@ -37,12 +37,28 @@ namespace Networking
             }
             catch (Exception)
             {
-                //TODO catch exception for non-unique player name and return false
-                throw;
+                //catch exception for non-unique player name and return false
+                return false;
             }
-
+            DataSet ds = new DataSet();
+            try
+            {
+                command.CommandText = "SELECT * FROM User_List WHERE Username = @username";
+                command.Parameters.AddWithValue("@username", user);
+                MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+                adapter.Fill(ds);
+            }
+            catch (Exception) { throw; }
+            try
+            {
+                command = connection.CreateCommand();
+                command.CommandText = "INSERT INTO User_Stats (Player_ID, Games_Joined, Games_Hosted) VALUES (@id,0,0)";
+                command.Parameters.AddWithValue("@id", ds.Tables[0].Rows[0]["Player_ID"]);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception) { throw; }
             connection.Close();
-
+            return true;
         }
 
         /// <summary>
@@ -667,6 +683,27 @@ namespace Networking
 
             connection.Close();
             return players;
+        }
+
+        public static void updatePlayerStat(string playerid, string stat, int value)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            MySqlCommand command;
+            connection.Open();
+            try
+            {
+                command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_Stats SET " + stat + " = " + stat + " + @value WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@value", value);
+                command.Parameters.AddWithValue("@playerid", playerid);
+                command.ExecuteNonQuery();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            connection.Close();
         }
     }
 }

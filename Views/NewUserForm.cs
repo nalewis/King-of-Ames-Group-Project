@@ -10,8 +10,6 @@ using System.Windows.Forms;
 using Networking;
 using Controllers.Helpers;
 
-//TODO add error message checking
-
 namespace Views
 {
     /// <summary>
@@ -36,7 +34,23 @@ namespace Views
             {
                 //hide label from previous failures
                 errorLabel.Hide();
-                NetworkClasses.createUser(newUsername.Lines[0], newPassword.Lines[0], Helpers.GetLocalIPAddress()); 
+                bool good = NetworkClasses.createUser(newUsername.Lines[0], newPassword.Lines[0], Helpers.GetLocalIPAddress());
+                if (good)
+                {
+                    Form form = new LoginForm();
+                    form.Show();
+                    this.Dispose();
+                }
+                else
+                {
+                    errorLabel.Text = "Username already exists.";
+                    errorLabel.Show();
+                }
+            }
+            else
+            {
+                errorLabel.Text = "Inputs cannot be empty.";
+                errorLabel.Show();
             }
         }
 
@@ -45,11 +59,20 @@ namespace Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void loginLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void toLogin_Click(object sender, EventArgs e)
         {
             Form form = new LoginForm();
             form.Show();
             this.Dispose();
+        }
+
+        private void NewUserForm_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                this.Dispose();
+                Environment.Exit(0);
+            }
         }
     }
 }

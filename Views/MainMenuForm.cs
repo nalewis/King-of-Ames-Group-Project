@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Controllers.User;
+using Networking;
 
 namespace Views
 {
@@ -42,7 +44,7 @@ namespace Views
         private void HostButton_Click(object sender, EventArgs e)
         {
             Host.serverStart();
-            
+            NetworkClasses.updatePlayerStat(User.id, "Games_Hosted", 1);
             Form gameList = new HostGameListForm();
             gameList.Show();
             this.Dispose();

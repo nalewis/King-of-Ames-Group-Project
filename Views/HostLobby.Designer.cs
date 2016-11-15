@@ -31,12 +31,12 @@
             this.playerList = new System.Windows.Forms.ListView();
             this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.leaveGame = new System.Windows.Forms.Button();
             this.char_label = new System.Windows.Forms.Label();
             this.select_char = new System.Windows.Forms.Button();
             this.char_list = new System.Windows.Forms.ComboBox();
             this.start_game = new System.Windows.Forms.Button();
-            this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // playerList
@@ -61,6 +61,10 @@
             // character
             // 
             this.character.Text = "Character";
+            // 
+            // ping
+            // 
+            this.ping.Text = "Ping";
             // 
             // leaveGame
             // 
@@ -120,10 +124,6 @@
             this.start_game.UseVisualStyleBackColor = true;
             this.start_game.Click += new System.EventHandler(this.start_game_Click);
             // 
-            // ping
-            // 
-            this.ping.Text = "Ping";
-            // 
             // HostGameListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -136,6 +136,7 @@
             this.Controls.Add(this.leaveGame);
             this.Controls.Add(this.playerList);
             this.Name = "HostGameListForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ServerListForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HostGameListForm_Closing);
             this.ResumeLayout(false);

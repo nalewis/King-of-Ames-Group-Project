@@ -89,55 +89,19 @@ namespace Views
             ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
             listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
             listItem.SubItems.Add(pings[0].ToString() + " ms");
-            //listItem.SubItems.Add(NetworkClasses.getNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
-            //listItem.SubItems.Add(row["Status"].ToString());
 
             //Add the row entry to the listview
             playerList.Items.Add(listItem);
-
-            if (!String.IsNullOrEmpty(row["Player_2"].ToString()))
+            for(int i = 2; i <= 6; i++)
             {
-                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_2"].ToString()));
-                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[1].ToString() + " ms");
-                playerList.Items.Add(listItem);
-            }
-
-            if (!String.IsNullOrEmpty(row["Player_3"].ToString()))
-            {
-                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_3"].ToString()));
-                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[2].ToString() + " ms");
-                playerList.Items.Add(listItem);
-            }
-
-            if (!String.IsNullOrEmpty(row["Player_4"].ToString()))
-            {
-                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_4"].ToString()));
-                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[3].ToString() + " ms");
-                playerList.Items.Add(listItem);
-            }
-
-            if (!String.IsNullOrEmpty(row["Player_5"].ToString()))
-            {
-                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_5"].ToString()));
-                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[4].ToString() + " ms");
-                playerList.Items.Add(listItem);
-            }
-
-            if (!String.IsNullOrEmpty(row["Player_6"].ToString()))
-            {
-                grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_6"].ToString()));
-                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[5].ToString() + " ms");
-                playerList.Items.Add(listItem);
+                if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
+                {
+                    grabber = NetworkClasses.getPlayer(Int32.Parse(row["Player_" + i].ToString()));
+                    listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                    listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                    listItem.SubItems.Add(pings[i-1].ToString() + " ms");
+                    playerList.Items.Add(listItem);
+                }
             }
         }
 

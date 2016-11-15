@@ -68,13 +68,11 @@ namespace Views
         {
             if(join.Enabled)
             {
-                bool conn = Client.connect();
-                if(conn)
+                bool goodConnection = Client.connect();
+                if(goodConnection)
                 {
                     NetworkClasses.joinServer(serverList.SelectedItems[0].SubItems[1].Text, User.id);
-                    Console.WriteLine("Connected");
-                    Console.WriteLine(serverList.SelectedItems[0].SubItems[0].Text + " : " + serverList.SelectedItems[0].SubItems[1].Text);
-                    //client.joinServer(serverList.SelectedItems[0].SubItems[0].Text, serverList.SelectedItems[0].SubItems[1].Text);
+                    NetworkClasses.updatePlayerStat(User.id, "Games_Joined", 1);
                     PlayerLobby lobby = new PlayerLobby();
                     lobby.Show();
                     this.Dispose();
