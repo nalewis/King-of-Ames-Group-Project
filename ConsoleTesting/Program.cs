@@ -10,7 +10,6 @@ namespace ConsoleTesting
            // var consoleGame = new ConsoleGame();
             //consoleGame.Play();
 
-            Console.WriteLine(GameStateController.Serlialize(GameStateController.StartTurn()));
         }
     }
 }
