@@ -283,9 +283,9 @@ namespace Networking
             MySqlConnection connection = new MySqlConnection(connectString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "UPDATE Server_List SET Status = @status WHERE Player_ID = @id";
+            command.CommandText = "UPDATE Server_List SET Status = @status WHERE Host = @id";
             command.Parameters.AddWithValue("@status", status);
-            command.Parameters.AddWithValue("@status", id);
+            command.Parameters.AddWithValue("@id", id);
             command.ExecuteNonQuery();
 
             connection.Close();
