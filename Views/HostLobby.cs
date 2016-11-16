@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Networking;
-using System.Data;
 using Controllers;
 
 namespace Views
@@ -12,15 +11,19 @@ namespace Views
     /// </summary>
     public partial class HostGameListForm : Form
     {
-        readonly Timer _timer;
+        //Timer to facilitate the updating of the view
+        private readonly Timer _timer;
+
+        /// <summary>
+        /// Initializing variables
+        /// </summary>
         public HostGameListForm()
         {
             InitializeComponent();
             start_game.Enabled = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            _timer = new Timer {Interval = (2*1000)};
-            // 2 secs
+            _timer = new Timer {Interval = (2*1000)}; //Ticks every 2 seconds
             _timer.Tick += timer_Tick;
             _timer.Start();
 
@@ -63,7 +66,7 @@ namespace Views
             _timer.Stop();
             NetworkClasses.UpdateCharacter(User.Id, null);
             Host.ServerStop();
-            MainMenuForm main = new MainMenuForm();
+            var main = new MainMenuForm();
             main.Show();
             Dispose();
         }
@@ -73,34 +76,36 @@ namespace Views
         /// </summary>
         private void UpdateList()
         {
+            //Resets the view
             playerList.Items.Clear();
-            DataSet ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
-            DataRow row = ds.Tables[0].Rows[0];
 
-            DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
-            List<int> pings = new List<int>();
+            //Gets server info and puts it into a dataset
+            var ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
+            var row = ds.Tables[0].Rows[0];
+            var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
+            
+            //Gets ping values for all players
+            var pings = new List<int>();
             while(pings.Count < 1)
             {
                 pings = Host.GetPing();
             }
 
             //Host
-            ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+            var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
             listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
             listItem.SubItems.Add(pings[0].ToString() + " ms");
 
-            //Add the row entry to the listview
+            //Add the clients to the listview
             playerList.Items.Add(listItem);
-            for(int i = 2; i <= 6; i++)
+            for(var i = 2; i <= 6; i++)
             {
-                if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
-                {
-                    grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
-                    listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                    listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                    listItem.SubItems.Add(pings[i-1].ToString() + " ms");
-                    playerList.Items.Add(listItem);
-                }
+                if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
+                grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
+                listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                listItem.SubItems.Add(pings[i-1].ToString() + " ms");
+                playerList.Items.Add(listItem);
             }
         }
 
@@ -121,21 +126,19 @@ namespace Views
         /// <param name="e"></param>
         private void start_game_Click(object sender, EventArgs e)
         {
-            DataSet ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
-            DataRow row = ds.Tables[0].Rows[0];
+            var ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
+            var row = ds.Tables[0].Rows[0];
 
-            DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
+            var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
 
             //Host
-            LobbyController.AddPlayer(Int32.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
+            LobbyController.AddPlayer(int.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
 
-            for (int i = 2; i <= 6; i++)
+            for (var i = 2; i <= 6; i++)
             {
-                if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
-                {
-                    grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
-                    LobbyController.AddPlayer(Int32.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
-                }
+                if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
+                grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
+                LobbyController.AddPlayer(int.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
             }
             NetworkClasses.UpdateServerStatus("In Progress", User.Id);
             LobbyController.StartGame();

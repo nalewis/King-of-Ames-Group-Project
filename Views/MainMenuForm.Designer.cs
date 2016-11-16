@@ -36,7 +36,7 @@
             // 
             // HostButton
             // 
-            this.HostButton.Location = new System.Drawing.Point(121, 23);
+            this.HostButton.Location = new System.Drawing.Point(104, 46);
             this.HostButton.Name = "HostButton";
             this.HostButton.Size = new System.Drawing.Size(75, 23);
             this.HostButton.TabIndex = 0;
@@ -46,7 +46,7 @@
             // 
             // JoinButton
             // 
-            this.JoinButton.Location = new System.Drawing.Point(121, 64);
+            this.JoinButton.Location = new System.Drawing.Point(104, 88);
             this.JoinButton.Name = "JoinButton";
             this.JoinButton.Size = new System.Drawing.Size(75, 23);
             this.JoinButton.TabIndex = 1;
@@ -56,7 +56,7 @@
             // 
             // OptionsButton
             // 
-            this.OptionsButton.Location = new System.Drawing.Point(121, 109);
+            this.OptionsButton.Location = new System.Drawing.Point(104, 130);
             this.OptionsButton.Name = "OptionsButton";
             this.OptionsButton.Size = new System.Drawing.Size(75, 23);
             this.OptionsButton.TabIndex = 2;
@@ -65,7 +65,7 @@
             // 
             // ProfileButton
             // 
-            this.ProfileButton.Location = new System.Drawing.Point(121, 154);
+            this.ProfileButton.Location = new System.Drawing.Point(104, 174);
             this.ProfileButton.Name = "ProfileButton";
             this.ProfileButton.Size = new System.Drawing.Size(75, 23);
             this.ProfileButton.TabIndex = 3;

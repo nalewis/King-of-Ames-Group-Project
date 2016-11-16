@@ -100,9 +100,9 @@
             this.errorLabel.AutoSize = true;
             this.errorLabel.Location = new System.Drawing.Point(101, 163);
             this.errorLabel.Name = "errorLabel";
-            this.errorLabel.Size = new System.Drawing.Size(170, 13);
+            this.errorLabel.Size = new System.Drawing.Size(104, 13);
             this.errorLabel.TabIndex = 8;
-            this.errorLabel.Text = "Invalid username and/or password";
+            this.errorLabel.Text = "Error label goes here";
             this.errorLabel.Visible = false;
             // 
             // createUser

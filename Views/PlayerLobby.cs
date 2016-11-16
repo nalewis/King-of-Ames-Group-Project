@@ -1,6 +1,5 @@
 ﻿using Networking;
 using System;
-using System.Data;
 using System.Windows.Forms;
 
 namespace Views
@@ -10,14 +9,18 @@ namespace Views
     /// </summary>
     public partial class PlayerLobby : Form
     {
-        readonly Timer _timer;
+        //Timer to handle view updates
+        private readonly Timer _timer;
+
+        /// <summary>
+        /// Initializing variables
+        /// </summary>
         public PlayerLobby()
         {
             InitializeComponent();
             UpdateList();
-            //timer that runs to check for updated SQL values, then updates listview accordingly
-            _timer = new Timer {Interval = (2*1000)};
-            // 2 secs
+
+            _timer = new Timer {Interval = (2*1000)};//Ticks every 2 seconds
             _timer.Tick += timer_Tick;
             _timer.Start();
         }
@@ -43,22 +46,25 @@ namespace Views
             NetworkClasses.UpdateCharacter(User.Id, null);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.Id);
             Client.ClientStop();
-            MainMenuForm main = new MainMenuForm();
-            main.Show();
+            var form = new MainMenuForm();
+            form.Show();
             Dispose();
         }
 
+        /// <summary>
+        /// Checks if user is closing the application, clsoes accordingly
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void PlayerLobby_Closing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                _timer.Stop();
-                Dispose();
-                NetworkClasses.UpdateCharacter(User.Id, null);
-                NetworkClasses.FindRemovePlayer(Client.Conn, User.Id);
-                Client.ClientStop();
-                Environment.Exit(0);
-            }
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            _timer.Stop();
+            Dispose();
+            NetworkClasses.UpdateCharacter(User.Id, null);
+            NetworkClasses.FindRemovePlayer(Client.Conn, User.Id);
+            Client.ClientStop();
+            Environment.Exit(0);
         }
 
         /// <summary>
@@ -69,30 +75,27 @@ namespace Views
             playerList.Items.Clear();
             try
             {
-                DataSet ds = NetworkClasses.GetServer(Client.Conn);
-                DataRow row = ds.Tables[0].Rows[0];
+                var ds = NetworkClasses.GetServer(Client.Conn);
+                var row = ds.Tables[0].Rows[0];
 
-                DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
+                var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
 
                 //Host
-                ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
                 //Add the row entry to the listview
                 playerList.Items.Add(listItem);
 
-                for (int i = 2; i <= 6; i++)
+                for (var i = 2; i <= 6; i++)
                 {
-                    if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
-                    {
-                        grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
-                        listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                        listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                        //listItem.SubItems.Add(pings[i - 1].ToString() + " ms");
-                        playerList.Items.Add(listItem);
-                    }
+                    if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
+                    grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
+                    listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                    listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                    playerList.Items.Add(listItem);
                 }
             }
-            catch (Exception)
+            catch (Exception) //Thrown if server no longer exists
             {
                 Form form = new MainMenuForm();
                 form.Show();

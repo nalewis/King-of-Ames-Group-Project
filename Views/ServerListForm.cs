@@ -6,10 +6,13 @@ using System.Data;
 
 namespace Views
 {
+    /// <summary>
+    /// Form for the user to view all available servers
+    /// </summary>
     public partial class ServerListForm : Form
     {
         /// <summary>
-        /// Form for the user to view all available servers
+        /// Initializing variables
         /// </summary>
         public ServerListForm()
         {
@@ -30,7 +33,7 @@ namespace Views
         }
 
         /// <summary>
-        /// When the window is closed, the NetClient is stopped and closes the application
+        /// Checks if user is closing the application, closes accordingly
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -49,7 +52,7 @@ namespace Views
         /// <param name="e"></param>
         private void mainMenu_Click(object sender, EventArgs e)
         {
-            MainMenuForm main = new MainMenuForm();
+            var main = new MainMenuForm();
             Client.ClientStop();
             main.Show();
             Dispose();
@@ -63,19 +66,17 @@ namespace Views
         /// <param name="e"></param>
         private void join_Click(object sender, EventArgs e)
         {
-            if(join.Enabled)
+            if (!join.Enabled) return;
+            var goodConnection = Client.Connect();
+            if(goodConnection)
             {
-                bool goodConnection = Client.Connect();
-                if(goodConnection)
-                {
-                    NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.Id);
-                    NetworkClasses.UpdatePlayerStat(User.Id, "Games_Joined", 1);
-                    PlayerLobby lobby = new PlayerLobby();
-                    lobby.Show();
-                    Dispose();
-                }
-                else { Console.WriteLine("Couldn't Connect"); }
+                NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.Id);
+                NetworkClasses.UpdatePlayerStat(User.Id, "Games_Joined", 1);
+                var lobby = new PlayerLobby();
+                lobby.Show();
+                Dispose();
             }
+            else { Console.WriteLine("Couldn't Connect"); }
         }
 
         /// <summary>
@@ -83,15 +84,15 @@ namespace Views
         /// </summary>
         private void ListServers()
         {
-            DataSet ds = NetworkClasses.GetServers();
+            var ds = NetworkClasses.GetServers();
 
             foreach(DataRow row in ds.Tables[0].Rows)
             {
-                DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
+                var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
 
-                ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["Local_IP"].ToString());
-                listItem.SubItems.Add(NetworkClasses.GetNumPlayers(Int32.Parse(row["Server_ID"].ToString())) + "/6");
+                listItem.SubItems.Add(NetworkClasses.GetNumPlayers(int.Parse(row["Server_ID"].ToString())) + "/6");
                 listItem.SubItems.Add(row["Status"].ToString());
 
                 //Add the row entry to the listview
@@ -101,6 +102,7 @@ namespace Views
 
         /// <summary>
         /// Gets Host IP when server is selected, and updates the client connection string
+        /// Also enables the join game button
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

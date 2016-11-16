@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Lidgren.Network;
 using System.Threading;
 using System.Collections.Generic;
+using System.Linq;
 using Controllers;
 using GamePieces.Monsters;
 
@@ -12,13 +13,13 @@ using Newtonsoft.Json;
 
 namespace Views
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the appliction.
         /// </summary>a
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -31,7 +32,7 @@ namespace Views
     /// <summary>
     /// Host class is where the NetServer from Lidgren is located
     /// </summary>
-    static class Host
+    internal static class Host
     {
         public static List<int> Players = new List<int>(); 
         private static NetServer _server;
@@ -51,7 +52,7 @@ namespace Views
             NetworkClasses.CreateServer(User.Id, User.LocalIp);
 
             // Starts thread to handle input from clients
-            Thread recieve = new Thread(RecieveLoop);
+            var recieve = new Thread(RecieveLoop);
             recieve.Start();
 
             //The host contains a client to behave like a user
@@ -115,12 +116,35 @@ namespace Views
                             Players.Remove(inc.ReadInt32());
                         }
                         break;
+                    case NetIncomingMessageType.UnconnectedData:
+                        break;
+                    case NetIncomingMessageType.Receipt:
+                        break;
+                    case NetIncomingMessageType.DiscoveryRequest:
+                        break;
+                    case NetIncomingMessageType.DiscoveryResponse:
+                        break;
+                    case NetIncomingMessageType.VerboseDebugMessage:
+                        break;
+                    case NetIncomingMessageType.DebugMessage:
+                        break;
+                    case NetIncomingMessageType.WarningMessage:
+                        break;
+                    case NetIncomingMessageType.ErrorMessage:
+                        break;
+                    case NetIncomingMessageType.NatIntroductionSuccess:
+                        break;
+                    case NetIncomingMessageType.ConnectionLatencyUpdated:
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
         }
 
+        /// <summary>
+        /// Sends the monter packets to all connected users
+        /// </summary>
         public static void StartGame()
         {
             var outMsg = _server.CreateMessage();
@@ -128,7 +152,7 @@ namespace Views
             outMsg.Write(Players.Count);
             MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
             var packets = MonsterController.GetDataPackets();
-            for (int i = 0; i < Players.Count; i++)
+            for (var i = 0; i < Players.Count; i++)
             {
                 var json = JsonConvert.SerializeObject(packets[i]);
                 outMsg.Write(json);
@@ -136,17 +160,16 @@ namespace Views
             _server.SendToAll(outMsg,NetDeliveryMethod.ReliableOrdered);
         }
 
+        /// <summary>
+        /// Gets the ping values for all connected users
+        /// </summary>
+        /// <returns>Int list</returns>
         public static List<int> GetPing()
         {
-            List<int> pings = new List<int>();
-            foreach(NetConnection conn in _server.Connections)
-            {
-                pings.Add((int)(conn.AverageRoundtripTime*1000));
-            }
-            return pings;
+            return _server.Connections.Select(conn => (int) (conn.AverageRoundtripTime*1000)).ToList();
         }
 
-        enum PacketTypes
+        private enum PacketTypes
         {
             Login,
             Leave,
@@ -159,7 +182,7 @@ namespace Views
     /// <summary>
     /// Client class holds the NetClient from Lidgren
     /// </summary>
-    static class Client
+    internal static class Client
     {
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
@@ -176,7 +199,7 @@ namespace Views
             //Sends login request to Host, with player ID attached
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
-            outMsg.Write(Int32.Parse(User.Id));
+            outMsg.Write(int.Parse(User.Id));
             
             //resets the receive thread
             _shouldStop = false;
@@ -184,7 +207,6 @@ namespace Views
             _loop.Start();
 
             NetClient.Connect(Conn, 6969, outMsg);
-           // if(NetClient.ConnectionStatus != NetConnectionStatus.Connected) { return false; }
             return true;
         }
 
@@ -216,8 +238,8 @@ namespace Views
                         var type = inc.ReadByte();
                         if (type == (byte)PacketTypes.Start)
                         {
-                            int end = inc.ReadInt32();
-                            for (int i = 0; i < end; i++)
+                            var end = inc.ReadInt32();
+                            for (var i = 0; i < end; i++)
                             {
                                var json = inc.ReadString();
                                var packet = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
@@ -235,6 +257,28 @@ namespace Views
                             Conn = "";
                         }
                         break;
+                    case NetIncomingMessageType.UnconnectedData:
+                        break;
+                    case NetIncomingMessageType.ConnectionApproval:
+                        break;
+                    case NetIncomingMessageType.Receipt:
+                        break;
+                    case NetIncomingMessageType.DiscoveryRequest:
+                        break;
+                    case NetIncomingMessageType.DiscoveryResponse:
+                        break;
+                    case NetIncomingMessageType.VerboseDebugMessage:
+                        break;
+                    case NetIncomingMessageType.DebugMessage:
+                        break;
+                    case NetIncomingMessageType.WarningMessage:
+                        break;
+                    case NetIncomingMessageType.ErrorMessage:
+                        break;
+                    case NetIncomingMessageType.NatIntroductionSuccess:
+                        break;
+                    case NetIncomingMessageType.ConnectionLatencyUpdated:
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -248,7 +292,7 @@ namespace Views
         {
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Leave);
-            outMsg.Write(Int32.Parse(User.Id));
+            outMsg.Write(int.Parse(User.Id));
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
             NetClient.WaitMessage(1000);
             NetClient.Shutdown("Closed");
@@ -257,7 +301,7 @@ namespace Views
             Conn = "";
         }
 
-        enum PacketTypes
+        private enum PacketTypes
         {
             Login,
             Leave,

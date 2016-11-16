@@ -11,6 +11,9 @@ namespace Views
     /// </summary>
     public partial class LoginForm : Form
     {
+        /// <summary>
+        /// Initializing variables
+        /// </summary>
         public LoginForm()
         {
             InitializeComponent();
@@ -39,24 +42,34 @@ namespace Views
                 }
                 else
                 {
+                    errorLabel.Text = "Invalid Username/Password";
                     errorLabel.Show();
                 }
             }
             else
             {
+                errorLabel.Text = "Username/Password cannot be blank.";
                 errorLabel.Show();
             }
         }
 
+        /// <summary>
+        /// Checks if user is closing the applications, closes accordingly
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoginForm_Closing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                Dispose();
-                Environment.Exit(0);
-            }
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            Dispose();
+            Environment.Exit(0);
         }
 
+        /// <summary>
+        /// On click, takes user to the new user form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void createUser_Click(object sender, EventArgs e)
         {
             Form form = new NewUserForm();

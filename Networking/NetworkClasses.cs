@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Networking
 {
@@ -11,8 +12,8 @@ namespace Networking
     public class NetworkClasses
     {
         //Information to access the MySQL database
-        static string connectString = "Server=10.25.71.66;Database=db309yt01;Uid=dbu309yt01;Pwd=ZuuYea5cBtZ;";
-        
+        private const string ConnectString = "Server=10.25.71.66;Database=db309yt01;Uid=dbu309yt01;Pwd=ZuuYea5cBtZ;";
+
         /// <summary>
         /// Using the inputs from the signup form, opens a connection to the database, check if username exists, if not, adds user to list
         /// </summary>
@@ -21,7 +22,7 @@ namespace Networking
         /// <param name="ip"></param>
         public static bool CreateUser(string user, string pass, string ip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             MySqlCommand command;
             connection.Open();
             try
@@ -38,10 +39,10 @@ namespace Networking
                 //catch exception for non-unique player name and return false
                 return false;
             }
-            DataSet ds = new DataSet();
+            var ds = new DataSet();
             command.CommandText = "SELECT * FROM User_List WHERE Username = @username";
             command.Parameters.AddWithValue("@username", user);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             adapter.Fill(ds);
             command = connection.CreateCommand();
             command.CommandText = "INSERT INTO User_Stats (Player_ID, Games_Joined, Games_Hosted) VALUES (@id,0,0)";
@@ -61,29 +62,25 @@ namespace Networking
         /// <returns></returns>
         public static bool Login(string user, string pass, string ip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM User_List WHERE Username = @user AND Password = @pass";
             command.Parameters.AddWithValue("@user", user);
             command.Parameters.AddWithValue("@pass", pass);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
-            if (ds.Tables[0].Rows.Count != 0)
-            {
-                //update the players ip
-                UpdateIp(ds.Tables[0].Rows[0]["Player_ID"].ToString(), ip);
+            if (ds.Tables[0].Rows.Count == 0) return false;
+            //update the players ip
+            UpdateIp(ds.Tables[0].Rows[0]["Player_ID"].ToString(), ip);
 
-                User.Username = ds.Tables[0].Rows[0]["Username"].ToString();
-                User.LocalIp = ip;
-                User.Id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
-                User.Character = ds.Tables[0].Rows[0]["_Character"].ToString();
-                connection.Close();
-                return true;
-            }
-
-            return false;
+            User.Username = ds.Tables[0].Rows[0]["Username"].ToString();
+            User.LocalIp = ip;
+            User.Id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
+            User.Character = ds.Tables[0].Rows[0]["_Character"].ToString();
+            connection.Close();
+            return true;
         }
 
         /// <summary>
@@ -95,7 +92,7 @@ namespace Networking
         /// <returns></returns>
         public static bool UpdateIp(string playerid, string ip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "UPDATE User_List SET Local_IP = @ip WHERE Player_ID = @playerid";
@@ -114,24 +111,17 @@ namespace Networking
         /// <returns></returns>
         public static bool IsHosting(string hostid)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Host = @hostid";
             command.Parameters.AddWithValue("@hostid", hostid);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
             connection.Close();
-            if (ds.Tables[0].Rows.Count == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return ds.Tables[0].Rows.Count != 0;
         }
 
         /// <summary>
@@ -142,7 +132,7 @@ namespace Networking
         /// <returns></returns>
         public static bool CreateServer(string hostid, string hostip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "INSERT INTO Server_List (Host, Host_IP, Status) VALUES (@hostid, @hostip, 'Creating')";
@@ -161,7 +151,7 @@ namespace Networking
         /// <returns></returns>
         public static bool DeleteServer(string hostid)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "DELETE FROM Server_List WHERE Host = '" + hostid + "'";
@@ -179,14 +169,14 @@ namespace Networking
         /// <returns>Dataset containing the server ID, host ID, host IP, and connected player IDs</returns>
         public static DataSet GetServer(string hostid, string hostip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Host = @hostid AND Host_IP = @hostip";
             command.Parameters.AddWithValue("@hostid", hostid);
             command.Parameters.AddWithValue("@hostip", hostip);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
 
@@ -201,13 +191,13 @@ namespace Networking
         /// <returns>>Dataset containing the server ID, host ID, host IP, and connected player IDs</returns>
         public static DataSet GetServer(string hostip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
             command.Parameters.AddWithValue("@hostip", hostip);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
 
@@ -221,12 +211,12 @@ namespace Networking
         /// <returns>Dataset containing server info of all servers</returns>
         public static DataSet GetServers()
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Status ='Creating'";
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
 
@@ -241,13 +231,13 @@ namespace Networking
         /// <returns>Dataset containing player info</returns>
         public static DataSet GetPlayer(int playerId)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @Player_ID";
             command.Parameters.AddWithValue("@Player_ID", playerId);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
 
@@ -262,7 +252,7 @@ namespace Networking
         /// <param name="character"></param>
         public static void UpdateCharacter(string playerid, string character)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "UPDATE User_List SET _Character = @character WHERE Player_ID = @playerid";
@@ -280,7 +270,7 @@ namespace Networking
         /// <param name="id"></param>
         public static void UpdateServerStatus(string status, string id)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "UPDATE Server_List SET Status = @status WHERE Host = @id";
@@ -302,7 +292,7 @@ namespace Networking
             var openSpot = GetNextAvailableSpot(hostip);
             if (openSpot != -1)
             {
-                MySqlConnection connection = new MySqlConnection(connectString);
+                var connection = new MySqlConnection(ConnectString);
                 connection.Open();
                 var command = connection.CreateCommand();
                 command.CommandText = "UPDATE Server_List SET Player_" + openSpot + " = @playerid WHERE Host_IP = @hostip";
@@ -326,51 +316,24 @@ namespace Networking
         /// <returns>lowest spot in server 2-6</returns>
         public static int GetNextAvailableSpot(string hostip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
             command.Parameters.AddWithValue("@hostip", hostip);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
             if (ds.Tables[0].Rows.Count != 0)
             {
-                //var stuff = String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString());
-                //var thing = ds.Tables[0].Rows[0]["Player_2"].ToString();
-                if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
+                for (var i = 2; i < 6; i++)
                 {
+                    if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString())) continue;
                     connection.Close();
-                    return 2;
-                }
-                else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_3"].ToString()))
-                {
-                    connection.Close();
-                    return 3;
-                }
-                else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_4"].ToString()))
-                {
-                    connection.Close();
-                    return 4;
-                }
-                else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_5"].ToString()))
-                {
-                    connection.Close();
-                    return 5;
-                }
-                else if (String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_6"].ToString()))
-                {
-                    connection.Close();
-                    return 6;
-                }
-                else
-                {
-                    connection.Close();
-                    return -1;
+                    return i;
                 }
             }
-
             connection.Close();
             return -1;
         }
@@ -382,51 +345,25 @@ namespace Networking
         /// <param name="playerid"></param>
         public static void FindRemovePlayer(string hostip, string playerid)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
-            int remove = -1;
+            var remove = -1;
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
             command.Parameters.AddWithValue("@hostip", hostip);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
             if (ds.Tables[0].Rows.Count != 0)
             {
-                //var stuff = String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString());
-                //var thing = ds.Tables[0].Rows[0]["Player_2"].ToString();
-                if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_2"].ToString(), playerid) == 0)
+                for (var i = 2; i < 6; i++)
                 {
-                    connection.Close();
-                    remove = 2;
-                }
-                else if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_3"].ToString(), playerid) == 0)
-                {
-                    connection.Close();
-                    remove = 3;
-                }
-                else if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_4"].ToString(), playerid) == 0)
-                {
-                    connection.Close();
-                    remove = 4;
-                }
-                else if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_5"].ToString(), playerid) == 0)
-                {
-                    connection.Close();
-                    remove = 5;
-                }
-                else if (String.CompareOrdinal(ds.Tables[0].Rows[0]["Player_6"].ToString(), playerid) == 0)
-                {
-                    connection.Close();
-                    remove = 6;
-                }
-                else
-                {
-                    connection.Close();
+                    if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_" + i].ToString(), playerid) == 0) continue;
+                    remove = i;
+                    break;
                 }
             }
-
             connection.Close();
             RemovePlayer(hostip, remove);
         }
@@ -438,10 +375,10 @@ namespace Networking
         /// <param name="playerPosition"></param>
         public static void RemovePlayer(string hostip, int playerPosition)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";
             command.Parameters.AddWithValue("@hostip", hostip);
             command.ExecuteNonQuery();
@@ -456,16 +393,8 @@ namespace Networking
         /// <returns>false if any player hasn't selected a character, true otherwise</returns>
         public static bool CheckReady(List<int> players)
         {
-            List<DataSet> playersList = new List<DataSet>();
-            foreach (int player in players)
-            {
-                playersList.Add(GetPlayer(player));
-            }
-            foreach (DataSet player in playersList)
-            {
-                if(String.IsNullOrEmpty(player.Tables[0].Rows[0]["_Character"].ToString())) { return false; }
-            }
-            return true;
+            var playersList = players.Select(GetPlayer).ToList();
+            return playersList.All(player => !string.IsNullOrEmpty(player.Tables[0].Rows[0]["_Character"].ToString()));
         }
 
         /// <summary>
@@ -475,44 +404,26 @@ namespace Networking
         /// <returns>number of players in the server</returns>
         public static int GetNumPlayers(int serverId)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
-            int count = -1;
+            var count = -1;
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Server_ID = @Server_ID";
             command.Parameters.AddWithValue("@Server_ID", serverId);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
             connection.Close();
 
-            if (ds.Tables[0].Rows.Count != 0)
+            if (ds.Tables[0].Rows.Count == 0) return count;
+            count = 1;
+            for (var i = 2; i < 6; i++)
             {
-                count = 1;
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
-                {
-                    count++;
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_3"].ToString()))
-                {
-                    count++;
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_4"].ToString()))
-                {
-                    count++;
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_5"].ToString()))
-                {
-                    count++;
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_6"].ToString()))
-                {
-                    count++;
-                }
+                if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString())) continue;
+                count++;
             }
 
-            connection.Close();
             return count;
         }
 
@@ -520,54 +431,36 @@ namespace Networking
         /// Gets an int array of the player IDs currently connected to the Host
         /// </summary>
         /// <param name="hostip"></param>
-        /// <returns></returns>
+        /// <returns>int array of IDs</returns>
         public static int[] GetPlayerIDs(string hostip)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             int[] players = { -1, -1, -1, -1, -1, -1 };
 
-            MySqlCommand command = connection.CreateCommand();
+            var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Host_IP = @hostip";
             command.Parameters.AddWithValue("@hostip", hostip);
-            MySqlDataAdapter adapter = new MySqlDataAdapter(command);
+            var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
             connection.Close();
 
-            if (ds.Tables[0].Rows.Count != 0)
+            if (ds.Tables[0].Rows.Count == 0) return players;
+            players[0] = int.Parse(ds.Tables[0].Rows[0]["Host"].ToString());
+            for (var i = 2; i < 6; i++)
             {
-                players[0] = Int32.Parse(ds.Tables[0].Rows[0]["Host"].ToString());
-
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_2"].ToString()))
+                if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString()))
                 {
-                    players[1] = Int32.Parse(ds.Tables[0].Rows[0]["Player_2"].ToString());
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_3"].ToString()))
-                {
-                    players[2] = Int32.Parse(ds.Tables[0].Rows[0]["Player_3"].ToString());
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_4"].ToString()))
-                {
-                    players[3] = Int32.Parse(ds.Tables[0].Rows[0]["Player_4"].ToString());
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_5"].ToString()))
-                {
-                    players[4] = Int32.Parse(ds.Tables[0].Rows[0]["Player_5"].ToString());
-                }
-                if (!String.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_6"].ToString()))
-                {
-                    players[5] = Int32.Parse(ds.Tables[0].Rows[0]["Player_6"].ToString());
+                    players[i-1] = int.Parse(ds.Tables[0].Rows[0]["Player_" + i].ToString());
                 }
             }
-
-            connection.Close();
             return players;
         }
 
         public static void UpdatePlayerStat(string playerid, string stat, int value)
         {
-            MySqlConnection connection = new MySqlConnection(connectString);
+            var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "UPDATE User_Stats SET " + stat + " = " + stat + " + @value WHERE Player_ID = @playerid";

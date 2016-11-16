@@ -9,23 +9,24 @@ namespace Views
     /// </summary>
     public partial class MainMenuForm : Form
     {
+        /// <summary>
+        /// Intializing variables
+        /// </summary>
         public MainMenuForm()
         {
             InitializeComponent();
         }
 
         /// <summary>
-        /// Closes the application if the window is closed
+        /// Checks if user is closing the application, closes accordingly
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public void MainMenuForm_Closing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                Dispose();
-                Environment.Exit(0);
-            }
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            Dispose();
+            Environment.Exit(0);
         }
 
         /// <summary>

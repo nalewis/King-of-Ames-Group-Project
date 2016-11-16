@@ -24,7 +24,7 @@ namespace Networking
 
         public static string WebMessage(NameValueCollection data)
         {
-            using (WebClient wc = new WebClient())
+            using (var wc = new WebClient())
             {
                 wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                 var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
