@@ -274,6 +274,24 @@ namespace Networking
         }
 
         /// <summary>
+        /// Updates the server status based on player count and game status
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="id"></param>
+        public static void UpdateServerStatus(string status, string id)
+        {
+            MySqlConnection connection = new MySqlConnection(connectString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "UPDATE Server_List SET Status = @status WHERE Player_ID = @id";
+            command.Parameters.AddWithValue("@status", status);
+            command.Parameters.AddWithValue("@status", id);
+            command.ExecuteNonQuery();
+
+            connection.Close();
+        }
+
+        /// <summary>
         /// Adds the new player into the server info
         /// </summary>
         /// <param name="hostip"></param>

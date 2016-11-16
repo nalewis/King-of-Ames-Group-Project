@@ -23,7 +23,8 @@ namespace GameEngine {
         public static int ScreenWidth;
         public static int ScreenHeight;
 
-        public Engine() {
+        public Engine()
+        {
             GraffixMngr = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;

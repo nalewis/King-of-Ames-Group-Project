@@ -20,9 +20,6 @@ namespace Views
         [STAThread]
         static void Main()
         {
-            //Handler for deleting a server entry if the user suddenly quits
-            //AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Form form = new LoginForm();
@@ -97,6 +94,7 @@ namespace Views
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
+                            if(Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.Id); }
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");
@@ -124,7 +122,8 @@ namespace Views
         {
             var outMsg = _server.CreateMessage();
             outMsg.Write((byte)PacketTypes.Start);
-            outMsg.Write((Int32)Players.Count);
+            outMsg.Write(Players.Count);
+            MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
             var packets = MonsterController.GetDataPackets();
             for (int i = 0; i < Players.Count; i++)
             {
@@ -162,6 +161,7 @@ namespace Views
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
         private static bool _shouldStop;
+        public static MonsterDataPacket MonsterPacket;
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -202,13 +202,18 @@ namespace Views
                         Console.WriteLine("Connected to Server.");
                         break;
                     case NetIncomingMessageType.Data:
-                        var type = inc.ReadByte(); 
-                        if(type == (byte)PacketTypes.Start)
+                        var type = inc.ReadByte();
+                        int end = inc.ReadInt32();
+                        if (type == (byte)PacketTypes.Start)
                         {
-                            for (int i = 0; i < inc.ReadInt32(); i++)
+                            for (int i = 0; i < end; i++)
                             {
-                                var packet = JsonConvert.DeserializeObject<MonsterDataPacket>(inc.ReadString());
-                                if (packet.PlayerId == Int32.Parse(User.Id)) Console.WriteLine("Fuckin");
+                               var json = inc.ReadString();
+                               var packet = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                               if (packet.PlayerId == Int32.Parse(User.Id))
+                               {
+                                    Console.WriteLine("Packet Recieved");
+                               }
                             }
                         }
                         break;

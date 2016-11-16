@@ -134,7 +134,7 @@ namespace Views
                 if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
                 {
                     grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
-                    LobbyController.AddPlayer(Int32.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["Character"].ToString());
+                    LobbyController.AddPlayer(Int32.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
                 }
             }
             LobbyController.StartGame();
