@@ -46,6 +46,7 @@
     <Compile Include="Actions\ActionPacket.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="NetworkClasses.cs" />
+    <Compile Include="StringCipher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Game Pieces\Game Pieces.csproj">

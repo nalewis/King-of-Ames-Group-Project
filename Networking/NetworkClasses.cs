@@ -25,6 +25,7 @@ namespace Networking
             var connection = new MySqlConnection(ConnectString);
             MySqlCommand command;
             connection.Open();
+            pass = StringCipher.Encrypt(pass, "thomas");
             try
             {
                 command = connection.CreateCommand();
@@ -65,13 +66,14 @@ namespace Networking
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM User_List WHERE Username = @user AND Password = @pass";
+            command.CommandText = "SELECT * FROM User_List WHERE Username = @user";
             command.Parameters.AddWithValue("@user", user);
-            command.Parameters.AddWithValue("@pass", pass);
             var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
             if (ds.Tables[0].Rows.Count == 0) return false;
+            var dbpass = StringCipher.Decrypt(ds.Tables[0].Rows[0]["password"].ToString(), "thomas");
+            if (dbpass != pass) return false;
             //update the players ip
             UpdateIp(ds.Tables[0].Rows[0]["Player_ID"].ToString(), ip);
 
