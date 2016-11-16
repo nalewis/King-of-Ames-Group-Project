@@ -7,6 +7,7 @@ using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 using GamePieces.Session;
 using KoTGame = GamePieces.Session.Game;
+using Networking.Actions;
 
 namespace GameEngine.GameScreens
 {
@@ -71,7 +72,7 @@ namespace GameEngine.GameScreens
         
             if (Engine.InputManager.KeyPressed(Keys.P))
             {
-                Engine.AddScreen(new PauseMenu());
+                ScreenManager.AddScreen(new PauseMenu());
             }
 
             UpdateGraphicsPieces();
@@ -177,7 +178,7 @@ namespace GameEngine.GameScreens
 
         private void BuyScreen()
         {
-            Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
+            ScreenManager.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
         }
 
         public override void Draw(GameTime gameTime)
@@ -199,7 +200,9 @@ namespace GameEngine.GameScreens
 
         private void StartNextTurn()
         {
-            GameStateController.EndTurn();
+            //TODO: ACTION PACKETS! ALL THE ACTION PACKETS!!
+            ActionPacket ap = new ActionPacket(Networking.Actions.Action.EndTurn);
+            //GameStateController.EndTurn();
             _diceRow.Hidden = true;
             _gameState = GameState.StartTurn;
         }

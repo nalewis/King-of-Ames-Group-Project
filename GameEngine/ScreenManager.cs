@@ -16,7 +16,7 @@ namespace GameEngine
 
         public override void Initialize()
         {
-            AddScreen(new MainGameScreen);
+            AddScreen(new MainGameScreen());
             base.Initialize();
         }
 
