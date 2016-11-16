@@ -67,29 +67,41 @@ namespace Views
         private void UpdateList()
         {
             playerList.Items.Clear();
-            DataSet ds = NetworkClasses.GetServer(Client.Conn);
-            DataRow row = ds.Tables[0].Rows[0];
-
-            DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
-
-            //Host
-            ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-
-            //Add the row entry to the listview
-            playerList.Items.Add(listItem);
-
-            for (int i = 2; i <= 6; i++)
+            try
             {
-                if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
+                DataSet ds = NetworkClasses.GetServer(Client.Conn);
+                DataRow row = ds.Tables[0].Rows[0];
+
+                DataSet grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Host"].ToString()));
+
+                //Host
+                ListViewItem listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                //Add the row entry to the listview
+                playerList.Items.Add(listItem);
+
+                for (int i = 2; i <= 6; i++)
                 {
-                    grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
-                    listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                    listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                    //listItem.SubItems.Add(pings[i - 1].ToString() + " ms");
-                    playerList.Items.Add(listItem);
+                    if (!String.IsNullOrEmpty(row["Player_" + i].ToString()))
+                    {
+                        grabber = NetworkClasses.GetPlayer(Int32.Parse(row["Player_" + i].ToString()));
+                        listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                        listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                        //listItem.SubItems.Add(pings[i - 1].ToString() + " ms");
+                        playerList.Items.Add(listItem);
+                    }
                 }
             }
-       
+            catch (Exception)
+            {
+                Form form = new MainMenuForm();
+                form.Show();
+                _timer.Stop();
+                Client.ClientStop();
+                NetworkClasses.UpdateCharacter(User.Id, null);
+                MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Dispose();
+            }
         }
 
         /// <summary>

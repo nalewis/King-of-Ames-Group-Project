@@ -65,9 +65,12 @@ namespace Views
         /// </summary>
         public static void ServerStop()
         {
-            NetworkClasses.DeleteServer(User.Id);
             Client.ClientStop();
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte) PacketTypes.Closed);
+            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             _server.Shutdown("Closed");
+            NetworkClasses.DeleteServer(User.Id);
         }
 
         /// <summary>
@@ -147,7 +150,8 @@ namespace Views
         {
             Login,
             Leave,
-            Start
+            Start,
+            Closed
         }
 
     }
@@ -200,12 +204,19 @@ namespace Views
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         Console.WriteLine("Connected to Server.");
+                        if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
+                        {
+                            NetClient.Shutdown("Closed");
+                            //ends the receive loop
+                            _shouldStop = true;
+                            Conn = "";
+                        }
                         break;
                     case NetIncomingMessageType.Data:
                         var type = inc.ReadByte();
-                        int end = inc.ReadInt32();
                         if (type == (byte)PacketTypes.Start)
                         {
+                            int end = inc.ReadInt32();
                             for (int i = 0; i < end; i++)
                             {
                                var json = inc.ReadString();
@@ -215,6 +226,13 @@ namespace Views
                                     Console.WriteLine("Packet Recieved");
                                }
                             }
+                        }
+                        else if (type == (byte) PacketTypes.Closed)
+                        {
+                            NetClient.Shutdown("Closed");
+                            //ends the receive loop
+                            _shouldStop = true;
+                            Conn = "";
                         }
                         break;
                     default:
@@ -244,6 +262,7 @@ namespace Views
             Login,
             Leave,
             Start,
+            Closed
         }
     }
 }

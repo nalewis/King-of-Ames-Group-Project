@@ -137,6 +137,7 @@ namespace Views
                     LobbyController.AddPlayer(Int32.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
                 }
             }
+            NetworkClasses.UpdateServerStatus("In Progress", User.Id);
             LobbyController.StartGame();
             Host.StartGame();
         }
