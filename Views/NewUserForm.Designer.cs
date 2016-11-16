@@ -34,8 +34,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.errorLabel = new System.Windows.Forms.Label();
             this.newUserButton = new System.Windows.Forms.Button();
-            this.loginLabel = new System.Windows.Forms.LinkLabel();
             this.toLogin = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // newUsername
@@ -91,13 +91,6 @@
             this.newUserButton.UseVisualStyleBackColor = true;
             this.newUserButton.Click += new System.EventHandler(this.newUserButton_Click);
             // 
-            // loginLabel
-            // 
-            this.loginLabel.Location = new System.Drawing.Point(0, 0);
-            this.loginLabel.Name = "loginLabel";
-            this.loginLabel.Size = new System.Drawing.Size(100, 23);
-            this.loginLabel.TabIndex = 0;
-            // 
             // toLogin
             // 
             this.toLogin.Location = new System.Drawing.Point(71, 153);
@@ -108,13 +101,22 @@
             this.toLogin.UseVisualStyleBackColor = true;
             this.toLogin.Click += new System.EventHandler(this.toLogin_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(28, 34);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(300, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Username and password can only contain letters and numbers";
+            // 
             // NewUserForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(350, 262);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.toLogin);
-            this.Controls.Add(this.loginLabel);
             this.Controls.Add(this.newUserButton);
             this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.label2);
@@ -138,7 +140,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.Button newUserButton;
-        private System.Windows.Forms.LinkLabel loginLabel;
         private System.Windows.Forms.Button toLogin;
+        private System.Windows.Forms.Label label3;
     }
 }
