@@ -78,11 +78,11 @@ namespace GameEngine.GraphicPieces
             if (_diceRow.Hidden) return;
             if (Die.Save)
             {
-                Controllers.DiceController.UnSaveDie(Index);
+                Controllers.GameStateController.UnSaveDie(Index);
             }
             else
             {
-                Controllers.DiceController.SaveDie(Index);
+                Controllers.GameStateController.SaveDie(Index);
             }
         }
 

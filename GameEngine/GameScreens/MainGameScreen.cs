@@ -102,7 +102,9 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
                 _diceRow.Clear();
-                DiceController.EndRolling();
+
+                DiceController.EndRolling(); //TODO SEND ACTION PACKET!!
+
                 /*
                 if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
                 {
@@ -121,7 +123,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
-                DiceController.Roll();
+                GameStateController.Roll(); //TODO: SEND TO HOST!!!
                 _diceRow.Hidden = false;
             }
 
