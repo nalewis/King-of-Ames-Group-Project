@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Controllers;
+using Networking;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 using GamePieces.Session;
-using KoTGame = GamePieces.Session.Game;
-using Networking.Actions;
+using KoTGame = GamePieces.Session.Game; //TODO remove this
 
 namespace GameEngine.GameScreens
 {
@@ -18,7 +18,9 @@ namespace GameEngine.GameScreens
         private readonly List<TextPrompt> _textPrompts;
         private readonly DiceRow _diceRow;
 
-        private Monster _currentMonster;
+        private static int _localPlayer;
+        private static Monster _localMonster;
+        private State _localPlayerState;
 
         private GameState _gameState;
 
@@ -28,26 +30,28 @@ namespace GameEngine.GameScreens
 
         public MainGameScreen()
         {
-            LobbyController.StartGame();
+            //LobbyController.StartGame(); //NEED MONSTER DATA PACKETS
             _positionList = CalculatePositions();
             _pBlocks = InitializePlayerBlocks();
             _textPrompts = new List<TextPrompt>();
-            _diceRow = new DiceRow(GetPosition("DicePos"));
-            _currentMonster = KoTGame.Current;       
+            _diceRow = new DiceRow(GetPosition("DicePos")); //TODO; 
+            _localPlayer = 0; //WILL BE AN INT SOON User.Id;       //TODO: 
+            _localMonster = MonsterController.GetById(_localPlayer);
             _gameState = GameState.StartTurn;
         }
 
         public override void Update(GameTime gameTime)
         {
+            _localPlayerState = MonsterController.State(_localPlayer);
+
+
             if (KoTGame.Winner != null)
             {
                 _textPrompts.Clear();
                 _textPrompts.Add(new TextPrompt(KoTGame.Winner.Name + " WINS!!", "WinText", GetPosition("WinText")));
             }
 
-           UpdatePositions();
-
-            _currentMonster = KoTGame.Current;
+            UpdatePositions();
 
             switch (_gameState)
             {
@@ -64,12 +68,12 @@ namespace GameEngine.GameScreens
                     AskYieldBay();
                     break;
                 case GameState.BuyCards:
-                    BuyScreen();
+                    // BuyScreen();
                     break;
                 default:
                     throw new Exception("Haven't implemented this player state yet!");
             }
-        
+
             if (Engine.InputManager.KeyPressed(Keys.P))
             {
                 ScreenManager.AddScreen(new PauseMenu());
@@ -84,30 +88,33 @@ namespace GameEngine.GameScreens
             _diceRow.Clear();
             _textPrompts.Clear();
 
-            _currentMonster.StartTurn();
+            GameStateController.StartTurn(); //TODO: Send this to the host!
+
             _diceRow.AddDice(DiceController.GetDice());
-            _textPrompts.Add(new TextPrompt("Your Turn " + _currentMonster.Name, "TextPrompt1", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt("Your Turn " + MonsterController.Name(_localPlayer), "TextPrompt1", _positionList["TextPrompt1"]));
             _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", "TextPrompt2", _positionList["TextPrompt2"]));
-            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
             _gameState = GameState.Rolling;
         }
 
         private void Rolling()
         {
-            if (_currentMonster.RemainingRolls == 0)
+            if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
                 _diceRow.Clear();
                 DiceController.EndRolling();
+                /*
                 if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
                 {
                     _gameState = GameState.AskYieldCity;
                     return;
                 }
-                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
+                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield) //TODO: Move somewhere else!
                 {
                     _gameState = GameState.AskYieldBay;
                     return;
                 }
+                */
                 _textPrompts.Clear();
                 StartNextTurn();
             }
@@ -129,15 +136,15 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            if(_textPrompts.Count > 0)
+            if (_textPrompts.Count > 0)
                 _textPrompts.RemoveAt(_textPrompts.Count - 1);
-            _textPrompts.Add(new TextPrompt(_currentMonster.RemainingRolls + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
         }
 
         private void AskYieldCity()
         {
             _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(Board.TokyoCity.Name + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt(MonsterController.Name(_localPlayer) + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
@@ -163,11 +170,11 @@ namespace GameEngine.GameScreens
         private void AskYieldBay()
         {
             _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(Board.TokyoBay.Name + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt(_localMonster.Name + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                Board.TokyoBay.Yield();
+                GameStateController.Yield(_localPlayer); //TODO: Send to Host!
                 StartNextTurn();
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
@@ -176,10 +183,12 @@ namespace GameEngine.GameScreens
             }
         }
 
+        /*
         private void BuyScreen()
         {
-            ScreenManager.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
+            Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
         }
+        */
 
         public override void Draw(GameTime gameTime)
         {
@@ -200,9 +209,7 @@ namespace GameEngine.GameScreens
 
         private void StartNextTurn()
         {
-            //TODO: ACTION PACKETS! ALL THE ACTION PACKETS!!
-            ActionPacket ap = new ActionPacket(Networking.Actions.Action.EndTurn);
-            //GameStateController.EndTurn();
+            //GameStateController.EndTurn(); //TODO:
             _diceRow.Hidden = true;
             _gameState = GameState.StartTurn;
         }
@@ -242,7 +249,7 @@ namespace GameEngine.GameScreens
         private static List<PlayerBlock> InitializePlayerBlocks()
         {
             var tempTexture = Engine.TextureList["cthulhu"];
-            var monList = KoTGame.Monsters;
+            var monList = getMonsterList();
             var toReturn = new List<PlayerBlock>();
 
             switch (monList.Count)
@@ -313,6 +320,20 @@ namespace GameEngine.GameScreens
             return _positionList[key];
         }
 
+        private static List<Monster> getMonsterList()
+        {
+            Monster mon = MonsterController.GetById(_localPlayer);
+            List<Monster> monsterList = new List<Monster>();
+            monsterList.Add(mon);
+            mon = mon.Next;
+            while (mon != _localMonster)
+            {
+                monsterList.Add(mon);
+                mon = mon.Next;
+            }
+            return monsterList;
+        }
+
         internal enum GameState
         {
             StartTurn,
@@ -320,7 +341,6 @@ namespace GameEngine.GameScreens
             AskYieldBay,
             AskYieldCity,
             BuyCards
-
         }
     }
 }
