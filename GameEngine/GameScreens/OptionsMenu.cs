@@ -46,7 +46,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Escape))
             {
-                Engine.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);
             }
 
             if ((Engine.InputManager.KeyPressed(Keys.Left) || Engine.InputManager.KeyPressed(Keys.Right)) && _stateIndex == 0)
@@ -68,7 +68,7 @@ namespace GameEngine.GameScreens
                 if (_stateIndex == 1)
                 {
                     Engine.ChangeResolution(_menuItems[0]);
-                    Engine.RemoveScreen(this);
+                    ScreenManager.RemoveScreen(this);
                 }
             }
 

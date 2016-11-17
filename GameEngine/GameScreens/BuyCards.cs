@@ -55,7 +55,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Escape))
             {
-                Engine.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);
             }
             /*
             if (Engine.InputManager.KeyPressed(Keys.Enter))

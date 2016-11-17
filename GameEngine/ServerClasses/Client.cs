@@ -3,6 +3,7 @@ using GamePieces.Monsters;
 using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
+using Networking.Actions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -84,6 +85,11 @@ namespace GameEngine.ServerClasses
                             Game.StartGame(MonsterPackets);
                             Program.Run();
 
+                            if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
+                            {
+                                //todo check for action
+                            }
+
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {
@@ -121,6 +127,15 @@ namespace GameEngine.ServerClasses
             }
         }
 
+        public static void sendActionPacket(ActionPacket packet)
+        {
+            var outMsg = NetClient.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Action);
+            var json = JsonConvert.SerializeObject(packet);
+            outMsg.Write(json);
+            NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Tells the server to delete it from list, stops loop and shuts down NetClient
         /// </summary>
@@ -142,6 +157,7 @@ namespace GameEngine.ServerClasses
             Login,
             Leave,
             Start,
+            Action,
             Closed
         }
     }

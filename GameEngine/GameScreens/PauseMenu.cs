@@ -44,7 +44,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Escape))
             {
-                Engine.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);
             }
 
             if (Engine.InputManager.KeyPressed(Keys.Enter))
@@ -52,10 +52,10 @@ namespace GameEngine.GameScreens
                 switch (_stateIndex)
                 {
                     case 0:
-                        Engine.RemoveScreen(this);
+                        ScreenManager.RemoveScreen(this);
                         break;
                     case 1:
-                        Engine.AddScreen(new OptionsMenu());
+                       ScreenManager.AddScreen(new OptionsMenu());
                         break;
                     case 2:
                         Engine.ExitGame = true;
