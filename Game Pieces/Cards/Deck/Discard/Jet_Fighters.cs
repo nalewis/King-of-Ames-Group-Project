@@ -14,7 +14,7 @@ namespace GamePieces.Cards.Deck.Discard
         /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
-            monster.VictroyPoints += 5;
+            monster.VictoryPoints += 5;
             monster.Health -= 4;
         }
     }

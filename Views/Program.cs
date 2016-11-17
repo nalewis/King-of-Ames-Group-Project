@@ -188,7 +188,7 @@ namespace Views
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
         private static bool _shouldStop;
-        public static MonsterDataPacket MonsterPacket;
+        public static MonsterDataPacket MonsterPackets;
 
         /// <summary>
         /// Connects the client to the server using the current ip

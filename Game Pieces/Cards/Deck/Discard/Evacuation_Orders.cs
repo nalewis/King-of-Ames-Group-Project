@@ -18,7 +18,7 @@ namespace GamePieces.Cards.Deck.Discard
         {
             Game.Monsters.Where(enemy => !enemy.Equals(monster))
                 .ToList()
-                .ForEach(enemy => enemy.VictroyPoints -= 5);
+                .ForEach(enemy => enemy.VictoryPoints -= 5);
         }
     }
 }

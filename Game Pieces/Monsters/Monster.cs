@@ -71,7 +71,7 @@ namespace GamePieces.Monsters
         public int PreviousEnergy { get; private set; }
 
         //Victory Points
-        public int VictroyPoints
+        public int VictoryPoints
         {
             get { return Get(); }
             set
@@ -80,14 +80,14 @@ namespace GamePieces.Monsters
                 {
                     if (value < 0) value = 0;
                     if (value > 20) value = 20;
-                    State = value > VictroyPoints ? State.Scoring : State.Losing;
-                    PreviousVictroyPoints = VictroyPoints;
+                    State = value > VictoryPoints ? State.Scoring : State.Losing;
+                    PreviousVictoryPoints = VictoryPoints;
                 }
                 Set(value);
             }
         }
 
-        public int PreviousVictroyPoints { get; private set; }
+        public int PreviousVictoryPoints { get; private set; }
 
         //Health
         public int Health
@@ -137,7 +137,7 @@ namespace GamePieces.Monsters
             Name = name;
             Energy = 0;
             NumberOfCards = 0;
-            VictroyPoints = 0;
+            VictoryPoints = 0;
             Health = MaximumHealth;
             Location = Location.Default;
             RemainingRolls = 0;
@@ -162,7 +162,7 @@ namespace GamePieces.Monsters
         {
             State = State.StartOfTurn;
             Cards.ForEach(card => card.Reset());
-            if (InTokyo) VictroyPoints += 2;
+            if (InTokyo) VictoryPoints += 2;
             RemainingRolls = MaximumRolls;
             DiceRoller.Setup(Dice);
         }
@@ -296,7 +296,7 @@ namespace GamePieces.Monsters
         public MonsterDataPacket GetPacket()
         {
             return new MonsterDataPacket(PlayerId, Index, Name, State, Location, Cards.ToArray(), NumberOfCards,
-                PreviousNumberOfCards, Energy, PreviousEnergy, VictroyPoints, PreviousVictroyPoints, Health,
+                PreviousNumberOfCards, Energy, PreviousEnergy, VictoryPoints, PreviousVictoryPoints, Health,
                 PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls);
         }
 
@@ -316,8 +316,8 @@ namespace GamePieces.Monsters
             PreviousNumberOfCards = packet.PreviousNumberOfCards;
             Energy = packet.Energy;
             PreviousEnergy = packet.PreviousEnergy;
-            VictroyPoints = packet.VictoryPoints;
-            PreviousVictroyPoints = packet.PreviousVictroyPoints;
+            VictoryPoints = packet.VictoryPoints;
+            PreviousVictoryPoints = packet.PreviousVictoryPoints;
             Health = packet.Health;
             PreviousHealth = packet.PreviousHealth;
             MaximumHealth = packet.MaximumHealth;

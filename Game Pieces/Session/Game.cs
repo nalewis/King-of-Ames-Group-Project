@@ -21,8 +21,8 @@ namespace GamePieces.Session
         public static Monster Winner =>
             Players == 1
                 ? Monsters.First()
-                : Monsters.Exists(monster => monster.VictroyPoints >= 20)
-                    ? Monsters.Where(monster => monster.VictroyPoints >= 20).ToList().First()
+                : Monsters.Exists(monster => monster.VictoryPoints >= 20)
+                    ? Monsters.Where(monster => monster.VictoryPoints >= 20).ToList().First()
                     : null;
 
         public static bool Host { get; private set; }

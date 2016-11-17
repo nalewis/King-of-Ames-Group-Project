@@ -17,7 +17,7 @@ namespace GamePieces.Monsters
         public int Energy { get; set; }
         public int PreviousEnergy { get; set; }
         public int VictoryPoints { get; set; }
-        public int PreviousVictroyPoints { get; set; }
+        public int PreviousVictoryPoints { get; set; }
         public int Health { get; set; }
         public int PreviousHealth { get; set; }
         public int MaximumHealth { get; set; }
@@ -28,7 +28,7 @@ namespace GamePieces.Monsters
 
         public MonsterDataPacket(int playerId, int index, string name, State state, Location location, Card[] cards,
             int numberOfCards, int previousNumberOfCards, int energy, int previousEnergy, int victoryPoints,
-            int previousVictroyPoints, int health, int previousHealth, int maximumHealth, int attackPoints, int dice,
+            int previousVictoryPoints, int health, int previousHealth, int maximumHealth, int attackPoints, int dice,
             int maximumRolls, int remainingRolls)
         {
             PlayerId = playerId;
@@ -42,7 +42,7 @@ namespace GamePieces.Monsters
             Energy = energy;
             PreviousEnergy = previousEnergy;
             VictoryPoints = victoryPoints;
-            PreviousVictroyPoints = previousVictroyPoints;
+            PreviousVictoryPoints = previousVictoryPoints;
             Health = health;
             PreviousHealth = previousHealth;
             MaximumHealth = maximumHealth;

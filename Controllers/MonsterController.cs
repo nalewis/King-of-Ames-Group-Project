@@ -143,7 +143,7 @@ namespace Controllers
         /// <returns>Victory Points</returns>
         public static int VictoryPoints(int playerId)
         {
-            return GetById(playerId).VictroyPoints;
+            return GetById(playerId).VictoryPoints;
         }
 
         /// <summary>
