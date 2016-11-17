@@ -16,7 +16,7 @@ namespace GamePieces.Cards.Deck.Discard
         /// <param name="monster">Monster</param>
         protected override void UpdateLogic(Monster monster)
         {
-            monster.VictroyPoints += 2;
+            monster.VictoryPoints += 2;
             Game.Monsters.Where(enemy => !enemy.Equals(monster))
                 .ToList()
                 .ForEach(enemy => enemy.Energy -= enemy.Energy / 2);

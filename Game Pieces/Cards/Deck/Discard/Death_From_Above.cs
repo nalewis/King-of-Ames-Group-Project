@@ -15,7 +15,7 @@ namespace GamePieces.Cards.Deck.Discard
 
         protected override void UpdateLogic(Monster monster)
         {
-            monster.VictroyPoints += 2;
+            monster.VictoryPoints += 2;
             if (monster.Location == Location.TokyoCity) return;
             Board.LeaveTokyo(Board.TokyoCity);
             Board.MoveIntoTokyo(monster);

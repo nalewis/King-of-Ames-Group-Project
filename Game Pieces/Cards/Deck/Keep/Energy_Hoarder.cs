@@ -14,7 +14,7 @@ namespace GamePieces.Cards.Deck.Keep
 
         protected override void UpdateLogic(Monster monster)
         {
-            monster.VictroyPoints += monster.Energy / 6;
+            monster.VictoryPoints += monster.Energy / 6;
         }
     }
 }

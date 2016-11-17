@@ -23,7 +23,7 @@ namespace GamePieces.Session
         public static int Energy => Tally[(int) Symbol.Energy]; //Energy points total
         public static int Heal => Tally[(int) Symbol.Heal]; //Heal points total
 
-        public static int VictroyPoints => //Victroy points total
+        public static int VictoryPoints => //Victory points total
             (Tally[(int) Symbol.One] >= 3 ? 1 + Tally[(int) Symbol.One] - 3 : 0) +
             (Tally[(int) Symbol.Two] >= 3 ? 2 + Tally[(int) Symbol.Two] - 3 : 0) +
             (Tally[(int) Symbol.Three] >= 3 ? 3 + Tally[(int) Symbol.Three] - 3 : 0);
@@ -69,7 +69,7 @@ namespace GamePieces.Session
             monster.AttackPoints += Attack;
             monster.Energy += Energy;
             monster.Health += Heal;
-            monster.VictroyPoints += VictroyPoints;
+            monster.VictoryPoints += VictoryPoints;
             Array.Clear(Tally, 0, Tally.Length);
         }
     }

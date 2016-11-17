@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Networking;
+using GameEngine.ServerClasses;
 
 namespace Views
 {

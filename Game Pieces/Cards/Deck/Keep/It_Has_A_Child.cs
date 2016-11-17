@@ -16,7 +16,7 @@ namespace GamePieces.Cards.Deck.Keep
         {
             while (monster.Cards.Count != 0)
                 monster.RemoveCard(monster.Cards[0]);
-            monster.VictroyPoints = 0;
+            monster.VictoryPoints = 0;
             monster.Health = 10;
         }
     }

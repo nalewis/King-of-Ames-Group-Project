@@ -13,12 +13,12 @@ namespace GamePieces.Cards.Deck.Keep
             return monster.State == State.EndOfTurn &&
                    Game.Monsters.Where(enemy => !enemy.Equals(monster))
                        .ToList()
-                       .All(enemy => monster.VictroyPoints < enemy.VictroyPoints);
+                       .All(enemy => monster.VictoryPoints < enemy.VictoryPoints);
         }
 
         protected override void UpdateLogic(Monster monster)
         {
-            monster.VictroyPoints += 1;
+            monster.VictoryPoints += 1;
         }
     }
 }

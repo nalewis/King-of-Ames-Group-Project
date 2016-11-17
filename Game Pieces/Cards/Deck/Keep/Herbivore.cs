@@ -15,7 +15,7 @@ namespace GamePieces.Cards.Deck.Keep
 
         protected override void UpdateLogic(Monster monster)
         {
-            monster.VictroyPoints += 1;
+            monster.VictoryPoints += 1;
         }
     }
 }

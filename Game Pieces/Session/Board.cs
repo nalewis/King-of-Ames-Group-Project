@@ -26,13 +26,13 @@ namespace GamePieces.Session
             {
                 TokyoCity = monster;
                 monster.Location = Location.TokyoCity;
-                monster.VictroyPoints += 1;
+                monster.VictoryPoints += 1;
             }
             else if (UseTokyoBay && !TokyoBayIsOccupied)
             {
                 TokyoBay = monster;
                 monster.Location = Location.TokyoBay;
-                monster.VictroyPoints += 1;
+                monster.VictoryPoints += 1;
             }
         }
 

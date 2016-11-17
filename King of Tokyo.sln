@@ -1,5 +1,4 @@
-
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -8,8 +7,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game Pieces", "Game Pieces\Game Pieces.csproj", "{B38A16C3-74C0-4A57-BCD9-6000681C06B1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTesting", "ConsoleTesting\ConsoleTesting.csproj", "{F68A25F3-442F-45BA-9335-2F0FC6573558}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Views", "Views\Views.csproj", "{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "Controllers\Controllers.csproj", "{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}"
 EndProject
@@ -49,14 +46,6 @@ Global
 		{F68A25F3-442F-45BA-9335-2F0FC6573558}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F68A25F3-442F-45BA-9335-2F0FC6573558}.Release|x86.ActiveCfg = Release|Any CPU
 		{F68A25F3-442F-45BA-9335-2F0FC6573558}.Release|x86.Build.0 = Release|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Debug|x86.Build.0 = Debug|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Release|x86.ActiveCfg = Release|Any CPU
-		{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}.Release|x86.Build.0 = Release|Any CPU
 		{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F89A1B8F-E86D-45F3-8547-2315B87E1DC8}.Debug|x86.ActiveCfg = Debug|Any CPU

@@ -74,7 +74,7 @@ namespace GameEngine.GraphicPieces
 
             sb.DrawString(font, "Health: " + Monster.Health, _healthTextPos, Color.Blue);
             sb.DrawString(font, "Energy: " + Monster.Energy, _energyTextPos, Color.Blue);
-            sb.DrawString(font, "Points: " + Monster.VictroyPoints, _pointsTextPos, Color.Blue);
+            sb.DrawString(font, "Points: " + Monster.VictoryPoints, _pointsTextPos, Color.Blue);
         }
     }
 }

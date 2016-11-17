@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Networking;
 using Controllers;
+using GameEngine.ServerClasses;
 
 namespace Views
 {
@@ -143,6 +144,7 @@ namespace Views
             NetworkClasses.UpdateServerStatus("In Progress", User.PlayerId);
             LobbyController.StartGame();
             Host.StartGame();
+            //this.Dispose();
         }
     }
 }

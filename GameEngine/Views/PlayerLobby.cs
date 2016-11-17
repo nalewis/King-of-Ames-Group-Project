@@ -1,4 +1,5 @@
-﻿using Networking;
+﻿using GameEngine.ServerClasses;
+using Networking;
 using System;
 using System.Windows.Forms;
 

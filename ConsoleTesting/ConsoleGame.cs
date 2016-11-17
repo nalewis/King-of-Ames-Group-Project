@@ -75,7 +75,7 @@ namespace ConsoleTesting
                     }
 
                     Console.WriteLine(Game.Current.Name + ", your turn is over!");
-                    Console.WriteLine("Victroy Points: " + Game.Current.VictroyPoints);
+                    Console.WriteLine("Victory Points: " + Game.Current.VictoryPoints);
                     Console.WriteLine("Health: " + Game.Current.Health);
                     Console.WriteLine("Energy: " + Game.Current.Energy);
                     Console.WriteLine("Location: " + Game.Current.Location);

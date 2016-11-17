@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Networking;
+using GameEngine.ServerClasses;
 using System.Data;
 
 namespace Views
