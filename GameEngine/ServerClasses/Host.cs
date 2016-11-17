@@ -28,7 +28,7 @@ namespace GameEngine.ServerClasses
             Console.WriteLine("Server started...");
 
             //add server to the SQL database with the current details
-            NetworkClasses.CreateServer(User.Id, User.LocalIp);
+            NetworkClasses.CreateServer(User.PlayerId, User.LocalIp);
 
             // Starts thread to handle input from clients
             var recieve = new Thread(RecieveLoop);
@@ -50,7 +50,7 @@ namespace GameEngine.ServerClasses
             outMsg.Write((byte)PacketTypes.Closed);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             _server.Shutdown("Closed");
-            NetworkClasses.DeleteServer(User.Id);
+            NetworkClasses.DeleteServer(User.PlayerId);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace GameEngine.ServerClasses
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.Id); }
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");

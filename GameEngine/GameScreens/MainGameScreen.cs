@@ -27,7 +27,7 @@ namespace GameEngine.GameScreens
 
         public MainGameScreen()
         {
-            LobbyController.StartGame();
+            //LobbyController.StartGame();
             _positionList = CalculatePositions();
             _pBlocks = InitializePlayerBlocks();
             _textPrompts = new List<TextPrompt>();

@@ -32,7 +32,7 @@ namespace GameEngine.ServerClasses
             //Sends login request to Host, with player ID attached
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
-            outMsg.Write(int.Parse(User.Id));
+            outMsg.Write(User.PlayerId);
 
             //resets the receive thread
             _shouldStop = false;
@@ -76,11 +76,12 @@ namespace GameEngine.ServerClasses
                             {
                                 var json = inc.ReadString();
                                 var packet = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                                if (packet.PlayerId == Int32.Parse(User.Id))
+                                if (packet.PlayerId == User.PlayerId)
                                 {
                                     Program.Run();
                                     Console.WriteLine("Packet Recieved");
                                 }
+                                //call the monsterpacket start game
                             }
                         }
                         else if (type == (byte)PacketTypes.Closed)
@@ -126,7 +127,7 @@ namespace GameEngine.ServerClasses
         {
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Leave);
-            outMsg.Write(int.Parse(User.Id));
+            outMsg.Write(User.PlayerId);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
             NetClient.WaitMessage(1000);
             NetClient.Shutdown("Closed");

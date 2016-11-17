@@ -65,7 +65,7 @@ namespace Views
         private void leaveGame_Click(object sender, EventArgs e)
         {
             _timer.Stop();
-            NetworkClasses.UpdateCharacter(User.Id, null);
+            NetworkClasses.UpdateCharacter(User.PlayerId, null);
             Host.ServerStop();
             var main = new MainMenuForm();
             main.Show();
@@ -81,7 +81,7 @@ namespace Views
             playerList.Items.Clear();
 
             //Gets server info and puts it into a dataset
-            var ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
+            var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
             var row = ds.Tables[0].Rows[0];
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
             
@@ -117,7 +117,7 @@ namespace Views
         /// <param name="e"></param>
         private void select_char_Click(object sender, EventArgs e)
         {
-            NetworkClasses.UpdateCharacter(User.Id, char_list.SelectedItem.ToString());
+            NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Views
         /// <param name="e"></param>
         private void start_game_Click(object sender, EventArgs e)
         {
-            var ds = NetworkClasses.GetServer(User.Id, User.LocalIp);
+            var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
             var row = ds.Tables[0].Rows[0];
 
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
@@ -141,9 +141,10 @@ namespace Views
                 grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
                 LobbyController.AddPlayer(int.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
             }
-            NetworkClasses.UpdateServerStatus("In Progress", User.Id);
+            NetworkClasses.UpdateServerStatus("In Progress", User.PlayerId);
             LobbyController.StartGame();
             Host.StartGame();
+            //this.Dispose();
         }
     }
 }
