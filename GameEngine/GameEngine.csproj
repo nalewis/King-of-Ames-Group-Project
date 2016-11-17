@@ -70,6 +70,7 @@
     <Compile Include="InputManager.cs" />
     <Compile Include="GraphicPieces\PlayerBlock.cs" />
     <Compile Include="GraphicPieces\TextPrompt.cs" />
+    <Compile Include="ScreenManager.cs" />
     <Compile Include="ServerClasses\Client.cs" />
     <Compile Include="ServerClasses\Host.cs" />
     <Compile Include="Views\HostLobby.cs">
