@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{570D8E9E-57F5-4469-8EDC-B0B41F2A4DDE}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Views</RootNamespace>
     <AssemblyName>Views</AssemblyName>
@@ -61,10 +61,6 @@
       <Project>{b38a16c3-74c0-4a57-bcd9-6000681c06b1}</Project>
       <Name>Game Pieces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GameEngine\GameEngine.csproj">
-      <Project>{34bc71dc-74bf-4922-a0ab-a31c4159e663}</Project>
-      <Name>GameEngine</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Networking\Networking.csproj">
       <Project>{0b0e035a-cb84-49f4-8e84-32cf744b1aac}</Project>
       <Name>Networking</Name>
@@ -104,7 +100,6 @@
     <Compile Include="PlayerLobby.Designer.cs">
       <DependentUpon>PlayerLobby.cs</DependentUpon>
     </Compile>
-    <Compile Include="Program.cs" />
     <Compile Include="NewUserForm.cs">
       <SubType>Form</SubType>
     </Compile>
