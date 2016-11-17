@@ -75,11 +75,11 @@ namespace Networking
             var dbpass = StringCipher.Decrypt(ds.Tables[0].Rows[0]["password"].ToString(), "thomas");
             if (dbpass != pass) return false;
             //update the players ip
-            UpdateIp(ds.Tables[0].Rows[0]["Player_ID"].ToString(), ip);
+            UpdateIp(int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString()), ip);
 
             User.Username = ds.Tables[0].Rows[0]["Username"].ToString();
             User.LocalIp = ip;
-            User.Id = ds.Tables[0].Rows[0]["Player_ID"].ToString();
+            User.PlayerId = int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString());
             User.Character = ds.Tables[0].Rows[0]["_Character"].ToString();
             connection.Close();
             return true;
@@ -92,7 +92,7 @@ namespace Networking
         /// <param name="playerid"></param>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public static bool UpdateIp(string playerid, string ip)
+        public static bool UpdateIp(int playerid, string ip)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -111,7 +111,7 @@ namespace Networking
         /// </summary>
         /// <param name="hostid"></param>
         /// <returns></returns>
-        public static bool IsHosting(string hostid)
+        public static bool IsHosting(int hostid)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -132,7 +132,7 @@ namespace Networking
         /// <param name="hostid"></param>
         /// <param name="hostip"></param>
         /// <returns></returns>
-        public static bool CreateServer(string hostid, string hostip)
+        public static bool CreateServer(int hostid, string hostip)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -151,7 +151,7 @@ namespace Networking
         /// </summary>
         /// <param name="hostid"></param>
         /// <returns></returns>
-        public static bool DeleteServer(string hostid)
+        public static bool DeleteServer(int hostid)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -169,7 +169,7 @@ namespace Networking
         /// <param name="hostid"></param>
         /// <param name="hostip"></param>
         /// <returns>Dataset containing the server ID, host ID, host IP, and connected player IDs</returns>
-        public static DataSet GetServer(string hostid, string hostip)
+        public static DataSet GetServer(int hostid, string hostip)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -252,7 +252,7 @@ namespace Networking
         /// </summary>
         /// <param name="playerid"></param>
         /// <param name="character"></param>
-        public static void UpdateCharacter(string playerid, string character)
+        public static void UpdateCharacter(int playerid, string character)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -269,15 +269,15 @@ namespace Networking
         /// Updates the server status based on player count and game status
         /// </summary>
         /// <param name="status"></param>
-        /// <param name="id"></param>
-        public static void UpdateServerStatus(string status, string id)
+        /// <param name="playerid"></param>
+        public static void UpdateServerStatus(string status, int playerid)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "UPDATE Server_List SET Status = @status WHERE Host = @id";
             command.Parameters.AddWithValue("@status", status);
-            command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@id", playerid);
             command.ExecuteNonQuery();
 
             connection.Close();
@@ -289,7 +289,7 @@ namespace Networking
         /// <param name="hostip"></param>
         /// <param name="playerid"></param>
         /// <returns></returns>
-        public static bool JoinServer(string hostip, string playerid)
+        public static bool JoinServer(string hostip, int playerid)
         {
             var openSpot = GetNextAvailableSpot(hostip);
             if (openSpot != -1)
@@ -345,7 +345,7 @@ namespace Networking
         /// </summary>
         /// <param name="hostip"></param>
         /// <param name="playerid"></param>
-        public static void FindRemovePlayer(string hostip, string playerid)
+        public static void FindRemovePlayer(string hostip, int playerid)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -361,7 +361,7 @@ namespace Networking
             {
                 for (var i = 2; i < 6; i++)
                 {
-                    if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_" + i].ToString(), playerid) == 0) continue;
+                    if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_" + i].ToString(), playerid.ToString()) == 0) continue;
                     remove = i;
                     break;
                 }
@@ -460,7 +460,13 @@ namespace Networking
             return players;
         }
 
-        public static void UpdatePlayerStat(string playerid, string stat, int value)
+        /// <summary>
+        /// Updates specified player stat to specified value
+        /// </summary>
+        /// <param name="playerid"></param>
+        /// <param name="stat"></param>
+        /// <param name="value"></param>
+        public static void UpdatePlayerStat(int playerid, string stat, int value)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
