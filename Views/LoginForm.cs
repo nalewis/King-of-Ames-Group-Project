@@ -31,11 +31,11 @@ namespace Views
 
                 //Sends input to login function, if input is good, sends user to main menu 
                 //Else error message is shown
-                if (NetworkClasses.login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIPAddress()))
+                if (NetworkClasses.Login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIpAddress()))
                 {
                     Form form = new MainMenuForm();
                     form.Show();
-                    this.Dispose();
+                    Dispose();
                 }
                 else
                 {
@@ -52,7 +52,7 @@ namespace Views
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                this.Dispose();
+                Dispose();
                 Environment.Exit(0);
             }
         }
@@ -61,7 +61,7 @@ namespace Views
         {
             Form form = new NewUserForm();
             form.Show();
-            this.Dispose();
+            Dispose();
         }
     }
 }

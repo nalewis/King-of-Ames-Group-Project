@@ -6,25 +6,25 @@ namespace GamePieces.Monsters
     [Serializable]
     public struct MonsterDataPacket
     {
-        public int PlayerId { get; }
-        public int Index { get; }
-        public string Name { get; }
-        public State State { get; }
-        public Location Location { get; }
-        public Card[] Cards { get; }
-        public int NumberOfCards { get; }
-        public int PreviousNumberOfCards { get; }
-        public int Energy { get; }
-        public int PreviousEnergy { get; }
-        public int VictoryPoints { get; }
-        public int PreviousVictroyPoints { get; }
-        public int Health { get; }
-        public int PreviousHealth { get; }
-        public int MaximumHealth { get; }
-        public int AttackPoints { get; }
-        public int Dice { get; }
-        public int MaximumRolls { get; }
-        public int RemainingRolls { get; }
+        public int PlayerId { get; set; }
+        public int Index { get; set; }
+        public string Name { get; set; }
+        public State State { get; set; }
+        public Location Location { get; set; }
+        public Card[] Cards { get; set; }
+        public int NumberOfCards { get; set; }
+        public int PreviousNumberOfCards { get; set; }
+        public int Energy { get; set; }
+        public int PreviousEnergy { get; set; }
+        public int VictoryPoints { get; set; }
+        public int PreviousVictroyPoints { get; set; }
+        public int Health { get; set; }
+        public int PreviousHealth { get; set; }
+        public int MaximumHealth { get; set; }
+        public int AttackPoints { get; set; }
+        public int Dice { get; set; }
+        public int MaximumRolls { get; set; }
+        public int RemainingRolls { get; set; }
 
         public MonsterDataPacket(int playerId, int index, string name, State state, Location location, Card[] cards,
             int numberOfCards, int previousNumberOfCards, int energy, int previousEnergy, int victoryPoints,

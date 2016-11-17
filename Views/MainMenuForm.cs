@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Networking;
 
@@ -30,7 +23,7 @@ namespace Views
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                this.Dispose();
+                Dispose();
                 Environment.Exit(0);
             }
         }
@@ -42,11 +35,11 @@ namespace Views
         /// <param name="e"></param>
         private void HostButton_Click(object sender, EventArgs e)
         {
-            Host.serverStart();
-            NetworkClasses.updatePlayerStat(User.id, "Games_Hosted", 1);
+            Host.ServerStart();
+            NetworkClasses.UpdatePlayerStat(User.Id, "Games_Hosted", 1);
             Form gameList = new HostGameListForm();
             gameList.Show();
-            this.Dispose();
+            Dispose();
         }
 
         /// <summary>
@@ -56,10 +49,10 @@ namespace Views
         /// <param name="e"></param>
         private void JoinButton_Click(object sender, EventArgs e)
         {
-            Client._client.Start();
+            Client.NetClient.Start();
             Form serverList = new ServerListForm();
             serverList.Show();
-            this.Dispose();
+            Dispose();
         }
     }
 }
