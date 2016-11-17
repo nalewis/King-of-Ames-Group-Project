@@ -49,7 +49,7 @@ namespace Views
             Console.WriteLine("Server started...");
 
             //add server to the SQL database with the current details
-            NetworkClasses.CreateServer(User.Id, User.LocalIp);
+            NetworkClasses.CreateServer(User.PlayerId, User.LocalIp);
 
             // Starts thread to handle input from clients
             var recieve = new Thread(RecieveLoop);
@@ -71,7 +71,7 @@ namespace Views
             outMsg.Write((byte) PacketTypes.Closed);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             _server.Shutdown("Closed");
-            NetworkClasses.DeleteServer(User.Id);
+            NetworkClasses.DeleteServer(User.PlayerId);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Views
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
-                            if(Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.Id); }
+                            if(Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");
@@ -188,7 +188,7 @@ namespace Views
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
         private static bool _shouldStop;
-        public static MonsterDataPacket MonsterPacket;
+        private static MonsterDataPacket[] _monsterPacket;
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -199,7 +199,7 @@ namespace Views
             //Sends login request to Host, with player ID attached
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Login);
-            outMsg.Write(int.Parse(User.Id));
+            outMsg.Write(User.PlayerId);
             
             //resets the receive thread
             _shouldStop = false;
@@ -239,15 +239,14 @@ namespace Views
                         if (type == (byte)PacketTypes.Start)
                         {
                             var end = inc.ReadInt32();
+                            _monsterPacket = new MonsterDataPacket[end];
                             for (var i = 0; i < end; i++)
                             {
                                var json = inc.ReadString();
                                var packet = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                               if (packet.PlayerId == Int32.Parse(User.Id))
-                               {
-                                    Console.WriteLine("Packet Recieved");
-                               }
+                               _monsterPacket[i] = packet;
                             }
+                            StartGame();
                         }
                         else if (type == (byte) PacketTypes.Closed)
                         {
@@ -292,13 +291,18 @@ namespace Views
         {
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Leave);
-            outMsg.Write(int.Parse(User.Id));
+            outMsg.Write(User.PlayerId);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
             NetClient.WaitMessage(1000);
             NetClient.Shutdown("Closed");
             //ends the receive loop
             _shouldStop = true;
             Conn = "";
+        }
+
+        public static void StartGame()
+        {
+            MonsterController.AcceptDataPackets(_monsterPacket);
         }
 
         private enum PacketTypes

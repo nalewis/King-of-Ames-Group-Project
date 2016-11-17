@@ -41,7 +41,7 @@ namespace Networking
     {
         public static string Username = "";
         public static string LocalIp = "";
-        public static string Id = "";
+        public static int PlayerId;
         public static string Character = "";
     }
 }

@@ -37,7 +37,7 @@ namespace Views
         private void HostButton_Click(object sender, EventArgs e)
         {
             Host.ServerStart();
-            NetworkClasses.UpdatePlayerStat(User.Id, "Games_Hosted", 1);
+            NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Hosted", 1);
             Form gameList = new HostGameListForm();
             gameList.Show();
             Dispose();

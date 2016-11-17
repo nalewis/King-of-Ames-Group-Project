@@ -43,8 +43,8 @@ namespace Views
         private void leaveGame_Click(object sender, EventArgs e)
         {
             _timer.Stop();
-            NetworkClasses.UpdateCharacter(User.Id, null);
-            NetworkClasses.FindRemovePlayer(Client.Conn, User.Id);
+            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             var form = new MainMenuForm();
             form.Show();
@@ -61,8 +61,8 @@ namespace Views
             if (e.CloseReason != CloseReason.UserClosing) return;
             _timer.Stop();
             Dispose();
-            NetworkClasses.UpdateCharacter(User.Id, null);
-            NetworkClasses.FindRemovePlayer(Client.Conn, User.Id);
+            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             Environment.Exit(0);
         }
@@ -101,7 +101,7 @@ namespace Views
                 form.Show();
                 _timer.Stop();
                 Client.ClientStop();
-                NetworkClasses.UpdateCharacter(User.Id, null);
+                NetworkClasses.UpdateCharacter(User.PlayerId, null);
                 MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Dispose();
             }
@@ -114,7 +114,7 @@ namespace Views
         /// <param name="e"></param>
         private void select_char_Click(object sender, EventArgs e)
         {
-            NetworkClasses.UpdateCharacter(User.Id, char_list.SelectedItem.ToString());
+            NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
         }
     }
 }
