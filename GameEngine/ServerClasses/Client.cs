@@ -1,5 +1,6 @@
 ﻿using Controllers;
 using GamePieces.Monsters;
+using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
 using Newtonsoft.Json;
@@ -21,7 +22,7 @@ namespace GameEngine.ServerClasses
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
         private static bool _shouldStop;
-        public static MonsterDataPacket MonsterPackets;
+        public static MonsterDataPacket[] MonsterPackets;
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -72,17 +73,17 @@ namespace GameEngine.ServerClasses
                         if (type == (byte)PacketTypes.Start)
                         {
                             var end = inc.ReadInt32();
+                            MonsterPackets = new MonsterDataPacket[end];
                             for (var i = 0; i < end; i++)
                             {
                                 var json = inc.ReadString();
-                                var packet = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                                if (packet.PlayerId == User.PlayerId)
-                                {
-                                    Program.Run();
-                                    Console.WriteLine("Packet Recieved");
-                                }
+                                MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                
                                 //call the monsterpacket start game
                             }
+                            Game.StartGame(MonsterPackets);
+                            Program.Run();
+
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {
