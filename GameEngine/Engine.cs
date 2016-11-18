@@ -44,7 +44,9 @@ namespace GameEngine {
             ScreenHeight = GraffixMngr.GraphicsDevice.Viewport.Height;
 
             TextureList = new Dictionary<string, Texture2D>();
+            LoadTextures();
             FontList = new Dictionary<string, SpriteFont>();
+            LoadFonts();
             InputManager = new InputManager(this);
             ScreenManager = new ScreenManager(this);
 
@@ -57,9 +59,6 @@ namespace GameEngine {
         /// </summary>
         protected override void LoadContent() {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            LoadTextures();
-            LoadFonts();
         }
 
         /// <summary>
