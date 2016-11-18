@@ -76,7 +76,7 @@ namespace GameEngine.ServerClasses
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
-                            Game.StartGame(MonsterPackets);
+                            LobbyController.StartGame(MonsterPackets);
                             //Game.StartTurn();
                             Program.Run();
 

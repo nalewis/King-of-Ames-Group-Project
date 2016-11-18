@@ -143,6 +143,7 @@ namespace GameEngine.ServerClasses
             GameStateController.AcceptAction(packet);
             Monster test = Game.Current;
             Monster testaroo = Game.Monsters[0];
+            Console.WriteLine(Game.Current.Equals(Game.Monsters[0]));
             SendMonsterPackets(false);
         }
 
