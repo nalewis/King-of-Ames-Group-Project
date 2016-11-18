@@ -44,7 +44,6 @@ namespace GameEngine.GameScreens
         {
             _localPlayerState = MonsterController.State(_localPlayer);
 
-
             if (KoTGame.Winner != null)
             {
                 _textPrompts.Clear();
