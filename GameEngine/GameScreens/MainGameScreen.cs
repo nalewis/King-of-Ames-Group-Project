@@ -92,13 +92,13 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
                 _diceRow.Clear();
-                ServerClasses.Client.sendActionPacket(GameStateController.EndRolling());
+                ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 EndTurn();
             }
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
-                ServerClasses.Client.sendActionPacket(GameStateController.Roll());
+                ServerClasses.Client.SendActionPacket(GameStateController.Roll());
                 _diceRow.Hidden = false;
             }
 
@@ -125,7 +125,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                ServerClasses.Client.sendActionPacket(GameStateController.Yield(_localPlayer));
+                ServerClasses.Client.SendActionPacket(GameStateController.Yield(_localPlayer));
                 EndTurn();
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
@@ -160,7 +160,7 @@ namespace GameEngine.GameScreens
 
         private void EndTurn()
         {
-            ServerClasses.Client.sendActionPacket(GameStateController.EndTurn());
+            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             _diceRow.Hidden = true;
             _gameState = GameState.Waiting;
         }
