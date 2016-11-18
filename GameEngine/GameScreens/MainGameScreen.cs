@@ -30,7 +30,6 @@ namespace GameEngine.GameScreens
         public MainGameScreen()
         {
             _spriteLocationList = GetSpriteLocations();
-            //_pBlocks = InitializePlayerBlocks();
             _textPrompts = new List<TextPrompt>();
             _diceRow = new DiceRow(GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
@@ -40,9 +39,12 @@ namespace GameEngine.GameScreens
 
         public override void Update(GameTime gameTime)
         {
+            UpdatePositions(); //Possibly check for changes to rez before updating
             _localPlayerState = MonsterController.State(_localPlayer);
 
-            UpdatePositions();
+            if (_localMonster.CanYield) _gameState = GameState.AskYield;
+
+            if (_localPlayerState == State.Rolling) _gameState = GameState.Rolling;
 
             switch (_gameState)
             {
@@ -52,11 +54,10 @@ namespace GameEngine.GameScreens
                 case GameState.Rolling:
                     Rolling();
                     break;
-                case GameState.AskYieldCity:
-                    AskYieldCity();
+                case GameState.AskYield:
+                    AskYield();
                     break;
-                case GameState.AskYieldBay:
-                    AskYieldBay();
+                case GameState.Waiting:
                     break;
                 case GameState.BuyCards:
                     // BuyScreen();
@@ -93,23 +94,8 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
                 _diceRow.Clear();
-
                 ServerClasses.Client.sendActionPacket(GameStateController.EndRolling());
-
-                /*
-                if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
-                {
-                    _gameState = GameState.AskYieldCity;
-                    return;
-                }
-                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield) //TODO: Move somewhere else!
-                {
-                    _gameState = GameState.AskYieldBay;
-                    return;
-                }
-                */
-                _textPrompts.Clear();
-                StartNextTurn();
+                EndTurn();
             }
 
             if (Engine.InputManager.KeyPressed(Keys.R))
@@ -134,45 +120,19 @@ namespace GameEngine.GameScreens
             _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _spriteLocationList["RollsLeft"]));
         }
 
-        private void AskYieldCity()
+        private void AskYield()
         {
             _textPrompts.Clear();
             _textPrompts.Add(new TextPrompt(MonsterController.Name(_localPlayer) + ": Yield? Y/N", "TextPrompt1", _spriteLocationList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                Board.TokyoCity.Yield();
-                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
-                {
-                    _gameState = GameState.AskYieldBay;
-                    return;
-                }
-                StartNextTurn();
-            }
-            else if (Engine.InputManager.KeyPressed(Keys.N))
-            {
-                if (Board.TokyoBayIsOccupied && Board.TokyoBay.CanYield)
-                {
-                    _gameState = GameState.AskYieldBay;
-                    return;
-                }
-                StartNextTurn();
-            }
-        }
-
-        private void AskYieldBay()
-        {
-            _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(_localMonster.Name + ": Yield? Y/N", "TextPrompt1", _spriteLocationList["TextPrompt1"]));
-
-            if (Engine.InputManager.KeyPressed(Keys.Y))
-            {
                 ServerClasses.Client.sendActionPacket(GameStateController.Yield(_localPlayer));
-                StartNextTurn();
+                EndTurn();
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                StartNextTurn();
+                EndTurn();
             }
         }
 
@@ -200,11 +160,11 @@ namespace GameEngine.GameScreens
             base.UnloadAssets();
         }
 
-        private void StartNextTurn()
+        private void EndTurn()
         {
-            //GameStateController.EndTurn(); //TODO:
+            ServerClasses.Client.sendActionPacket(GameStateController.EndTurn());
             _diceRow.Hidden = true;
-            _gameState = GameState.StartTurn;
+            _gameState = GameState.Waiting;
         }
 
         private static Dictionary<string, Vector2> GetSpriteLocations()
@@ -332,8 +292,9 @@ namespace GameEngine.GameScreens
             StartTurn,
             Rolling,
             AskYieldBay,
-            AskYieldCity,
-            BuyCards
+            AskYield,
+            BuyCards,
+            Waiting
         }
     }
 }
