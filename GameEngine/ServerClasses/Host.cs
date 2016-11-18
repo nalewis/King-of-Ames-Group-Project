@@ -133,7 +133,7 @@ namespace GameEngine.ServerClasses
         public static void StartGame()
         {
             Game.StartTurn();
-            MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
+            //MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
             SendMonsterPackets(true);
         }
 
