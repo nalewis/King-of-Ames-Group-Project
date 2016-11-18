@@ -6,11 +6,7 @@ using Networking;
 using Networking.Actions;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace GameEngine.ServerClasses
 {
@@ -138,7 +134,7 @@ namespace GameEngine.ServerClasses
             }
         }
 
-        public static void sendActionPacket(ActionPacket packet)
+        public static void SendActionPacket(ActionPacket packet)
         {
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Action);

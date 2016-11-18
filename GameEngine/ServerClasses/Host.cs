@@ -7,9 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace GameEngine.ServerClasses
 {
@@ -100,7 +98,7 @@ namespace GameEngine.ServerClasses
                         {
                             var json = inc.ReadString();
                             ActionPacket packet = JsonConvert.DeserializeObject<ActionPacket>(json);
-                            receiveActionUpdate(packet);
+                            ReceiveActionUpdate(packet);
                         }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
@@ -135,25 +133,22 @@ namespace GameEngine.ServerClasses
         public static void StartGame()
         {
             Game.StartTurn();
-            var outMsg = _server.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Start);
-            outMsg.Write(Players.Count);
             MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
-            var packets = MonsterController.GetDataPackets();
-            for (var i = 0; i < Players.Count; i++)
-            {
-                var json = JsonConvert.SerializeObject(packets[i]);
-                outMsg.Write(json);
-            }
-            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+            SendMonsterPackets(true);
         }
 
-        public static void receiveActionUpdate(ActionPacket packet)
+        public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
 
+            SendMonsterPackets(false);
+        }
+
+        public static void SendMonsterPackets(bool start)
+        {
             var outMsg = _server.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Update);
+            if (start) { outMsg.Write((byte)PacketTypes.Start);}
+            else { outMsg.Write((byte)PacketTypes.Update); }
             outMsg.Write(Players.Count);
             var packets = MonsterController.GetDataPackets();
             for (var i = 0; i < Players.Count; i++)
