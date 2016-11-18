@@ -27,37 +27,7 @@ namespace GameEngine.Views
         /// <param name="e"></param>
         private void newUserButton_Click(object sender, EventArgs e)
         {
-            errorLabel.Hide();
-            //Check that the inputs are not empty
-            if (newUsername.TextLength > 0 && newPassword.TextLength > 0)
-            {
-                if (ContainsVaildChars(newUsername.Text) && ContainsVaildChars(newPassword.Text))
-                {
-                    var good = NetworkClasses.CreateUser(newUsername.Lines[0], newPassword.Lines[0],
-                        Helpers.GetLocalIpAddress());
-                    if (good)
-                    {
-                        Form form = new LoginForm();
-                        form.Show();
-                        Dispose();
-                    }
-                    else
-                    {
-                        errorLabel.Text = "Username already exists.";
-                        errorLabel.Show();
-                    }
-                }
-                else
-                {
-                    errorLabel.Text = "LETTERS AND NUMBERS ONLY";
-                    errorLabel.Show();
-                }
-            }
-            else
-            {
-                errorLabel.Text = "Username/Password cannot be blank.";
-                errorLabel.Show();
-            }
+            Create();
         }
 
         /// <summary>
@@ -93,6 +63,46 @@ namespace GameEngine.Views
         private static bool ContainsVaildChars(string s)
         {
             return s.All(t => (t > 47 && t < 58) || (t > 64 && t < 91) || (t > 96 && t < 123));
+        }
+
+        private void NewUserForm_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == 13) { Create();}
+        }
+
+        private void Create()
+        {
+            errorLabel.Hide();
+            //Check that the inputs are not empty
+            if (newUsername.TextLength > 0 && newPassword.TextLength > 0)
+            {
+                if (ContainsVaildChars(newUsername.Text) && ContainsVaildChars(newPassword.Text))
+                {
+                    var good = NetworkClasses.CreateUser(newUsername.Lines[0], newPassword.Lines[0],
+                        Helpers.GetLocalIpAddress());
+                    if (good)
+                    {
+                        Form form = new LoginForm();
+                        form.Show();
+                        Dispose();
+                    }
+                    else
+                    {
+                        errorLabel.Text = "Username already exists.";
+                        errorLabel.Show();
+                    }
+                }
+                else
+                {
+                    errorLabel.Text = "LETTERS AND NUMBERS ONLY";
+                    errorLabel.Show();
+                }
+            }
+            else
+            {
+                errorLabel.Text = "Username/Password cannot be blank.";
+                errorLabel.Show();
+            }
         }
     }
 }
