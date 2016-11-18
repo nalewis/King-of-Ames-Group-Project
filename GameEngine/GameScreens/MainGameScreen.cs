@@ -41,12 +41,13 @@ namespace GameEngine.GameScreens
         public override void Update(GameTime gameTime)
         {
             UpdatePositions(); //Possibly check for changes to rez before updating
+            UpdateGraphicsPieces();
             _localPlayerState = MonsterController.State(_localPlayer);
 
             if (_localMonster.CanYield) _gameState = GameState.AskYield;
 
-            if (_localPlayerState == State.Rolling) _gameState = GameState.Rolling;
-            else if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
+            if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
+            else if (_localPlayerState == State.Rolling) _gameState = GameState.Rolling;
 
             switch (_gameState)
             {
@@ -72,8 +73,6 @@ namespace GameEngine.GameScreens
             {
                 ScreenManager.AddScreen(new PauseMenu());
             }
-
-            UpdateGraphicsPieces();
             base.Update(gameTime);
         }
 
@@ -169,6 +168,7 @@ namespace GameEngine.GameScreens
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             _diceRow.Hidden = true;
             _gameState = GameState.Waiting;
+            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
 
         private static Dictionary<string, Vector2> GetSpriteLocations()
