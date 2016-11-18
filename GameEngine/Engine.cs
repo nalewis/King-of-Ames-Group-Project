@@ -86,6 +86,7 @@ namespace GameEngine {
             if (ExitGame)
             {
                 UnloadContent();
+                ServerClasses.Client.ClientStop();
                 Exit();
             }
                 
