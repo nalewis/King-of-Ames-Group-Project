@@ -81,7 +81,7 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
                             Game.StartGame(MonsterPackets);
-                            Game.StartTurn();
+                            //Game.StartTurn();
                             Program.Run();
 
                             if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)

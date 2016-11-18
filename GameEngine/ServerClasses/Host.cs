@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
 using Networking.Actions;
@@ -133,6 +134,7 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void StartGame()
         {
+            Game.StartTurn();
             var outMsg = _server.CreateMessage();
             outMsg.Write((byte)PacketTypes.Start);
             outMsg.Write(Players.Count);
