@@ -30,11 +30,12 @@ namespace GameEngine.GameScreens
         public MainGameScreen()
         {
             _spriteLocationList = GetSpriteLocations();
-            _pBlocks = InitializePlayerBlocks();
+            //_pBlocks = InitializePlayerBlocks();
             _textPrompts = new List<TextPrompt>();
             _diceRow = new DiceRow(GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
+            _pBlocks = InitializePlayerBlocks();
         }
 
         public override void Update(GameTime gameTime)
