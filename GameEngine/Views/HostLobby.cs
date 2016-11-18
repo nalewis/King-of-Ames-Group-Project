@@ -37,7 +37,10 @@ namespace GameEngine.Views
         /// <param name="e"></param>
         private void timer_Tick(object sender, EventArgs e)
         {
-            start_game.Enabled = NetworkClasses.CheckReady(Host.Players);
+            if (Host.Players.Count > 1)
+            {
+                start_game.Enabled = NetworkClasses.CheckReady(Host.Players);
+            }
             UpdateList();
         }
 
@@ -87,7 +90,7 @@ namespace GameEngine.Views
             
             //Gets ping values for all players
             var pings = new List<int>();
-            while(pings.Count < 1)
+            while(pings.Count < 1 )
             {
                 pings = Host.GetPing();
             }
@@ -105,7 +108,7 @@ namespace GameEngine.Views
                 grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
-                listItem.SubItems.Add(pings[i-1].ToString() + " ms");
+                //stItem.SubItems.Add(pings[i-1] + " ms");
                 playerList.Items.Add(listItem);
             }
         }
