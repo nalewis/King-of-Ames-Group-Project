@@ -96,7 +96,7 @@ namespace GameEngine.ServerClasses
                         }
                         else if(type == (byte)PacketTypes.Action)
                         {
-
+                            //TODO accept action/ get monsters / send monsters?
                         }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
