@@ -45,7 +45,8 @@ namespace GameEngine.GameScreens
 
             if (_localMonster.CanYield) _gameState = GameState.AskYield;
 
-            if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
+            if (_localPlayerState == State.Rolling) _gameState = GameState.Rolling;
+            else if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
 
             switch (_gameState)
             {
@@ -84,9 +85,9 @@ namespace GameEngine.GameScreens
             _textPrompts.Add(new TextPrompt("Your Turn " + MonsterController.Name(_localPlayer), "TextPrompt1", _spriteLocationList["TextPrompt1"]));
             _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", "TextPrompt2", _spriteLocationList["TextPrompt2"]));
             _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _spriteLocationList["RollsLeft"]));
-            _gameState = GameState.Rolling;
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
+                _gameState = GameState.Rolling;
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
                 _diceRow.Hidden = false;
             }

@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using GamePieces.Monsters;
 using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
@@ -140,6 +141,8 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
+            Monster test = Game.Current;
+            Monster testaroo = Game.Monsters[0];
             SendMonsterPackets(false);
         }
 
