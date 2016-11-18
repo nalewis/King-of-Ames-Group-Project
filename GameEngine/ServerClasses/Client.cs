@@ -89,6 +89,18 @@ namespace GameEngine.ServerClasses
                             }
 
                         }
+                        else if (type == (byte)PacketTypes.Update)
+                        {
+                            var end = inc.ReadInt32();
+                            MonsterPackets = new MonsterDataPacket[end];
+                            for (var i = 0; i < end; i++)
+                            {
+                                var json = inc.ReadString();
+                                MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                            }
+
+                            MonsterController.AcceptDataPackets(MonsterPackets);
+                        }
                         else if (type == (byte)PacketTypes.Closed)
                         {
                             NetClient.Shutdown("Closed");
@@ -156,6 +168,7 @@ namespace GameEngine.ServerClasses
             Leave,
             Start,
             Action,
+            Update,
             Closed
         }
     }

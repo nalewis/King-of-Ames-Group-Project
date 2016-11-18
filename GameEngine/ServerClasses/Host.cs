@@ -1,6 +1,7 @@
 ﻿using Controllers;
 using Lidgren.Network;
 using Networking;
+using Networking.Actions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -96,7 +97,9 @@ namespace GameEngine.ServerClasses
                         }
                         else if(type == (byte)PacketTypes.Action)
                         {
-                            //TODO accept action/ get monsters / send monsters?
+                            var json = inc.ReadString();
+                            ActionPacket packet = JsonConvert.DeserializeObject<ActionPacket>(json);
+                            receiveActionUpdate(packet);
                         }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
@@ -143,6 +146,22 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void receiveActionUpdate(ActionPacket packet)
+        {
+            GameStateController.AcceptAction(packet);
+
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Update);
+            outMsg.Write(Players.Count);
+            var packets = MonsterController.GetDataPackets();
+            for (var i = 0; i < Players.Count; i++)
+            {
+                var json = JsonConvert.SerializeObject(packets[i]);
+                outMsg.Write(json);
+            }
+            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Gets the ping values for all connected users
         /// </summary>
@@ -158,6 +177,7 @@ namespace GameEngine.ServerClasses
             Leave,
             Start,
             Action,
+            Update,
             Closed
         }
 
