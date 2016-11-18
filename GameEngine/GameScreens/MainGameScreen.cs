@@ -80,12 +80,16 @@ namespace GameEngine.GameScreens
         {
             _diceRow.Clear();
             _textPrompts.Clear();
-
             _diceRow.AddDice(DiceController.GetDice());
             _textPrompts.Add(new TextPrompt("Your Turn " + MonsterController.Name(_localPlayer), "TextPrompt1", _spriteLocationList["TextPrompt1"]));
             _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", "TextPrompt2", _spriteLocationList["TextPrompt2"]));
             _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _spriteLocationList["RollsLeft"]));
             _gameState = GameState.Rolling;
+            if (Engine.InputManager.KeyPressed(Keys.R))
+            {
+                ServerClasses.Client.SendActionPacket(GameStateController.Roll());
+                _diceRow.Hidden = false;
+            }
         }
 
         private void Rolling()
