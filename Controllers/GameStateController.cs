@@ -13,7 +13,7 @@ namespace Controllers
         /// <param name="actionPacket">Action packet</param>
         public static void AcceptAction(ActionPacket actionPacket)
         {
-            if(!Game.Host) return;
+            //if(!Game.Host) return;
             switch (actionPacket.Action)
             {
                 case Action.StartTurn:

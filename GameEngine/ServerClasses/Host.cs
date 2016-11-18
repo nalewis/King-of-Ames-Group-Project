@@ -140,7 +140,6 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-
             SendMonsterPackets(false);
         }
 
