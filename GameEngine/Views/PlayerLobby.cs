@@ -1,9 +1,9 @@
-﻿using GameEngine.ServerClasses;
-using Networking;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using GameEngine.ServerClasses;
+using Networking;
 
-namespace Views
+namespace GameEngine.Views
 {
     /// <summary>
     /// Form to list the players currently in the lobby and select character

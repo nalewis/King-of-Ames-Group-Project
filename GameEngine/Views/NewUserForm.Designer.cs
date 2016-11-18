@@ -1,4 +1,4 @@
-﻿namespace Views
+﻿namespace GameEngine.Views
 {
     partial class NewUserForm
     {

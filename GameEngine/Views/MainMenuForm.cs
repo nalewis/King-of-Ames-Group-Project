@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using Networking;
 using GameEngine.ServerClasses;
+using Networking;
 
-namespace Views
+namespace GameEngine.Views
 {
     /// <summary>
     /// Form to handle user navigation to the various pre-game menus, options, and account info

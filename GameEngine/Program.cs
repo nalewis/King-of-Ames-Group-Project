@@ -1,14 +1,6 @@
 ﻿using System;
-using Controllers;
 using System.Windows.Forms;
-using Views;
-using Lidgren.Network;
-using GamePieces.Monsters;
-using System.Threading;
-using Networking;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
+using GameEngine.Views;
 
 namespace GameEngine
 {

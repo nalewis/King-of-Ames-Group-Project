@@ -2,9 +2,7 @@
 using System.Windows.Forms;
 using Networking;
 
-//TODO encrypt password
-
-namespace Views
+namespace GameEngine.Views
 {
     /// <summary>
     /// Form to handle exsiting user login
