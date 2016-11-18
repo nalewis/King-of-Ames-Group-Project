@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Networking;
 using Controllers;
 using GameEngine.ServerClasses;
+using Networking;
 
-namespace Views
+namespace GameEngine.Views
 {
     /// <summary>
     /// Form to list the players currently in the lobby and select character w/ ability to start the game

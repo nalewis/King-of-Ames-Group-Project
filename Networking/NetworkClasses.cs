@@ -422,8 +422,7 @@ namespace Networking
             count = 1;
             for (var i = 2; i < 6; i++)
             {
-                if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString())) continue;
-                count++;
+                if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString())){count++;}
             }
 
             return count;

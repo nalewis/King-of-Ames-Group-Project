@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using Networking;
 using GameEngine.ServerClasses;
-using System.Data;
+using Networking;
 
-namespace Views
+namespace GameEngine.Views
 {
     /// <summary>
     /// Form for the user to view all available servers

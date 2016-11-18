@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Networking;
 
-namespace Views
+namespace GameEngine.Views
 {
     /// <summary>
     /// Form to handle creation of a new user
