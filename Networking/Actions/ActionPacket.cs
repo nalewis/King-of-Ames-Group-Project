@@ -5,9 +5,9 @@ namespace Networking.Actions
     [Serializable]
     public struct ActionPacket
     {
-        public int PlayerId { get; }
-        public Action Action { get; }
-        public dynamic Value { get; }
+        public int PlayerId { get; set; }
+        public Action Action { get; set; }
+        public dynamic Value { get; set; }
 
         public ActionPacket(Action action, int playerId = 0, dynamic value = null)
         {

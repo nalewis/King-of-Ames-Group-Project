@@ -139,6 +139,7 @@ namespace GameEngine.ServerClasses
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Action);
             var json = JsonConvert.SerializeObject(packet);
+            packet = JsonConvert.DeserializeObject<ActionPacket>(json);
             outMsg.Write(json);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
         }

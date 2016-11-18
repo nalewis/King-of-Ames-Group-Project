@@ -97,7 +97,7 @@ namespace GameEngine.ServerClasses
                         else if(type == (byte)PacketTypes.Action)
                         {
                             var json = inc.ReadString();
-                            ActionPacket packet = JsonConvert.DeserializeObject<ActionPacket>(json);
+                            var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
                             ReceiveActionUpdate(packet);
                         }
                         break;
