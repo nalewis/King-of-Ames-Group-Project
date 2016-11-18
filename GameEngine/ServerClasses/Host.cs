@@ -1,5 +1,4 @@
 ﻿using Controllers;
-using GamePieces.Monsters;
 using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
@@ -16,6 +15,7 @@ namespace GameEngine.ServerClasses
     {
         public static List<int> Players = new List<int>();
         private static NetServer _server;
+        public static bool _hosting = false;
 
         /// <summary>
         /// Initializes the server, starts the reiceve loop, creates a NetClient and connects it to the server
@@ -30,6 +30,7 @@ namespace GameEngine.ServerClasses
 
             //add server to the SQL database with the current details
             NetworkClasses.CreateServer(User.PlayerId, User.LocalIp);
+            _hosting = true;
 
             // Starts thread to handle input from clients
             var recieve = new Thread(RecieveLoop);
@@ -52,6 +53,7 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
+            _hosting = false;
         }
 
         /// <summary>
@@ -142,8 +144,8 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-            Monster test = Game.Current;
-            Monster testaroo = Game.Monsters[0];
+            var test = Game.Current;
+            var testaroo = Game.Monsters[0];
 
             SendMonsterPackets(false);
         }

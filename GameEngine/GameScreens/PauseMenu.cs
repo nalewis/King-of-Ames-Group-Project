@@ -1,7 +1,9 @@
 ﻿
+using System.Windows.Forms;
+using GameEngine.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 
 namespace GameEngine.GameScreens
@@ -59,6 +61,8 @@ namespace GameEngine.GameScreens
                         break;
                     case 2:
                         Engine.ExitGame = true;
+                        Form form = new MainMenuForm();
+                        form.Show();
                         break;
                 }
             }

@@ -77,7 +77,11 @@ namespace GameEngine.Views
             try
             {
                 var ds = NetworkClasses.GetServer(Client.Conn);
-                //if(ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress") { Dispose();}
+                if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
+                {
+                    _timer.Stop();
+                    Dispose();
+                }
                 var row = ds.Tables[0].Rows[0];
 
                 var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));

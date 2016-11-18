@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using GameEngine.GameScreens;
+using GameEngine.ServerClasses;
+using GameEngine.Views;
 
 namespace GameEngine {
     /// <summary>
@@ -86,7 +89,10 @@ namespace GameEngine {
             if (ExitGame)
             {
                 UnloadContent();
-                ServerClasses.Client.ClientStop();
+                if (Host._hosting) { Host.ServerStop(); }
+                else { Client.ClientStop(); }
+                Form form = new MainMenuForm();
+                form.Show();
                 Exit();
             }
                 
