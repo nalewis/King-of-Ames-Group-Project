@@ -44,7 +44,7 @@ namespace GameEngine.GameScreens
 
             if (_localMonster.CanYield) _gameState = GameState.AskYield;
 
-            if (_localPlayerState == State.Rolling) _gameState = GameState.Rolling;
+            if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
 
             switch (_gameState)
             {
@@ -79,8 +79,6 @@ namespace GameEngine.GameScreens
         {
             _diceRow.Clear();
             _textPrompts.Clear();
-
-            ServerClasses.Client.sendActionPacket(GameStateController.StartTurn());
 
             _diceRow.AddDice(DiceController.GetDice());
             _textPrompts.Add(new TextPrompt("Your Turn " + MonsterController.Name(_localPlayer), "TextPrompt1", _spriteLocationList["TextPrompt1"]));
