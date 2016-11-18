@@ -116,6 +116,7 @@ namespace Views
         private void select_char_Click(object sender, EventArgs e)
         {
             NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
+            UpdateList();
         }
     }
 }

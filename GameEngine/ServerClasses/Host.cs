@@ -94,6 +94,10 @@ namespace GameEngine.ServerClasses
                         {
                             Players.Remove(inc.ReadInt32());
                         }
+                        else if(type == (byte)PacketTypes.Action)
+                        {
+
+                        }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
                         break;
@@ -153,6 +157,7 @@ namespace GameEngine.ServerClasses
             Login,
             Leave,
             Start,
+            Action,
             Closed
         }
 
