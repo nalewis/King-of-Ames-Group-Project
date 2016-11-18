@@ -9,7 +9,6 @@ namespace GamePieces.Monsters
         public int PlayerId { get; set; }
         public int Index { get; set; }
         public string Name { get; set; }
-        public State State { get; set; }
         public Location Location { get; set; }
         public Card[] Cards { get; set; }
         public int NumberOfCards { get; set; }
@@ -25,16 +24,16 @@ namespace GamePieces.Monsters
         public int Dice { get; set; }
         public int MaximumRolls { get; set; }
         public int RemainingRolls { get; set; }
+        public State State { get; set; }
 
-        public MonsterDataPacket(int playerId, int index, string name, State state, Location location, Card[] cards,
+        public MonsterDataPacket(int playerId, int index, string name, Location location, Card[] cards,
             int numberOfCards, int previousNumberOfCards, int energy, int previousEnergy, int victoryPoints,
             int previousVictoryPoints, int health, int previousHealth, int maximumHealth, int attackPoints, int dice,
-            int maximumRolls, int remainingRolls)
+            int maximumRolls, int remainingRolls, State state)
         {
             PlayerId = playerId;
             Index = index;
             Name = name;
-            State = state;
             Location = location;
             Cards = cards;
             NumberOfCards = numberOfCards;
@@ -50,6 +49,7 @@ namespace GamePieces.Monsters
             Dice = dice;
             MaximumRolls = maximumRolls;
             RemainingRolls = remainingRolls;
+            State = state;
         }
     }
 }
