@@ -145,7 +145,7 @@ namespace GameEngine.Views
             NetworkClasses.UpdateServerStatus("In Progress", User.PlayerId);
             LobbyController.StartGame();
             Host.StartGame();
-            //this.Dispose();
+            Dispose();
         }
     }
 }
