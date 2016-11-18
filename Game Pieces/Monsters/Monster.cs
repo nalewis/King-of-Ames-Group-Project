@@ -295,9 +295,9 @@ namespace GamePieces.Monsters
         /// <returns>Data Packet</returns>
         public MonsterDataPacket GetPacket()
         {
-            return new MonsterDataPacket(PlayerId, Index, Name, State, Location, Cards.ToArray(), NumberOfCards,
+            return new MonsterDataPacket(PlayerId, Index, Name, Location, Cards.ToArray(), NumberOfCards,
                 PreviousNumberOfCards, Energy, PreviousEnergy, VictoryPoints, PreviousVictoryPoints, Health,
-                PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls);
+                PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls, State);
         }
 
         /// <summary>
