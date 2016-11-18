@@ -22,6 +22,7 @@ namespace GameEngine
 
         public override void Update(GameTime gameTime)
         {
+            if (ScreenList.Count == 0) return;
             var index = ScreenList.Count - 1;
             while (ScreenList[index].IsPopup &&
                    ScreenList[index].IsActive)
@@ -65,6 +66,12 @@ namespace GameEngine
             {
                 screen.UnloadAssets();
             }
+        }
+
+        public void Exit()
+        {
+            Unload();
+            ScreenList.Clear();
         }
     }
 }

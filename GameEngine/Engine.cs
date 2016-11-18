@@ -67,6 +67,8 @@ namespace GameEngine {
         /// </summary>
         protected override void UnloadContent() {
             ScreenManager.Unload();
+            ScreenManager.Dispose();
+            InputManager.Dispose();
             TextureList.Clear();
             FontList.Clear();
             Content.Unload();
@@ -82,7 +84,11 @@ namespace GameEngine {
             //if(InputManager.KeyPressed(Keys.Escape)) AddScreen(new PauseMenu());
 
             if (ExitGame)
+            {
+                UnloadContent();
                 Exit();
+            }
+                
 
             ScreenWidth = GraffixMngr.GraphicsDevice.Viewport.Width;
             ScreenHeight = GraffixMngr.GraphicsDevice.Viewport.Height;
@@ -96,6 +102,7 @@ namespace GameEngine {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            if (ScreenManager.ScreenList.Count == 0) return;
             var index = ScreenManager.ScreenList.Count - 1;
             while (ScreenManager.ScreenList[index].IsPopup)
             {
