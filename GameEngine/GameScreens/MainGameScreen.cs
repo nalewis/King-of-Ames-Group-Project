@@ -35,6 +35,7 @@ namespace GameEngine.GameScreens
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
+            _gameState = GameState.Waiting;
         }
 
         public override void Update(GameTime gameTime)
