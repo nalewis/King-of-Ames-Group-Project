@@ -24,31 +24,7 @@ namespace GameEngine.Views
         /// <param name="e"></param>
         private void loginButton_Click(object sender, EventArgs e)
         {
-            //Check input isn't empty, else error message is shown
-            if(usernameBox.TextLength > 0 && passwordBox.TextLength > 0)
-            {
-                //Hide existing error label, if any
-                errorLabel.Hide();
-
-                //Sends input to login function, if input is good, sends user to main menu 
-                //Else error message is shown
-                if (NetworkClasses.Login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIpAddress()))
-                {
-                    Form form = new MainMenuForm();
-                    form.Show();
-                    Dispose();
-                }
-                else
-                {
-                    errorLabel.Text = "Invalid Username/Password";
-                    errorLabel.Show();
-                }
-            }
-            else
-            {
-                errorLabel.Text = "Username/Password cannot be blank.";
-                errorLabel.Show();
-            }
+            Login();
         }
 
         /// <summary>
@@ -73,6 +49,40 @@ namespace GameEngine.Views
             Form form = new NewUserForm();
             form.Show();
             Dispose();
+        }
+
+        private void LoginForm_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == 13) { Login();}
+        }
+
+        private void Login()
+        {
+            //Check input isn't empty, else error message is shown
+            if (usernameBox.TextLength > 0 && passwordBox.TextLength > 0)
+            {
+                //Hide existing error label, if any
+                errorLabel.Hide();
+
+                //Sends input to login function, if input is good, sends user to main menu 
+                //Else error message is shown
+                if (NetworkClasses.Login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIpAddress()))
+                {
+                    Form form = new MainMenuForm();
+                    form.Show();
+                    Dispose();
+                }
+                else
+                {
+                    errorLabel.Text = "Invalid Username/Password";
+                    errorLabel.Show();
+                }
+            }
+            else
+            {
+                errorLabel.Text = "Username/Password cannot be blank.";
+                errorLabel.Show();
+            }
         }
     }
 }

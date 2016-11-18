@@ -7,13 +7,12 @@ using System;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 using GamePieces.Session;
-using KoTGame = GamePieces.Session.Game; //TODO remove this
 
 namespace GameEngine.GameScreens
 {
     class MainGameScreen : GameScreen
     {
-        private static Dictionary<string, Vector2> _positionList;
+        private static Dictionary<string, Vector2> _spriteLocationList;
         private readonly List<PlayerBlock> _pBlocks;
         private readonly List<TextPrompt> _textPrompts;
         private readonly DiceRow _diceRow;
@@ -30,25 +29,17 @@ namespace GameEngine.GameScreens
 
         public MainGameScreen()
         {
-            //LobbyController.StartGame(); //NEED MONSTER DATA PACKETS
-            _positionList = CalculatePositions();
+            _spriteLocationList = GetSpriteLocations();
             _pBlocks = InitializePlayerBlocks();
             _textPrompts = new List<TextPrompt>();
-            _diceRow = new DiceRow(GetPosition("DicePos")); //TODO; 
-            _localPlayer = 0; //WILL BE AN INT SOON User.Id;       //TODO: 
+            _diceRow = new DiceRow(GetPosition("DicePos"));
+            _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
-            _gameState = GameState.StartTurn;
         }
 
         public override void Update(GameTime gameTime)
         {
             _localPlayerState = MonsterController.State(_localPlayer);
-
-            if (KoTGame.Winner != null)
-            {
-                _textPrompts.Clear();
-                _textPrompts.Add(new TextPrompt(KoTGame.Winner.Name + " WINS!!", "WinText", GetPosition("WinText")));
-            }
 
             UpdatePositions();
 
@@ -87,12 +78,12 @@ namespace GameEngine.GameScreens
             _diceRow.Clear();
             _textPrompts.Clear();
 
-            GameStateController.StartTurn(); //TODO: Send this to the host!
+            ServerClasses.Client.sendActionPacket(GameStateController.StartTurn());
 
             _diceRow.AddDice(DiceController.GetDice());
-            _textPrompts.Add(new TextPrompt("Your Turn " + MonsterController.Name(_localPlayer), "TextPrompt1", _positionList["TextPrompt1"]));
-            _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", "TextPrompt2", _positionList["TextPrompt2"]));
-            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt("Your Turn " + MonsterController.Name(_localPlayer), "TextPrompt1", _spriteLocationList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", "TextPrompt2", _spriteLocationList["TextPrompt2"]));
+            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _spriteLocationList["RollsLeft"]));
             _gameState = GameState.Rolling;
         }
 
@@ -102,7 +93,7 @@ namespace GameEngine.GameScreens
             {
                 _diceRow.Clear();
 
-                DiceController.EndRolling(); //TODO SEND ACTION PACKET!!
+                ServerClasses.Client.sendActionPacket(GameStateController.EndRolling());
 
                 /*
                 if (Board.TokyoCityIsOccupied && Board.TokyoCity.CanYield)
@@ -122,7 +113,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
-                GameStateController.Roll(); //TODO: SEND TO HOST!!!
+                ServerClasses.Client.sendActionPacket(GameStateController.Roll());
                 _diceRow.Hidden = false;
             }
 
@@ -139,13 +130,13 @@ namespace GameEngine.GameScreens
 
             if (_textPrompts.Count > 0)
                 _textPrompts.RemoveAt(_textPrompts.Count - 1);
-            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _positionList["RollsLeft"]));
+            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _spriteLocationList["RollsLeft"]));
         }
 
         private void AskYieldCity()
         {
             _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(MonsterController.Name(_localPlayer) + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt(MonsterController.Name(_localPlayer) + ": Yield? Y/N", "TextPrompt1", _spriteLocationList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
@@ -171,11 +162,11 @@ namespace GameEngine.GameScreens
         private void AskYieldBay()
         {
             _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(_localMonster.Name + ": Yield? Y/N", "TextPrompt1", _positionList["TextPrompt1"]));
+            _textPrompts.Add(new TextPrompt(_localMonster.Name + ": Yield? Y/N", "TextPrompt1", _spriteLocationList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                GameStateController.Yield(_localPlayer); //TODO: Send to Host!
+                ServerClasses.Client.sendActionPacket(GameStateController.Yield(_localPlayer));
                 StartNextTurn();
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
@@ -203,7 +194,7 @@ namespace GameEngine.GameScreens
         {
             _pBlocks.Clear();
             _textPrompts.Clear();
-            _positionList.Clear();
+            _spriteLocationList.Clear();
             _diceRow.Clear();
             base.UnloadAssets();
         }
@@ -215,7 +206,7 @@ namespace GameEngine.GameScreens
             _gameState = GameState.StartTurn;
         }
 
-        private static Dictionary<string, Vector2> CalculatePositions()
+        private static Dictionary<string, Vector2> GetSpriteLocations()
         {
             var width = Engine.GraffixMngr.GraphicsDevice.Viewport.Width;
             var height = Engine.GraffixMngr.GraphicsDevice.Viewport.Height;
@@ -239,7 +230,7 @@ namespace GameEngine.GameScreens
 
         private void UpdatePositions()
         {
-            _positionList = CalculatePositions();
+            _spriteLocationList = GetSpriteLocations();
             foreach (var tp in _textPrompts)
             {
                 tp.Position = GetPosition(tp.Name);
@@ -318,7 +309,7 @@ namespace GameEngine.GameScreens
 
         public static Vector2 GetPosition(string key)
         {
-            return _positionList[key];
+            return _spriteLocationList[key];
         }
 
         private static List<Monster> getMonsterList()

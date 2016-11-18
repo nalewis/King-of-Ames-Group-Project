@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Views
+﻿using System.Windows.Forms;
+
+namespace GameEngine.Views
 {
     partial class NewUserForm
     {
@@ -44,6 +46,7 @@
             this.newUsername.Name = "newUsername";
             this.newUsername.Size = new System.Drawing.Size(100, 20);
             this.newUsername.TabIndex = 0;
+            this.newUsername.KeyPress += new KeyPressEventHandler(NewUserForm_KeyPressed);
             // 
             // newPassword
             // 
@@ -52,6 +55,7 @@
             this.newPassword.PasswordChar = '*';
             this.newPassword.Size = new System.Drawing.Size(100, 20);
             this.newPassword.TabIndex = 1;
+            this.newPassword.KeyPress += new KeyPressEventHandler(NewUserForm_KeyPressed);
             // 
             // label1
             // 
@@ -127,6 +131,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "New User";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewUserForm_Closing);
+            this.KeyPress += new KeyPressEventHandler(NewUserForm_KeyPressed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
