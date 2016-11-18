@@ -134,6 +134,7 @@ namespace GameEngine.ServerClasses
         public static void StartGame()
         {
             Game.StartTurn();
+            Console.WriteLine("start : " + Game.Current.Equals(Game.Monsters[0]));
             //MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
             SendMonsterPackets(true);
         }
@@ -143,7 +144,7 @@ namespace GameEngine.ServerClasses
             GameStateController.AcceptAction(packet);
             Monster test = Game.Current;
             Monster testaroo = Game.Monsters[0];
-            Console.WriteLine(Game.Current.Equals(Game.Monsters[0]));
+
             SendMonsterPackets(false);
         }
 
@@ -160,6 +161,7 @@ namespace GameEngine.ServerClasses
                 outMsg.Write(json);
             }
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+            Console.WriteLine("host send: " + Game.Current.Equals(Game.Monsters[0]));
         }
 
         /// <summary>

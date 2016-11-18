@@ -48,8 +48,11 @@ namespace GamePieces.Session
         public static void StartGame(MonsterDataPacket[] dataPackets)
         {
             Monsters.Clear();
+            Dead.Clear();
             foreach (var dataPacket in dataPackets)
                 Monsters.Add(new Monster(dataPacket));
+            Current = Monsters.First();
+            Board.Reset();
             Host = false;
         }
 

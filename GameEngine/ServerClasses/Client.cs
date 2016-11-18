@@ -84,7 +84,7 @@ namespace GameEngine.ServerClasses
                             {
                                 //todo check for action
                             }
-
+                            Console.WriteLine("client start: " + Game.Current.Equals(Game.Monsters[0]));
                         }
                         else if (type == (byte)PacketTypes.Update)
                         {

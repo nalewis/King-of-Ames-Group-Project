@@ -1,9 +1,10 @@
-﻿﻿
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using DataStructures.Observer_Pattern;
 using GamePieces.Cards;
 using GamePieces.Session;
+using System;
 
 namespace GamePieces.Monsters
 {
@@ -143,6 +144,7 @@ namespace GamePieces.Monsters
             RemainingRolls = 0;
             Index = Game.Players;
             State = State.EndOfTurn;
+            Console.WriteLine("Name: " + Name);
         }
 
         /// <summary>

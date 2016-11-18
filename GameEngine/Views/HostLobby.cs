@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Controllers;
 using GameEngine.ServerClasses;
 using Networking;
+using GamePieces.Session;
 
 namespace GameEngine.Views
 {
@@ -147,6 +148,7 @@ namespace GameEngine.Views
             }
             NetworkClasses.UpdateServerStatus("In Progress", User.PlayerId);
             LobbyController.StartGame();
+            Console.WriteLine("Lobby: " + Game.Current.Equals(Game.Monsters[0]));
             Host.StartGame();
             Dispose();
         }
