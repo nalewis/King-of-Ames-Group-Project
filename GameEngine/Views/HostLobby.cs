@@ -148,7 +148,6 @@ namespace GameEngine.Views
             }
             NetworkClasses.UpdateServerStatus("In Progress", User.PlayerId);
             LobbyController.StartGame();
-            Console.WriteLine("Lobby: " + Game.Current.Equals(Game.Monsters[0]));
             Host.StartGame();
             _timer.Stop();
             Dispose();
