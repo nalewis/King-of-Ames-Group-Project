@@ -361,9 +361,11 @@ namespace Networking
             {
                 for (var i = 2; i < 6; i++)
                 {
-                    if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_" + i].ToString(), playerid.ToString()) == 0) continue;
-                    remove = i;
-                    break;
+                    if (int.Parse(ds.Tables[0].Rows[0]["Player_" + i].ToString()) == playerid)
+                    {
+                        remove = i;
+                        break;
+                    }
                 }
             }
             connection.Close();

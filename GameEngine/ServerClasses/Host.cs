@@ -75,6 +75,7 @@ namespace GameEngine.ServerClasses
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
                             Console.WriteLine("Status disconnected");
+                            Players.Remove(inc.ReadInt32());
                         }
 
                         break;
