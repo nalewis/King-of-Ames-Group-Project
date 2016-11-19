@@ -6,6 +6,8 @@ using Networking.Actions;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
+using System.Windows.Forms;
+using GameEngine.Views;
 
 namespace GameEngine.ServerClasses
 {
@@ -17,7 +19,7 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
-        private static Thread _gameLoop;
+        private static readonly Thread GameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
 
@@ -78,8 +80,7 @@ namespace GameEngine.ServerClasses
                             }
                             LobbyController.StartGame(MonsterPackets);
 
-                            _gameLoop = new Thread(Program.Run);
-                            _gameLoop.Start();
+                            GameLoop.Start();
 
                         }
                         else if (type == (byte)PacketTypes.Update)
@@ -159,6 +160,9 @@ namespace GameEngine.ServerClasses
             //ends the receive loop
             _shouldStop = true;
             Conn = "";
+            if (GameLoop.IsAlive) { GameLoop.Abort(); }
+            Form form = new MainMenuForm();
+            form.Show();
         }
 
         private enum PacketTypes

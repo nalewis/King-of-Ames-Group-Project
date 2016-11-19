@@ -70,8 +70,6 @@ namespace GameEngine.Views
             _timer.Stop();
             NetworkClasses.UpdateCharacter(User.PlayerId, null);
             Host.ServerStop();
-            var main = new MainMenuForm();
-            main.Show();
             Dispose();
         }
 
