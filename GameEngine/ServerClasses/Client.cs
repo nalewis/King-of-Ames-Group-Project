@@ -18,6 +18,7 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
+        private static Thread _gameLoop;
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
 
@@ -77,17 +78,14 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
                             LobbyController.StartGame(MonsterPackets);
-                            Thread thread = new Thread(Program.Run);
-                            thread.Start();
 
-                            if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
-                            {
-                                //just keeping this here if its ever needed
-                            }
-                            Console.WriteLine("client start: " + Game.Current.Equals(Game.Monsters[0]));
+                            _gameLoop = new Thread(Program.Run);
+                            _gameLoop.Start();
+
                         }
                         else if (type == (byte)PacketTypes.Update)
                         {
+                            Console.WriteLine("Update!");
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
                             for (var i = 0; i < end; i++)

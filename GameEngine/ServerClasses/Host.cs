@@ -70,7 +70,7 @@ namespace GameEngine.ServerClasses
                     case NetIncomingMessageType.Error:
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Client " + inc.SenderConnection.RemoteUniqueIdentifier + " status changed: " + inc.SenderConnection.Status);
+                        Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " + inc.SenderConnection.Status);
                         Console.WriteLine("dudes left: " + _server.Connections);
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
@@ -154,7 +154,17 @@ namespace GameEngine.ServerClasses
             var test = Game.Current;
             var testaroo = Game.Monsters[0];
 
-            SendMonsterPackets(false);
+            //SendMonsterPackets(false);
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Update);
+            outMsg.Write(Players.Count);
+            var packets = MonsterController.GetDataPackets();
+            for (var i = 0; i < Players.Count; i++)
+            {
+                var json = JsonConvert.SerializeObject(packets[i]);
+                outMsg.Write(json);
+            }
+            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void SendMonsterPackets(bool start)
