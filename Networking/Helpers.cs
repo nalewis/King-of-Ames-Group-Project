@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections.Specialized;
 
 namespace Networking
 {
@@ -20,17 +18,6 @@ namespace Networking
                 }
             }
             throw new Exception("Local IP Address Not Found!");
-        }
-
-        public static string WebMessage(NameValueCollection data)
-        {
-            using (var wc = new WebClient())
-            {
-                wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                var result = wc.UploadValues("http://proj-309-yt-01.cs.iastate.edu/login.php", "POST", data);
-                return Encoding.ASCII.GetString(result);
-                //Console.WriteLine("\nResponse received was :\n{0}", encresult);
-            }
         }
     }
 }

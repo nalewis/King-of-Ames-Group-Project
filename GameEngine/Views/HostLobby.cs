@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using Controllers;
 using GameEngine.ServerClasses;
 using Networking;
-using GamePieces.Session;
 
 namespace GameEngine.Views
 {

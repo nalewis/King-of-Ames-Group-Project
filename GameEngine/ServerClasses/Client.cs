@@ -1,6 +1,5 @@
 ﻿using Controllers;
 using GamePieces.Monsters;
-using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
 using Networking.Actions;
@@ -132,12 +131,16 @@ namespace GameEngine.ServerClasses
             }
         }
 
+        /// <summary>
+        /// Sends local action to server to update the game status
+        /// </summary>
+        /// <param name="packet"></param>
         public static void SendActionPacket(ActionPacket packet)
         {
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Action);
             var json = JsonConvert.SerializeObject(packet);
-            packet = JsonConvert.DeserializeObject<ActionPacket>(json);
+            JsonConvert.DeserializeObject<ActionPacket>(json);
             outMsg.Write(json);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
