@@ -70,7 +70,13 @@ namespace GameEngine.ServerClasses
                     case NetIncomingMessageType.Error:
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Client status changed: " + inc.SenderConnection.Status);
+                        Console.WriteLine("Client " + inc.SenderConnection.RemoteUniqueIdentifier + " status changed: " + inc.SenderConnection.Status);
+                        Console.WriteLine("dudes left: " + _server.Connections);
+                        if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
+                        {
+                            Console.WriteLine("Status disconnected");
+                        }
+
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
                         //Initially approves connecting clients based on their login byte

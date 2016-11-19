@@ -56,7 +56,7 @@ namespace GameEngine.ServerClasses
                         Console.WriteLine(inc.ToString());
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Connected to Server.");
+                        Console.WriteLine("Status changed: " + inc.SenderConnection.Status);
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
                             NetClient.Shutdown("Closed");
@@ -77,12 +77,11 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
                             LobbyController.StartGame(MonsterPackets);
-                            //Game.StartTurn();
                             Program.Run();
 
                             if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
                             {
-                                //todo check for action
+                                //just keeping this here if its ever needed
                             }
                             Console.WriteLine("client start: " + Game.Current.Equals(Game.Monsters[0]));
                         }
