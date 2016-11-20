@@ -41,7 +41,6 @@ namespace Controllers
         /// </summary>
         public static void Roll()
         {
-            Console.WriteLine(Game.Current.Equals(Game.Monsters[0]));
             Game.Roll();
         }
 

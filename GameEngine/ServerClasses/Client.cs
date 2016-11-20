@@ -79,17 +79,19 @@ namespace GameEngine.ServerClasses
                             }
                             LobbyController.StartGame(MonsterPackets);
                             _gameLoop = new Thread(Program.Run);
+                            //Makes this thread a STAThread, not sure if necessary...
+                            _gameLoop.SetApartmentState(ApartmentState.STA);
                             _gameLoop.Start();
                         }
                         else if (type == (byte)PacketTypes.Update)
                         {
-                            Console.WriteLine("Update!");
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
                             for (var i = 0; i < end; i++)
                             {
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                Console.WriteLine("Player " + i + " state: " + MonsterPackets[i].State.ToString());
                             }
 
                             MonsterController.AcceptDataPackets(MonsterPackets);

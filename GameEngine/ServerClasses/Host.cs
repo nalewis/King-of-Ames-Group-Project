@@ -70,13 +70,10 @@ namespace GameEngine.ServerClasses
                     case NetIncomingMessageType.Error:
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " + inc.SenderConnection.Status);
-                        Console.WriteLine("dudes left: " + _server.Connections);
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
-                            Console.WriteLine("Status disconnected");
+                            Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " + inc.SenderConnection.Status);
                         }
-
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
                         //Initially approves connecting clients based on their login byte
@@ -142,28 +139,13 @@ namespace GameEngine.ServerClasses
         public static void StartGame()
         {
             Game.StartTurn();
-            Console.WriteLine("start : " + Game.Current.Equals(Game.Monsters[0]));
-            //MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
             SendMonsterPackets(true);
         }
 
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-            var test = Game.Current;
-            var testaroo = Game.Monsters[0];
-
-            //SendMonsterPackets(false);
-            var outMsg = _server.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Update);
-            outMsg.Write(Players.Count);
-            var packets = MonsterController.GetDataPackets();
-            for (var i = 0; i < Players.Count; i++)
-            {
-                var json = JsonConvert.SerializeObject(packets[i]);
-                outMsg.Write(json);
-            }
-            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+            SendMonsterPackets(false);
         }
 
         public static void SendMonsterPackets(bool start)
@@ -179,7 +161,6 @@ namespace GameEngine.ServerClasses
                 outMsg.Write(json);
             }
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("host send: " + Game.Current.Equals(Game.Monsters[0]));
         }
 
         /// <summary>
