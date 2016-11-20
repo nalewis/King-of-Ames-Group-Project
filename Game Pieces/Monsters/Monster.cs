@@ -311,7 +311,6 @@ namespace GamePieces.Monsters
             PlayerId = packet.PlayerId;
             Index = packet.Index;
             Name = packet.Name;
-            State = packet.State;
             Location = packet.Location;
             Cards = packet.Cards.ToList();
             NumberOfCards = packet.NumberOfCards;
@@ -327,6 +326,7 @@ namespace GamePieces.Monsters
             Dice = packet.Dice;
             MaximumRolls = packet.MaximumRolls;
             RemainingRolls = packet.RemainingRolls;
+            State = packet.State;
         }
     }
 }

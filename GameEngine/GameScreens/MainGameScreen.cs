@@ -42,12 +42,11 @@ namespace GameEngine.GameScreens
             UpdatePositions(); //Possibly check for changes to rez before updating
             UpdateGraphicsPieces();
             _localPlayerState = MonsterController.State(_localPlayer);
-            if (_localPlayerState == State.Attacked)
+            if (_localPlayerState != State.Attacked)
             {
-                Console.WriteLine("Bogus!");
+                Console.WriteLine("Local player state: " + _localPlayerState);
+                Console.WriteLine("MonsterController state: " + MonsterController.State(_localPlayer));
             }
-            Console.WriteLine("local Player state: " + _localPlayerState);
-            Console.WriteLine("MonsterController state: " + MonsterController.State(_localPlayer));
             if (_localMonster.CanYield) _gameState = GameState.AskYield;
 
             if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
@@ -174,7 +173,7 @@ namespace GameEngine.GameScreens
             _diceRow.Hidden = true;
             _gameState = GameState.Waiting;
             //TODO this restarts the current players turn, how do we specify the next monster for current?
-            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
+//            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
 
         private static Dictionary<string, Vector2> GetSpriteLocations()

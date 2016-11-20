@@ -91,7 +91,7 @@ namespace GameEngine.ServerClasses
                             {
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                                Console.WriteLine("Player " + i + " state: " + MonsterPackets[i].State.ToString());
+                                Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
                             }
 
                             MonsterController.AcceptDataPackets(MonsterPackets);
