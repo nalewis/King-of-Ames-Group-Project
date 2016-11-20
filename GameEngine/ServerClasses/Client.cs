@@ -108,23 +108,11 @@ namespace GameEngine.ServerClasses
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
                         break;
-                    case NetIncomingMessageType.Receipt:
-                        break;
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        break;
                     case NetIncomingMessageType.DebugMessage:
                         break;
                     case NetIncomingMessageType.WarningMessage:
                         break;
                     case NetIncomingMessageType.ErrorMessage:
-                        break;
-                    case NetIncomingMessageType.NatIntroductionSuccess:
-                        break;
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

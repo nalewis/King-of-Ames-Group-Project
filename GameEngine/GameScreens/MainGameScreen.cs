@@ -43,7 +43,7 @@ namespace GameEngine.GameScreens
             UpdatePositions(); //Possibly check for changes to rez before updating
             UpdateGraphicsPieces();
             _localPlayerState = MonsterController.State(_localPlayer);
-
+            Console.WriteLine("local Player state: " + _localPlayerState);
             if (_localMonster.CanYield) _gameState = GameState.AskYield;
 
             if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
@@ -168,7 +168,8 @@ namespace GameEngine.GameScreens
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             _diceRow.Hidden = true;
             _gameState = GameState.Waiting;
-            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
+            //TODO this restarts the current players turn, how do we specify the next monster for current?
+            //ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
 
         private static Dictionary<string, Vector2> GetSpriteLocations()
