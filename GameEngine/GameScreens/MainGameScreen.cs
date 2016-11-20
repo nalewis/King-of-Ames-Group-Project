@@ -105,6 +105,12 @@ namespace GameEngine.GameScreens
                 EndTurn();
             }
 
+            if (Engine.InputManager.KeyPressed(Keys.E))
+            {
+                ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
+                _diceRow.Hidden = true;
+            }
+
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
