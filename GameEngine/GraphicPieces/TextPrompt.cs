@@ -3,6 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GameEngine.GraphicPieces
 {
+    /// <summary>
+    /// Class for displaying text blocks onto the screen.
+    /// Used for displaying prompts to the user
+    /// </summary>
     internal class TextPrompt
     {
         private readonly string _text;
