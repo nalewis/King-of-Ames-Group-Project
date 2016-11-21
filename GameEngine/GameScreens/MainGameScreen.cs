@@ -20,8 +20,6 @@ namespace GameEngine.GameScreens
         private static Monster _localMonster;
         private State _localPlayerState;
 
-        private GameState _gameState;
-
         public MainGameScreen()
         {
             ScreenLocations = new ScreenLocations();
@@ -30,44 +28,31 @@ namespace GameEngine.GameScreens
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
-            _gameState = GameState.Waiting;
         }
 
         public override void Update(GameTime gameTime)
         {
-            UpdatePositions(); //Possibly check for changes to rez before updating
+            UpdatePositions();
             UpdateGraphicsPieces();
-            _localPlayerState = MonsterController.State(_localPlayer);
-
-            if (_localMonster.CanYield) _gameState = GameState.AskYield;
-
-            if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
-            else if (_localPlayerState == State.Rolling) _gameState = GameState.Rolling;
-
-            switch (_gameState)
-            {
-                case GameState.StartTurn:
-                    StartingTurn();
-                    break;
-                case GameState.Rolling:
-                    Rolling();
-                    break;
-                case GameState.AskYield:
-                    AskYield();
-                    break;
-                case GameState.Waiting:
-                    break;
-                case GameState.BuyCards:
-                    // BuyScreen();
-                    break;
-                default:
-                    throw new Exception("Haven't implemented this player state yet!");
-            }
 
             if (Engine.InputManager.KeyPressed(Keys.P))
             {
                 ScreenManager.AddScreen(new PauseMenu());
             }
+
+            if (GameStateController.IsCurrent)
+            {
+                _localPlayerState = MonsterController.State(_localPlayer);
+                if (_localPlayerState == State.StartOfTurn) StartingTurn(); // Setup To Roll
+                else if (_localPlayerState == State.Rolling) Rolling(); // Function for Rolling
+                else BuyCardPrompt();
+
+            }
+            else // Local Player is not Current.
+            {
+                if(_localMonster.CanYield) AskYield();
+            }
+
             base.Update(gameTime);
         }
 
@@ -105,7 +90,6 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
-                _gameState = GameState.Rolling;
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
                 _diceRow.Hidden = false;
             }
@@ -152,7 +136,6 @@ namespace GameEngine.GameScreens
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             _diceRow.Clear();
             _diceRow.Hidden = true;
-            _gameState = GameState.Waiting;
             //TODO currently seeing how it works starting next turn automatically at end of dice rolls
             //            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
@@ -160,9 +143,8 @@ namespace GameEngine.GameScreens
         private void AskYield()
         {
             _textPrompts.Clear();
-            var s = new List<string>();
-            s.Add(MonsterController.Name(_localPlayer) + ": Yield? Y/N");
-            _textPrompts.Add(new TextBlock("YieldPrompt", s)); // TODO Key and location can't be different, need to change.
+            var s = new List<string> {MonsterController.Name(_localPlayer) + ": Yield? Y/N"};
+            _textPrompts.Add(new TextBlock("YieldPrompt", s));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
@@ -175,9 +157,23 @@ namespace GameEngine.GameScreens
             }
         }
 
-        private void BuyScreen()
+        private void BuyCardPrompt()
         {
-            //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
+            _textPrompts.Clear();
+            var s = new List<string> {MonsterController.Name(_localPlayer) + ": Buy Cards? Y/N"};
+            _textPrompts.Add(new TextBlock("BuyCardsPrompt", s));
+
+            if (Engine.InputManager.KeyPressed(Keys.Y))
+            {
+                //Create a int reference variable
+                //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy, ref variable));
+                //depending on ref variable send action to buy that card
+                EndTurn();
+            }
+            if (Engine.InputManager.KeyPressed(Keys.N))
+            {
+                EndTurn();
+            }
         }
 
         #endregion

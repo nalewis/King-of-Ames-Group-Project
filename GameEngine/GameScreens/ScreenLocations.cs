@@ -41,7 +41,8 @@ namespace GameEngine.GameScreens
                 {"RollsLeft", new Vector2(_screenWidth - 400, _screeHeight - 200) },
                 {"WinText", new Vector2(_screenWidth - 400, _screeHeight - 100) },
                 {"YieldPrompt", new Vector2(_screenWidth - 400, _screeHeight - 100) },
-                {"RollingText", new Vector2(_screenWidth - 400, _screeHeight - 100) }
+                {"RollingText", new Vector2(_screenWidth - 400, _screeHeight - 100) },
+                {"BuyCardsPrompt", new Vector2(_screenWidth - 400, _screeHeight - 100) }
             };
         }
 
