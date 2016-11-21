@@ -7,7 +7,7 @@ namespace GamePieces.Dice
         private readonly Random Random; //Random Number Generator
         private readonly int Faces; //Number of faces on the die
 
-        public Color Color { get; } //Black or Green
+        public Color Color { get; private set; } //Black or Green
         public Symbol Symbol { get; private set; } //Showing face symbol
         public bool Save { get; set; } //Saving prevents the showing face value from  being changed
 
@@ -32,6 +32,13 @@ namespace GamePieces.Dice
         public void Roll()
         {
             if (!Save) Symbol = (Symbol) Random.Next(0, Faces);
+        }
+
+        internal void AcceptPacket(Symbol symbol, Color color, bool save)
+        {
+            Symbol = symbol;
+            Color = color;
+            Save = save;
         }
     }
 }

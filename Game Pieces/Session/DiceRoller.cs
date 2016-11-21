@@ -72,5 +72,17 @@ namespace GamePieces.Session
             monster.VictoryPoints += VictoryPoints;
             Array.Clear(Tally, 0, Tally.Length);
         }
+
+        public static void AcceptDataPacket(DiceDataPacket dataPacket)
+        {
+            if(Rolling.Count != dataPacket.Size)
+            {
+                throw new Exception("Data packet does not match the current rolling state");
+            }
+            for(var i = 0; i < Rolling.Count; i++)
+            {
+                Rolling[i].AcceptPacket(dataPacket.Symbols[i], dataPacket.Colors[i], dataPacket.States[i]);
+            }
+        }
     }
 }

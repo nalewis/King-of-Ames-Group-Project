@@ -13,7 +13,7 @@ namespace Controllers
         /// <returns>Data Packets</returns>
         public static DiceDataPacket GetDataPacket()
         {
-            var dicePacket = new DiceDataPacket(DiceRoller.Rolling.ToArray());
+            var dicePacket = new DiceDataPacket(DiceRoller.Rolling);
             return dicePacket;
         }
 
@@ -21,9 +21,9 @@ namespace Controllers
         /// Change the monsters in the game state using the given data packets.
         /// </summary>
         /// <param name="dataPackets">Data Packets</param>
-        public static void AcceptDataPackets(DiceDataPacket[] dataPackets)
+        public static void AcceptDataPacket(DiceDataPacket dataPacket)
         {
-            //TODO
+            DiceRoller.AcceptDataPacket(dataPacket);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Controllers
         /// <param name="index">Index</param>
         public static void SaveDie(int index)
         {
-            if(index < 0 || index > DiceRoller.Rolling.Count) return;
+            if (index < 0 || index > DiceRoller.Rolling.Count) return;
             DiceRoller.Rolling[index].Save = true;
         }
 
@@ -51,7 +51,7 @@ namespace Controllers
         /// <param name="index">Index</param>
         public static void UnSaveDie(int index)
         {
-            if(index < 0 || index > DiceRoller.Rolling.Count) return;
+            if (index < 0 || index > DiceRoller.Rolling.Count) return;
             DiceRoller.Rolling[index].Save = false;
         }
 
