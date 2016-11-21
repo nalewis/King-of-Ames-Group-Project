@@ -103,6 +103,7 @@ namespace GameEngine.ServerClasses
                                     var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
                                     DiceController.AcceptDataPacket(dice);
                                 }
+                                Console.Error.WriteLine("Dice! (╯°□°）╯︵ ┻━┻");
                             }
                             catch (Exception)
                             {
