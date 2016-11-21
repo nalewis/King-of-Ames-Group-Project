@@ -146,14 +146,14 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-            SendMonsterPackets(false);
+            SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
         }
 
         /// <summary>
         /// Sends packets to clients 
         /// </summary>
         /// <param name="start"></param>
-        public static void SendMonsterPackets(bool start)
+        public static void SendMonsterPackets(bool start = false, bool sendDice = false)
         {
             var outMsg = _server.CreateMessage();
             if (start) { outMsg.Write((byte)PacketTypes.Start);}
@@ -166,8 +166,12 @@ namespace GameEngine.ServerClasses
                 outMsg.Write(json);
             }
 
-            var dice = DiceController.GetDataPacket();
-            outMsg.Write(JsonConvert.SerializeObject(dice));
+            if (sendDice)
+            {
+                outMsg.Write((byte)PacketTypes.Dice);
+                var dice = DiceController.GetDataPacket();
+                outMsg.Write(JsonConvert.SerializeObject(dice));
+            }
 
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
@@ -188,6 +192,7 @@ namespace GameEngine.ServerClasses
             Start,
             Action,
             Update,
+            Dice,
             Closed
         }
 
