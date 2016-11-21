@@ -25,14 +25,14 @@ namespace GameEngine.Views
             start_game.Enabled = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            _timer = new Timer {Interval = (2*1000)}; //Ticks every 2 seconds
+            _timer = new Timer {Interval = (1*1000)}; //Ticks every 1 seconds
             _timer.Tick += timer_Tick;
             _timer.Start();
 
         }
 
         /// <summary>
-        /// Automatic update of the list of players and their characters every 2 seconds
+        /// Automatic update of the list of players and their characters every 1 seconds
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -126,7 +126,7 @@ namespace GameEngine.Views
                 NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
                 UpdateList();
             }
-            catch
+            catch(Exception)
             {
                 MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

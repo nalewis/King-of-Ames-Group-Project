@@ -21,13 +21,13 @@ namespace GameEngine.Views
             InitializeComponent();
             UpdateList();
 
-            _timer = new Timer {Interval = (2*1000)};//Ticks every 2 seconds
+            _timer = new Timer {Interval = (1*1000)};//Ticks every 1 seconds
             _timer.Tick += timer_Tick;
             _timer.Start();
         }
 
         /// <summary>
-        /// Updates the list of players and their characters every 2 seconds
+        /// Updates the list of players and their characters every 1 seconds
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -125,7 +125,7 @@ namespace GameEngine.Views
                 NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
                 UpdateList();
             }
-            catch(Exception exception)
+            catch(Exception)
             {
                 MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
