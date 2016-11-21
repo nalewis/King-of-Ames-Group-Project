@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace GameEngine.GraphicPieces
 {
@@ -7,16 +8,17 @@ namespace GameEngine.GraphicPieces
     /// Class for displaying text blocks onto the screen.
     /// Used for displaying prompts to the user
     /// </summary>
-    internal class TextPrompt
+    internal class TextBlock
     {
-        private readonly string _text;
+        private const int LineSpacing = 30;
+        private readonly List<string> _text;
         public string Name { get; }
         public Vector2 Position { get; set; }
 
-        public TextPrompt(string text, string name, Vector2 position)
+        public TextBlock(string name, List<string> text, Vector2 position)
         {
-            _text = text;
             Name = name;
+            _text = text;
             Position = position;
         }
 
@@ -24,9 +26,12 @@ namespace GameEngine.GraphicPieces
         {
             SpriteFont font;
             Engine.FontList.TryGetValue("BigFont", out font);
-
-            sb.DrawString(font, _text, Position, Color.White);
+            var pos = Position;
+            for (var i = 0; i < _text.Count; i++)
+            {
+                pos.Y = pos.Y + (i*LineSpacing);
+                sb.DrawString(font, _text[i], pos, Color.White);
+            }
         }
-
     }
 }
