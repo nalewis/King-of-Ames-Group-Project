@@ -47,6 +47,13 @@ namespace GameEngine.GameScreens
                 ScreenManager.AddScreen(new PauseMenu());
             }
 
+            _localPlayerState = MonsterController.State(_localPlayer);
+            if (_localPlayerState == State.StartOfTurn) StartingTurn(); // Setup To Roll
+            else if (_localPlayerState == State.Rolling) Rolling();
+
+            if (GameStateController.IsCurrent) { Console.WriteLine("Is Current: True"); }
+
+            /*
             if (GameStateController.IsCurrent)
             {
                 _localPlayerState = MonsterController.State(_localPlayer);
@@ -57,8 +64,10 @@ namespace GameEngine.GameScreens
             }
             else // Local Player is not Current.
             {
+                //Console.WriteLine("Not Current! (╯°□°）╯︵ ┻━┻");
                 if(_localMonster.CanYield) AskYield();
             }
+            */
 
             base.Update(gameTime);
         }
