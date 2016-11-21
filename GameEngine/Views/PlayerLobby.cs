@@ -19,6 +19,12 @@ namespace GameEngine.Views
         public PlayerLobby()
         {
             InitializeComponent();
+            char_list.Items.Add("Alienoid");
+            char_list.Items.Add("Cyber Bunny");
+            char_list.Items.Add("Giga Zaur");
+            char_list.Items.Add("Kraken");
+            char_list.Items.Add("Mecha Dragon");
+            char_list.Items.Add("The King");
             UpdateList();
 
             _timer = new Timer {Interval = (1*1000)};//Ticks every 1 seconds
@@ -74,6 +80,8 @@ namespace GameEngine.Views
         private void UpdateList()
         {
             playerList.Items.Clear();
+
+
             try
             {
                 var ds = NetworkClasses.GetServer(Client.Conn);
@@ -85,10 +93,17 @@ namespace GameEngine.Views
                 var row = ds.Tables[0].Rows[0];
 
                 var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
+                var character = "";
 
                 //Host
                 var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                character = grabber.Tables[0].Rows[0]["_Character"].ToString();
+                listItem.SubItems.Add(character);
+                if (char_list.Items.Contains(character))
+                {
+                    char_list.Items.Remove(character);
+                }
+
                 //Add the row entry to the listview
                 playerList.Items.Add(listItem);
 
@@ -97,7 +112,12 @@ namespace GameEngine.Views
                     if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
                     grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
                     listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                    listItem.SubItems.Add(grabber.Tables[0].Rows[0]["_Character"].ToString());
+                    character = grabber.Tables[0].Rows[0]["_Character"].ToString();
+                    listItem.SubItems.Add(character);
+                    if (char_list.Items.Contains(character))
+                    {
+                        char_list.Items.Remove(character);
+                    }
                     playerList.Items.Add(listItem);
                 }
             }
