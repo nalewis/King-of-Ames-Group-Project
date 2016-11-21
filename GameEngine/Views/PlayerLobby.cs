@@ -19,12 +19,6 @@ namespace GameEngine.Views
         public PlayerLobby()
         {
             InitializeComponent();
-            char_list.Items.Add("Alienoid");
-            char_list.Items.Add("Cyber Bunny");
-            char_list.Items.Add("Giga Zaur");
-            char_list.Items.Add("Kraken");
-            char_list.Items.Add("Mecha Dragon");
-            char_list.Items.Add("The King");
             UpdateList();
 
             _timer = new Timer {Interval = (1*1000)};//Ticks every 1 seconds
@@ -80,8 +74,13 @@ namespace GameEngine.Views
         private void UpdateList()
         {
             playerList.Items.Clear();
-
-
+            char_list.Items.Clear();
+            char_list.Items.Add("Alienoid");
+            char_list.Items.Add("Cyber Bunny");
+            char_list.Items.Add("Giga Zaur");
+            char_list.Items.Add("Kraken");
+            char_list.Items.Add("Mecha Dragon");
+            char_list.Items.Add("The King");
             try
             {
                 var ds = NetworkClasses.GetServer(Client.Conn);
