@@ -87,7 +87,7 @@ namespace GameEngine.GameScreens
                 "Press R to Roll, P for Menu, E to End Rolling",
                 MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
             };
-            _textPrompts.Add(new TextBlock("TextPrompt1", stringList, _spriteLocationList["TextPrompt1"]));
+            _textPrompts.Add(new TextBlock("RollingText", stringList));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
@@ -130,11 +130,13 @@ namespace GameEngine.GameScreens
 
             if (_textPrompts.Count > 0)
                 _textPrompts.RemoveAt(_textPrompts.Count - 1);
-            var stringList = new List<string>();
-            stringList.Add("Your Turn " + MonsterController.Name(_localPlayer));
-            stringList.Add("Press R to Roll, P for Menu, E to End Rolling");
-            stringList.Add(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!");
-            _textPrompts.Add(new TextBlock("TextPrompt1", stringList, _spriteLocationList["TextPrompt1"]));
+            var sL = new List<string>()
+            {
+                "Your Turn " + MonsterController.Name(_localPlayer),
+                "Press R to Roll, P for Menu, E to End Rolling",
+                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
+            };
+            _textPrompts.Add(new TextBlock("RollingText", sL));
         }
 
         private void AskYield()
@@ -142,7 +144,7 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
             var s = new List<string>();
             s.Add(MonsterController.Name(_localPlayer) + ": Yield? Y/N");
-            _textPrompts.Add(new TextBlock("TextPrompt1", s, _spriteLocationList["TextPrompt1"])); // TODO Key and location can't be different, need to change.
+            _textPrompts.Add(new TextBlock("YieldPrompt", s)); // TODO Key and location can't be different, need to change.
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
@@ -207,7 +209,10 @@ namespace GameEngine.GameScreens
                 {"TextPrompt1", new Vector2(width - 400, height - 100) },
                 {"TextPrompt2", new Vector2(width - 400, height - 75) },
                 {"RollsLeft", new Vector2(width - 400, height - 200) },
-                {"WinText", new Vector2(width - 400, height - 100) }
+                {"WinText", new Vector2(width - 400, height - 100) },
+                {"YieldPrompt", new Vector2(width - 400, height - 100) },
+                {"RollingText", new Vector2(width - 400, height - 100) },
+
             };
         }
 
@@ -224,7 +229,7 @@ namespace GameEngine.GameScreens
         private static List<PlayerBlock> InitializePlayerBlocks()
         {
             var tempTexture = Engine.TextureList["cthulhu"];
-            var monList = getMonsterList();
+            var monList = GetMonsterList();
             var toReturn = new List<PlayerBlock>();
 
             switch (monList.Count)
@@ -295,7 +300,7 @@ namespace GameEngine.GameScreens
             return _spriteLocationList[key];
         }
 
-        private static List<Monster> getMonsterList()
+        private static List<Monster> GetMonsterList()
         {
             Monster mon = MonsterController.GetById(_localPlayer);
             List<Monster> monsterList = new List<Monster>();

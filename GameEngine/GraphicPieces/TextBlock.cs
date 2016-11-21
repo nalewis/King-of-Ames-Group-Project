@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using GameEngine.GameScreens;
 
 namespace GameEngine.GraphicPieces
 {
@@ -15,11 +16,11 @@ namespace GameEngine.GraphicPieces
         public string Name { get; }
         public Vector2 Position { get; set; }
 
-        public TextBlock(string name, List<string> text, Vector2 position)
+        public TextBlock(string name, List<string> text)
         {
             Name = name;
             _text = text;
-            Position = position;
+            Position = MainGameScreen.GetPosition(name);
         }
 
         public void Draw(SpriteBatch sb)
@@ -27,10 +28,10 @@ namespace GameEngine.GraphicPieces
             SpriteFont font;
             Engine.FontList.TryGetValue("BigFont", out font);
             var pos = Position;
-            for (var i = 0; i < _text.Count; i++)
+            foreach (string line in _text)
             {
                 pos.Y = pos.Y + LineSpacing;
-                sb.DrawString(font, _text[i], pos, Color.White);
+                sb.DrawString(font, line, pos, Color.White);
             }
         }
     }
