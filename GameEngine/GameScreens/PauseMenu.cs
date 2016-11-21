@@ -69,8 +69,6 @@ namespace GameEngine.GameScreens
                         break;
                     case 2:
                         Engine.ExitGame = true;
-                        Form form = new MainMenuForm();
-                        form.Show();
                         break;
                 }
             }

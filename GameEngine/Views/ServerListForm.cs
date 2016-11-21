@@ -64,7 +64,7 @@ namespace GameEngine.Views
         /// On click, joins the selected server and takes the user to the player lobby
         /// </summary>
         /// <param name="sender"></param>
-        ///// <param name="e"></param>
+        /// <param name="e"></param>
         private void join_Click(object sender, EventArgs e)
         {
             if (!join.Enabled) return;

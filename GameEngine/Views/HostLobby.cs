@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using Controllers;
 using GameEngine.ServerClasses;
 using Networking;
-using GamePieces.Session;
 
 namespace GameEngine.Views
 {
@@ -71,8 +70,8 @@ namespace GameEngine.Views
             _timer.Stop();
             NetworkClasses.UpdateCharacter(User.PlayerId, null);
             Host.ServerStop();
-            var main = new MainMenuForm();
-            main.Show();
+            Form form = new MainMenuForm();
+            form.Show();
             Dispose();
         }
 

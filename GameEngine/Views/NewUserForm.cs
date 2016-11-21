@@ -20,8 +20,6 @@ namespace GameEngine.Views
 
         /// <summary>
         /// On click, sends username,password, and IP to createUser function
-        /// Also checks validity of username and password
-        ///     i.e. Can't be blank, must contain letters and numbers only, and username can't already exist
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -65,16 +63,25 @@ namespace GameEngine.Views
             return s.All(t => (t > 47 && t < 58) || (t > 64 && t < 91) || (t > 96 && t < 123));
         }
 
+        /// <summary>
+        /// Same as clicking create user button, but happens when user presses enter
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewUserForm_KeyPressed(object sender, KeyPressEventArgs e)
         {
             if(e.KeyChar == 13) { Create();}
         }
 
+        /// <summary>
+        /// Checks validity of username and password and sends info to database
+        ///     i.e. Length must be between 1 and 20, must contain letters and numbers only, and username can't already exist
+        /// </summary>
         private void Create()
         {
             errorLabel.Hide();
             //Check that the inputs are not empty
-            if (newUsername.TextLength > 0 && newPassword.TextLength > 0)
+            if (newUsername.TextLength > 0 && newPassword.TextLength > 0 && newUsername.TextLength < 20 && newPassword.TextLength < 20)
             {
                 if (ContainsVaildChars(newUsername.Text) && ContainsVaildChars(newPassword.Text))
                 {
@@ -100,7 +107,7 @@ namespace GameEngine.Views
             }
             else
             {
-                errorLabel.Text = "Username/Password cannot be blank.";
+                errorLabel.Text = "Username/Password must be between 1 and 20 characters";
                 errorLabel.Show();
             }
         }

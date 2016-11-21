@@ -1,13 +1,13 @@
-﻿using Controllers;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using Controllers;
 using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
 using Networking.Actions;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace GameEngine.ServerClasses
 {
@@ -15,7 +15,6 @@ namespace GameEngine.ServerClasses
     {
         public static List<int> Players = new List<int>();
         private static NetServer _server;
-        public static bool _hosting = false;
 
         /// <summary>
         /// Initializes the server, starts the reiceve loop, creates a NetClient and connects it to the server
@@ -30,7 +29,6 @@ namespace GameEngine.ServerClasses
 
             //add server to the SQL database with the current details
             NetworkClasses.CreateServer(User.PlayerId, User.LocalIp);
-            _hosting = true;
 
             // Starts thread to handle input from clients
             var recieve = new Thread(RecieveLoop);
@@ -53,7 +51,6 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
-            _hosting = false;
         }
 
         /// <summary>
@@ -142,6 +139,10 @@ namespace GameEngine.ServerClasses
             SendMonsterPackets(true);
         }
 
+        /// <summary>
+        /// Takes in action from client, updates the rest of the clients
+        /// </summary>
+        /// <param name="packet"></param>
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
@@ -149,6 +150,10 @@ namespace GameEngine.ServerClasses
             SendMonsterPackets();
         }
 
+        /// <summary>
+        /// Sends packets to clients 
+        /// </summary>
+        /// <param name="start"></param>
         public static void SendMonsterPackets(bool start = false, bool sendDice = false)
         {
             var outMsg = _server.CreateMessage();

@@ -1,7 +1,6 @@
 ﻿using Controllers;
 using GamePieces.Dice;
 using GamePieces.Monsters;
-using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
 using Networking.Actions;
@@ -19,7 +18,7 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
-        private static Thread _gameLoop;
+        private static Thread _gameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
 
@@ -79,7 +78,6 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
                             LobbyController.StartGame(MonsterPackets);
-                            _gameLoop = new Thread(Program.Run);
                             //Makes this thread a STAThread, not sure if necessary...
                             _gameLoop.SetApartmentState(ApartmentState.STA);
                             _gameLoop.Start();
@@ -135,12 +133,16 @@ namespace GameEngine.ServerClasses
             }
         }
 
+        /// <summary>
+        /// Sends local action to server to update the game status
+        /// </summary>
+        /// <param name="packet"></param>
         public static void SendActionPacket(ActionPacket packet)
         {
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Action);
             var json = JsonConvert.SerializeObject(packet);
-            packet = JsonConvert.DeserializeObject<ActionPacket>(json);
+            JsonConvert.DeserializeObject<ActionPacket>(json);
             outMsg.Write(json);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
@@ -159,6 +161,7 @@ namespace GameEngine.ServerClasses
             //ends the receive loop
             _shouldStop = true;
             Conn = "";
+            if (_gameLoop.IsAlive) { _gameLoop.Abort(); }
         }
 
         private enum PacketTypes

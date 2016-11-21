@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 
 namespace Networking
 {
@@ -361,7 +362,7 @@ namespace Networking
             {
                 for (var i = 2; i < 6; i++)
                 {
-                    if (string.CompareOrdinal(ds.Tables[0].Rows[0]["Player_" + i].ToString(), playerid.ToString()) == 0)
+                    if (int.Parse(ds.Tables[0].Rows[0]["Player_" + i].ToString()) == playerid)
                     {
                         remove = i;
                         break;
@@ -397,8 +398,7 @@ namespace Networking
         /// <returns>false if any player hasn't selected a character, true otherwise</returns>
         public static bool CheckReady(List<int> players)
         {
-            var playersList = players.Select(GetPlayer).ToList();
-            return playersList.All(player => !string.IsNullOrEmpty(player.Tables[0].Rows[0]["_Character"].ToString()));
+            return players.All(player => !string.IsNullOrEmpty(GetPlayer(player).Tables[0].Rows[0]["_Character"].ToString()));
         }
 
         /// <summary>
