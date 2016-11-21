@@ -51,8 +51,8 @@ namespace GameEngine.GameScreens
             {
                 _localPlayerState = MonsterController.State(_localPlayer);
                 if (_localPlayerState == State.StartOfTurn) StartingTurn(); // Setup To Roll
-                else if (_localPlayerState == State.Rolling) Rolling(); // Function for Rolling
-                else BuyCardPrompt();
+                else Rolling(); // Function for Rolling
+                //else BuyCardPrompt();
 
             }
             else // Local Player is not Current.
