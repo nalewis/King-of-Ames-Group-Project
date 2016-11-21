@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using GamePieces.Dice;
 using GamePieces.Monsters;
 using GamePieces.Session;
 using Lidgren.Network;
@@ -93,8 +94,21 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                                 Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
                             }
-
                             MonsterController.AcceptDataPackets(MonsterPackets);
+
+                            try
+                            {
+                                if (inc.ReadByte() == (byte)PacketTypes.Dice) {
+                                    var diceJson = inc.ReadString();
+                                    var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
+                                    DiceController.AcceptDataPacket(dice);
+                                }
+                            }
+                            catch (Exception)
+                            {
+                                //LOG
+                                Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
+                            }
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {
@@ -153,6 +167,7 @@ namespace GameEngine.ServerClasses
             Start,
             Action,
             Update,
+            Dice,
             Closed
         }
     }

@@ -83,7 +83,7 @@ namespace GameEngine.ServerClasses
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }//TODO What happens if one player leaves?
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");
@@ -145,10 +145,10 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-            SendMonsterPackets(false);
+            SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
         }
 
-        public static void SendMonsterPackets(bool start)
+        public static void SendMonsterPackets(bool start = false, bool sendDice = false)
         {
             var outMsg = _server.CreateMessage();
             if (start) { outMsg.Write((byte)PacketTypes.Start);}
@@ -160,6 +160,14 @@ namespace GameEngine.ServerClasses
                 var json = JsonConvert.SerializeObject(packets[i]);
                 outMsg.Write(json);
             }
+
+            if (sendDice)
+            {
+                outMsg.Write((byte)PacketTypes.Dice);
+                var dice = DiceController.GetDataPacket();
+                outMsg.Write(JsonConvert.SerializeObject(dice));
+            }
+
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
@@ -179,6 +187,7 @@ namespace GameEngine.ServerClasses
             Start,
             Action,
             Update,
+            Dice,
             Closed
         }
 

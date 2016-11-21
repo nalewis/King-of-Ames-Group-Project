@@ -17,7 +17,7 @@ namespace GamePieces.Session
 
         private static readonly int[] Tally = new int[Faces]; //The score of the currently rolled dice
 
-        public static List<Die> Rolling = new List<Die>(); //All of thet dice being rolled
+        public static List<Die> Rolling = new List<Die>(); //All of the dice being rolled
 
         public static int Attack => Tally[(int) Symbol.Attack]; //Attack points total
         public static int Energy => Tally[(int) Symbol.Energy]; //Energy points total
@@ -71,6 +71,18 @@ namespace GamePieces.Session
             monster.Health += Heal;
             monster.VictoryPoints += VictoryPoints;
             Array.Clear(Tally, 0, Tally.Length);
+        }
+
+        public static void AcceptDataPacket(DiceDataPacket dataPacket)
+        {
+            if(Rolling.Count != dataPacket.Size)
+            {
+                throw new Exception("Data packet does not match the current rolling state");
+            }
+            for(var i = 0; i < Rolling.Count; i++)
+            {
+                Rolling[i].AcceptPacket(dataPacket.Symbols[i], dataPacket.Colors[i], dataPacket.States[i]);
+            }
         }
     }
 }

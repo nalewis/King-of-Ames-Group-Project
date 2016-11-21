@@ -98,11 +98,23 @@
     <Compile Include="Views\NewUserForm.Designer.cs">
       <DependentUpon>NewUserForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Views\Options.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Options.Designer.cs">
+      <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\PlayerLobby.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\PlayerLobby.Designer.cs">
       <DependentUpon>PlayerLobby.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Profile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Profile.Designer.cs">
+      <DependentUpon>Profile.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\ServerListForm.cs">
       <SubType>Form</SubType>
@@ -143,8 +155,14 @@
     <EmbeddedResource Include="Views\NewUserForm.resx">
       <DependentUpon>NewUserForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Options.resx">
+      <DependentUpon>Options.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\PlayerLobby.resx">
       <DependentUpon>PlayerLobby.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Profile.resx">
+      <DependentUpon>Profile.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ServerListForm.resx">
       <DependentUpon>ServerListForm.cs</DependentUpon>
