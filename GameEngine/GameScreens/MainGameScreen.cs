@@ -32,6 +32,13 @@ namespace GameEngine.GameScreens
 
         public override void Update(GameTime gameTime)
         {
+            if (GameStateController.GameOver)
+            {
+                _textPrompts.Clear();
+                _textPrompts.Add(new TextBlock("GameOver", new List<string>() {"Game Over"}));
+                return;
+            }
+
             UpdatePositions();
             UpdateGraphicsPieces();
 
