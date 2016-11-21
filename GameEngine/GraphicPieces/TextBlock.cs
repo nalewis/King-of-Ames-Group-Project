@@ -29,7 +29,7 @@ namespace GameEngine.GraphicPieces
             var pos = Position;
             for (var i = 0; i < _text.Count; i++)
             {
-                pos.Y = pos.Y + (i*LineSpacing);
+                pos.Y = pos.Y + LineSpacing;
                 sb.DrawString(font, _text[i], pos, Color.White);
             }
         }

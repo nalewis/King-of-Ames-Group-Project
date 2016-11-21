@@ -81,10 +81,12 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
             _diceRow.AddDice(DiceController.GetDice());
 
-            var stringList = new List<string>();
-            stringList.Add("Your Turn " + MonsterController.Name(_localPlayer));
-            stringList.Add("Press R to Roll, P for Menu, E to End Rolling");
-            stringList.Add(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!");
+            var stringList = new List<string>
+            {
+                "Your Turn " + MonsterController.Name(_localPlayer),
+                "Press R to Roll, P for Menu, E to End Rolling",
+                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
+            };
             _textPrompts.Add(new TextBlock("TextPrompt1", stringList, _spriteLocationList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
