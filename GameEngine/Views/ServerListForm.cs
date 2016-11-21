@@ -109,11 +109,21 @@ namespace GameEngine.Views
         /// <param name="e"></param>
         private void serverList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //selected items[0] is the row, subitems[1] is the ip
-            var data = serverList.SelectedItems[0].SubItems[1].Text;
-            Client.Conn = data;
-            join.Enabled = true;
-            join.BackColor = Color.LightGray;
+            try
+            {
+                //selected items[0] is the row, subitems[1] is the ip
+                var data = serverList.SelectedItems[0].SubItems[1].Text;
+                Client.Conn = data;
+                join.Enabled = true;
+                join.BackColor = Color.LightGray;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                var form = new MainMenuForm();
+                form.Show();
+                this.Dispose();
+            }
         }
     }
 }
