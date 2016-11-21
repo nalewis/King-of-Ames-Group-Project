@@ -20,6 +20,8 @@ namespace GameEngine.GameScreens
         private static Monster _localMonster;
         private State _localPlayerState;
 
+        private GameState _gameState;
+
         public MainGameScreen()
         {
             ScreenLocations = new ScreenLocations();
@@ -35,23 +37,38 @@ namespace GameEngine.GameScreens
             if (GameStateController.GameOver)
             {
                 _textPrompts.Clear();
-                _textPrompts.Add(new TextBlock("GameOver", new List<string>() {"Game Over"}));
+                _textPrompts.Add(new TextBlock("GameOver", new List<string>() { "Game Over" }));
                 return;
             }
-
             UpdatePositions();
             UpdateGraphicsPieces();
+
+            _localPlayerState = MonsterController.State(_localPlayer);
+            if (_localPlayerState == State.StartOfTurn) { _gameState = GameState.StartTurn; }
+            else if(_localPlayerState == State.Rolling) { _gameState = GameState.Rolling; }
+            switch (_gameState)
+            {
+                case GameState.StartTurn:
+                    StartingTurn();
+                    break;
+                case GameState.Rolling:
+                    Rolling();
+                    break;
+                default:
+                    Console.Write("switch hit default.");
+                    break;
+            }
 
             if (Engine.InputManager.KeyPressed(Keys.P))
             {
                 ScreenManager.AddScreen(new PauseMenu());
             }
 
-            _localPlayerState = MonsterController.State(_localPlayer);
-            if (_localPlayerState == State.StartOfTurn) StartingTurn(); // Setup To Roll
-            else if (_localPlayerState == State.Rolling) Rolling();
+           // _localPlayerState = MonsterController.State(_localPlayer);
+          //  if (_localPlayerState == State.StartOfTurn) StartingTurn(); // Setup To Roll
+          //  else if (_localPlayerState == State.Rolling) Rolling();
 
-            if (GameStateController.IsCurrent) { Console.WriteLine("Is Current: True"); }
+            //if (GameStateController.IsCurrent) { Console.WriteLine("Is Current: True"); }
 
             /*
             if (GameStateController.IsCurrent)
