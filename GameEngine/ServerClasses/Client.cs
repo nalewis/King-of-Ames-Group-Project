@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using GamePieces.Dice;
 using GamePieces.Monsters;
 using GamePieces.Session;
 using Lidgren.Network;
@@ -93,8 +94,11 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                                 Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
                             }
-
                             MonsterController.AcceptDataPackets(MonsterPackets);
+
+                            var diceJson = inc.ReadString();
+                            var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
+                            //TODO accept dice data packet?
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {

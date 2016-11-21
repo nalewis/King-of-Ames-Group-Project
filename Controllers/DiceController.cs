@@ -8,6 +8,25 @@ namespace Controllers
     public static class DiceController
     {
         /// <summary>
+        /// Get the dice packet for the current game state.
+        /// </summary>
+        /// <returns>Data Packets</returns>
+        public static DiceDataPacket GetDataPacket()
+        {
+            var dicePacket = new DiceDataPacket(DiceRoller.Rolling.ToArray());
+            return dicePacket;
+        }
+
+        /// <summary>
+        /// Change the monsters in the game state using the given data packets.
+        /// </summary>
+        /// <param name="dataPackets">Data Packets</param>
+        public static void AcceptDataPackets(DiceDataPacket[] dataPackets)
+        {
+            //TODO
+        }
+
+        /// <summary>
         /// Gets all of the dice being rolled
         /// </summary>
         /// <returns>Dice</returns>
