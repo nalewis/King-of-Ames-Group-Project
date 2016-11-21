@@ -45,7 +45,7 @@ namespace GameEngine.GameScreens
 
             _localPlayerState = MonsterController.State(_localPlayer);
             if (_localPlayerState == State.StartOfTurn) { _gameState = GameState.StartTurn; }
-            else if(_localPlayerState == State.Rolling) { _gameState = GameState.Rolling; }
+
             switch (_gameState)
             {
                 case GameState.StartTurn:
@@ -53,6 +53,8 @@ namespace GameEngine.GameScreens
                     break;
                 case GameState.Rolling:
                     Rolling();
+                    break;
+                case GameState.Waiting:
                     break;
                 default:
                     Console.Write("switch hit default.");
@@ -122,14 +124,17 @@ namespace GameEngine.GameScreens
             _textPrompts.Add(new TextBlock("RollingText", stringList));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
-            {
+            {   
+                _gameState = GameState.Rolling;
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
+                _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
             }
         }
 
         private void Rolling()
         {
+            _diceRow.Hidden = false;
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
@@ -139,7 +144,6 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
-                _diceRow.Hidden = false;
             }
 
             if (Engine.InputManager.LeftClick())
@@ -167,6 +171,7 @@ namespace GameEngine.GameScreens
         private void EndTurn()
         {
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
+            _gameState = GameState.Waiting;
             _diceRow.Clear();
             _diceRow.Hidden = true;
             _textPrompts.Clear();
