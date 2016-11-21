@@ -1,5 +1,6 @@
 ﻿using GamePieces.Cards;
 using GamePieces.Session;
+using Networking;
 using Networking.Actions;
 
 namespace Controllers
@@ -7,6 +8,9 @@ namespace Controllers
 
     public static class GameStateController
     {
+        public static bool IsCurrent => Game.Current.Equals(MonsterController.GetById(User.PlayerId));
+        public static bool GameOver => Game.Winner != null;
+
         /// <summary>
         /// Changes the game state with the given action.
         /// </summary>

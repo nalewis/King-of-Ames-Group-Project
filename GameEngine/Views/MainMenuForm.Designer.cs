@@ -62,6 +62,7 @@
             this.OptionsButton.TabIndex = 2;
             this.OptionsButton.Text = "Options";
             this.OptionsButton.UseVisualStyleBackColor = true;
+            this.OptionsButton.Click += new System.EventHandler(this.OptionsButton_Click);
             // 
             // ProfileButton
             // 
@@ -71,6 +72,7 @@
             this.ProfileButton.TabIndex = 3;
             this.ProfileButton.Text = "View Profile";
             this.ProfileButton.UseVisualStyleBackColor = true;
+            this.ProfileButton.Click += new System.EventHandler(this.ProfileButton_Click);
             // 
             // MainMenuForm
             // 

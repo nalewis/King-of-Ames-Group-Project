@@ -17,7 +17,7 @@ namespace GamePieces.Session
 
         private static readonly int[] Tally = new int[Faces]; //The score of the currently rolled dice
 
-        public static List<Die> Rolling = new List<Die>(); //All of thet dice being rolled
+        public static List<Die> Rolling = new List<Die>(); //All of the dice being rolled
 
         public static int Attack => Tally[(int) Symbol.Attack]; //Attack points total
         public static int Energy => Tally[(int) Symbol.Energy]; //Energy points total

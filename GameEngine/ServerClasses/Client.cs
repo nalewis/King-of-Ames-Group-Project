@@ -1,4 +1,5 @@
 ﻿using Controllers;
+using GamePieces.Dice;
 using GamePieces.Monsters;
 using Lidgren.Network;
 using Networking;
@@ -6,8 +7,6 @@ using Networking.Actions;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
-using System.Windows.Forms;
-using GameEngine.Views;
 
 namespace GameEngine.ServerClasses
 {
@@ -19,7 +18,7 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
-        private static readonly Thread GameLoop = new Thread(Program.Run);
+        private static Thread _gameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
 
@@ -79,22 +78,25 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
                             LobbyController.StartGame(MonsterPackets);
-
-                            GameLoop.Start();
-
+                            //Makes this thread a STAThread, not sure if necessary...
+                            _gameLoop.SetApartmentState(ApartmentState.STA);
+                            _gameLoop.Start();
                         }
                         else if (type == (byte)PacketTypes.Update)
                         {
-                            Console.WriteLine("Update!");
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
                             for (var i = 0; i < end; i++)
                             {
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
                             }
-
                             MonsterController.AcceptDataPackets(MonsterPackets);
+
+                            var diceJson = inc.ReadString();
+                            var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
+                            //TODO accept dice data packet?
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {
@@ -108,23 +110,11 @@ namespace GameEngine.ServerClasses
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
                         break;
-                    case NetIncomingMessageType.Receipt:
-                        break;
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        break;
                     case NetIncomingMessageType.DebugMessage:
                         break;
                     case NetIncomingMessageType.WarningMessage:
                         break;
                     case NetIncomingMessageType.ErrorMessage:
-                        break;
-                    case NetIncomingMessageType.NatIntroductionSuccess:
-                        break;
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -160,9 +150,7 @@ namespace GameEngine.ServerClasses
             //ends the receive loop
             _shouldStop = true;
             Conn = "";
-            if (GameLoop.IsAlive) { GameLoop.Abort(); }
-            Form form = new MainMenuForm();
-            form.Show();
+            if (_gameLoop.IsAlive) { _gameLoop.Abort(); }
         }
 
         private enum PacketTypes

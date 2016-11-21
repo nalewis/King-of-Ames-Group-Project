@@ -56,5 +56,19 @@ namespace GameEngine.Views
             serverList.Show();
             Dispose();
         }
+
+        private void OptionsButton_Click(object sender, EventArgs e)
+        {
+            Form option = new Options();
+            option.Show();
+            Dispose();
+        }
+
+        private void ProfileButton_Click(object sender, EventArgs e)
+        {
+            Form profile = new Profile();
+            profile.Show();
+            Dispose();
+        }
     }
 }

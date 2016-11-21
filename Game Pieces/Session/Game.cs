@@ -102,6 +102,10 @@ namespace GamePieces.Session
         {
             Current.EndTurn();
             Current = Current.Next;
+            if(Winner == null)
+            {
+                StartTurn();
+            }
         }
     }
 }

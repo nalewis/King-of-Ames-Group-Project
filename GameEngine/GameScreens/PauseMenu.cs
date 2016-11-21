@@ -8,16 +8,24 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace GameEngine.GameScreens
 {
+    /// <summary>
+    /// The GameScreen that displays when the user hits Escape/"Pause".
+    /// </summary>
     class PauseMenu : GameScreen
     {
-        private const int OptionPadding = 60;
+        private const int OptionPadding = 60;   // The amount of space to leave between options.
         private string[] _menuOptions;
         private Vector2 _position;
         private SpriteFont _font;
         private int _stateIndex;
 
-        public new bool IsPopup = true;
+        public new bool IsPopup = true;     // Changes the default setting so this screen displays over others.
 
+        /// <summary>
+        /// Allows the game to run logic such as updating the game objects,
+        /// gathering input, and playing sound.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
             if (Engine.InputManager.KeyPressed(Keys.Down))
@@ -70,6 +78,10 @@ namespace GameEngine.GameScreens
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Called whenever the game should draw.
+        /// </summary>
+        /// <param name="gameTime">Snapshot of timing values.</param>
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
@@ -80,10 +92,13 @@ namespace GameEngine.GameScreens
                 Engine.SpriteBatch.DrawString(_font, text, pos, _stateIndex == i ? Color.Yellow : Color.Black);
             }
             Engine.SpriteBatch.End();
-
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// Loads the necessary assets for this screen. 
+        /// Runs once when calling the screen.
+        /// </summary>
         public override void LoadAssets()
         {
             _menuOptions = new[] {"Resume", "Options", "Exit"};
@@ -92,6 +107,7 @@ namespace GameEngine.GameScreens
             _stateIndex = 0;
         }
 
+        // TODO: Extract to remove duplicate function (also found in optionsMenu
         private static float GetCenter(string text, SpriteFont sF)
         {
             return ((float)Engine.ScreenWidth/2) - (sF.MeasureString(text).X/2);

@@ -2,6 +2,9 @@
 
 namespace GameEngine.GameScreens
 {
+    /// <summary>
+    /// Parent class that contains the default values/functions all GameScreens inherit.
+    /// </summary>
     public class GameScreen
     {
         public bool IsActive = true;

@@ -71,11 +71,19 @@ namespace GameEngine.Views
             var goodConnection = Client.Connect();
             if(goodConnection)
             {
-                NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
-                NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
-                var lobby = new PlayerLobby();
-                lobby.Show();
-                Dispose();
+                try
+                {
+                    NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
+                    NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
+                    var lobby = new PlayerLobby();
+                    lobby.Show();
+                    Dispose();
+                }
+                catch(Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+
             }
             else { Console.WriteLine("Couldn't Connect"); }
         }
@@ -109,11 +117,21 @@ namespace GameEngine.Views
         /// <param name="e"></param>
         private void serverList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //selected items[0] is the row, subitems[1] is the ip
-            var data = serverList.SelectedItems[0].SubItems[1].Text;
-            Client.Conn = data;
-            join.Enabled = true;
-            join.BackColor = Color.LightGray;
+            try
+            {
+                //selected items[0] is the row, subitems[1] is the ip
+                var data = serverList.SelectedItems[0].SubItems[1].Text;
+                Client.Conn = data;
+                join.Enabled = true;
+                join.BackColor = Color.LightGray;
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                var form = new MainMenuForm();
+                form.Show();
+                this.Dispose();
+            }
         }
     }
 }

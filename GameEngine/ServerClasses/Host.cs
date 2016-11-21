@@ -67,14 +67,10 @@ namespace GameEngine.ServerClasses
                     case NetIncomingMessageType.Error:
                         break;
                     case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Client " + inc.SenderConnection + " status changed: " + inc.SenderConnection.Status);
-                        Console.WriteLine("dudes left: " + _server.Connections);
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
-                            Console.WriteLine("Status disconnected");
-                            Players.Remove(inc.ReadInt32());
+                            Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " + inc.SenderConnection.Status);
                         }
-
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
                         //Initially approves connecting clients based on their login byte
@@ -84,7 +80,7 @@ namespace GameEngine.ServerClasses
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }//TODO What happens if one player leaves?
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");
@@ -140,8 +136,6 @@ namespace GameEngine.ServerClasses
         public static void StartGame()
         {
             Game.StartTurn();
-            Console.WriteLine("start : " + Game.Current.Equals(Game.Monsters[0]));
-            //MonsterController.AcceptDataPackets(MonsterController.GetDataPackets());
             SendMonsterPackets(true);
         }
 
@@ -152,7 +146,6 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-
             SendMonsterPackets(false);
         }
 
@@ -172,8 +165,11 @@ namespace GameEngine.ServerClasses
                 var json = JsonConvert.SerializeObject(packets[i]);
                 outMsg.Write(json);
             }
+
+            var dice = DiceController.GetDataPacket();
+            outMsg.Write(JsonConvert.SerializeObject(dice));
+
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-            Console.WriteLine("host send: " + Game.Current.Equals(Game.Monsters[0]));
         }
 
         /// <summary>

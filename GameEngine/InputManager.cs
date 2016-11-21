@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine
 {
+    /// <summary>
+    /// A GameComponent class for all input related functions in the game.
+    /// </summary>
     public class InputManager : GameComponent
     {
         private KeyboardState _freshKeyboardState, _oldKeyboardState;
