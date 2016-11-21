@@ -34,7 +34,6 @@
             this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.leaveGame = new System.Windows.Forms.Button();
             this.char_label = new System.Windows.Forms.Label();
-            this.select_char = new System.Windows.Forms.Button();
             this.char_list = new System.Windows.Forms.ComboBox();
             this.start_game = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -86,17 +85,6 @@
             this.char_label.TabIndex = 11;
             this.char_label.Text = "Character:";
             // 
-            // select_char
-            // 
-            this.select_char.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.select_char.Location = new System.Drawing.Point(182, 212);
-            this.select_char.Name = "select_char";
-            this.select_char.Size = new System.Drawing.Size(90, 23);
-            this.select_char.TabIndex = 10;
-            this.select_char.Text = "Select";
-            this.select_char.UseVisualStyleBackColor = true;
-            this.select_char.Click += new System.EventHandler(this.select_char_Click);
-            // 
             // char_list
             // 
             this.char_list.FormattingEnabled = true;
@@ -111,6 +99,7 @@
             this.char_list.Name = "char_list";
             this.char_list.Size = new System.Drawing.Size(102, 21);
             this.char_list.TabIndex = 9;
+            this.char_list.SelectedIndexChanged += new System.EventHandler(this.char_list_SelectedIndexChanged);
             // 
             // start_game
             // 
@@ -131,7 +120,6 @@
             this.ClientSize = new System.Drawing.Size(284, 271);
             this.Controls.Add(this.start_game);
             this.Controls.Add(this.char_label);
-            this.Controls.Add(this.select_char);
             this.Controls.Add(this.char_list);
             this.Controls.Add(this.leaveGame);
             this.Controls.Add(this.playerList);
@@ -151,7 +139,6 @@
         private System.Windows.Forms.ColumnHeader playerName;
         private System.Windows.Forms.ColumnHeader character;
         private System.Windows.Forms.Label char_label;
-        private System.Windows.Forms.Button select_char;
         private System.Windows.Forms.ComboBox char_list;
         private System.Windows.Forms.Button start_game;
         private System.Windows.Forms.ColumnHeader ping;

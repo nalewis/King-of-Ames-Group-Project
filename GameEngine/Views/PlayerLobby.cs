@@ -113,19 +113,14 @@ namespace GameEngine.Views
             }
         }
 
-        /// <summary>
-        /// Sends the selected character to the database update function
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void select_char_Click(object sender, EventArgs e)
+        private void char_list_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
                 NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
                 UpdateList();
             }
-            catch(Exception)
+            catch (Exception)
             {
                 MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

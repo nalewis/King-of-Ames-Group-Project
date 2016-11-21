@@ -114,24 +114,6 @@ namespace GameEngine.Views
         }
 
         /// <summary>
-        /// Sends the selected character to the database update function
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void select_char_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
-                UpdateList();
-            }
-            catch(Exception)
-            {
-                MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
         /// Once all players are ready, adds players to the Game controller and starts the game
         /// </summary>
         /// <param name="sender"></param>
@@ -157,6 +139,19 @@ namespace GameEngine.Views
             Host.StartGame();
             _timer.Stop();
             Dispose();
+        }
+
+        private void char_list_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
+                UpdateList();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
