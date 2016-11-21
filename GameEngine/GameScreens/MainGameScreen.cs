@@ -85,7 +85,7 @@ namespace GameEngine.GameScreens
             stringList.Add("Your Turn " + MonsterController.Name(_localPlayer));
             stringList.Add("Press R to Roll, P for Menu, E to End Rolling");
             stringList.Add(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!");
-            _textPrompts.Add(new TextBlock("RollingText", stringList, _spriteLocationList["TextPrompt1"]));
+            _textPrompts.Add(new TextBlock("TextPrompt1", stringList, _spriteLocationList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
@@ -132,7 +132,7 @@ namespace GameEngine.GameScreens
             stringList.Add("Your Turn " + MonsterController.Name(_localPlayer));
             stringList.Add("Press R to Roll, P for Menu, E to End Rolling");
             stringList.Add(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!");
-            _textPrompts.Add(new TextBlock("RollingText", stringList, _spriteLocationList["TextPrompt1"]));
+            _textPrompts.Add(new TextBlock("TextPrompt1", stringList, _spriteLocationList["TextPrompt1"]));
         }
 
         private void AskYield()
@@ -140,7 +140,7 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
             var s = new List<string>();
             s.Add(MonsterController.Name(_localPlayer) + ": Yield? Y/N");
-            _textPrompts.Add(new TextBlock("YieldPrompt", s, _spriteLocationList["TextPrompt1"]));
+            _textPrompts.Add(new TextBlock("TextPrompt1", s, _spriteLocationList["TextPrompt1"])); // TODO Key and location can't be different, need to change.
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
