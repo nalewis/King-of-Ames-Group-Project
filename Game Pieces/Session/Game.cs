@@ -59,6 +59,7 @@ namespace GamePieces.Session
         public static void StartTurn()
         {
             Current.StartTurn();
+            Current.StartTurn();
         }
 
         public static void Roll()
