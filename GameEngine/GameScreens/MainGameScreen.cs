@@ -93,7 +93,6 @@ namespace GameEngine.GameScreens
 
         private void Rolling()
         {
-            Console.WriteLine("Rolls Remaining: " + MonsterController.RollsRemaining(_localPlayer));
             if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
                 _diceRow.Clear();

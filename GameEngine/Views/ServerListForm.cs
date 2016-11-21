@@ -71,11 +71,19 @@ namespace GameEngine.Views
             var goodConnection = Client.Connect();
             if(goodConnection)
             {
-                NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
-                NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
-                var lobby = new PlayerLobby();
-                lobby.Show();
-                Dispose();
+                try
+                {
+                    NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
+                    NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
+                    var lobby = new PlayerLobby();
+                    lobby.Show();
+                    Dispose();
+                }
+                catch(Exception exception)
+                {
+                    Console.WriteLine(exception);
+                }
+
             }
             else { Console.WriteLine("Couldn't Connect"); }
         }

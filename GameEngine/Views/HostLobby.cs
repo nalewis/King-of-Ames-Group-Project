@@ -121,12 +121,12 @@ namespace GameEngine.Views
         /// <param name="e"></param>
         private void select_char_Click(object sender, EventArgs e)
         {
-            if (char_list.SelectedItem.ToString() != null)
+            try
             {
                 NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
                 UpdateList();
             }
-            else
+            catch
             {
                 MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
