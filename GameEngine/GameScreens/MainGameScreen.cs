@@ -97,7 +97,6 @@ namespace GameEngine.GameScreens
 
         private void Rolling()
         {
-            Console.WriteLine("Rolls Remaining: " + MonsterController.RollsRemaining(_localPlayer));
             if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
