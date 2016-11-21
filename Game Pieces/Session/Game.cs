@@ -69,7 +69,6 @@ namespace GamePieces.Session
         public static void EndRolling()
         {
             Current.EndRolling();
-            Console.Write("Current state should be tally: " + Current.State);
             Current.Attack();
         }
 

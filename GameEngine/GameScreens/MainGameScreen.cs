@@ -42,11 +42,7 @@ namespace GameEngine.GameScreens
             UpdatePositions(); //Possibly check for changes to rez before updating
             UpdateGraphicsPieces();
             _localPlayerState = MonsterController.State(_localPlayer);
-            if (_localPlayerState != State.Attacked)
-            {
-                Console.WriteLine("Local player state: " + _localPlayerState);
-                Console.WriteLine("MonsterController state: " + MonsterController.State(_localPlayer));
-            }
+
             if (_localMonster.CanYield) _gameState = GameState.AskYield;
 
             if (_localPlayerState == State.StartOfTurn) _gameState = GameState.StartTurn;
@@ -101,7 +97,7 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
                 _diceRow.Clear();
-                //ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
+                ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 EndTurn();
             }
 
