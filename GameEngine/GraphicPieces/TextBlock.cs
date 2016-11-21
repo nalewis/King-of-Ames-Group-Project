@@ -20,7 +20,7 @@ namespace GameEngine.GraphicPieces
         {
             Name = name;
             _text = text;
-            Position = MainGameScreen.GetPosition(name);
+            Position = MainGameScreen.ScreenLocations.GetPosition(name);
         }
 
         public void Draw(SpriteBatch sb)
