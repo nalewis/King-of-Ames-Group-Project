@@ -152,6 +152,7 @@ namespace GameEngine.GameScreens
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             _diceRow.Clear();
             _diceRow.Hidden = true;
+            _textPrompts.Clear();
             //TODO currently seeing how it works starting next turn automatically at end of dice rolls
             //            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
