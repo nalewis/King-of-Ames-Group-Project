@@ -4,6 +4,7 @@ using Networking;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 
@@ -111,16 +112,15 @@ namespace GameEngine.GameScreens
 
         private void StartingTurn()
         {
+            _diceRow.Hidden = true;
             _diceRow.Clear();
             _textPrompts.Clear();
 
-            var stringList = new List<string>
-            {
+            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu, E to End Rolling",
                 MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
-            };
-            _textPrompts.Add(new TextBlock("RollingText", stringList));
+                }));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {   
@@ -133,7 +133,6 @@ namespace GameEngine.GameScreens
 
         private void Rolling()
         {
-            _diceRow.Hidden = false;
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
@@ -156,24 +155,25 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            if (_textPrompts.Count > 0)
-                _textPrompts.RemoveAt(_textPrompts.Count - 1);
-            var sL = new List<string>()
+            foreach (var textBlock in _textPrompts)
             {
+                if (textBlock.Name.Equals("RollingText")) _textPrompts.Remove(textBlock);
+            }
+
+            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu, E to End Rolling",
                 MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
-            };
-            _textPrompts.Add(new TextBlock("RollingText", sL));
+                }));
         }
 
         private void EndTurn()
         {
-            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
+            _textPrompts.Clear();
             _gameState = GameState.Waiting;
+            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             _diceRow.Clear();
             _diceRow.Hidden = true;
-            _textPrompts.Clear();
             //TODO currently seeing how it works starting next turn automatically at end of dice rolls
             //            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
@@ -316,7 +316,6 @@ namespace GameEngine.GameScreens
         {
             StartTurn,
             Rolling,
-            AskYieldBay,
             AskYield,
             BuyCards,
             Waiting
