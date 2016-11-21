@@ -146,8 +146,8 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-            //SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
-            SendMonsterPackets();
+            SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
+            //SendMonsterPackets();
         }
 
         /// <summary>
@@ -161,9 +161,9 @@ namespace GameEngine.ServerClasses
             else { outMsg.Write((byte)PacketTypes.Update); }
             outMsg.Write(Players.Count);
             var packets = MonsterController.GetDataPackets();
-            for (var i = 0; i < Players.Count; i++)
+            foreach (var packet in packets)
             {
-                var json = JsonConvert.SerializeObject(packets[i]);
+                var json = JsonConvert.SerializeObject(packet);//TODO check player count
                 outMsg.Write(json);
             }
 

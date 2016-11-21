@@ -94,7 +94,7 @@ namespace GameEngine.ServerClasses
                             }
                             MonsterController.AcceptDataPackets(MonsterPackets);
 
-                            /*try
+                            try
                             {
                                 if (inc.ReadByte() == (byte)PacketTypes.Dice) {
                                     var diceJson = inc.ReadString();
@@ -107,7 +107,7 @@ namespace GameEngine.ServerClasses
                             {
                                 //LOG
                                 Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
-                            }*/
+                            }
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {
