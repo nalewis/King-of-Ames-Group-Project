@@ -47,7 +47,7 @@ namespace GameEngine.GameScreens
             switch (_gameState)
             {
                 case GameState.StartTurn:
-                    StartPlayersTurn();
+                    StartingTurn();
                     break;
                 case GameState.Rolling:
                     Rolling();
@@ -71,7 +71,25 @@ namespace GameEngine.GameScreens
             base.Update(gameTime);
         }
 
-        private void StartPlayersTurn()
+        public override void Draw(GameTime gameTime)
+        {
+            Engine.SpriteBatch.Begin();
+            DrawGraphicsPieces();
+            Engine.SpriteBatch.End();
+            base.Draw(gameTime);
+        }
+
+        public override void UnloadAssets()
+        {
+            _pBlocks.Clear();
+            _textPrompts.Clear();
+            _diceRow.Clear();
+            base.UnloadAssets();
+        }
+
+        #region GameStateFunctions
+
+        private void StartingTurn()
         {
             _diceRow.Clear();
             _textPrompts.Clear();
@@ -95,13 +113,7 @@ namespace GameEngine.GameScreens
 
         private void Rolling()
         {
-            if (MonsterController.RollsRemaining(_localPlayer) == 0)
-            {
-                ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
-                EndTurn();
-            }
-
-            if (Engine.InputManager.KeyPressed(Keys.E))
+            if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 EndTurn();
@@ -135,6 +147,16 @@ namespace GameEngine.GameScreens
             _textPrompts.Add(new TextBlock("RollingText", sL));
         }
 
+        private void EndTurn()
+        {
+            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
+            _diceRow.Clear();
+            _diceRow.Hidden = true;
+            _gameState = GameState.Waiting;
+            //TODO currently seeing how it works starting next turn automatically at end of dice rolls
+            //            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
+        }
+
         private void AskYield()
         {
             _textPrompts.Clear();
@@ -153,38 +175,14 @@ namespace GameEngine.GameScreens
             }
         }
 
-        /*
         private void BuyScreen()
         {
-            Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
-        }
-        */
-
-        public override void Draw(GameTime gameTime)
-        {
-            Engine.SpriteBatch.Begin();
-            DrawGraphicsPieces();
-            Engine.SpriteBatch.End();
-            base.Draw(gameTime);
+            //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy));
         }
 
-        public override void UnloadAssets()
-        {
-            _pBlocks.Clear();
-            _textPrompts.Clear();
-            _diceRow.Clear();
-            base.UnloadAssets();
-        }
+        #endregion
 
-        private void EndTurn()
-        {
-            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
-            _diceRow.Clear();
-            _diceRow.Hidden = true;
-            _gameState = GameState.Waiting;
-            //TODO this restarts the current players turn, how do we specify the next monster for current?
-//            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
-        }
+        #region PrivateHelpers
 
         private void UpdatePositions()
         {
@@ -194,6 +192,42 @@ namespace GameEngine.GameScreens
                 tp.Position = ScreenLocations.GetPosition(tp.Name);
             }
             _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
+        }
+
+        private void UpdateGraphicsPieces()
+        {
+            foreach (var ds in _diceRow.DiceSprites)
+                ds.Update();
+            foreach (var pb in _pBlocks)
+                pb.Update();
+        }
+
+        private void DrawGraphicsPieces()
+        {
+            foreach (var pb in _pBlocks)
+                pb.Draw(Engine.SpriteBatch);
+
+            if (!_diceRow.Hidden)
+            {
+                foreach (var ds in _diceRow.DiceSprites)
+                    ds.Draw(Engine.SpriteBatch);
+            }
+
+            foreach (var tp in _textPrompts)
+                tp.Draw(Engine.SpriteBatch);
+        }
+
+        private static List<Monster> GetMonsterList()
+        {
+            var mon = MonsterController.GetById(_localPlayer);
+            var monsterList = new List<Monster> { mon };
+            mon = mon.Next;
+            while (mon != _localMonster)
+            {
+                monsterList.Add(mon);
+                mon = mon.Next;
+            }
+            return monsterList;
         }
 
         private static List<PlayerBlock> InitializePlayerBlocks()
@@ -242,42 +276,7 @@ namespace GameEngine.GameScreens
             return toReturn;
         }
 
-        private void UpdateGraphicsPieces()
-        {
-            foreach (var ds in _diceRow.DiceSprites)
-                ds.Update();
-            foreach (var pb in _pBlocks)
-                pb.Update();
-        }
-
-        private void DrawGraphicsPieces()
-        {
-            foreach (var pb in _pBlocks)
-                pb.Draw(Engine.SpriteBatch);
-
-            if (!_diceRow.Hidden)
-            {
-                foreach (var ds in _diceRow.DiceSprites)
-                    ds.Draw(Engine.SpriteBatch);
-            }
-
-            foreach (var tp in _textPrompts)
-                tp.Draw(Engine.SpriteBatch);
-        }
-
-        private static List<Monster> GetMonsterList()
-        {
-            Monster mon = MonsterController.GetById(_localPlayer);
-            List<Monster> monsterList = new List<Monster>();
-            monsterList.Add(mon);
-            mon = mon.Next;
-            while (mon != _localMonster)
-            {
-                monsterList.Add(mon);
-                mon = mon.Next;
-            }
-            return monsterList;
-        }
+        #endregion
 
         internal enum GameState
         {
