@@ -127,6 +127,7 @@ namespace GameEngine.Views
                 _timer.Stop();
                 Client.ClientStop();
                 NetworkClasses.UpdateCharacter(User.PlayerId, null);
+                NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
                 MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Dispose();
             }
