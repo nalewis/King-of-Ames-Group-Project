@@ -113,7 +113,6 @@ namespace GameEngine.GameScreens
         {
             _diceRow.Clear();
             _textPrompts.Clear();
-            _diceRow.AddDice(DiceController.GetDice());
 
             var stringList = new List<string>
             {
