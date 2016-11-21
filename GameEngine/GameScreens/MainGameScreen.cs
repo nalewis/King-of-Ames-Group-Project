@@ -13,7 +13,7 @@ namespace GameEngine.GameScreens
     {
         private static Dictionary<string, Vector2> _spriteLocationList;
         private readonly List<PlayerBlock> _pBlocks;
-        private readonly List<TextPrompt> _textPrompts;
+        private readonly List<TextBlock> _textPrompts;
         private readonly DiceRow _diceRow;
 
         private static int _localPlayer;
@@ -29,7 +29,7 @@ namespace GameEngine.GameScreens
         public MainGameScreen()
         {
             _spriteLocationList = GetSpriteLocations();
-            _textPrompts = new List<TextPrompt>();
+            _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
@@ -80,9 +80,13 @@ namespace GameEngine.GameScreens
             _diceRow.Clear();
             _textPrompts.Clear();
             _diceRow.AddDice(DiceController.GetDice());
-            _textPrompts.Add(new TextPrompt("Your Turn " + MonsterController.Name(_localPlayer), "TextPrompt1", _spriteLocationList["TextPrompt1"]));
-            _textPrompts.Add(new TextPrompt("Press R to Roll, P for Menu", "TextPrompt2", _spriteLocationList["TextPrompt2"]));
-            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _spriteLocationList["RollsLeft"]));
+
+            var stringList = new List<string>();
+            stringList.Add("Your Turn " + MonsterController.Name(_localPlayer));
+            stringList.Add("Press R to Roll, P for Menu, E to End Rolling");
+            stringList.Add(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!");
+            _textPrompts.Add(new TextBlock("RollingText", stringList, _spriteLocationList["TextPrompt1"]));
+
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
                 _gameState = GameState.Rolling;
@@ -95,7 +99,6 @@ namespace GameEngine.GameScreens
         {
             if (MonsterController.RollsRemaining(_localPlayer) == 0)
             {
-                _diceRow.Clear();
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 EndTurn();
             }
@@ -103,7 +106,7 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.E))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
-                _diceRow.Hidden = true;
+                EndTurn();
             }
 
             if (Engine.InputManager.KeyPressed(Keys.R))
@@ -125,13 +128,19 @@ namespace GameEngine.GameScreens
 
             if (_textPrompts.Count > 0)
                 _textPrompts.RemoveAt(_textPrompts.Count - 1);
-            _textPrompts.Add(new TextPrompt(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!", "RollsLeft", _spriteLocationList["RollsLeft"]));
+            var stringList = new List<string>();
+            stringList.Add("Your Turn " + MonsterController.Name(_localPlayer));
+            stringList.Add("Press R to Roll, P for Menu, E to End Rolling");
+            stringList.Add(MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!");
+            _textPrompts.Add(new TextBlock("RollingText", stringList, _spriteLocationList["TextPrompt1"]));
         }
 
         private void AskYield()
         {
             _textPrompts.Clear();
-            _textPrompts.Add(new TextPrompt(MonsterController.Name(_localPlayer) + ": Yield? Y/N", "TextPrompt1", _spriteLocationList["TextPrompt1"]));
+            var s = new List<string>();
+            s.Add(MonsterController.Name(_localPlayer) + ": Yield? Y/N");
+            _textPrompts.Add(new TextBlock("YieldPrompt", s, _spriteLocationList["TextPrompt1"]));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
@@ -171,6 +180,7 @@ namespace GameEngine.GameScreens
         private void EndTurn()
         {
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
+            _diceRow.Clear();
             _diceRow.Hidden = true;
             _gameState = GameState.Waiting;
             //TODO this restarts the current players turn, how do we specify the next monster for current?
