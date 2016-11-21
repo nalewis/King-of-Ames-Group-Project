@@ -47,6 +47,8 @@ namespace GameEngine.Views
             NetworkClasses.UpdateCharacter(User.PlayerId, null);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
+            Form form = new MainMenuForm();
+            form.Show();
             Dispose();
         }
 
