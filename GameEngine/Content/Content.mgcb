@@ -13,18 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin monsterTextures/cthulhu.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:monsterTextures/cthulhu.jpg
-
 #begin diceTextures/dice1.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -109,7 +97,7 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts\MenuFont.spritefont
 
-#begin monsterTextures/Alienoid.jpg
+#begin monsterTextures/alienoid.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -119,9 +107,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures/Alienoid.jpg
+/build:monsterTextures/alienoid.jpg
 
-#begin monsterTextures/Kraken.jpg
+#begin monsterTextures/cthulhu.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -131,9 +119,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures/Kraken.jpg
+/build:monsterTextures/cthulhu.jpg
 
-#begin monsterTextures/MekaDragon.jpg
+#begin monsterTextures/cyberbunny.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -143,9 +131,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures/MekaDragon.jpg
+/build:monsterTextures/cyberbunny.jpg
 
-#begin monsterTextures/Pandakai.jpg
+#begin monsterTextures/gigazaur.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -155,9 +143,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures/Pandakai.jpg
+/build:monsterTextures/gigazaur.jpg
 
-#begin monsterTextures/TheRealKing.jpg
+#begin monsterTextures/kraken.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -167,9 +155,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures/TheRealKing.jpg
+/build:monsterTextures/kraken.jpg
 
-#begin monsterTextures\Cyber Bunny.jpg
+#begin monsterTextures/mekadragon.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -179,9 +167,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures\Cyber Bunny.jpg
+/build:monsterTextures/mekadragon.jpg
 
-#begin monsterTextures\GigaZaur.jpg
+#begin monsterTextures/pandakai.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -191,9 +179,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures\GigaZaur.jpg
+/build:monsterTextures/pandakai.jpg
 
-#begin monsterTextures\The King.jpg
+#begin monsterTextures/theking.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -203,5 +191,17 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:monsterTextures\The King.jpg
+/build:monsterTextures/theking.jpg
+
+#begin monsterTextures/therealking.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:monsterTextures/therealking.jpg
 
