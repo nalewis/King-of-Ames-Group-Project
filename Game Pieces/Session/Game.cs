@@ -59,7 +59,6 @@ namespace GamePieces.Session
         public static void StartTurn()
         {
             Current.StartTurn();
-            Current.StartTurn();
         }
 
         public static void Roll()
@@ -105,7 +104,8 @@ namespace GamePieces.Session
             Current = Current.Next;
             if(Winner == null)
             {
-                StartTurn();
+                //System.Threading.Thread.Sleep(500);
+                //StartTurn();
             }
         }
     }
