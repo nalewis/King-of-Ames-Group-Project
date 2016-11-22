@@ -20,7 +20,7 @@ namespace GameEngine.GameScreens
         private static Monster _localMonster;
         private State _localPlayerState;
 
-        private GameState _gameState = GameState.Waiting;
+        private static GameState _gameState = GameState.Waiting;
 
         public MainGameScreen()
         {
@@ -30,6 +30,11 @@ namespace GameEngine.GameScreens
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
+        }
+
+        public static void SetLocalPlayerState(int i)
+        {
+            if(i == 0) _gameState = GameState.StartTurn;
         }
 
         public override void Update(GameTime gameTime)

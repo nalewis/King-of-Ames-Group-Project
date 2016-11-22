@@ -7,6 +7,7 @@ using Networking.Actions;
 using Newtonsoft.Json;
 using System;
 using System.Threading;
+using GameEngine.GameScreens;
 
 namespace GameEngine.ServerClasses
 {
@@ -92,8 +93,11 @@ namespace GameEngine.ServerClasses
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                                 Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
-                            }
+                            }             
                             MonsterController.AcceptDataPackets(MonsterPackets);
+
+                            if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
+                                MainGameScreen.SetLocalPlayerState(0);
 
                             if (inc.ReadByte() == (byte)PacketTypes.Dice) {
                                 var diceJson = inc.ReadString();
