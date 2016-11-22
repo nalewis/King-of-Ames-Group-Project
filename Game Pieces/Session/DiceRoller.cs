@@ -76,12 +76,13 @@ namespace GamePieces.Session
         public static void AcceptDataPacket(DiceDataPacket dataPacket)
         {
             //TODO
-            /*if(Rolling.Count != dataPacket.Size)
+            if(Rolling.Count != dataPacket.Size)
             {
-                throw new Exception("Data packet does not match the current rolling state");
-            }*/
+                Setup(dataPacket.Size);
+                //throw new Exception("Data packet does not match the current rolling state");
+            }
             //TODO
-            for(var i = 0; i < 6; i++)
+            for(var i = 0; i < Rolling.Count; i++)
             {
                 Rolling[i].AcceptPacket(dataPacket.Symbols[i], dataPacket.Colors[i], dataPacket.States[i]);
             }
