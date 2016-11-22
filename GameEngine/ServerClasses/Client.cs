@@ -88,6 +88,7 @@ namespace GameEngine.ServerClasses
                         }
                         else if (type == (byte)PacketTypes.Update)
                         {
+                            var dontAccept = false;
 
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
@@ -96,8 +97,20 @@ namespace GameEngine.ServerClasses
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                                 Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
-                            }             
-                            MonsterController.AcceptDataPackets(MonsterPackets);
+
+                                if (MonsterPackets[i].PlayerId == User.PlayerId)
+                                {
+                                    if(!(GameStateController.IsCurrent && MonsterPackets[i].State == State.EndOfTurn))
+                                    {
+                                        dontAccept = true;
+                                    }
+                                }
+                            }
+
+                            if (!dontAccept)
+                            {
+                                MonsterController.AcceptDataPackets(MonsterPackets);
+                            }      
 
                             if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
                                 MainGameScreen.SetLocalPlayerState(0);
