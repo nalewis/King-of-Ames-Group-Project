@@ -4,7 +4,6 @@ using Networking;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 
@@ -56,6 +55,12 @@ namespace GameEngine.GameScreens
                     Rolling();
                     break;
                 case GameState.Waiting:
+                    break;
+                case GameState.BuyingCards:
+                    BuyCardPrompt();
+                    break;
+                case GameState.EndingTurn:
+                    EndTurn();
                     break;
                 default:
                     Console.Write("switch hit default.");
@@ -118,7 +123,8 @@ namespace GameEngine.GameScreens
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
-                "Press R to Roll, P for Menu, E to End Rolling",
+                "Press R to Roll, P for Menu ",
+                "or E to End Rolling",
                 MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
                 }));
 
@@ -136,6 +142,7 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
+                _gameState = GameState.EndingTurn;
                 EndTurn();
             }
 
@@ -162,7 +169,8 @@ namespace GameEngine.GameScreens
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
-                "Press R to Roll, P for Menu, E to End Rolling",
+                "Press R to Roll, P for Menu,",
+                "or E to End Rolling",
                 MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
                 }));
         }
@@ -170,14 +178,13 @@ namespace GameEngine.GameScreens
         private void EndTurn()
         {
             _textPrompts.Clear();
-            _gameState = GameState.Waiting;
-            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             _diceRow.Clear();
             _diceRow.Hidden = true;
-            //TODO currently seeing how it works starting next turn automatically at end of dice rolls
-            //            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
+            _gameState = GameState.Waiting;
+            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
         }
 
+/*
         private void AskYield()
         {
             _textPrompts.Clear();
@@ -187,29 +194,36 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.Yield(_localPlayer));
-                EndTurn();
+                _gameState = gameState.Waiting; ? 
+
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                EndTurn();
+                _gameState = gameState.Waiting; ? 
             }
         }
+*/
 
         private void BuyCardPrompt()
         {
             _textPrompts.Clear();
-            var s = new List<string> {MonsterController.Name(_localPlayer) + ": Buy Cards? Y/N"};
-            _textPrompts.Add(new TextBlock("BuyCardsPrompt", s));
+            _textPrompts.Add(new TextBlock("BuyCardsPrompt", new List<string>()
+            {
+                MonsterController.Name(_localPlayer) + ": Buy Cards? Y/N"
+            }));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                //Create a int reference variable
-                //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy, ref variable));
-                //depending on ref variable send action to buy that card
+                //CardsForSale cfs; ?? can this be a variable?
+                //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy, playerChoice or cfs));
+                //wait until playerChoice is positive/not null
+                //ServerClasses.Client.SendActionPacket(GameStateController.BuyCard())
+                _gameState = GameState.EndingTurn;
                 EndTurn();
             }
             if (Engine.InputManager.KeyPressed(Keys.N))
             {
+                _gameState = GameState.EndingTurn;
                 EndTurn();
             }
         }
@@ -317,8 +331,9 @@ namespace GameEngine.GameScreens
             StartTurn,
             Rolling,
             AskYield,
-            BuyCards,
-            Waiting
+            BuyingCards,
+            Waiting,
+            EndingTurn
         }
     }
 }
