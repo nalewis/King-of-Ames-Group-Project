@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Networking;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,6 +23,25 @@ namespace GameEngine.Views
             Form menu = new MainMenuForm();
             menu.Show();
             Dispose();
+        }
+
+        private void nameChange_Click(object sender, EventArgs e)
+        {
+            messageLabel.Visible = false;
+            messageLabel.Text = "";
+            if (nameChangeText.TextLength > 0)
+            {
+                if(NetworkClasses.UpdateUsername(User.PlayerId, nameChangeText.Lines[0]))
+                {
+                    messageLabel.Visible = true;
+                    messageLabel.Text = "Successfully updated username";
+                }
+                else
+                {
+                    messageLabel.Visible = true;
+                    messageLabel.Text = "Invalid/Unavailable username";
+                }
+            }
         }
     }
 }

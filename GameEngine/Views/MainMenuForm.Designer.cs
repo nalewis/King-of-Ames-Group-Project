@@ -32,11 +32,14 @@
             this.JoinButton = new System.Windows.Forms.Button();
             this.OptionsButton = new System.Windows.Forms.Button();
             this.ProfileButton = new System.Windows.Forms.Button();
+            this.logoutButton = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // HostButton
             // 
-            this.HostButton.Location = new System.Drawing.Point(104, 46);
+            this.HostButton.Location = new System.Drawing.Point(34, 19);
             this.HostButton.Name = "HostButton";
             this.HostButton.Size = new System.Drawing.Size(75, 23);
             this.HostButton.TabIndex = 0;
@@ -46,7 +49,7 @@
             // 
             // JoinButton
             // 
-            this.JoinButton.Location = new System.Drawing.Point(104, 88);
+            this.JoinButton.Location = new System.Drawing.Point(34, 48);
             this.JoinButton.Name = "JoinButton";
             this.JoinButton.Size = new System.Drawing.Size(75, 23);
             this.JoinButton.TabIndex = 1;
@@ -56,7 +59,7 @@
             // 
             // OptionsButton
             // 
-            this.OptionsButton.Location = new System.Drawing.Point(104, 130);
+            this.OptionsButton.Location = new System.Drawing.Point(34, 77);
             this.OptionsButton.Name = "OptionsButton";
             this.OptionsButton.Size = new System.Drawing.Size(75, 23);
             this.OptionsButton.TabIndex = 2;
@@ -66,7 +69,7 @@
             // 
             // ProfileButton
             // 
-            this.ProfileButton.Location = new System.Drawing.Point(104, 174);
+            this.ProfileButton.Location = new System.Drawing.Point(34, 106);
             this.ProfileButton.Name = "ProfileButton";
             this.ProfileButton.Size = new System.Drawing.Size(75, 23);
             this.ProfileButton.TabIndex = 3;
@@ -74,19 +77,42 @@
             this.ProfileButton.UseVisualStyleBackColor = true;
             this.ProfileButton.Click += new System.EventHandler(this.ProfileButton_Click);
             // 
+            // logoutButton
+            // 
+            this.logoutButton.Location = new System.Drawing.Point(34, 135);
+            this.logoutButton.Name = "logoutButton";
+            this.logoutButton.Size = new System.Drawing.Size(75, 23);
+            this.logoutButton.TabIndex = 4;
+            this.logoutButton.Text = "Logout";
+            this.logoutButton.UseVisualStyleBackColor = true;
+            this.logoutButton.Click += new System.EventHandler(this.logoutButton_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.HostButton);
+            this.groupBox1.Controls.Add(this.logoutButton);
+            this.groupBox1.Controls.Add(this.JoinButton);
+            this.groupBox1.Controls.Add(this.ProfileButton);
+            this.groupBox1.Controls.Add(this.OptionsButton);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(141, 177);
+            this.groupBox1.TabIndex = 5;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Command Menu";
+            // 
             // MainMenuForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
-            this.Controls.Add(this.ProfileButton);
-            this.Controls.Add(this.OptionsButton);
-            this.Controls.Add(this.JoinButton);
-            this.Controls.Add(this.HostButton);
+            this.BackColor = System.Drawing.Color.Chocolate;
+            this.ClientSize = new System.Drawing.Size(165, 203);
+            this.Controls.Add(this.groupBox1);
             this.Name = "MainMenuForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MainMenuForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainMenuForm_Closing);
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -97,5 +123,7 @@
         private System.Windows.Forms.Button JoinButton;
         private System.Windows.Forms.Button OptionsButton;
         private System.Windows.Forms.Button ProfileButton;
+        private System.Windows.Forms.Button logoutButton;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

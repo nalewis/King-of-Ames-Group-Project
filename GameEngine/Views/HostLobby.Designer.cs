@@ -48,7 +48,7 @@
             this.playerList.GridLines = true;
             this.playerList.Location = new System.Drawing.Point(12, 12);
             this.playerList.Name = "playerList";
-            this.playerList.Size = new System.Drawing.Size(260, 194);
+            this.playerList.Size = new System.Drawing.Size(205, 194);
             this.playerList.TabIndex = 0;
             this.playerList.UseCompatibleStateImageBehavior = false;
             this.playerList.View = System.Windows.Forms.View.Details;
@@ -56,6 +56,7 @@
             // playerName
             // 
             this.playerName.Text = "Player Name";
+            this.playerName.Width = 77;
             // 
             // character
             // 
@@ -68,9 +69,9 @@
             // leaveGame
             // 
             this.leaveGame.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.leaveGame.Location = new System.Drawing.Point(160, 239);
+            this.leaveGame.Location = new System.Drawing.Point(119, 239);
             this.leaveGame.Name = "leaveGame";
-            this.leaveGame.Size = new System.Drawing.Size(112, 23);
+            this.leaveGame.Size = new System.Drawing.Size(78, 23);
             this.leaveGame.TabIndex = 2;
             this.leaveGame.Text = "Leave Game";
             this.leaveGame.UseVisualStyleBackColor = true;
@@ -100,7 +101,7 @@
             this.start_game.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.start_game.Location = new System.Drawing.Point(15, 239);
             this.start_game.Name = "start_game";
-            this.start_game.Size = new System.Drawing.Size(112, 23);
+            this.start_game.Size = new System.Drawing.Size(75, 23);
             this.start_game.TabIndex = 12;
             this.start_game.Text = "Start Game";
             this.start_game.UseVisualStyleBackColor = true;
@@ -110,7 +111,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 271);
+            this.BackColor = System.Drawing.Color.Chocolate;
+            this.ClientSize = new System.Drawing.Size(229, 271);
             this.Controls.Add(this.start_game);
             this.Controls.Add(this.char_label);
             this.Controls.Add(this.char_list);

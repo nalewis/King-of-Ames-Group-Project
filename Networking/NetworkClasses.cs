@@ -107,6 +107,28 @@ namespace Networking
             return true;
         }
 
+        public static bool UpdateUsername(int playerid, string name)
+        {
+            try
+            {
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_List SET Username = @name WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@playerid", playerid);//TODO handle exception for non-unique name-change
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Checks if the player id is the host of a server (for use by the exit function)
         /// </summary>

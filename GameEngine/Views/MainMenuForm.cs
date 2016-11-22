@@ -70,5 +70,12 @@ namespace GameEngine.Views
             profile.Show();
             Dispose();
         }
+
+        private void logoutButton_Click(object sender, EventArgs e)
+        {
+            Form login = new LoginForm();
+            login.Show();
+            Dispose();
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace GameEngine.Views
             this.newUsername.Name = "newUsername";
             this.newUsername.Size = new System.Drawing.Size(100, 20);
             this.newUsername.TabIndex = 0;
-            this.newUsername.KeyPress += new KeyPressEventHandler(NewUserForm_KeyPressed);
+            this.newUsername.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NewUserForm_KeyPressed);
             // 
             // newPassword
             // 
@@ -55,7 +55,7 @@ namespace GameEngine.Views
             this.newPassword.PasswordChar = '*';
             this.newPassword.Size = new System.Drawing.Size(100, 20);
             this.newPassword.TabIndex = 1;
-            this.newPassword.KeyPress += new KeyPressEventHandler(NewUserForm_KeyPressed);
+            this.newPassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NewUserForm_KeyPressed);
             // 
             // label1
             // 
@@ -118,6 +118,7 @@ namespace GameEngine.Views
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(350, 262);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.toLogin);
@@ -131,7 +132,7 @@ namespace GameEngine.Views
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "New User";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.NewUserForm_Closing);
-            this.KeyPress += new KeyPressEventHandler(NewUserForm_KeyPressed);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NewUserForm_KeyPressed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

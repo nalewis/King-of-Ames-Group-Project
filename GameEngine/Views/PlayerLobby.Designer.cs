@@ -40,7 +40,7 @@
             // leaveGame
             // 
             this.leaveGame.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.leaveGame.Location = new System.Drawing.Point(195, 210);
+            this.leaveGame.Location = new System.Drawing.Point(173, 210);
             this.leaveGame.Name = "leaveGame";
             this.leaveGame.Size = new System.Drawing.Size(77, 23);
             this.leaveGame.TabIndex = 4;
@@ -66,21 +66,24 @@
             // playerName
             // 
             this.playerName.Text = "Player Name";
+            this.playerName.Width = 90;
             // 
             // character
             // 
             this.character.Text = "Character";
+            this.character.Width = 97;
             // 
             // ping
             // 
             this.ping.Text = "Ping";
+            this.ping.Width = 49;
             // 
             // char_list
             // 
             this.char_list.FormattingEnabled = true;
             this.char_list.Location = new System.Drawing.Point(74, 212);
             this.char_list.Name = "char_list";
-            this.char_list.Size = new System.Drawing.Size(115, 21);
+            this.char_list.Size = new System.Drawing.Size(93, 21);
             this.char_list.TabIndex = 5;
             this.char_list.SelectedIndexChanged += new System.EventHandler(this.char_list_SelectedIndexChanged);
             // 
@@ -97,6 +100,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(284, 241);
             this.Controls.Add(this.char_label);
             this.Controls.Add(this.char_list);

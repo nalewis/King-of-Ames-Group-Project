@@ -94,18 +94,13 @@ namespace GameEngine.ServerClasses
                             }
                             MonsterController.AcceptDataPackets(MonsterPackets);
 
-                            try
-                            {
-                                if (inc.ReadByte() == (byte)PacketTypes.Dice) {
-                                    var diceJson = inc.ReadString();
-                                    var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
-                                    DiceController.AcceptDataPacket(dice);
-                                }
-                                Console.Error.WriteLine("Dice! (╯°□°）╯︵ ┻━┻");
+                            if (inc.ReadByte() == (byte)PacketTypes.Dice) {
+                                var diceJson = inc.ReadString();
+                                var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
+                                DiceController.AcceptDataPacket(dice);
                             }
-                            catch (Exception)
+                            else
                             {
-                                //LOG
                                 Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
                             }
                         }

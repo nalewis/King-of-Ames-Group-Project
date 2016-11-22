@@ -93,17 +93,17 @@ namespace GameEngine.Views
             // hostName
             // 
             this.hostName.Text = "Host";
-            this.hostName.Width = 74;
+            this.hostName.Width = 80;
             // 
             // ip
             // 
             this.ip.Text = "IP";
-            this.ip.Width = 75;
+            this.ip.Width = 83;
             // 
             // players
             // 
             this.players.Text = "Players";
-            this.players.Width = 55;
+            this.players.Width = 68;
             // 
             // status
             // 
@@ -114,6 +114,7 @@ namespace GameEngine.Views
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(331, 273);
             this.Controls.Add(this.serverList);
             this.Controls.Add(this.refresh);
