@@ -18,7 +18,7 @@ namespace GameEngine.GraphicPieces
         private string PlayerName { get; }
         private readonly string _positionString;
 
-        private Vector2 _nameTextPos;
+        //private Vector2 _nameTextPos;
         private Vector2 _healthTextPos;
         private Vector2 _energyTextPos;
         private Vector2 _pointsTextPos;
@@ -30,17 +30,21 @@ namespace GameEngine.GraphicPieces
         /// <summary>
         /// Creates a new PlayerBlock.
         /// </summary>
-        /// <param name="texture">The texture for the Monster's image.</param>
         /// <param name="positionString">The key for getting position from MainGameScreen,</param>
         /// <param name="mon">The monster this PlayerBlock is used to display.</param>
-        public PlayerBlock(Texture2D texture, string positionString, Monster mon)
+        public PlayerBlock(string positionString, Monster mon)
         {
-            PlayerPortrait = texture;
-            _positionString = positionString;
-            Monster = mon;
-            DisplayPosition = MainGameScreen.ScreenLocations.GetPosition(positionString);
             PlayerName = mon.Name;
+            PlayerPortrait = GetPortrait(PlayerName);
+            _positionString = positionString;
+            DisplayPosition = MainGameScreen.ScreenLocations.GetPosition(positionString);
+            Monster = mon;
             SetTextPositions();
+        }
+
+        private static Texture2D GetPortrait(string playerName)
+        { 
+            return Engine.TextureList[playerName];
         }
 
         /// <summary>
@@ -48,7 +52,7 @@ namespace GameEngine.GraphicPieces
         /// </summary>
         protected void SetTextPositions()
         {
-            _nameTextPos = new Vector2(DisplayPosition.X, DisplayPosition.Y + PlayerPortrait.Height + Padding);
+            //_nameTextPos = new Vector2(DisplayPosition.X, DisplayPosition.Y + PlayerPortrait.Height + Padding);
             _healthTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y);
             _energyTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y + YPad);
             _pointsTextPos = new Vector2(DisplayPosition.X + PlayerPortrait.Width + Padding, DisplayPosition.Y + 2*YPad);
@@ -84,7 +88,7 @@ namespace GameEngine.GraphicPieces
             Engine.FontList.TryGetValue("BigFont", out font);
 
             sb.Draw(PlayerPortrait, DisplayPosition, Color.White);
-            sb.DrawString(font, PlayerName.Length < TextLimit ? PlayerName : PlayerName.Substring(0, TextLimit), _nameTextPos, Color.Red);
+            //sb.DrawString(font, PlayerName.Length < TextLimit ? PlayerName : PlayerName.Substring(0, TextLimit), _nameTextPos, Color.Red);
             sb.DrawString(font, "Health: " + Monster.Health, _healthTextPos, Color.Blue);
             sb.DrawString(font, "Energy: " + Monster.Energy, _energyTextPos, Color.Blue);
             sb.DrawString(font, "Points: " + Monster.VictoryPoints, _pointsTextPos, Color.Blue);

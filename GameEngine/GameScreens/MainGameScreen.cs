@@ -187,6 +187,7 @@ namespace GameEngine.GameScreens
             _diceRow.Hidden = true;
             _gameState = GameState.Waiting;
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
+            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
 
 /*
@@ -285,47 +286,44 @@ namespace GameEngine.GameScreens
 
         private static List<PlayerBlock> InitializePlayerBlocks()
         {
-            var tempTexture = Engine.TextureList["cthulhu"];
             var monList = GetMonsterList();
             var toReturn = new List<PlayerBlock>();
-
             switch (monList.Count)
             {
                 case 2:
-                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopCenter", monList[1]));
+                    toReturn.Add(new PlayerBlock("BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock("TopCenter", monList[1]));
                     break;
                 case 3:
-                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[2]));
+                    toReturn.Add(new PlayerBlock("BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock("TopLeft", monList[1]));
+                    toReturn.Add(new PlayerBlock("TopRight", monList[2]));
                     break;
                 case 4:
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "MidLeft", monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "MidRight", monList[3]));
+                    toReturn.Add(new PlayerBlock("TopLeft", monList[0]));
+                    toReturn.Add(new PlayerBlock("TopRight", monList[1]));
+                    toReturn.Add(new PlayerBlock("MidLeft", monList[2]));
+                    toReturn.Add(new PlayerBlock("MidRight", monList[3]));
                     break;
                 case 5:
-                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "MidLeft", monList[3]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "MidRight", monList[4]));
+                    toReturn.Add(new PlayerBlock("BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock("TopLeft", monList[1]));
+                    toReturn.Add(new PlayerBlock("TopRight", monList[2]));
+                    toReturn.Add(new PlayerBlock("MidLeft", monList[3]));
+                    toReturn.Add(new PlayerBlock("MidRight", monList[4]));
                     break;
                 case 6:
-                    toReturn.Add(new PlayerBlock(tempTexture, "BottomCenter", monList[0]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopLeft", monList[1]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopCenter", monList[2]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "TopRight", monList[3]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "MidLeft", monList[4]));
-                    toReturn.Add(new PlayerBlock(tempTexture, "MidRight", monList[5]));
+                    toReturn.Add(new PlayerBlock("BottomCenter", monList[0]));
+                    toReturn.Add(new PlayerBlock("TopLeft", monList[1]));
+                    toReturn.Add(new PlayerBlock("TopCenter", monList[2]));
+                    toReturn.Add(new PlayerBlock("TopRight", monList[3]));
+                    toReturn.Add(new PlayerBlock("MidLeft", monList[4]));
+                    toReturn.Add(new PlayerBlock("MidRight", monList[5]));
                     break;
                 default:
                     Console.WriteLine("Something went wrong.");
                     break;
             }
-
             return toReturn;
         }
 

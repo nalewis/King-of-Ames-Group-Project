@@ -157,6 +157,14 @@ namespace GameEngine {
         {
             //Load monster sprites
             AddTexture("monsterTextures\\cthulhu", "cthulhu");
+            AddTexture("monsterTextures\\alienoid", "Alienoid");
+            AddTexture("monsterTextures\\cyberbunny", "Cyber Bunny");
+            AddTexture("monsterTextures\\gigazaur", "GigaZaur");
+            AddTexture("monsterTextures\\kraken", "Kraken");
+            AddTexture("monsterTextures\\mekadragon", "MekaDragon");
+            AddTexture("monsterTextures\\pandakai", "Pandakai");
+            AddTexture("monsterTextures\\theking", "The King");
+            AddTexture("monsterTextures\\therealking", "The Real King");
 
             //Load dice sprites
             AddTexture("diceTextures\\dice1", "dice1");
