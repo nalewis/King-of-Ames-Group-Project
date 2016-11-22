@@ -22,7 +22,7 @@ namespace GameEngine.ServerClasses
         private static Thread _gameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
-        public static Mutex mut;
+        public static Mutex mut = new Mutex();//TODO initialize on game start
 
         /// <summary>
         /// Connects the client to the server using the current ip
