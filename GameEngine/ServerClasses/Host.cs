@@ -173,7 +173,7 @@ namespace GameEngine.ServerClasses
                 var dice = DiceController.GetDataPacket();
                 outMsg.Write(JsonConvert.SerializeObject(dice));
             }
-            else
+            else if(!start)
             {
                 outMsg.Write((byte)PacketTypes.NoDice);
             }
