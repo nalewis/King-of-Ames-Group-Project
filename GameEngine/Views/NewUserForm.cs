@@ -81,7 +81,7 @@ namespace GameEngine.Views
         {
             errorLabel.Hide();
             //Check that the inputs are not empty
-            if (newUsername.TextLength > 0 && newPassword.TextLength > 0 && newUsername.TextLength < 20 && newPassword.TextLength < 20)
+            if (newUsername.TextLength > 0 && newPassword.TextLength >= 5 && newUsername.TextLength <= 20 && newPassword.TextLength < 20)
             {
                 if (ContainsVaildChars(newUsername.Text) && ContainsVaildChars(newPassword.Text))
                 {
@@ -107,7 +107,7 @@ namespace GameEngine.Views
             }
             else
             {
-                errorLabel.Text = "Username/Password must be between 1 and 20 characters";
+                errorLabel.Text = "Username must be between 1 and 20 characters\nPassword must be between 5 and 20 characters.";
                 errorLabel.Show();
             }
         }

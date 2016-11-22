@@ -3,7 +3,6 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
 using System.Linq;
-using System.Media;
 
 namespace Networking
 {
@@ -117,6 +116,29 @@ namespace Networking
                 command.CommandText = "UPDATE User_List SET Username = @name WHERE Player_ID = @playerid";
                 command.Parameters.AddWithValue("@name", name);
                 command.Parameters.AddWithValue("@playerid", playerid);//TODO handle exception for non-unique name-change
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool UpdatePassword(int playerid, string pass)
+        {
+            try
+            {
+                pass = StringCipher.Encrypt(pass, "thomas");
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_List SET Password = @pass WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@pass", pass);
+                command.Parameters.AddWithValue("@playerid", playerid);
                 command.ExecuteNonQuery();
 
                 connection.Close();

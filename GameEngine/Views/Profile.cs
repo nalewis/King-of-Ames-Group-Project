@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameEngine.Views
@@ -22,6 +15,18 @@ namespace GameEngine.Views
             Form menu = new MainMenuForm();
             menu.Show();
             Dispose();
+        }
+
+        /// <summary>
+        /// Checks if user is closing the application, closes accordingly
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void Profile_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            Dispose();
+            Environment.Exit(0);
         }
     }
 }

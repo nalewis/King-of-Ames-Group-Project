@@ -1,12 +1,6 @@
 ﻿using Networking;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameEngine.Views
@@ -25,23 +19,83 @@ namespace GameEngine.Views
             Dispose();
         }
 
+        /// <summary>
+        /// Checks if user is closing the application, closes accordingly
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void Options_Closing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            Dispose();
+            Environment.Exit(0);
+        }
+
         private void nameChange_Click(object sender, EventArgs e)
         {
-            messageLabel.Visible = false;
-            messageLabel.Text = "";
-            if (nameChangeText.TextLength > 0)
+            if (nameChangeText.TextLength > 0 && nameChangeText.TextLength <= 20)
             {
-                if(NetworkClasses.UpdateUsername(User.PlayerId, nameChangeText.Lines[0]))
+                if (ContainsVaildChars(nameChangeText.Text))
                 {
-                    messageLabel.Visible = true;
-                    messageLabel.Text = "Successfully updated username";
+                    if (NetworkClasses.UpdateUsername(User.PlayerId, nameChangeText.Text))
+                    {
+                        MessageBox.Show("Username has been changed to " + nameChangeText.Text + ".", "Username Updated",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        nameChangeText.Text = "";
+                    }
+                    else
+                    {
+                        MessageBox.Show("Username is already taken.", "Username Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+                    }
                 }
                 else
                 {
-                    messageLabel.Visible = true;
-                    messageLabel.Text = "Invalid/Unavailable username";
+                    MessageBox.Show("Username must contain only letters and numbers.", "Username Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+            else
+            {
+                MessageBox.Show("Username must be between 1 and 20 characters.", "Username Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void passChange_Click(object sender, EventArgs e)
+        {
+            if (passChangeText.TextLength >= 5 && passChangeText.TextLength <= 20)
+            {
+                if (ContainsVaildChars(passChangeText.Text))
+                {
+                    if (NetworkClasses.UpdatePassword(User.PlayerId, passChangeText.Text))
+                    {
+                        MessageBox.Show("Password has been changed", "Password Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        passChangeText.Text = "";
+                    }
+                    else
+                    {
+                        MessageBox.Show("Something went wrong", "Password Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Password must contain only letters and numbers.", "Password Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Password must be between 5 and 20 characters.", "Password Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        /// <summary>
+        /// Checks if all characters in the given string are valid
+        /// Valid chars include 0-9, A-Z, and a-z
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns>true if valid, false otherwise</returns>
+        private static bool ContainsVaildChars(string s)
+        {
+            return s.All(t => (t > 47 && t < 58) || (t > 64 && t < 91) || (t > 96 && t < 123));
         }
     }
 }
