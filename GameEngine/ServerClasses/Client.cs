@@ -22,8 +22,8 @@ namespace GameEngine.ServerClasses
         private static Thread _gameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
-        public static Mutex mut = new Mutex();//TODO initialize on game start
         public static bool canContinue = true;
+        public static bool isStart = false;
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -100,17 +100,15 @@ namespace GameEngine.ServerClasses
 
                                 if (MonsterPackets[i].PlayerId == User.PlayerId)
                                 {
-                                    if(!(GameStateController.IsCurrent && MonsterPackets[i].State == State.EndOfTurn))
+                                    if(MonsterPackets[i].State == State.StartOfTurn)
                                     {
-                                        dontAccept = true;
+                                        //dontAccept = true;
+                                        isStart = true;
                                     }
                                 }
                             }
 
-                            if (!dontAccept)
-                            {
-                                MonsterController.AcceptDataPackets(MonsterPackets);
-                            }      
+                            MonsterController.AcceptDataPackets(MonsterPackets);
 
                             if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
                                 MainGameScreen.SetLocalPlayerState(0);
