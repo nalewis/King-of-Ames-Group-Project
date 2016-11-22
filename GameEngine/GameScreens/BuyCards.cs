@@ -18,7 +18,7 @@ namespace GameEngine.GameScreens
         public new bool IsPopup = true;
 
 
-        public BuyCards(List<Card> cardList, int energy)
+        public BuyCards(List<Card> cardList, int energy, ref int choice)
         {
             _cardList = cardList;
             _energy = energy;
@@ -53,22 +53,21 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            if (Engine.InputManager.KeyPressed(Keys.Escape))
-            {
-                ScreenManager.RemoveScreen(this);
-            }
             /*
             if (Engine.InputManager.KeyPressed(Keys.Enter))
             {
                 switch (_selected)
                 {
                     case 0:
+                        choice = 0;
                         Engine.RemoveScreen(this);
                         break;
                     case 1:
+                        choice = 1;
                         Engine.AddScreen(new OptionsMenu());
                         break;
                     case 2:
+                        choice = 2;
                         Engine.ExitGame = true;
                         break;
                 }

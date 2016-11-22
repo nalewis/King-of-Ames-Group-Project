@@ -4,7 +4,6 @@ using Networking;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
-using System.Linq;
 using GameEngine.GraphicPieces;
 using GamePieces.Monsters;
 
@@ -198,14 +197,17 @@ namespace GameEngine.GameScreens
         private void BuyCardPrompt()
         {
             _textPrompts.Clear();
-            var s = new List<string> {MonsterController.Name(_localPlayer) + ": Buy Cards? Y/N"};
-            _textPrompts.Add(new TextBlock("BuyCardsPrompt", s));
+            _textPrompts.Add(new TextBlock("BuyCardsPrompt", new List<string>()
+            {
+                MonsterController.Name(_localPlayer) + ": Buy Cards? Y/N"
+            }));
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                //Create a int reference variable
-                //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy, ref variable));
-                //depending on ref variable send action to buy that card
+                //CardsForSale cfs; ?? can this be a variable?
+                //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy, playerChoice or cfs));
+                //wait until playerChoice is positive/not null
+                //ServerClasses.Client.SendActionPacket(GameStateController.BuyCard())
                 EndTurn();
             }
             if (Engine.InputManager.KeyPressed(Keys.N))
