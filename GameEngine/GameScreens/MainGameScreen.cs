@@ -121,8 +121,6 @@ namespace GameEngine.GameScreens
             _diceRow.Clear();
             _textPrompts.Clear();
 
-            GamePieces.Session.DiceRoller.
-
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
