@@ -30,17 +30,21 @@ namespace GameEngine.GraphicPieces
         /// <summary>
         /// Creates a new PlayerBlock.
         /// </summary>
-        /// <param name="texture">The texture for the Monster's image.</param>
         /// <param name="positionString">The key for getting position from MainGameScreen,</param>
         /// <param name="mon">The monster this PlayerBlock is used to display.</param>
         public PlayerBlock(string positionString, Monster mon)
         {
             PlayerName = mon.Name;
-            PlayerPortrait = Engine.TextureList[PlayerName];
+            PlayerPortrait = GetPortrait(PlayerName);
             _positionString = positionString;
             DisplayPosition = MainGameScreen.ScreenLocations.GetPosition(positionString);
             Monster = mon;
             SetTextPositions();
+        }
+
+        private static Texture2D GetPortrait(string playerName)
+        { 
+            return Engine.TextureList[playerName];
         }
 
         /// <summary>

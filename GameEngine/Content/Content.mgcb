@@ -121,30 +121,6 @@
 /processorParam:TextureFormat=Color
 /build:monsterTextures/Alienoid.jpg
 
-#begin monsterTextures/CyberBunny.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:monsterTextures/CyberBunny.jpg
-
-#begin monsterTextures/GigaZaur.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:monsterTextures/GigaZaur.jpg
-
 #begin monsterTextures/Kraken.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -181,18 +157,6 @@
 /processorParam:TextureFormat=Color
 /build:monsterTextures/Pandakai.jpg
 
-#begin monsterTextures/TheKing.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:monsterTextures/TheKing.jpg
-
 #begin monsterTextures/TheRealKing.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -204,4 +168,40 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:monsterTextures/TheRealKing.jpg
+
+#begin monsterTextures\Cyber Bunny.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:monsterTextures\Cyber Bunny.jpg
+
+#begin monsterTextures\GigaZaur.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:monsterTextures\GigaZaur.jpg
+
+#begin monsterTextures\The King.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:monsterTextures\The King.jpg
 
