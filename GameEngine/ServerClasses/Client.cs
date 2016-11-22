@@ -23,6 +23,7 @@ namespace GameEngine.ServerClasses
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
         public static Mutex mut = new Mutex();//TODO initialize on game start
+        public static bool canContinue = true;
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -87,7 +88,6 @@ namespace GameEngine.ServerClasses
                         }
                         else if (type == (byte)PacketTypes.Update)
                         {
-                            mut.WaitOne();
 
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
@@ -112,7 +112,7 @@ namespace GameEngine.ServerClasses
                                 Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
                             }
 
-                            mut.ReleaseMutex();
+                            canContinue = true;
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {
@@ -144,16 +144,18 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void SendActionPacket(ActionPacket packet)
         {
-            mut.WaitOne();
+            while (!canContinue)
+            {
+                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine("Sleeping packet type: " + packet.Action);
+            }
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Action);
             var json = JsonConvert.SerializeObject(packet);
             JsonConvert.DeserializeObject<ActionPacket>(json);
             outMsg.Write(json);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
-
-            //possibly put a wait here to allow for server response
-            mut.ReleaseMutex();
+            canContinue = false;
         }
 
         /// <summary>
