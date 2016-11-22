@@ -165,7 +165,7 @@ namespace GameEngine.ServerClasses
         {
             while (!canContinue)
             {
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(500);
                 Console.WriteLine("Sleeping packet type: " + packet.Action);
             }
             var outMsg = NetClient.CreateMessage();

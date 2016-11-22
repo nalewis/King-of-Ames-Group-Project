@@ -146,6 +146,7 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
+            System.Threading.Thread.Sleep(1000);
             SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
             //SendMonsterPackets();
         }
