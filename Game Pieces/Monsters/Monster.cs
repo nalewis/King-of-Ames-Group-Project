@@ -162,11 +162,11 @@ namespace GamePieces.Monsters
         /// </summary>
         public void StartTurn()
         {
-            State = State.StartOfTurn;
             Cards.ForEach(card => card.Reset());
             if (InTokyo) VictoryPoints += 2;
             RemainingRolls = MaximumRolls;
             DiceRoller.Setup(Dice);
+            State = State.StartOfTurn;
         }
 
         /// <summary>

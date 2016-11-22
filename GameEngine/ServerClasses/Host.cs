@@ -145,6 +145,7 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
+            Console.WriteLine("Packet: " + packet.Action);
             Console.WriteLine("Before: " + Game.Current.State + " id: " + Game.Current.PlayerId);
             GameStateController.AcceptAction(packet);
             Console.WriteLine("After: " + Game.Current.State + " id: " + Game.Current.PlayerId);
