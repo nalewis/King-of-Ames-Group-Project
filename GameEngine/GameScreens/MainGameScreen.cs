@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using GameEngine.GraphicPieces;
+using GameEngine.ServerClasses;
 using GamePieces.Monsters;
 
 namespace GameEngine.GameScreens
@@ -48,8 +49,10 @@ namespace GameEngine.GameScreens
             UpdatePositions();
             UpdateGraphicsPieces();
 
-            _localPlayerState = MonsterController.State(_localPlayer);
-            if (_localPlayerState == State.StartOfTurn) { _gameState = GameState.StartTurn; }
+            if(Client.isStart) _gameState = GameState.StartTurn;
+
+            //_localPlayerState = MonsterController.State(_localPlayer);
+            //if (_localPlayerState == State.StartOfTurn) { _gameState = GameState.StartTurn; }
 
             switch (_gameState)
             {
@@ -136,6 +139,7 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.R))
             {   
                 _gameState = GameState.Rolling;
+                Client.isStart = false;
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
