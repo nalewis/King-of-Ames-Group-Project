@@ -20,7 +20,7 @@ namespace GameEngine.GameScreens
         private static Monster _localMonster;
         private State _localPlayerState;
 
-        private GameState _gameState;
+        private GameState _gameState = GameState.Waiting;
 
         public MainGameScreen()
         {
@@ -162,9 +162,12 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            foreach (var textBlock in _textPrompts)
+            if (_textPrompts.Count > 0)
             {
-                if (textBlock.Name.Equals("RollingText")) _textPrompts.Remove(textBlock);
+                foreach (var textBlock in _textPrompts)
+                {
+                    if (textBlock.Name.Equals("RollingText")) _textPrompts.Remove(textBlock);
+                }
             }
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
