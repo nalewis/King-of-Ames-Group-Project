@@ -8,10 +8,10 @@ namespace GamePieces.Dice
     [Serializable]
     public struct DiceDataPacket
     {
-        public int Size { get; }
-        public Symbol[] Symbols { get; }
-        public Color[] Colors { get; }
-        public bool[] States { get; }
+        public int Size { get; set; }
+        public Symbol[] Symbols { get; set; }
+        public Color[] Colors { get; set; }
+        public bool[] States { get; set; }
 
         public DiceDataPacket(List<Die> Dice)
         {

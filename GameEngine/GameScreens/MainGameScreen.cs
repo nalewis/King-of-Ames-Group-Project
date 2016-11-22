@@ -164,10 +164,7 @@ namespace GameEngine.GameScreens
 
             if (_textPrompts.Count > 0)
             {
-                foreach (var textBlock in _textPrompts)
-                {
-                    if (textBlock.Name.Equals("RollingText")) _textPrompts.Remove(textBlock);
-                }
+                _textPrompts.Remove(_textPrompts[_textPrompts.Count - 1]);
             }
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {

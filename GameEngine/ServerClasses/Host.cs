@@ -146,8 +146,8 @@ namespace GameEngine.ServerClasses
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
             GameStateController.AcceptAction(packet);
-            //SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
-            SendMonsterPackets();
+            SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
+            //SendMonsterPackets();
         }
 
         /// <summary>
@@ -167,7 +167,6 @@ namespace GameEngine.ServerClasses
                 outMsg.Write(json);
             }
 
-            /*
             if (sendDice)
             {
                 outMsg.Write((byte)PacketTypes.Dice);
@@ -178,7 +177,6 @@ namespace GameEngine.ServerClasses
             {
                 outMsg.Write((byte)PacketTypes.NoDice);
             }
-            */
 
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
