@@ -145,8 +145,9 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
+            Console.WriteLine("Before: " + Game.Current.State + " id: " + Game.Current.PlayerId);
             GameStateController.AcceptAction(packet);
-            System.Threading.Thread.Sleep(1000);
+            Console.WriteLine("After: " + Game.Current.State + " id: " + Game.Current.PlayerId);
             SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
             //SendMonsterPackets();
         }
