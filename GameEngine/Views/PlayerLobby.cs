@@ -92,15 +92,15 @@ namespace GameEngine.Views
                 var row = ds.Tables[0].Rows[0];
 
                 var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
-                var character = "";
+                var Character = "";
 
                 //Host
                 var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                character = grabber.Tables[0].Rows[0]["_Character"].ToString();
-                listItem.SubItems.Add(character);
-                if (char_list.Items.Contains(character))
+                Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
+                listItem.SubItems.Add(Character);
+                if (char_list.Items.Contains(Character))
                 {
-                    char_list.Items.Remove(character);
+                    char_list.Items.Remove(Character);
                 }
 
                 //Add the row entry to the listview
@@ -111,11 +111,11 @@ namespace GameEngine.Views
                     if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
                     grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
                     listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                    character = grabber.Tables[0].Rows[0]["_Character"].ToString();
-                    listItem.SubItems.Add(character);
-                    if (char_list.Items.Contains(character))
+                    Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
+                    listItem.SubItems.Add(Character);
+                    if (char_list.Items.Contains(Character))
                     {
-                        char_list.Items.Remove(character);
+                        char_list.Items.Remove(Character);
                     }
                     playerList.Items.Add(listItem);
                 }
