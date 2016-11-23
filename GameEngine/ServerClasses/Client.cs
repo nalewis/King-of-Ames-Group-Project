@@ -188,7 +188,7 @@ namespace GameEngine.ServerClasses
         public static void SendMessage(string message)
         {
             var timeStamp = DateTime.Now.ToString("mm:ss");
-            message = "[" + timeStamp + "]" + message;
+            message = "[" + timeStamp + "] " + message;
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Message);
             outMsg.Write(message);

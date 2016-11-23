@@ -48,12 +48,13 @@ namespace GameEngine.Views
         {
             messageLabel.Visible = false;
             messageLabel.Text = "";
+            var n = -1;
 
             if (NetworkClasses.IsAdmin(User.PlayerId))
             {
-                if (banPlayerText.TextLength > 0)
+                if (banPlayerText.TextLength > 0 && int.TryParse(banPlayerText.Lines[0], out n))
                 {
-                    if (NetworkClasses.BanPlayer(User.PlayerId))
+                    if (NetworkClasses.BanPlayer(n))
                     {
                         messageLabel.Text = "Successfully Banned Player ID: " + banPlayerText.Lines[0];
                         banPlayerText.Lines[0] = "";
@@ -62,6 +63,10 @@ namespace GameEngine.Views
                     {
                         messageLabel.Text = "Invalid Player ID";
                     }
+                }
+                else
+                {
+                    messageLabel.Text = "Player ID must be numeric";
                 }
             }
             else
