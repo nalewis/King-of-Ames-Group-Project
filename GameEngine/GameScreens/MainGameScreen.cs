@@ -189,7 +189,7 @@ namespace GameEngine.GameScreens
                 //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
-            if (Engine.InputManager.KeyPressed(Keys.R))
+            if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
             {   
                 _gameState = GameState.Rolling;
                 //Client.isStart = false;
@@ -213,7 +213,7 @@ namespace GameEngine.GameScreens
                 return;
             }
 
-            if (Engine.InputManager.KeyPressed(Keys.R))
+            if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
             {
                 Client.SendActionPacket(GameStateController.Roll());
                 RollAnimation = 30;
@@ -390,6 +390,7 @@ namespace GameEngine.GameScreens
                     {
                         RollingDice.DiceSprites[i].Roll();
                         RollingDice.DiceSprites[i].Draw(Engine.SpriteBatch);
+                        RollAnimation--;
                     }
                 }
             }
