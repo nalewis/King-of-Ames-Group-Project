@@ -21,6 +21,8 @@ namespace GameEngine.Views
         public HostGameListForm()
         {
             InitializeComponent();
+            Form form = new LobbyChat();
+            form.Show();
             start_game.Enabled = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly

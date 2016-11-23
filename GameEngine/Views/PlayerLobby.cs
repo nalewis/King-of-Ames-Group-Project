@@ -81,7 +81,7 @@ namespace GameEngine.Views
             char_list.Items.Add("Kraken");
             char_list.Items.Add("Meka Dragon");
             char_list.Items.Add("The King");
-            char_list.Items.Add("The Real King"); //TODO This unlocks something cool, is this enough tho or will this break things?
+            char_list.Items.Add("The Real King"); 
             try
             {
                 var ds = NetworkClasses.GetServer(Client.Conn);

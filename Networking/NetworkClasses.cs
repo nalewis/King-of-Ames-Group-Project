@@ -82,7 +82,9 @@ namespace Networking
             User.LocalIp = ip;
             User.PlayerId = int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString());
             User.Character = ds.Tables[0].Rows[0]["_Character"].ToString();
+
             connection.Close();
+            DeleteServer(User.PlayerId);
             return true;
         }
 

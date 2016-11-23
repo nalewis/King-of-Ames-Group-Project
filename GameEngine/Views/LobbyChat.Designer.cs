@@ -33,11 +33,13 @@
             this.writeMessage = new System.Windows.Forms.RichTextBox();
             this.Chat = new System.Windows.Forms.RichTextBox();
             this.clearChat = new System.Windows.Forms.Button();
+            this.username = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.username);
             this.groupBox1.Controls.Add(this.clearChat);
             this.groupBox1.Controls.Add(this.sendMessage);
             this.groupBox1.Controls.Add(this.writeMessage);
@@ -61,9 +63,9 @@
             // 
             // writeMessage
             // 
-            this.writeMessage.Location = new System.Drawing.Point(6, 209);
+            this.writeMessage.Location = new System.Drawing.Point(67, 209);
             this.writeMessage.Name = "writeMessage";
-            this.writeMessage.Size = new System.Drawing.Size(248, 21);
+            this.writeMessage.Size = new System.Drawing.Size(187, 21);
             this.writeMessage.TabIndex = 1;
             this.writeMessage.Text = "";
             // 
@@ -71,6 +73,7 @@
             // 
             this.Chat.Location = new System.Drawing.Point(6, 19);
             this.Chat.Name = "Chat";
+            this.Chat.ReadOnly = true;
             this.Chat.Size = new System.Drawing.Size(248, 184);
             this.Chat.TabIndex = 0;
             this.Chat.Text = "";
@@ -85,6 +88,16 @@
             this.clearChat.UseVisualStyleBackColor = true;
             this.clearChat.Click += new System.EventHandler(this.clearChat_Click);
             // 
+            // username
+            // 
+            this.username.AutoSize = true;
+            this.username.BackColor = System.Drawing.Color.Chocolate;
+            this.username.Location = new System.Drawing.Point(6, 212);
+            this.username.Name = "username";
+            this.username.Size = new System.Drawing.Size(55, 13);
+            this.username.TabIndex = 3;
+            this.username.Text = "Username";
+            // 
             // LobbyChat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -95,6 +108,7 @@
             this.Name = "LobbyChat";
             this.Text = "LobbyChat";
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -106,5 +120,6 @@
         private System.Windows.Forms.RichTextBox writeMessage;
         private System.Windows.Forms.RichTextBox Chat;
         private System.Windows.Forms.Button clearChat;
+        private System.Windows.Forms.Label username;
     }
 }
