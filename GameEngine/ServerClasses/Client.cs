@@ -104,6 +104,7 @@ namespace GameEngine.ServerClasses
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                                 //Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
 
+                                /*
                                 if (MonsterPackets[i].PlayerId == User.PlayerId)
                                 {
                                     if(MonsterPackets[i].State == State.StartOfTurn)
@@ -111,12 +112,13 @@ namespace GameEngine.ServerClasses
                                         isStart = true;
                                     }
                                 }
+                                */
                             }
 
                             MonsterController.AcceptDataPackets(MonsterPackets);
 
-                            if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
-                                MainGameScreen.SetLocalPlayerState(0);
+                            //if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
+                            //    MainGameScreen.SetLocalPlayerState(0);
 
                             if (inc.ReadByte() == (byte)PacketTypes.Dice) {
                                 var diceJson = inc.ReadString();

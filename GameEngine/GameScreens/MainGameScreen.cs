@@ -33,10 +33,10 @@ namespace GameEngine.GameScreens
             _pBlocks = InitializePlayerBlocks();
         }
 
-        public static void SetLocalPlayerState(int i)
-        {
-            if(i == 0) _gameState = GameState.StartTurn;
-        }
+        //public static void SetLocalPlayerState(int i)
+        //{
+        //    if(i == 0) _gameState = GameState.StartTurn;
+        //}
 
         public override void Update(GameTime gameTime)
         {
@@ -49,10 +49,10 @@ namespace GameEngine.GameScreens
             UpdatePositions();
             UpdateGraphicsPieces();
 
-            if(Client.isStart) _gameState = GameState.StartTurn;
+            //if(Client.isStart) _gameState = GameState.StartTurn;
 
-            //_localPlayerState = MonsterController.State(_localPlayer);
-            //if (_localPlayerState == State.StartOfTurn) { _gameState = GameState.StartTurn; }
+            _localPlayerState = MonsterController.State(_localPlayer);
+            if (_localPlayerState == State.StartOfTurn) { _gameState = GameState.StartTurn; }
 
             switch (_gameState)
             {
@@ -69,6 +69,9 @@ namespace GameEngine.GameScreens
                     break;
                 case GameState.EndingTurn:
                     EndTurn();
+                    break;
+                case GameState.AskYield:
+                    AskYield();
                     break;
                 default:
                     Console.Write("switch hit default.");
@@ -132,14 +135,13 @@ namespace GameEngine.GameScreens
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
-                "or E to End Rolling",
-                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
+                "or E to End Rolling"
                 }));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {   
                 _gameState = GameState.Rolling;
-                Client.isStart = false;
+                //Client.isStart = false;
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
@@ -151,8 +153,9 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
-                _gameState = GameState.EndingTurn;
-                EndTurn();
+                //Buy Cards?
+                _gameState = GameState.BuyingCards;
+                return;
             }
 
             if (Engine.InputManager.KeyPressed(Keys.R))
@@ -194,7 +197,7 @@ namespace GameEngine.GameScreens
             ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
 
-/*
+
         private void AskYield()
         {
             _textPrompts.Clear();
@@ -204,15 +207,14 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.Yield(_localPlayer));
-                _gameState = gameState.Waiting; ? 
+                _gameState = GameState.Waiting;
 
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                _gameState = gameState.Waiting; ? 
+                _gameState = GameState.Waiting;
             }
         }
-*/
 
         private void BuyCardPrompt()
         {
