@@ -143,6 +143,7 @@ namespace GameEngine.GameScreens
                 _gameState = GameState.Rolling;
                 //Client.isStart = false;
                 ServerClasses.Client.SendActionPacket(GameStateController.Roll());
+                System.Threading.Thread.Sleep(500);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
             }
