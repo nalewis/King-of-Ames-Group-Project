@@ -80,7 +80,7 @@ namespace GameEngine.ServerClasses
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }//TODO What happens if one player leaves?
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");
@@ -95,6 +95,7 @@ namespace GameEngine.ServerClasses
 
                         if (type == (byte)PacketTypes.Leave)
                         {
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Creating", User.PlayerId); }
                             Players.Remove(inc.ReadInt32());
                         }
                         else if(type == (byte)PacketTypes.Action)
@@ -102,6 +103,10 @@ namespace GameEngine.ServerClasses
                             var json = inc.ReadString();
                             var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
                             ReceiveActionUpdate(packet);
+                        }
+                        else if (type == (byte) PacketTypes.Chat)
+                        {
+                            
                         }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
@@ -218,7 +223,8 @@ namespace GameEngine.ServerClasses
             Dice,
             NoDice,
             GameOver,
-            Closed
+            Closed,
+            Chat
         }
 
     }

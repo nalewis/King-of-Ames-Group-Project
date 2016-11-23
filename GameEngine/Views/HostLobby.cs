@@ -89,6 +89,7 @@ namespace GameEngine.Views
             char_list.Items.Add("Kraken");
             char_list.Items.Add("Mecha Dragon");
             char_list.Items.Add("The King");
+            char_list.Items.Add("The Real King");
 
             //Gets server info and puts it into a dataset
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);

@@ -182,6 +182,14 @@ namespace GameEngine.ServerClasses
             canContinue = false;
         }
 
+        public static void SendChatMessage(string message)
+        {
+            var outMsg = NetClient.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Chat);
+            outMsg.Write(message);
+            NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Tells the server to delete it from list, stops loop and shuts down NetClient
         /// </summary>
@@ -209,7 +217,8 @@ namespace GameEngine.ServerClasses
             Dice,
             NoDice,
             GameOver,
-            Closed
+            Closed,
+            Chat
         }
     }
 }
