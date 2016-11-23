@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Remoting;
 using GamePieces.Cards;
 using GamePieces.Session;
 
@@ -12,7 +13,7 @@ namespace Controllers
         /// <returns>Data Packets</returns>
         public static CardDataPacket CreateDataPacket(Card card)
         {
-           return new CardDataPacket(card.GetType());
+            return new CardDataPacket(card.GetType(), card.Activated);
         }
 
         /// <summary>
@@ -23,7 +24,9 @@ namespace Controllers
         {
             try
             {
-              return (Card) Activator.CreateInstance(dataPacket.Type);
+                var card = (Card) Activator.CreateInstance(dataPacket.Type);
+                card.Activated = dataPacket.Activated;
+                return card;
             }
             catch (Exception)
             {
@@ -73,7 +76,7 @@ namespace Controllers
         /// </summary>
         public static void BuyCardOne()
         {
-            if(CardForSaleOne() != null) Game.BuyCard(0);
+            if (CardForSaleOne() != null) Game.BuyCard(0);
         }
 
         /// <summary>
@@ -81,7 +84,7 @@ namespace Controllers
         /// </summary>
         public static void BuyCardTwo()
         {
-            if(CardForSaleTwo() != null) Game.BuyCard(1);
+            if (CardForSaleTwo() != null) Game.BuyCard(1);
         }
 
         /// <summary>
@@ -89,7 +92,7 @@ namespace Controllers
         /// </summary>
         public static void BuyCardThree()
         {
-            if(CardForSaleThree() != null) Game.BuyCard(2);
+            if (CardForSaleThree() != null) Game.BuyCard(2);
         }
     }
 }

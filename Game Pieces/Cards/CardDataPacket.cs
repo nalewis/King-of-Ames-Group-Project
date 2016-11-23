@@ -6,10 +6,12 @@ namespace GamePieces.Cards
     public struct CardDataPacket
     {
         public Type Type { get; }
+        public bool Activated { get; }
 
-        public CardDataPacket(Type type)
+        public CardDataPacket(Type type, bool activated)
         {
             Type = type;
+            Activated = activated;
         }
     }
 }
