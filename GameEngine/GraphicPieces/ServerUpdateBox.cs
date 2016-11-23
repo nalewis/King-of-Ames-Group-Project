@@ -27,7 +27,7 @@ namespace GameEngine.GraphicPieces
 
         private Texture2D GetBackground()
         {
-            var bg = new Texture2D(Engine.GraphicsD,  Width, Height, false, SurfaceFormat.Color);
+            var bg = new Texture2D(Engine.GraffixMngr.GraphicsDevice,  Width, Height, false, SurfaceFormat.Color);
             var colorData = new Color[Width * Height];
             for (var i = 0; i < Width * Height; i++)
             {
