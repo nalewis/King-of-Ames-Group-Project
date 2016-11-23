@@ -10,6 +10,7 @@ namespace GamePieces.Session
     {
         //Monsters
         public static Monster Current { get; private set; }
+        public static LinkedList<Monster> Turns { get; } = new LinkedList<Monster>();
 
         public static readonly List<Monster>
             Monsters = new List<Monster>(),
@@ -38,20 +39,14 @@ namespace GamePieces.Session
             Deck = new Stack<Card>(Card.GetCards());
             for (var i = 0; i < 3; i++) if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
             Monsters.Clear();
+            Turns.Clear();
             Dead.Clear();
-            for(var i = 0; i < playerIds.Count; i++) Monsters.Add(new Monster(playerIds[i], names[i]));
 
-            Monsters.First().Previous = Monsters.Last();
-            Monsters.Last().Next = Monsters.First();
-
-            for (var i = 0; i < Monsters.Count - 1; i++)
+            for (var i = 0; i < playerIds.Count; i++)
             {
-                Monsters[i].Next = Monsters[i + 1];
-            }
-
-            for (var i = Monsters.Count - 1; i > 0; i--)
-            {
-                Monsters[i].Previous = Monsters[i - 1];
+                var monster = new Monster(playerIds[i], names[i]);
+                Monsters.Add(monster);
+                Turns.AddLast(monster);
             }
 
             Current = Monsters.First();
@@ -62,9 +57,14 @@ namespace GamePieces.Session
         public static void StartGame(MonsterDataPacket[] dataPackets)
         {
             Monsters.Clear();
+            Turns.Clear();
             Dead.Clear();
             foreach (var dataPacket in dataPackets)
-                Monsters.Add(new Monster(dataPacket));
+            {
+                var monster = new Monster(dataPacket);
+                Monsters.Add(monster);
+                Turns.AddLast(monster);
+            }
             Current = Monsters.First();
             Board.Reset();
             Host = false;
