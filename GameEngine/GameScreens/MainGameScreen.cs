@@ -63,6 +63,7 @@ namespace GameEngine.GameScreens
                     Rolling();
                     break;
                 case GameState.Waiting:
+                    Waiting();
                     break;
                 case GameState.BuyingCards:
                     BuyCardPrompt();
@@ -198,6 +199,16 @@ namespace GameEngine.GameScreens
             ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
         }
 
+        private void Waiting()
+        {
+            _textPrompts.Clear();
+            if (MonsterController.GetById(_localPlayer).CanYield)
+            {
+                _gameState = GameState.AskYield;
+                AskYield();
+            }
+        }
+
 
         private void AskYield()
         {
@@ -209,11 +220,13 @@ namespace GameEngine.GameScreens
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.Yield(_localPlayer));
                 _gameState = GameState.Waiting;
+                Waiting();
 
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
                 _gameState = GameState.Waiting;
+                Waiting();
             }
         }
 
