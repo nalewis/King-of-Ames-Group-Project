@@ -18,7 +18,7 @@ namespace GameEngine.GameScreens
         private readonly List<PlayerBlock> _pBlocks;
         private static List<TextBlock> _textPrompts;
         private readonly DiceRow _diceRow;
-        private SoundEffect startGameSound;
+        //private SoundEffect startGameSound;
 
         private static int _localPlayer;
         private static Monster _localMonster;
@@ -28,14 +28,14 @@ namespace GameEngine.GameScreens
 
         public MainGameScreen()
         {
-            startGameSound = Engine.SoundList["Recording"];
+            //startGameSound = Engine.SoundList["Recording"];
             ScreenLocations = new ScreenLocations();
             _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
-            startGameSound.Play();
+            //startGameSound.Play();
         }
 
         //public static void SetLocalPlayerState(int i)

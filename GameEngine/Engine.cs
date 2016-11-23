@@ -157,11 +157,11 @@ namespace GameEngine {
             FontList.Add(name, toAdd);
         }
 
-        private void AddSound(string filePath, string name)
-        {
-            var toAdd = Content.Load<SoundEffect>(filePath);
-            SoundList.Add(name, toAdd);
-        }
+        //private void AddSound(string filePath, string name)
+        //{
+        //    var toAdd = Content.Load<SoundEffect>(filePath);
+        //    SoundList.Add(name, toAdd);
+        //}
 
         private void LoadTextures()
         {
@@ -193,7 +193,7 @@ namespace GameEngine {
 
         private void LoadSounds()
         {
-            AddSound("Sounds\\Recording", "Recording");
+            //AddSound("Sounds\\Recording", "Recording");
         }
 
         #endregion
