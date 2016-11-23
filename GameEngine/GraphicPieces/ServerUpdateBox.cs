@@ -50,8 +50,8 @@ namespace GameEngine.GraphicPieces
             var textPos = _positionVector;
             foreach (var line in _stringList)
             {
-                textPos.Y = textPos.Y + LineSpacing;
                 sB.DrawString(_font, line, textPos, Color.WhiteSmoke);
+                textPos.Y = textPos.Y + LineSpacing;
             }
         }
     }
