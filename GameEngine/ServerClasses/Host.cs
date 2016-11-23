@@ -145,12 +145,18 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
-            Console.WriteLine("Packet: " + packet.Action);
-            Console.WriteLine("Before: " + Game.Current.State + " id: " + Game.Current.PlayerId);
+            //Console.WriteLine("Packet: " + packet.Action);
+            //Console.WriteLine("Before: " + Game.Current.State + " id: " + Game.Current.PlayerId);
             GameStateController.AcceptAction(packet);
-            Console.WriteLine("After: " + Game.Current.State + " id: " + Game.Current.PlayerId);
-            SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
-            //SendMonsterPackets();
+            //Console.WriteLine("After: " + Game.Current.State + " id: " + Game.Current.PlayerId);
+            if (GameStateController.GameOver)
+            {
+                DeclareWinner();
+            }
+            else
+            {
+                SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
+            }
         }
 
         /// <summary>
@@ -184,6 +190,15 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void DeclareWinner()
+        {
+            //send packet type game over, update player stats, show final scores
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte)PacketTypes.GameOver);
+            outMsg.Write(Game.Winner.Name);
+            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Gets the ping values for all connected users
         /// </summary>
@@ -202,6 +217,7 @@ namespace GameEngine.ServerClasses
             Update,
             Dice,
             NoDice,
+            GameOver,
             Closed
         }
 

@@ -139,6 +139,10 @@ namespace GameEngine.ServerClasses
                             _shouldStop = true;
                             Conn = "";
                         }
+                        else if (type == (byte)PacketTypes.GameOver)
+                        {
+                            Console.WriteLine("Game Over!");
+                        }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
                         break;
@@ -201,6 +205,8 @@ namespace GameEngine.ServerClasses
             Action,
             Update,
             Dice,
+            NoDice,
+            GameOver,
             Closed
         }
     }
