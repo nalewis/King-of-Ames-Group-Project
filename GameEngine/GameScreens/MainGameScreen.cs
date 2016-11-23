@@ -173,7 +173,7 @@ namespace GameEngine.GameScreens
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
                 "or E to End Rolling",
-                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
+                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
@@ -223,7 +223,7 @@ namespace GameEngine.GameScreens
                 "Press R to Roll, P for Menu,",
                 "or E to End Rolling",
                 MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!",
-                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
+                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
         }
 
