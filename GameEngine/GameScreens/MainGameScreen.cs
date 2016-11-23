@@ -169,7 +169,8 @@ namespace GameEngine.GameScreens
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
-                "or E to End Rolling"
+                "or E to End Rolling",
+                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
@@ -218,7 +219,8 @@ namespace GameEngine.GameScreens
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu,",
                 "or E to End Rolling",
-                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
+                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!",
+                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
         }
 
@@ -281,7 +283,23 @@ namespace GameEngine.GameScreens
             {
                 ScreenManager.AddScreen(new BuyCards(new List<Card>(), MonsterController.GetById(_localPlayer).Energy));
                 if (cardScreenChoice == -1) return;
-                //ServerClasses.Client.SendActionPacket(GameStateController.BuyCard())
+                var cfs = CardsForSale.One;
+                switch (cardScreenChoice)
+                {
+                    case 0:
+                        cfs = CardsForSale.One;
+                        break;
+                    case 1:
+                        cfs = CardsForSale.Two;
+                        break;
+                    case 2:
+                        cfs = CardsForSale.Three;
+                        break;
+                    default:
+                        Console.Out.WriteLine("Something went wrong with cardScreenChoice");
+                        break;
+                }
+                ServerClasses.Client.SendActionPacket(GameStateController.BuyCard(cfs));
                 cardScreenChoice = -1; //reset choice for next time.
                 _gameState = GameState.EndingTurn;
                 EndTurn();

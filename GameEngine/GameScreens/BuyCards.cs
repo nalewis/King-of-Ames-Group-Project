@@ -59,7 +59,6 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            
             if (Engine.InputManager.KeyPressed(Keys.Enter))
             {
                 MainGameScreen.cardScreenChoice = _selected;
