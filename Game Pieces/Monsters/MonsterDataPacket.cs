@@ -24,12 +24,13 @@ namespace GamePieces.Monsters
         public int Dice { get; set; }
         public int MaximumRolls { get; set; }
         public int RemainingRolls { get; set; }
+        public bool CanYield { get; set; }
         public State State { get; set; }
 
         public MonsterDataPacket(int playerId, int index, string name, Location location, Card[] cards,
             int numberOfCards, int previousNumberOfCards, int energy, int previousEnergy, int victoryPoints,
             int previousVictoryPoints, int health, int previousHealth, int maximumHealth, int attackPoints, int dice,
-            int maximumRolls, int remainingRolls, State state)
+            int maximumRolls, int remainingRolls, bool canyield, State state)
         {
             PlayerId = playerId;
             Index = index;
@@ -49,6 +50,7 @@ namespace GamePieces.Monsters
             Dice = dice;
             MaximumRolls = maximumRolls;
             RemainingRolls = remainingRolls;
+            CanYield = canyield;
             State = state;
         }
     }
