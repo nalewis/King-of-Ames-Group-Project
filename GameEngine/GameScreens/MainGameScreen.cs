@@ -43,8 +43,6 @@ namespace GameEngine.GameScreens
         {
             if (GameStateController.GameOver)
             {
-                _textPrompts.Clear();
-                _textPrompts.Add(new TextBlock("GameOver", new List<string>() { "Game Over" }));
                 return;
             }
             UpdatePositions();
@@ -74,6 +72,8 @@ namespace GameEngine.GameScreens
                     break;
                 case GameState.AskYield:
                     AskYield();
+                    break;
+                case GameState.EndGame:
                     break;
                 default:
                     Console.Write("switch hit default.");
@@ -261,6 +261,18 @@ namespace GameEngine.GameScreens
             }
         }
 
+        public void EndGame(string winner)
+        {
+            _textPrompts.Clear();
+            _textPrompts.Add(new TextBlock("GameOver", new List<string>()
+            {
+                "Game Over",
+                "Winner: " + winner + "!"
+            }));
+            _gameState = GameState.EndGame;
+
+        }
+
         #endregion
 
         #region PrivateHelpers
@@ -363,7 +375,8 @@ namespace GameEngine.GameScreens
             AskYield,
             BuyingCards,
             Waiting,
-            EndingTurn
+            EndingTurn,
+            EndGame
         }
     }
 }
