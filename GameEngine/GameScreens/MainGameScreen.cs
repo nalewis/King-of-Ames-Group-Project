@@ -284,7 +284,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                ScreenManager.AddScreen(new BuyCards(Client.cardNames, MonsterController.GetById(_localPlayer).Energy));
+                ScreenManager.AddScreen(new BuyCards(MonsterController.GetById(_localPlayer).Energy));
                 if (cardScreenChoice == -1) return;
                 var cfs = CardsForSale.One;
                 switch (cardScreenChoice)
