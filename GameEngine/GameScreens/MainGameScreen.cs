@@ -20,6 +20,7 @@ namespace GameEngine.GameScreens
         private readonly List<PlayerBlock> _pBlocks;
         private static List<TextBlock> _textPrompts;
         private readonly DiceRow _diceRow;
+        public ServerUpdateBox ServerUpdateBox;
 
         private static int _localPlayer;
         private static Monster _localMonster;
@@ -38,6 +39,7 @@ namespace GameEngine.GameScreens
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
+            ServerUpdateBox = new ServerUpdateBox(Engine.GraphicsD, Engine.FontList["updateFont"]);
         }
 
         //public static void SetLocalPlayerState(int i)
@@ -347,6 +349,7 @@ namespace GameEngine.GameScreens
 
         private void DrawGraphicsPieces()
         {
+            ServerUpdateBox.Draw(Engine.SpriteBatch);
             foreach (var pb in _pBlocks)
                 pb.Draw(Engine.SpriteBatch);
 

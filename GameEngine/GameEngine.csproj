@@ -62,6 +62,7 @@
     <Compile Include="GraphicPieces\DiceSprite.cs" />
     <Compile Include="GraphicPieces\DiceRow.cs" />
     <Compile Include="Engine.cs" />
+    <Compile Include="GraphicPieces\ServerUpdateBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="GameScreens\GameScreen.cs" />
     <Compile Include="GameScreens\MainGameScreen.cs" />
