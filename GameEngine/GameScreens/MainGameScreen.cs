@@ -41,7 +41,7 @@ namespace GameEngine.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            if (GameStateController.GameOver)
+            if (GameStateController.GameOver || MonsterController.IsDead(_localPlayer))
             {
                 return;
             }

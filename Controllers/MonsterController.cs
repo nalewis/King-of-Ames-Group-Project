@@ -219,5 +219,15 @@ namespace Controllers
             }
             return Game.Monsters.First(monster => monster.PlayerId == playerId);
         }
+
+        /// <summary>
+        /// Checks if a monster is dead.
+        /// </summary>
+        /// <param name="playerId">Player ID</param>
+        /// <returns>If the monster is dead.</returns>
+        public static bool IsDead(int playerId)
+        {
+            return Game.Dead.Any(monster => monster.PlayerId == playerId);
+        }
     }
 }
