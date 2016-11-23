@@ -130,7 +130,7 @@ namespace GamePieces.Session
         public static void AcceptDataPacket(CardDataPacket dataPacket)
         {
             //TODO maybe check against the card size?
-            CardsForSale = dataPacket.Cards.ToList();
+            //CardsForSale = dataPacket.Cards.ToList();
         }
     }
 }

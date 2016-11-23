@@ -25,6 +25,7 @@ namespace GameEngine.ServerClasses
         public static MonsterDataPacket[] MonsterPackets;
         public static bool canContinue = true;
         public static bool isStart = false;
+        public static string[] cardNames;
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -81,7 +82,7 @@ namespace GameEngine.ServerClasses
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
-
+                            /*
                             //TODO find perm solution
                             if (inc.ReadByte() == (byte)PacketTypes.Cards)
                             {
@@ -92,7 +93,7 @@ namespace GameEngine.ServerClasses
                             else
                             {
                                 Console.Error.WriteLine("No Cards! (╯°□°）╯︵ ┻━┻");
-                            }
+                            }*/
 
                             LobbyController.StartGame(MonsterPackets);
                             //Makes this thread a STAThread, not sure if necessary...
@@ -128,7 +129,8 @@ namespace GameEngine.ServerClasses
                             {
                                 var cardJson = inc.ReadString();
                                 var cards = JsonConvert.DeserializeObject<CardDataPacket>(cardJson);
-                                CardController.AcceptDataPacket(cards);
+                                cardNames = cards.Name;
+                                //CardController.AcceptDataPacket(cards);
                             }
                             else
                             {
