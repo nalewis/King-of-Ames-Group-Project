@@ -103,10 +103,13 @@ namespace GamePieces.Monsters
                         value = 0;
                         Kill();
                     }
-                    if (value > MaximumHealth) value = MaximumHealth;
-                    State = value > Health ? State.Healing : State.Attacked;
-                    if (State == State.Healing && InTokyo) return;
-                    PreviousHealth = Health;
+                    else
+                    {
+                        if (value > MaximumHealth) value = MaximumHealth;
+                        State = value > Health ? State.Healing : State.Attacked;
+                        if (State == State.Healing && InTokyo) return;
+                        PreviousHealth = Health;
+                    }
                 }
                 Set(value);
             }
