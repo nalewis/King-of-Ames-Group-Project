@@ -7,10 +7,8 @@ using System;
 using System.Linq;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
-using GamePieces.Cards;
 using GamePieces.Monsters;
 using GamePieces.Session;
-using Microsoft.Xna.Framework.Audio;
 
 namespace GameEngine.GameScreens
 {
@@ -27,7 +25,11 @@ namespace GameEngine.GameScreens
         private State _localPlayerState;
         private bool firstPlay = true;
 
+
         public static int cardScreenChoice = -1;
+
+        private int RollAnimation { get; set; } = 0;
+        private DiceRow RollingDice { get; }
 
         private static GameState _gameState = GameState.Waiting;
 
@@ -40,6 +42,8 @@ namespace GameEngine.GameScreens
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
+
+            RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
         }
 
         //public static void SetLocalPlayerState(int i)
@@ -133,6 +137,10 @@ namespace GameEngine.GameScreens
         {
             _diceRow.Hidden = true;
             _diceRow.Clear();
+
+            RollingDice.Hidden = true;
+            RollingDice.Clear();
+
             _textPrompts.Clear();
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
@@ -153,6 +161,7 @@ namespace GameEngine.GameScreens
             _pBlocks.Clear();
             _textPrompts.Clear();
             _diceRow.Clear();
+            RollingDice.Clear();
             base.UnloadAssets();
         }
 
@@ -162,6 +171,10 @@ namespace GameEngine.GameScreens
         {
             _diceRow.Hidden = true;
             _diceRow.Clear();
+
+            RollingDice.Hidden = true;
+            RollingDice.Clear();
+
             _textPrompts.Clear();
             if (firstPlay)
             {
@@ -184,6 +197,9 @@ namespace GameEngine.GameScreens
                 System.Threading.Thread.Sleep(500);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
+
+                RollingDice.AddDice(DiceController.GetDice());
+                RollingDice.Hidden = false;
             }
         }
 
@@ -199,7 +215,8 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {
-                ServerClasses.Client.SendActionPacket(GameStateController.Roll());
+                Client.SendActionPacket(GameStateController.Roll());
+                RollAnimation = 30;
             }
 
             if (Engine.InputManager.LeftClick())
@@ -232,6 +249,10 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
             _diceRow.Clear();
             _diceRow.Hidden = true;
+
+            RollingDice.Clear();
+            RollingDice.Hidden = true;
+
             _gameState = GameState.Waiting;
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
@@ -338,6 +359,8 @@ namespace GameEngine.GameScreens
                 tp.Position = ScreenLocations.GetPosition(tp.Name);
             }
             _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
+
+            RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
         }
 
         private void UpdateGraphicsPieces()
@@ -357,8 +380,18 @@ namespace GameEngine.GameScreens
 
             if (!_diceRow.Hidden)
             {
-                foreach (var ds in _diceRow.DiceSprites)
-                    ds.Draw(Engine.SpriteBatch);
+                for (var i = 0; i < _diceRow.DiceSprites.Count; i++)
+                {
+                    if (RollAnimation <= 0 || _diceRow.DiceSprites[i].Save)
+                    {
+                        _diceRow.DiceSprites[i].Draw(Engine.SpriteBatch);
+                    }
+                    else
+                    {
+                        RollingDice.DiceSprites[i].Roll();
+                        RollingDice.DiceSprites[i].Draw(Engine.SpriteBatch);
+                    }
+                }
             }
 
             foreach (var tp in _textPrompts)
