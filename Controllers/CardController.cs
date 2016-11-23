@@ -11,7 +11,7 @@ namespace Controllers
         /// Get the dice packet for the current game state.
         /// </summary>
         /// <returns>Data Packets</returns>
-        public static CardDataPacket? CreateDataPacket(Card card)
+        public static CardDataPacket CreateDataPacket(Card card)
         {
             return new CardDataPacket(card.GetType(), card.Activated);
         }
