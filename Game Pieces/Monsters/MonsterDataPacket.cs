@@ -7,7 +7,6 @@ namespace GamePieces.Monsters
     public struct MonsterDataPacket
     {
         public int PlayerId { get; set; }
-        public int Index { get; set; }
         public string Name { get; set; }
         public Location Location { get; set; }
         public Card[] Cards { get; set; }
@@ -27,13 +26,12 @@ namespace GamePieces.Monsters
         public bool CanYield { get; set; }
         public State State { get; set; }
 
-        public MonsterDataPacket(int playerId, int index, string name, Location location, Card[] cards,
+        public MonsterDataPacket(int playerId, string name, Location location, Card[] cards,
             int numberOfCards, int previousNumberOfCards, int energy, int previousEnergy, int victoryPoints,
             int previousVictoryPoints, int health, int previousHealth, int maximumHealth, int attackPoints, int dice,
             int maximumRolls, int remainingRolls, bool canyield, State state)
         {
             PlayerId = playerId;
-            Index = index;
             Name = name;
             Location = location;
             Cards = cards;
