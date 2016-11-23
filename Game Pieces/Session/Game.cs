@@ -40,6 +40,20 @@ namespace GamePieces.Session
             Monsters.Clear();
             Dead.Clear();
             for(var i = 0; i < playerIds.Count; i++) Monsters.Add(new Monster(playerIds[i], names[i]));
+
+            Monsters.First().Previous = Monsters.Last();
+            Monsters.Last().Next = Monsters.First();
+
+            for (var i = 0; i < Monsters.Count - 1; i++)
+            {
+                Monsters[i].Next = Monsters[i + 1];
+            }
+
+            for (var i = Monsters.Count - 1; i > 0; i--)
+            {
+                Monsters[i].Previous = Monsters[i - 1];
+            }
+
             Current = Monsters.First();
             Board.Reset();
             Host = true;

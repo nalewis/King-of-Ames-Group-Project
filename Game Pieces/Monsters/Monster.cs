@@ -16,11 +16,10 @@ namespace GamePieces.Monsters
         //Location & Neighbors
         private int Index { get; set; }
 
-        public Monster Previous =>
-            Game.Players == 1 ? this : Index != 0 ? Game.Monsters[Index - 1] : Game.Monsters.Last();
+        public Monster Previous { get; set; }
 
-        public Monster Next =>
-            Game.Players == 1 ? this : Index != Game.Players - 1 ? Game.Monsters[Index + 1] : Game.Monsters.First();
+        public Monster Next { get; set; }
+
 
         //Name
         public string Name { get; private set; }
@@ -103,13 +102,11 @@ namespace GamePieces.Monsters
                         value = 0;
                         Kill();
                     }
-                    else
-                    {
-                        if (value > MaximumHealth) value = MaximumHealth;
-                        State = value > Health ? State.Healing : State.Attacked;
-                        if (State == State.Healing && InTokyo) return;
-                        PreviousHealth = Health;
-                    }
+                    else{
+                    if (value > MaximumHealth) value = MaximumHealth;
+                    State = value > Health ? State.Healing : State.Attacked;
+                    if (State == State.Healing && InTokyo) return;
+                    PreviousHealth = Health;
                 }
                 Set(value);
             }
@@ -294,8 +291,12 @@ namespace GamePieces.Monsters
             if (InTokyo) Board.LeaveTokyo(this);
             Cards.Clear();
             Game.Monsters.Remove(this);
-            foreach (var monster in Game.Monsters)
-                if (monster.Index > Index) monster.Index--;
+            Next.Previous = Previous;
+            Previous.Next = Next;
+
+            Next = null;
+            Previous = null;
+
             Game.Dead.Add(this);
             State = State.Dead;
         }
