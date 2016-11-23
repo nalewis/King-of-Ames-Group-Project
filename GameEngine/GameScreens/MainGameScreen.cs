@@ -22,6 +22,7 @@ namespace GameEngine.GameScreens
         private static int _localPlayer;
         private static Monster _localMonster;
         private State _localPlayerState;
+        private bool firstPlay = true;
 
         private static GameState _gameState = GameState.Waiting;
 
@@ -156,7 +157,11 @@ namespace GameEngine.GameScreens
             _diceRow.Hidden = true;
             _diceRow.Clear();
             _textPrompts.Clear();
-            Engine.PlaySound("StartTurn");
+            if (firstPlay)
+            {
+                Engine.PlaySound("StartTurn");
+                firstPlay = false;
+            }
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",

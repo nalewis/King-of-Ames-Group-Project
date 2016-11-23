@@ -165,7 +165,7 @@ namespace GameEngine {
 
         private void AddSound(string filePath, string name)
         {
-            var toAdd = Content.Load<SoundEffect>(filePath);
+            SoundEffect toAdd = Content.Load<SoundEffect>(filePath);
             SoundList.Add(name, toAdd);
         }
 
