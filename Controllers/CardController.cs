@@ -99,5 +99,10 @@ namespace Controllers
         {
             Game.CardsForSale = cardsForSale;
         }
+
+        public static List<Card> GetCardsForSale()
+        {
+            return Game.CardsForSale;
+        }
     }
 }
