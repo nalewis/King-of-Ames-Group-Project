@@ -77,11 +77,11 @@ namespace GameEngine.Views
             char_list.Items.Clear();
             char_list.Items.Add("Alienoid");
             char_list.Items.Add("Cyber Bunny");
-            char_list.Items.Add("GigaZaur");
+            char_list.Items.Add("Giga Zaur");
             char_list.Items.Add("Kraken");
-            char_list.Items.Add("MekaDragon");
+            char_list.Items.Add("Meka Dragon");
             char_list.Items.Add("The King");
-            //char_list.Items.Add("The Real King"); //TODO This unlocks something cool, is this enough tho or will this break things?
+            char_list.Items.Add("The Real King"); //TODO This unlocks something cool, is this enough tho or will this break things?
             try
             {
                 var ds = NetworkClasses.GetServer(Client.Conn);

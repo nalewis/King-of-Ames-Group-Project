@@ -80,7 +80,7 @@ namespace GameEngine.ServerClasses
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }//TODO What happens if one player leaves?
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");
@@ -172,7 +172,7 @@ namespace GameEngine.ServerClasses
             outMsg.Write(packets.Length);
             foreach (var packet in packets)
             {
-                var json = JsonConvert.SerializeObject(packet);//TODO check player count
+                var json = JsonConvert.SerializeObject(packet);
                 outMsg.Write(json);
             }
 
