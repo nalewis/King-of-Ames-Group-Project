@@ -210,8 +210,7 @@ namespace GameEngine.ServerClasses
             if (sendCards)
             {
                 outMsg.Write((byte) PacketTypes.Cards);
-              //  var cards = CardController.GetCardsForSale().Select(CardController.CreateDataPacket).ToArray();
-                var cards = CardController.CreateDataPacket(CardController.CardForSaleOne());
+                var cards = CardController.GetCardsForSale().Select(CardController.CreateDataPacket).ToArray();
                 outMsg.Write(JsonConvert.SerializeObject(cards));
             }
             else if (!start)
