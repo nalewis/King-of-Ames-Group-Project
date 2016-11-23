@@ -41,7 +41,7 @@ namespace GameEngine.GameScreens
 
         public override void Update(GameTime gameTime)
         {
-            if (GameStateController.GameOver || MonsterController.IsDead(_localPlayer))
+            if (GameStateController.GameOver)
             {
                 return;
             }
@@ -50,8 +50,16 @@ namespace GameEngine.GameScreens
 
             //if(Client.isStart) _gameState = GameState.StartTurn;
 
-            _localPlayerState = MonsterController.State(_localPlayer);
-            if (_localPlayerState == State.StartOfTurn) { _gameState = GameState.StartTurn; }
+            if (!MonsterController.IsDead(_localPlayer))
+            {
+                _localPlayerState = MonsterController.State(_localPlayer);
+                if (_localPlayerState == State.StartOfTurn)
+                    _gameState = GameState.StartTurn;
+            }
+            else
+            {
+                _gameState = GameState.IsDead;
+            }
 
             switch (_gameState)
             {
@@ -72,6 +80,9 @@ namespace GameEngine.GameScreens
                     break;
                 case GameState.AskYield:
                     AskYield();
+                    break;
+                case GameState.IsDead:
+                    IsDead();
                     break;
                 case GameState.EndGame:
                     break;
@@ -108,6 +119,17 @@ namespace GameEngine.GameScreens
             */
 
             base.Update(gameTime);
+        }
+
+        private void IsDead()
+        {
+            _diceRow.Hidden = true;
+            _diceRow.Clear();
+            _textPrompts.Clear();
+
+            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
+                "Your Dead."
+                }));
         }
 
         public override void Draw(GameTime gameTime)
@@ -376,7 +398,8 @@ namespace GameEngine.GameScreens
             BuyingCards,
             Waiting,
             EndingTurn,
-            EndGame
+            EndGame,
+            IsDead
         }
     }
 }
