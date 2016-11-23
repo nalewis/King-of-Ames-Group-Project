@@ -280,7 +280,7 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
                 ScreenManager.AddScreen(new BuyCards(new List<Card>(), MonsterController.GetById(_localPlayer).Energy));
-                while(cardScreenChoice == -1) { }
+                if (cardScreenChoice == -1) return;
                 //ServerClasses.Client.SendActionPacket(GameStateController.BuyCard())
                 cardScreenChoice = -1; //reset choice for next time.
                 _gameState = GameState.EndingTurn;
