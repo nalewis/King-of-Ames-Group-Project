@@ -203,7 +203,7 @@ namespace GameEngine.GameScreens
         private void Waiting()
         {
             _textPrompts.Clear();
-            Console.WriteLine("Local Player Can Yeild: " + MonsterController.GetById(_localPlayer).CanYield);
+            //Console.WriteLine("Local Player Can Yeild: " + MonsterController.GetById(_localPlayer).CanYield);
             if (MonsterController.GetById(_localPlayer).CanYield)
             {
                 _gameState = GameState.AskYield;
@@ -227,6 +227,7 @@ namespace GameEngine.GameScreens
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
+                MonsterController.GetById(_localPlayer).CanYield = false;
                 _gameState = GameState.Waiting;
                 Waiting();
             }
