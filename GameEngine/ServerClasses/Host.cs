@@ -145,7 +145,10 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
+            Console.WriteLine("Packet: " + packet.Action);
+            Console.WriteLine("Before: " + Game.Current.State + " id: " + Game.Current.PlayerId);
             GameStateController.AcceptAction(packet);
+            Console.WriteLine("After: " + Game.Current.State + " id: " + Game.Current.PlayerId);
             SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
             //SendMonsterPackets();
         }
@@ -159,8 +162,8 @@ namespace GameEngine.ServerClasses
             var outMsg = _server.CreateMessage();
             if (start) { outMsg.Write((byte)PacketTypes.Start);}
             else { outMsg.Write((byte)PacketTypes.Update); }
-            outMsg.Write(Players.Count);
             var packets = MonsterController.GetDataPackets();
+            outMsg.Write(packets.Length);
             foreach (var packet in packets)
             {
                 var json = JsonConvert.SerializeObject(packet);//TODO check player count

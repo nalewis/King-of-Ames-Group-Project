@@ -40,7 +40,7 @@ namespace GamePieces.Monsters
         }
 
         public bool InTokyo => Location != Location.Default;
-        public bool CanYield => InTokyo && Game.Attacked.Contains(this);
+        public bool CanYield = false; //=> InTokyo && Game.Attacked.Contains(this);
 
         //Cards
         public List<Card> Cards = new List<Card>();
@@ -162,11 +162,11 @@ namespace GamePieces.Monsters
         /// </summary>
         public void StartTurn()
         {
-            State = State.StartOfTurn;
             Cards.ForEach(card => card.Reset());
             if (InTokyo) VictoryPoints += 2;
             RemainingRolls = MaximumRolls;
             DiceRoller.Setup(Dice);
+            State = State.StartOfTurn;
         }
 
         /// <summary>
@@ -204,6 +204,11 @@ namespace GamePieces.Monsters
             {
                 Game.Attacked.AddRange(Game.Monsters.Where(monster => monster.InTokyo != InTokyo).ToList());
                 Game.Attacked.ForEach(monster => monster.Health -= AttackPoints);
+                foreach (var mon in Game.Attacked)
+                {
+                    if (mon.InTokyo)
+                        mon.CanYield = true;
+                }
                 Board.Update();
                 Board.MoveIntoTokyo(this);
             }
@@ -220,6 +225,7 @@ namespace GamePieces.Monsters
             State = State.Yielding;
             Board.LeaveTokyo(this);
             Board.MoveIntoTokyo(Game.Current);
+            CanYield = false;
         }
 
         /// <summary>
@@ -299,7 +305,7 @@ namespace GamePieces.Monsters
         {
             return new MonsterDataPacket(PlayerId, Index, Name, Location, Cards.ToArray(), NumberOfCards,
                 PreviousNumberOfCards, Energy, PreviousEnergy, VictoryPoints, PreviousVictoryPoints, Health,
-                PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls, State);
+                PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls, CanYield, State);
         }
 
         /// <summary>
@@ -326,6 +332,7 @@ namespace GamePieces.Monsters
             Dice = packet.Dice;
             MaximumRolls = packet.MaximumRolls;
             RemainingRolls = packet.RemainingRolls;
+            CanYield = packet.CanYield;
             State = packet.State;
         }
     }

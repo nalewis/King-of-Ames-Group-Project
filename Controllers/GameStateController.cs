@@ -60,6 +60,9 @@ namespace Controllers
                 case Action.UnSaveDie:
                     DiceController.UnSaveDie((int) actionPacket.Value);
                     break;
+                case Action.NoYield:
+                    MonsterController.GetById(actionPacket.PlayerId).CanYield = false;
+                    break;
                 default:
                     return;
             }
@@ -128,6 +131,16 @@ namespace Controllers
         public static ActionPacket Yield(int playerId)
         {
             return new ActionPacket(Action.Yield, playerId);
+        }
+
+        /// <summary>
+        /// No Yield.
+        /// </summary>
+        /// <param name="playerId">Player Id</param>
+        /// <returns>NoYield action packet</returns>
+        public static ActionPacket NoYield(int playerId)
+        {
+            return new ActionPacket(Action.NoYield, playerId);
         }
 
         /// <summary>

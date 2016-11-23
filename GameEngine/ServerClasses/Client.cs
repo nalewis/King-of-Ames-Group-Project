@@ -22,6 +22,8 @@ namespace GameEngine.ServerClasses
         private static Thread _gameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
+        public static bool canContinue = true;
+        public static bool isStart = false;
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -78,6 +80,14 @@ namespace GameEngine.ServerClasses
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                                 Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
+                                if (MonsterPackets[i].PlayerId == User.PlayerId)
+                                {
+                                    if (MonsterPackets[i].State == State.StartOfTurn)
+                                    {
+                                        //dontAccept = true;
+                                        isStart = true;
+                                    }
+                                }
                             }
                             LobbyController.StartGame(MonsterPackets);
                             //Makes this thread a STAThread, not sure if necessary...
@@ -92,12 +102,23 @@ namespace GameEngine.ServerClasses
                             {
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                                Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
-                            }             
+                                //Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
+
+                                /*
+                                if (MonsterPackets[i].PlayerId == User.PlayerId)
+                                {
+                                    if(MonsterPackets[i].State == State.StartOfTurn)
+                                    {
+                                        isStart = true;
+                                    }
+                                }
+                                */
+                            }
+
                             MonsterController.AcceptDataPackets(MonsterPackets);
 
-                            if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
-                                MainGameScreen.SetLocalPlayerState(0);
+                            //if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
+                            //    MainGameScreen.SetLocalPlayerState(0);
 
                             if (inc.ReadByte() == (byte)PacketTypes.Dice) {
                                 var diceJson = inc.ReadString();
@@ -108,6 +129,8 @@ namespace GameEngine.ServerClasses
                             {
                                 Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
                             }
+
+                            canContinue = true;
                         }
                         else if (type == (byte)PacketTypes.Closed)
                         {
@@ -139,12 +162,18 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void SendActionPacket(ActionPacket packet)
         {
+            while (!canContinue)
+            {
+                System.Threading.Thread.Sleep(500);
+                Console.WriteLine("Sleeping packet type: " + packet.Action);
+            }
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Action);
             var json = JsonConvert.SerializeObject(packet);
             JsonConvert.DeserializeObject<ActionPacket>(json);
             outMsg.Write(json);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+            canContinue = false;
         }
 
         /// <summary>
