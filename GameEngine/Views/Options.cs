@@ -102,10 +102,13 @@ namespace GameEngine.Views
         {
             var n = -1;
 
+            //Checks if user is admin
             if (NetworkClasses.IsAdmin(User.PlayerId))
             {
+                //Checks for empty textbox and if the value is an int
                 if (banPlayerText.TextLength > 0 && int.TryParse(banPlayerText.Lines[0], out n))
                 {
+                    //Bans the selected player id
                     if (NetworkClasses.BanPlayer(n))
                     {
                         MessageBox.Show("Successfully Banned Player ID: " + banPlayerText.Lines[0], "Player Banned", MessageBoxButtons.OK, MessageBoxIcon.Information);

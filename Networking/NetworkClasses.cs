@@ -544,6 +544,28 @@ namespace Networking
             }
         }
 
+        public static bool IsBanned(int playerid)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @playerid";
+            command.Parameters.AddWithValue("@playerid", playerid);
+            var adapter = new MySqlDataAdapter(command);
+            var ds = new DataSet();
+            adapter.Fill(ds);
+            if (int.Parse(ds.Tables[0].Rows[0]["IsBanned"].ToString()) == 1)
+            {
+                connection.Close();
+                return true;
+            }
+            else
+            {
+                connection.Close();
+                return false;
+            }
+        }
+
         public static bool IsAdmin(int playerid)
         {
             var connection = new MySqlConnection(ConnectString);
