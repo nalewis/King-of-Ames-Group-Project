@@ -87,7 +87,7 @@ namespace GameEngine.Views
             char_list.Items.Add("Cyber Bunny");
             char_list.Items.Add("Giga Zaur");
             char_list.Items.Add("Kraken");
-            char_list.Items.Add("Mecha Dragon");
+            char_list.Items.Add("Meka Dragon");
             char_list.Items.Add("The King");
             char_list.Items.Add("The Real King");
 

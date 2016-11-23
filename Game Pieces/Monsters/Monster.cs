@@ -1,4 +1,5 @@
 ﻿
+
 using System.Collections.Generic;
 using System.Linq;
 using DataStructures.Observer_Pattern;
@@ -14,13 +15,9 @@ namespace GamePieces.Monsters
         public int PlayerId { get; private set; }
 
         //Location & Neighbors
-        private int Index { get; set; }
-
-        public Monster Previous =>
-            Game.Players == 1 ? this : Index != 0 ? Game.Monsters[Index - 1] : Game.Monsters.Last();
-
-        public Monster Next =>
-            Game.Players == 1 ? this : Index != Game.Players - 1 ? Game.Monsters[Index + 1] : Game.Monsters.First();
+        private int Index => IndexOf(Game.Turns, this);
+        public Monster Previous => GetNodeAt(Game.Turns, Index).Previous?.Value;
+        public Monster Next => GetNodeAt(Game.Turns, Index).Next?.Value;
 
         //Name
         public string Name { get; private set; }
@@ -103,10 +100,13 @@ namespace GamePieces.Monsters
                         value = 0;
                         Kill();
                     }
-                    if (value > MaximumHealth) value = MaximumHealth;
-                    State = value > Health ? State.Healing : State.Attacked;
-                    if (State == State.Healing && InTokyo) return;
-                    PreviousHealth = Health;
+                    else
+                    {
+                        if (value > MaximumHealth) value = MaximumHealth;
+                        State = value > Health ? State.Healing : State.Attacked;
+                        if (State == State.Healing && InTokyo) return;
+                        PreviousHealth = Health;
+                    }
                 }
                 Set(value);
             }
@@ -142,7 +142,6 @@ namespace GamePieces.Monsters
             Health = MaximumHealth;
             Location = Location.Default;
             RemainingRolls = 0;
-            Index = Game.Players;
             State = State.EndOfTurn;
             Console.WriteLine("Name: " + Name);
         }
@@ -291,8 +290,7 @@ namespace GamePieces.Monsters
             if (InTokyo) Board.LeaveTokyo(this);
             Cards.Clear();
             Game.Monsters.Remove(this);
-            foreach (var monster in Game.Monsters)
-                if (monster.Index > Index) monster.Index--;
+            Game.Turns.Remove(this);
             Game.Dead.Add(this);
             State = State.Dead;
         }
@@ -303,7 +301,7 @@ namespace GamePieces.Monsters
         /// <returns>Data Packet</returns>
         public MonsterDataPacket GetPacket()
         {
-            return new MonsterDataPacket(PlayerId, Index, Name, Location, Cards.ToArray(), NumberOfCards,
+            return new MonsterDataPacket(PlayerId, Name, Location, Cards.ToArray(), NumberOfCards,
                 PreviousNumberOfCards, Energy, PreviousEnergy, VictoryPoints, PreviousVictoryPoints, Health,
                 PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls, CanYield, State);
         }
@@ -315,7 +313,6 @@ namespace GamePieces.Monsters
         public void AcceptPacket(MonsterDataPacket packet)
         {
             PlayerId = packet.PlayerId;
-            Index = packet.Index;
             Name = packet.Name;
             Location = packet.Location;
             Cards = packet.Cards.ToList();
@@ -334,6 +331,29 @@ namespace GamePieces.Monsters
             RemainingRolls = packet.RemainingRolls;
             CanYield = packet.CanYield;
             State = packet.State;
+        }
+
+        public static int IndexOf<T>(LinkedList<T> list, T item)
+        {
+            var count = 0;
+            for (var node = list.First; node != null; node = node.Next, count++)
+            {
+                if (item.Equals(node.Value))
+                    return count;
+            }
+            return -1;
+        }
+
+        public static LinkedListNode<T> GetNodeAt<T>(LinkedList<T> list, int position)
+        {
+            var mark = list.First;
+            var i = 0;
+            while (i < position)
+            {
+                mark = mark?.Next;
+                i++;
+            }
+            return mark;
         }
     }
 }

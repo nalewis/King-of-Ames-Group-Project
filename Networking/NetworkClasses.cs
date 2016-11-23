@@ -116,7 +116,7 @@ namespace Networking
                 var command = connection.CreateCommand();
                 command.CommandText = "UPDATE User_List SET Username = @name WHERE Player_ID = @playerid";
                 command.Parameters.AddWithValue("@name", name);
-                command.Parameters.AddWithValue("@playerid", playerid);//TODO handle exception for non-unique name-change
+                command.Parameters.AddWithValue("@playerid", playerid);
                 command.ExecuteNonQuery();
 
                 connection.Close();

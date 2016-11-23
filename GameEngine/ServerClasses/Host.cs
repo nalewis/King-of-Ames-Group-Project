@@ -177,7 +177,7 @@ namespace GameEngine.ServerClasses
             outMsg.Write(packets.Length);
             foreach (var packet in packets)
             {
-                var json = JsonConvert.SerializeObject(packet);//TODO check player count
+                var json = JsonConvert.SerializeObject(packet);
                 outMsg.Write(json);
             }
 
