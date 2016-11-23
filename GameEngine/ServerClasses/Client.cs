@@ -142,6 +142,8 @@ namespace GameEngine.ServerClasses
                         else if (type == (byte)PacketTypes.GameOver)
                         {
                             Console.WriteLine("Game Over!");
+                            var winnerName = inc.ReadString();
+                            MainGameScreen.EndGame(winnerName);
                         }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
