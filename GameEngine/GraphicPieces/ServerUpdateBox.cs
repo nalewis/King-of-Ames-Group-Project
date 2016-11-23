@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GameEngine.GameScreens;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -21,7 +22,7 @@ namespace GameEngine.GraphicPieces
             graphicsDevice = gD;
             _font = font;
             _backgroundRect = GetBackground();
-            _positionVector = new Vector2(100, 100);
+            _positionVector = MainGameScreen.ScreenLocations.GetPosition("ServerUpdateBox");
             _stringList = new List<string>();
         }
 
