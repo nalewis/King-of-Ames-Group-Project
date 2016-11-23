@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using GameEngine.ServerClasses;
 using Microsoft.Xna.Framework.Audio;
+using System;
 
 namespace GameEngine {
     /// <summary>
@@ -143,6 +144,11 @@ namespace GameEngine {
             GraffixMngr.ApplyChanges();
         }
 
+        internal static void PlaySound(string v)
+        {
+            SoundList[v].Play();
+        }
+
         #region ContentHelpers
 
         private void AddTexture(string filePath, string name)
@@ -157,11 +163,11 @@ namespace GameEngine {
             FontList.Add(name, toAdd);
         }
 
-        //private void AddSound(string filePath, string name)
-        //{
-        //    var toAdd = Content.Load<SoundEffect>(filePath);
-        //    SoundList.Add(name, toAdd);
-        //}
+        private void AddSound(string filePath, string name)
+        {
+            var toAdd = Content.Load<SoundEffect>(filePath);
+            SoundList.Add(name, toAdd);
+        }
 
         private void LoadTextures()
         {
@@ -193,7 +199,7 @@ namespace GameEngine {
 
         private void LoadSounds()
         {
-            //AddSound("Sounds\\Recording", "Recording");
+            AddSound("Sounds\\Recording", "StartTurn");
         }
 
         #endregion
