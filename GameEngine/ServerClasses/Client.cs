@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using GameEngine.GameScreens;
 using GamePieces.Cards;
+using System.Collections.Generic;
 
 namespace GameEngine.ServerClasses
 {
@@ -26,6 +27,7 @@ namespace GameEngine.ServerClasses
         public static bool canContinue = true;
         public static bool isStart = false;
         public static string[] cardNames;
+        public static List<string> messageHistory = new List<string>();
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -82,18 +84,6 @@ namespace GameEngine.ServerClasses
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
                             }
-                            /*
-                            //TODO find perm solution
-                            if (inc.ReadByte() == (byte)PacketTypes.Cards)
-                            {
-                                var cardJson = inc.ReadString();
-                                var cards = JsonConvert.DeserializeObject<CardDataPacket>(cardJson);
-                                //CardController.AcceptDataPacket(cards);
-                            }
-                            else
-                            {
-                                Console.Error.WriteLine("No Cards! (╯°□°）╯︵ ┻━┻");
-                            }*/
 
                             LobbyController.StartGame(MonsterPackets);
                             //Makes this thread a STAThread, not sure if necessary...
@@ -152,6 +142,11 @@ namespace GameEngine.ServerClasses
                             var winnerName = inc.ReadString();
                             MainGameScreen.EndGame(winnerName);
                         }
+                        else if (type == (byte)PacketTypes.Message)
+                        {
+                            var message = inc.ReadString();
+                            messageHistory.Add(message);
+                        }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
                         break;
@@ -189,6 +184,15 @@ namespace GameEngine.ServerClasses
             canContinue = false;
         }
 
+        //Sends a message to the server, the server will return the message to all clients, which will then add it to their message history
+        public static void SendMessage(string message)
+        {
+            var outMsg = NetClient.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Message);
+            outMsg.Write(message);
+            NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Tells the server to delete it from list, stops loop and shuts down NetClient
         /// </summary>
@@ -204,21 +208,6 @@ namespace GameEngine.ServerClasses
             _shouldStop = true;
             Conn = "";
             if (_gameLoop.IsAlive) { _gameLoop.Abort(); }
-        }
-
-        private enum PacketTypes
-        {
-            Login,
-            Leave,
-            Start,
-            Action,
-            Update,
-            Dice,
-            NoDice,
-            Cards,
-            NoCards,
-            GameOver,
-            Closed
         }
     }
 }

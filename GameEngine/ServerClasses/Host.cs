@@ -103,6 +103,11 @@ namespace GameEngine.ServerClasses
                             var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
                             ReceiveActionUpdate(packet);
                         }
+                        else if (type == (byte)PacketTypes.Message)
+                        {
+                            var message = inc.ReadString();
+                            PassMessageAlong(message);
+                        }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
                         break;
@@ -214,6 +219,14 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void PassMessageAlong(string message)
+        {
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Message);
+            outMsg.Write(message);
+            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Gets the ping values for all connected users
         /// </summary>
@@ -222,21 +235,5 @@ namespace GameEngine.ServerClasses
         {
             return _server.Connections.Select(conn => (int)(conn.AverageRoundtripTime * 1000)).ToList();
         }
-
-        private enum PacketTypes
-        {
-            Login,
-            Leave,
-            Start,
-            Action,
-            Update,
-            Dice,
-            NoDice,
-            Cards,
-            NoCards,
-            GameOver,
-            Closed
-        }
-
     }
 }
