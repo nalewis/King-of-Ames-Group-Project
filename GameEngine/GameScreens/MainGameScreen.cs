@@ -4,6 +4,7 @@ using Networking;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
@@ -234,6 +235,10 @@ namespace GameEngine.GameScreens
         private void BuyCardPrompt()
         {
             _textPrompts.Clear();
+
+            var monList = GetMonsterList();
+            if (monList.Any(mon => mon.CanYield)) { return; }
+
             _textPrompts.Add(new TextBlock("BuyCardsPrompt", new List<string>()
             {
                 MonsterController.Name(_localPlayer) + ": Buy Cards? Y/N"
