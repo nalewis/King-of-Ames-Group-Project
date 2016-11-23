@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.Threading;
 using GameEngine.GameScreens;
+using GamePieces.Cards;
 
 namespace GameEngine.ServerClasses
 {
@@ -79,16 +80,20 @@ namespace GameEngine.ServerClasses
                             {
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                                Console.WriteLine("Player " + MonsterPackets[i].PlayerId.ToString() + " state: " + MonsterPackets[i].State.ToString());
-                                if (MonsterPackets[i].PlayerId == User.PlayerId)
-                                {
-                                    if (MonsterPackets[i].State == State.StartOfTurn)
-                                    {
-                                        //dontAccept = true;
-                                        isStart = true;
-                                    }
-                                }
                             }
+
+                            //TODO find perm solution
+                            if (inc.ReadByte() == (byte)PacketTypes.Cards)
+                            {
+                                var cardJson = inc.ReadString();
+                                var cards = JsonConvert.DeserializeObject<CardDataPacket>(cardJson);
+                                //CardController.AcceptDataPacket(cards);
+                            }
+                            else
+                            {
+                                Console.Error.WriteLine("No Cards! (╯°□°）╯︵ ┻━┻");
+                            }
+
                             LobbyController.StartGame(MonsterPackets);
                             //Makes this thread a STAThread, not sure if necessary...
                             _gameLoop.SetApartmentState(ApartmentState.STA);
@@ -102,17 +107,6 @@ namespace GameEngine.ServerClasses
                             {
                                 var json = inc.ReadString();
                                 MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                                Console.WriteLine("Player " + MonsterPackets[i].PlayerId + " state: " + MonsterPackets[i].State);
-
-                                /*
-                                if (MonsterPackets[i].PlayerId == User.PlayerId)
-                                {
-                                    if(MonsterPackets[i].State == State.StartOfTurn)
-                                    {
-                                        isStart = true;
-                                    }
-                                }
-                                */
                             }
 
                             MonsterController.AcceptDataPackets(MonsterPackets);
@@ -128,6 +122,17 @@ namespace GameEngine.ServerClasses
                             else
                             {
                                 Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
+                            }
+
+                            if (inc.ReadByte() == (byte)PacketTypes.Cards)
+                            {
+                                var cardJson = inc.ReadString();
+                                var cards = JsonConvert.DeserializeObject<CardDataPacket>(cardJson);
+                                CardController.AcceptDataPacket(cards);
+                            }
+                            else
+                            {
+                                Console.Error.WriteLine("No Cards! (╯°□°）╯︵ ┻━┻");
                             }
 
                             canContinue = true;
@@ -208,6 +213,8 @@ namespace GameEngine.ServerClasses
             Update,
             Dice,
             NoDice,
+            Cards,
+            NoCards,
             GameOver,
             Closed
         }

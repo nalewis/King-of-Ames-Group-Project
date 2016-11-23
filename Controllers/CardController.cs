@@ -5,6 +5,24 @@ namespace Controllers
 {
     public static class CardController
     {
+        /// <summary>
+        /// Get the dice packet for the current game state.
+        /// </summary>
+        /// <returns>Data Packets</returns>
+        public static CardDataPacket GetDataPacket()
+        {
+            var cardPacket = new CardDataPacket(Game.CardsForSale);
+            return cardPacket;
+        }
+
+        /// <summary>
+        /// Change the monsters in the game state using the given data packets.
+        /// </summary>
+        /// <param name="dataPackets">Data Packets</param>
+        public static void AcceptDataPacket(CardDataPacket dataPacket)
+        {
+            Game.AcceptDataPacket(dataPacket);
+        }
 
         /// <summary>
         /// Gets the card on top of the deck without removing it

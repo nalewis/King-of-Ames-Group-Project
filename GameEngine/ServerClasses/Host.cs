@@ -159,7 +159,7 @@ namespace GameEngine.ServerClasses
                     packet.Action == Networking.Actions.Action.Roll ||
                     packet.Action == Networking.Actions.Action.EndRolling ||
                     packet.Action == Networking.Actions.Action.SaveDie ||
-                    packet.Action == Networking.Actions.Action.UnSaveDie);
+                    packet.Action == Networking.Actions.Action.UnSaveDie, sendCards: true);
             }
         }
 
@@ -167,7 +167,7 @@ namespace GameEngine.ServerClasses
         /// Sends packets to clients 
         /// </summary>
         /// <param name="start"></param>
-        public static void SendMonsterPackets(bool start = false, bool sendDice = false)
+        public static void SendMonsterPackets(bool start = false, bool sendDice = false, bool sendCards = false)
         {
             var outMsg = _server.CreateMessage();
             if (start) { outMsg.Write((byte)PacketTypes.Start);}
@@ -189,6 +189,17 @@ namespace GameEngine.ServerClasses
             else if(!start)
             {
                 outMsg.Write((byte)PacketTypes.NoDice);
+            }
+
+            if (sendCards)
+            {
+                outMsg.Write((byte)PacketTypes.Cards);
+                var cards = CardController.GetDataPacket();
+                outMsg.Write(JsonConvert.SerializeObject(cards));
+            }
+            else if(!start)
+            {
+                outMsg.Write((byte)PacketTypes.NoCards);
             }
 
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
@@ -221,6 +232,8 @@ namespace GameEngine.ServerClasses
             Update,
             Dice,
             NoDice,
+            Cards,
+            NoCards,
             GameOver,
             Closed
         }

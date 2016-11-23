@@ -77,6 +77,7 @@
     <Compile Include="Cards\Deck\Keep\Spiked_Tail.cs" />
     <Compile Include="Cards\Deck\Keep\Urbavore.cs" />
     <Compile Include="Cards\Deck\Keep\We_Are_Only_Making_It_Stronger.cs" />
+    <Compile Include="Cards\CardDataPacket.cs" />
     <Compile Include="Dice\Color.cs" />
     <Compile Include="Dice\Die.cs" />
     <Compile Include="Dice\DiceDataPacket.cs" />
