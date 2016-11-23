@@ -31,7 +31,7 @@ namespace GamePieces.Session
 
         //Cards
         public static Stack<Card> Deck;
-        public static readonly List<Card> CardsForSale = new List<Card>();
+        public static List<Card> CardsForSale = new List<Card>();
 
         public static void StartGame(List<int> playerIds, List<string> names)
         {
@@ -121,6 +121,16 @@ namespace GamePieces.Session
                 //System.Threading.Thread.Sleep(500);
                 //StartTurn();
             }
+        }
+
+        /// <summary>
+        /// Change the monsters in the game state using the given data packets.
+        /// </summary>
+        /// <param name="dataPackets">Data Packets</param>
+        public static void AcceptDataPacket(CardDataPacket dataPacket)
+        {
+            //TODO maybe check against the card size?
+            CardsForSale = dataPacket.Cards.ToList();
         }
     }
 }
