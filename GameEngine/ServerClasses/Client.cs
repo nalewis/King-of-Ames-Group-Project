@@ -96,8 +96,6 @@ namespace GameEngine.ServerClasses
                         }
                         else if (type == (byte)PacketTypes.Update)
                         {
-                            var dontAccept = false;
-
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
                             for (var i = 0; i < end; i++)
@@ -110,7 +108,6 @@ namespace GameEngine.ServerClasses
                                 {
                                     if(MonsterPackets[i].State == State.StartOfTurn)
                                     {
-                                        //dontAccept = true;
                                         isStart = true;
                                     }
                                 }
