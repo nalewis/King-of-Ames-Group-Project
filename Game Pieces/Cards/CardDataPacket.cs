@@ -5,8 +5,8 @@ namespace GamePieces.Cards
     [Serializable]
     public struct CardDataPacket
     {
-        public Type Type { get; }
-        public bool Activated { get; }
+        public Type Type { get; set; }
+        public bool Activated { get; set; }
 
         public CardDataPacket(Type type, bool activated)
         {

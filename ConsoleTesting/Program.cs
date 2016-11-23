@@ -1,6 +1,8 @@
 ﻿using System;
 using Controllers;
+using GamePieces.Cards;
 using GamePieces.Session;
+using Newtonsoft.Json;
 
 namespace ConsoleTesting
 {
@@ -11,12 +13,21 @@ namespace ConsoleTesting
             LobbyController.AddPlayer(0, "0");
             LobbyController.AddPlayer(1, "1");
             LobbyController.StartGame();
-           GameStateController.AcceptAction(GameStateController.StartTurn());
-            GameStateController.AcceptAction(GameStateController.Roll());
 
 
-            Console.WriteLine(Game.Current.State);
-            Console.WriteLine(Game.Monsters[0].State);
+            Console.WriteLine(CardController.CardForSaleOne().GetType());
+            var packet = CardController.CreateDataPacket(CardController.CardForSaleOne());
+
+            var json = JsonConvert.SerializeObject(packet);
+
+            Console.WriteLine(json);
+            var cardPacket = JsonConvert.DeserializeObject<CardDataPacket>(json);
+
+            var card = CardController.AcceptDataPacket(cardPacket);
+
+           // Console.WriteLine(card.GetType());
+
+
         }
     }
 }
