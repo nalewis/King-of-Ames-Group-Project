@@ -2,6 +2,7 @@
 using GameEngine.GameScreens;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using GameEngine.ServerClasses;
 
 namespace GameEngine.GraphicPieces
 
@@ -38,9 +39,9 @@ namespace GameEngine.GraphicPieces
             return bg;
         }
 
-        public void UpdateList(List<string> newList)
+        public void UpdateList()
         {
-            _stringList = newList;
+            _stringList = Client.messageHistory;
         }
 
         public void Draw(SpriteBatch sB)

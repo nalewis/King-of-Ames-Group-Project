@@ -167,6 +167,7 @@ namespace GameEngine.GameScreens
             {
                 Engine.PlaySound("StartTurn");
                 firstPlay = false;
+                Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
@@ -345,6 +346,7 @@ namespace GameEngine.GameScreens
                 ds.Update();
             foreach (var pb in _pBlocks)
                 pb.Update();
+            ServerUpdateBox.UpdateList();
         }
 
         private void DrawGraphicsPieces()
