@@ -122,15 +122,5 @@ namespace GamePieces.Session
                 //StartTurn();
             }
         }
-
-        /// <summary>
-        /// Change the monsters in the game state using the given data packets.
-        /// </summary>
-        /// <param name="dataPackets">Data Packets</param>
-        public static void AcceptDataPacket(CardDataPacket dataPacket)
-        {
-            //TODO maybe check against the card size?
-            //CardsForSale = dataPacket.Cards.ToList();
-        }
     }
 }

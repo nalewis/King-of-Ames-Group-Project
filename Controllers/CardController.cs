@@ -1,4 +1,5 @@
-﻿using GamePieces.Cards;
+﻿using System;
+using GamePieces.Cards;
 using GamePieces.Session;
 
 namespace Controllers
@@ -9,19 +10,26 @@ namespace Controllers
         /// Get the dice packet for the current game state.
         /// </summary>
         /// <returns>Data Packets</returns>
-        public static CardDataPacket GetDataPacket()
+        public static CardDataPacket CreateDataPacket(Card card)
         {
-            var cardPacket = new CardDataPacket(Game.CardsForSale);
-            return cardPacket;
+           return new CardDataPacket(card.GetType());
         }
 
         /// <summary>
         /// Change the monsters in the game state using the given data packets.
         /// </summary>
-        /// <param name="dataPackets">Data Packets</param>
-        public static void AcceptDataPacket(CardDataPacket dataPacket)
+        /// <param name="dataPacket">Data Packets</param>
+        public static Card AcceptDataPacket(CardDataPacket dataPacket)
         {
-            Game.AcceptDataPacket(dataPacket);
+            try
+            {
+              return (Card) Activator.CreateInstance(dataPacket.Type);
+            }
+            catch (Exception)
+            {
+                Console.Error.WriteLine("Cannot create card of type: " + dataPacket.Type);
+                return null;
+            }
         }
 
         /// <summary>
