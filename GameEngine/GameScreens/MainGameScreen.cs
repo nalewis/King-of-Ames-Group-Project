@@ -39,7 +39,7 @@ namespace GameEngine.GameScreens
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
-            ServerUpdateBox = new ServerUpdateBox(Engine.GraphicsD, Engine.FontList["updateFont"]);
+            ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
         }
 
         //public static void SetLocalPlayerState(int i)

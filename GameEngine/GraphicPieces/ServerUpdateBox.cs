@@ -18,9 +18,8 @@ namespace GameEngine.GraphicPieces
         private List<string> _stringList;
         private int LineSpacing = 20;
 
-        public ServerUpdateBox(GraphicsDevice gD, SpriteFont font)
+        public ServerUpdateBox(SpriteFont font)
         {
-            graphicsDevice = gD;
             _font = font;
             _backgroundRect = GetBackground();
             _positionVector = MainGameScreen.ScreenLocations.GetPosition("ServerUpdateBox");
@@ -29,7 +28,7 @@ namespace GameEngine.GraphicPieces
 
         private Texture2D GetBackground()
         {
-            var bg = new Texture2D(graphicsDevice, Width, Height, false, SurfaceFormat.Color);
+            var bg = new Texture2D(Engine.GraphicsD, Width, Height, false, SurfaceFormat.Color);
             var colorData = new Color[Width * Height];
             for (var i = 0; i < Width * Height; i++)
             {
