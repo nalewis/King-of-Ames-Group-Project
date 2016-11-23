@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using GameEngine.ServerClasses;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GameEngine {
     /// <summary>
@@ -18,6 +19,7 @@ namespace GameEngine {
         public static SpriteBatch SpriteBatch;
         public static Dictionary<string, Texture2D> TextureList;
         public static Dictionary<string, SpriteFont> FontList;
+        public static Dictionary<string, SoundEffect> SoundList;
 
         public static int ScreenWidth;
         public static int ScreenHeight;
@@ -46,6 +48,8 @@ namespace GameEngine {
             LoadTextures();
             FontList = new Dictionary<string, SpriteFont>();
             LoadFonts();
+            SoundList = new Dictionary<string, SoundEffect>();
+            LoadSounds();
             InputManager = new InputManager(this);
             ScreenManager = new ScreenManager(this);
 
@@ -153,15 +157,21 @@ namespace GameEngine {
             FontList.Add(name, toAdd);
         }
 
+        //private void AddSound(string filePath, string name)
+        //{
+        //    var toAdd = Content.Load<SoundEffect>(filePath);
+        //    SoundList.Add(name, toAdd);
+        //}
+
         private void LoadTextures()
         {
             //Load monster sprites
             AddTexture("monsterTextures\\cthulhu", "cthulhu");
             AddTexture("monsterTextures\\alienoid", "Alienoid");
             AddTexture("monsterTextures\\cyberbunny", "Cyber Bunny");
-            AddTexture("monsterTextures\\gigazaur", "GigaZaur");
+            AddTexture("monsterTextures\\gigazaur", "Giga Zaur");
             AddTexture("monsterTextures\\kraken", "Kraken");
-            AddTexture("monsterTextures\\mekadragon", "MekaDragon");
+            AddTexture("monsterTextures\\mekadragon", "Meka Dragon");
             AddTexture("monsterTextures\\pandakai", "Pandakai");
             AddTexture("monsterTextures\\theking", "The King");
             AddTexture("monsterTextures\\therealking", "The Real King");
@@ -179,6 +189,11 @@ namespace GameEngine {
         {
             AddFont("Fonts\\BigFont", "BigFont");
             AddFont("Fonts\\MenuFont", "MenuFont");
+        }
+
+        private void LoadSounds()
+        {
+            //AddSound("Sounds\\Recording", "Recording");
         }
 
         #endregion
