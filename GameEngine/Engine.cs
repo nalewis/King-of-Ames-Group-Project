@@ -18,6 +18,7 @@ namespace GameEngine {
         public static InputManager InputManager;
         public static ScreenManager ScreenManager;
         public static SpriteBatch SpriteBatch;
+        public static GraphicsDevice GraphicsD;
         public static Dictionary<string, Texture2D> TextureList;
         public static Dictionary<string, SpriteFont> FontList;
         public static Dictionary<string, SoundEffect> SoundList;
@@ -28,6 +29,7 @@ namespace GameEngine {
         public Engine()
         {
             GraffixMngr = new GraphicsDeviceManager(this);
+            GraphicsD = GraphicsDevice;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             GraffixMngr.PreferredBackBufferHeight = 720; //1080
@@ -195,6 +197,7 @@ namespace GameEngine {
         {
             AddFont("Fonts\\BigFont", "BigFont");
             AddFont("Fonts\\MenuFont", "MenuFont");
+            AddFont("Fonts\\Update", "updateFont");
         }
 
         private void LoadSounds()
