@@ -11,12 +11,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine.GameScreens
 {
-    class BuyCards : GameScreen
+    internal class BuyCards : GameScreen
     {
         private const int OptionPadding = 60;
         private readonly List<Card> _cardList;
         private readonly SpriteFont _font;
-        private int _energy;
+        private readonly int _energy;
         private int _selected;
         private Vector2 _position;
         public new bool IsPopup = true;
