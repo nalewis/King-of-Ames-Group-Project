@@ -15,7 +15,7 @@ namespace GameEngine.GameScreens
     {
         public static ScreenLocations ScreenLocations;
         private readonly List<PlayerBlock> _pBlocks;
-        private readonly List<TextBlock> _textPrompts;
+        private static List<TextBlock> _textPrompts;
         private readonly DiceRow _diceRow;
 
         private static int _localPlayer;
@@ -261,7 +261,7 @@ namespace GameEngine.GameScreens
             }
         }
 
-        public void EndGame(string winner)
+        public static void EndGame(string winner)
         {
             _textPrompts.Clear();
             _textPrompts.Add(new TextBlock("GameOver", new List<string>()
