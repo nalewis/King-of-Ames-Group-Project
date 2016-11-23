@@ -155,7 +155,11 @@ namespace GameEngine.ServerClasses
             }
             else
             {
-                SendMonsterPackets(sendDice: packet.Action == Networking.Actions.Action.Roll || packet.Action == Networking.Actions.Action.EndRolling);
+                SendMonsterPackets(sendDice:
+                    packet.Action == Networking.Actions.Action.Roll ||
+                    packet.Action == Networking.Actions.Action.EndRolling ||
+                    packet.Action == Networking.Actions.Action.SaveDie ||
+                    packet.Action == Networking.Actions.Action.UnSaveDie);
             }
         }
 
