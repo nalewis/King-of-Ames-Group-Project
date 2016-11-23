@@ -39,7 +39,7 @@ namespace GameEngine.GraphicPieces
 
         public void UpdateList()
         {
-            _stringList = Client.messageHistory;
+            _stringList = Client.MessageHistory;
         }
 
         public void Draw(SpriteBatch sB)

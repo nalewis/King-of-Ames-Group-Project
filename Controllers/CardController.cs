@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.Remoting;
+using System.Collections.Generic;
 using GamePieces.Cards;
 using GamePieces.Session;
 
@@ -11,7 +11,7 @@ namespace Controllers
         /// Get the dice packet for the current game state.
         /// </summary>
         /// <returns>Data Packets</returns>
-        public static CardDataPacket CreateDataPacket(Card card)
+        public static CardDataPacket? CreateDataPacket(Card card)
         {
             return new CardDataPacket(card.GetType(), card.Activated);
         }
@@ -93,6 +93,16 @@ namespace Controllers
         public static void BuyCardThree()
         {
             if (CardForSaleThree() != null) Game.BuyCard(2);
+        }
+
+        public static void SetCardsForSale(List<Card> cardsForSale)
+        {
+            Game.CardsForSale = cardsForSale;
+        }
+
+        public static List<Card> GetCardsForSale()
+        {
+            return Game.CardsForSale;
         }
     }
 }
