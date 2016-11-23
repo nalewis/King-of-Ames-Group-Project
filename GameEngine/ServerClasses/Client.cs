@@ -119,15 +119,10 @@ namespace GameEngine.ServerClasses
                             if (inc.ReadByte() == (byte) PacketTypes.Cards)
                             {
                                 var cardJson = inc.ReadString();
-//                                var cardsDataPackets = JsonConvert.DeserializeObject<CardDataPacket[]>(cardJson);
-//                                CardController.SetCardsForSale(cardsDataPackets.ToList()
-//                                    .Select(CardController.AcceptDataPacket)
-//                                    .ToList());
-                                var cardDataPackets = JsonConvert.DeserializeObject<CardDataPacket>(cardJson);
-                                CardController.SetCardsForSale(new List<Card>()
-                                {
-                                    CardController.AcceptDataPacket(cardDataPackets)
-                                });
+                                var cardsDataPackets = JsonConvert.DeserializeObject<CardDataPacket[]>(cardJson);
+                                CardController.SetCardsForSale(cardsDataPackets.ToList()
+                                    .Select(CardController.AcceptDataPacket)
+                                    .ToList());
                             }
                             else
                             {
