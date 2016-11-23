@@ -68,24 +68,30 @@ namespace GameEngine.Views
         private void join_Click(object sender, EventArgs e)
         {
             if (!join.Enabled) return;
-            var goodConnection = Client.Connect();
-            if(goodConnection)
+            if (!NetworkClasses.IsBanned(User.PlayerId))
             {
-                try
+                if (Client.Connect())
                 {
-                    NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
-                    NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
-                    var lobby = new PlayerLobby();
-                    lobby.Show();
-                    Dispose();
-                }
-                catch(Exception exception)
-                {
-                    Console.WriteLine(exception);
-                }
+                    try
+                    {
+                        NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
+                        NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
+                        Form lobby = new PlayerLobby();
+                        lobby.Show();
+                        Dispose();
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
 
+                }
+                else { Console.WriteLine("Couldn't Connect"); }
             }
-            else { Console.WriteLine("Couldn't Connect"); }
+            else
+            {
+                MessageBox.Show("Can't connect to game, you have been banned. Please contact administrator to lift ban.", "Join Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>
@@ -130,7 +136,7 @@ namespace GameEngine.Views
                 Console.WriteLine(exception.Message);
                 var form = new MainMenuForm();
                 form.Show();
-                this.Dispose();
+                Dispose();
             }
         }
     }

@@ -1,10 +1,40 @@
-﻿using GamePieces.Cards;
+﻿using System;
+using System.Collections.Generic;
+using GamePieces.Cards;
 using GamePieces.Session;
 
 namespace Controllers
 {
     public static class CardController
     {
+        /// <summary>
+        /// Get the dice packet for the current game state.
+        /// </summary>
+        /// <returns>Data Packets</returns>
+        public static CardDataPacket CreateDataPacket(Card card)
+        {
+            return new CardDataPacket(card.GetType(), card.Activated);
+        }
+
+        /// <summary>
+        /// Change the monsters in the game state using the given data packets.
+        /// </summary>
+        /// <param name="dataPacket">Data Packets</param>
+        public static Card AcceptDataPacket(CardDataPacket dataPacket)
+        {
+            try
+            {
+                Console.WriteLine(dataPacket.Type);
+                var card = (Card) Activator.CreateInstance(dataPacket.Type);
+                card.Activated = dataPacket.Activated;
+                return card;
+            }
+            catch (Exception)
+            {
+                Console.Error.WriteLine("Cannot create card of type: " + dataPacket.Type);
+                return null;
+            }
+        }
 
         /// <summary>
         /// Gets the card on top of the deck without removing it
@@ -47,7 +77,7 @@ namespace Controllers
         /// </summary>
         public static void BuyCardOne()
         {
-            if(CardForSaleOne() != null) Game.BuyCard(0);
+            if (CardForSaleOne() != null) Game.BuyCard(0);
         }
 
         /// <summary>
@@ -55,7 +85,7 @@ namespace Controllers
         /// </summary>
         public static void BuyCardTwo()
         {
-            if(CardForSaleTwo() != null) Game.BuyCard(1);
+            if (CardForSaleTwo() != null) Game.BuyCard(1);
         }
 
         /// <summary>
@@ -63,7 +93,17 @@ namespace Controllers
         /// </summary>
         public static void BuyCardThree()
         {
-            if(CardForSaleThree() != null) Game.BuyCard(2);
+            if (CardForSaleThree() != null) Game.BuyCard(2);
+        }
+
+        public static void SetCardsForSale(List<Card> cardsForSale)
+        {
+            Game.CardsForSale = cardsForSale;
+        }
+
+        public static List<Card> GetCardsForSale()
+        {
+            return Game.CardsForSale;
         }
     }
 }

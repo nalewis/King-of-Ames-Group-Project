@@ -31,7 +31,7 @@ namespace GamePieces.Session
 
         //Cards
         public static Stack<Card> Deck;
-        public static readonly List<Card> CardsForSale = new List<Card>();
+        public static List<Card> CardsForSale = new List<Card>();
 
         public static void StartGame(List<int> playerIds, List<string> names)
         {

@@ -18,6 +18,9 @@ namespace GameEngine.GraphicPieces
         private DiceRow _diceRow;
         private colour color;
 
+        public bool Save => Die.Save;
+
+
         /// <summary>
         /// Creates a new DiceSprite piece
         /// </summary>
@@ -33,6 +36,12 @@ namespace GameEngine.GraphicPieces
             _diceRow = diceRow;
             Update();
             color = colour.White;
+        }
+
+        public void Roll()
+        {
+            Die.Roll();
+            Update();
         }
 
         /// <summary>

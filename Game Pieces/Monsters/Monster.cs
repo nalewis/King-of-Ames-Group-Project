@@ -16,8 +16,23 @@ namespace GamePieces.Monsters
 
         //Location & Neighbors
         private int Index => IndexOf(Game.Turns, this);
-        public Monster Previous => GetNodeAt(Game.Turns, Index).Previous?.Value;
-        public Monster Next => GetNodeAt(Game.Turns, Index).Next?.Value;
+        public Monster Previous
+        {
+            get
+            {
+                var previous = GetNodeAt(Game.Turns, Index).Previous;
+                return previous != null ? previous.Value : Game.Turns.Last();
+            }
+        }
+
+        public Monster Next
+        {
+            get
+            {
+                var next = GetNodeAt(Game.Turns, Index).Next;
+                return next != null ? next.Value : Game.Turns.First();
+            }
+        }
 
         //Name
         public string Name { get; private set; }
@@ -143,7 +158,6 @@ namespace GamePieces.Monsters
             Location = Location.Default;
             RemainingRolls = 0;
             State = State.EndOfTurn;
-            Console.WriteLine("Name: " + Name);
         }
 
         /// <summary>

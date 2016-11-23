@@ -8,6 +8,7 @@ using System.Linq;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
+using GamePieces.Session;
 
 namespace GameEngine.GameScreens
 {
@@ -17,10 +18,18 @@ namespace GameEngine.GameScreens
         private readonly List<PlayerBlock> _pBlocks;
         private static List<TextBlock> _textPrompts;
         private readonly DiceRow _diceRow;
+        public ServerUpdateBox ServerUpdateBox;
 
         private static int _localPlayer;
         private static Monster _localMonster;
         private State _localPlayerState;
+        private bool firstPlay = true;
+
+
+        public static int cardScreenChoice = -1;
+
+        private int RollAnimation { get; set; } = 0;
+        private DiceRow RollingDice { get; }
 
         private static GameState _gameState = GameState.Waiting;
 
@@ -32,6 +41,9 @@ namespace GameEngine.GameScreens
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
+            ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
+
+            RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
         }
 
         //public static void SetLocalPlayerState(int i)
@@ -125,6 +137,10 @@ namespace GameEngine.GameScreens
         {
             _diceRow.Hidden = true;
             _diceRow.Clear();
+
+            RollingDice.Hidden = true;
+            RollingDice.Clear();
+
             _textPrompts.Clear();
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
@@ -145,6 +161,7 @@ namespace GameEngine.GameScreens
             _pBlocks.Clear();
             _textPrompts.Clear();
             _diceRow.Clear();
+            RollingDice.Clear();
             base.UnloadAssets();
         }
 
@@ -154,15 +171,25 @@ namespace GameEngine.GameScreens
         {
             _diceRow.Hidden = true;
             _diceRow.Clear();
-            _textPrompts.Clear();
 
+            RollingDice.Hidden = true;
+            RollingDice.Clear();
+
+            _textPrompts.Clear();
+            if (firstPlay)
+            {
+                Engine.PlaySound("StartTurn");
+                firstPlay = false;
+                Client.SendMessage(_localMonster.Name + " is starting their turn!");
+            }
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
-                "or E to End Rolling"
+                "or E to End Rolling",
+                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
-            if (Engine.InputManager.KeyPressed(Keys.R))
+            if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
             {   
                 _gameState = GameState.Rolling;
                 //Client.isStart = false;
@@ -170,6 +197,9 @@ namespace GameEngine.GameScreens
                 System.Threading.Thread.Sleep(500);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
+
+                RollingDice.AddDice(DiceController.GetDice());
+                RollingDice.Hidden = false;
             }
         }
 
@@ -183,9 +213,10 @@ namespace GameEngine.GameScreens
                 return;
             }
 
-            if (Engine.InputManager.KeyPressed(Keys.R))
+            if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
             {
-                ServerClasses.Client.SendActionPacket(GameStateController.Roll());
+                Client.SendActionPacket(GameStateController.Roll());
+                RollAnimation = 30;
             }
 
             if (Engine.InputManager.LeftClick())
@@ -208,7 +239,8 @@ namespace GameEngine.GameScreens
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu,",
                 "or E to End Rolling",
-                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!"
+                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!",
+                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
         }
 
@@ -217,6 +249,10 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
             _diceRow.Clear();
             _diceRow.Hidden = true;
+
+            RollingDice.Clear();
+            RollingDice.Hidden = true;
+
             _gameState = GameState.Waiting;
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
@@ -269,10 +305,26 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                //CardsForSale cfs; ?? can this be a variable?
-                //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy, playerChoice or cfs));
-                //wait until playerChoice is positive/not null
-                //ServerClasses.Client.SendActionPacket(GameStateController.BuyCard())
+                ScreenManager.AddScreen(new BuyCards(MonsterController.GetById(_localPlayer).Energy));
+                if (cardScreenChoice == -1) return;
+                var cfs = CardsForSale.One;
+                switch (cardScreenChoice)
+                {
+                    case 0:
+                        cfs = CardsForSale.One;
+                        break;
+                    case 1:
+                        cfs = CardsForSale.Two;
+                        break;
+                    case 2:
+                        cfs = CardsForSale.Three;
+                        break;
+                    default:
+                        Console.Out.WriteLine("Something went wrong with cardScreenChoice");
+                        break;
+                }
+                ServerClasses.Client.SendActionPacket(GameStateController.BuyCard(cfs));
+                cardScreenChoice = -1; //reset choice for next time.
                 _gameState = GameState.EndingTurn;
                 EndTurn();
             }
@@ -307,6 +359,8 @@ namespace GameEngine.GameScreens
                 tp.Position = ScreenLocations.GetPosition(tp.Name);
             }
             _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
+
+            RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
         }
 
         private void UpdateGraphicsPieces()
@@ -315,17 +369,30 @@ namespace GameEngine.GameScreens
                 ds.Update();
             foreach (var pb in _pBlocks)
                 pb.Update();
+            ServerUpdateBox.UpdateList();
         }
 
         private void DrawGraphicsPieces()
         {
+            ServerUpdateBox.Draw(Engine.SpriteBatch);
             foreach (var pb in _pBlocks)
                 pb.Draw(Engine.SpriteBatch);
 
             if (!_diceRow.Hidden)
             {
-                foreach (var ds in _diceRow.DiceSprites)
-                    ds.Draw(Engine.SpriteBatch);
+                for (var i = 0; i < _diceRow.DiceSprites.Count; i++)
+                {
+                    if (RollAnimation <= 0 || _diceRow.DiceSprites[i].Save)
+                    {
+                        _diceRow.DiceSprites[i].Draw(Engine.SpriteBatch);
+                    }
+                    else
+                    {
+                        RollingDice.DiceSprites[i].Roll();
+                        RollingDice.DiceSprites[i].Draw(Engine.SpriteBatch);
+                        RollAnimation--;
+                    }
+                }
             }
 
             foreach (var tp in _textPrompts)

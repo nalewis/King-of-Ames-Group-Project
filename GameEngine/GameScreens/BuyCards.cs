@@ -1,26 +1,29 @@
 ﻿
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GamePieces.Cards;
+using GamePieces.Cards.Deck.Discard;
+using GamePieces.Cards.Deck.Keep;
+using GamePieces.Session;
 using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine.GameScreens
 {
-    class BuyCards : GameScreen
+    internal class BuyCards : GameScreen
     {
         private const int OptionPadding = 60;
         private readonly List<Card> _cardList;
         private readonly SpriteFont _font;
-        private int _energy;
+        private readonly int _energy;
         private int _selected;
         private Vector2 _position;
         public new bool IsPopup = true;
 
-
-        public BuyCards(List<Card> cardList, int energy, ref int choice)
+        public BuyCards(int energy)
         {
-            _cardList = cardList;
+            _cardList = GamePieces.Session.Game.CardsForSale;
             _energy = energy;
             _font = Engine.FontList["MenuFont"];
             _selected = 0;
@@ -53,26 +56,12 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            /*
             if (Engine.InputManager.KeyPressed(Keys.Enter))
             {
-                switch (_selected)
-                {
-                    case 0:
-                        choice = 0;
-                        Engine.RemoveScreen(this);
-                        break;
-                    case 1:
-                        choice = 1;
-                        Engine.AddScreen(new OptionsMenu());
-                        break;
-                    case 2:
-                        choice = 2;
-                        Engine.ExitGame = true;
-                        break;
-                }
+                MainGameScreen.cardScreenChoice = _selected;
+                ScreenManager.RemoveScreen(this);
             }
-            */
+            
             base.Update(gameTime);
         }
 

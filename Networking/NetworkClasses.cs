@@ -3,7 +3,6 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using System.Collections.Generic;
 using System.Linq;
-using System.Media;
 
 namespace Networking
 {
@@ -118,6 +117,29 @@ namespace Networking
                 var command = connection.CreateCommand();
                 command.CommandText = "UPDATE User_List SET Username = @name WHERE Player_ID = @playerid";
                 command.Parameters.AddWithValue("@name", name);
+                command.Parameters.AddWithValue("@playerid", playerid);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool UpdatePassword(int playerid, string pass)
+        {
+            try
+            {
+                pass = StringCipher.Encrypt(pass, "thomas");
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_List SET Password = @pass WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@pass", pass);
                 command.Parameters.AddWithValue("@playerid", playerid);
                 command.ExecuteNonQuery();
 
@@ -502,6 +524,70 @@ namespace Networking
             command.ExecuteNonQuery();
 
             connection.Close();
+        }
+
+        public static bool BanPlayer(int playerid)
+        {
+            try
+            {
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_List SET IsBanned = 1 WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@playerid", playerid);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool IsBanned(int playerid)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @playerid";
+            command.Parameters.AddWithValue("@playerid", playerid);
+            var adapter = new MySqlDataAdapter(command);
+            var ds = new DataSet();
+            adapter.Fill(ds);
+            if (int.Parse(ds.Tables[0].Rows[0]["IsBanned"].ToString()) == 1)
+            {
+                connection.Close();
+                return true;
+            }
+            else
+            {
+                connection.Close();
+                return false;
+            }
+        }
+
+        public static bool IsAdmin(int playerid)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @playerid";
+            command.Parameters.AddWithValue("@playerid", playerid);
+            var adapter = new MySqlDataAdapter(command);
+            var ds = new DataSet();
+            adapter.Fill(ds);
+            if (int.Parse(ds.Tables[0].Rows[0]["IsAdmin"].ToString()) == 1)
+            {
+                connection.Close();
+                return true;
+            }
+            else
+            {
+                connection.Close();
+                return false;
+            }
         }
     }
 }

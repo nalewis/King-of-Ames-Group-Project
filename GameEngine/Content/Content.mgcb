@@ -205,3 +205,15 @@
 /processorParam:TextureFormat=Color
 /build:monsterTextures/therealking.jpg
 
+#begin Sounds/Recording.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Recording.wav
+
+#begin Fonts\Update.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:Fonts\Update.spritefont
+
