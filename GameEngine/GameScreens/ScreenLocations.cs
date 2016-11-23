@@ -7,7 +7,7 @@ namespace GameEngine.GameScreens
     internal class ScreenLocations
     {
         private const int PlayerBlockLength = 350;
-        private const int PlayerBlockHeight = 350;
+        private const int PlayerBlockHeight = 250;
         private const int DefaultPadding = 10;
         private Dictionary<string, Vector2> _positions;
         private int _screenWidth;
