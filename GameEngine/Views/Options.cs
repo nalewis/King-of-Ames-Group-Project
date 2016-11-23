@@ -33,15 +33,42 @@ namespace GameEngine.Views
             {
                 if(NetworkClasses.UpdateUsername(User.PlayerId, nameChangeText.Lines[0]))
                 {
-                    messageLabel.Visible = true;
-                    messageLabel.Text = "Successfully updated username";
+                    messageLabel.Text = "Successfully updated username to " + nameChangeText.Lines[0];
+                    nameChangeText.Lines[0] = "";
                 }
                 else
                 {
-                    messageLabel.Visible = true;
                     messageLabel.Text = "Invalid/Unavailable username";
                 }
+                messageLabel.Visible = true;
             }
+        }
+
+        private void banPlayer_Click(object sender, EventArgs e)
+        {
+            messageLabel.Visible = false;
+            messageLabel.Text = "";
+
+            if (NetworkClasses.IsAdmin(User.PlayerId))
+            {
+                if (banPlayerText.TextLength > 0)
+                {
+                    if (NetworkClasses.BanPlayer(User.PlayerId))
+                    {
+                        messageLabel.Text = "Successfully Banned Player ID: " + banPlayerText.Lines[0];
+                        banPlayerText.Lines[0] = "";
+                    }
+                    else
+                    {
+                        messageLabel.Text = "Invalid Player ID";
+                    }
+                }
+            }
+            else
+            {
+                messageLabel.Text = "You are not an admin, contact an admin for privileges";
+            }
+            messageLabel.Visible = true;
         }
     }
 }

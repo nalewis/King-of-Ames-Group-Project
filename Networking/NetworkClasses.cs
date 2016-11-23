@@ -501,5 +501,47 @@ namespace Networking
 
             connection.Close();
         }
+
+        public static bool BanPlayer(int playerid)
+        {
+            try
+            {
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_List SET IsBanned = 1 WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@playerid", playerid);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static bool IsAdmin(int playerid)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @playerid";
+            command.Parameters.AddWithValue("@playerid", playerid);
+            var adapter = new MySqlDataAdapter(command);
+            var ds = new DataSet();
+            adapter.Fill(ds);
+            if (int.Parse(ds.Tables[0].Rows[0]["IsAdmin"].ToString()) == 1)
+            {
+                connection.Close();
+                return true;
+            }
+            else
+            {
+                connection.Close();
+                return false;
+            }
+        }
     }
 }

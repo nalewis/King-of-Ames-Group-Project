@@ -74,6 +74,7 @@
     <Compile Include="ScreenManager.cs" />
     <Compile Include="ServerClasses\Client.cs" />
     <Compile Include="ServerClasses\Host.cs" />
+    <Compile Include="ServerClasses\PacketTypes.cs" />
     <Compile Include="Views\HostLobby.cs">
       <SubType>Form</SubType>
     </Compile>

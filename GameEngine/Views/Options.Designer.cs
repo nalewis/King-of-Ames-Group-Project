@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.BackButton = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.banPlayerText = new System.Windows.Forms.TextBox();
+            this.banPlayer = new System.Windows.Forms.Button();
             this.nameChange = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.nameChangeText = new System.Windows.Forms.TextBox();
@@ -55,21 +55,22 @@
             this.BackButton.UseVisualStyleBackColor = true;
             this.BackButton.Click += new System.EventHandler(this.BackButton_Click);
             // 
-            // textBox1
+            // banPlayerText
             // 
-            this.textBox1.Location = new System.Drawing.Point(14, 32);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 1;
+            this.banPlayerText.Location = new System.Drawing.Point(14, 32);
+            this.banPlayerText.Name = "banPlayerText";
+            this.banPlayerText.Size = new System.Drawing.Size(100, 20);
+            this.banPlayerText.TabIndex = 1;
             // 
-            // button1
+            // banPlayer
             // 
-            this.button1.Location = new System.Drawing.Point(120, 32);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.banPlayer.Location = new System.Drawing.Point(120, 32);
+            this.banPlayer.Name = "banPlayer";
+            this.banPlayer.Size = new System.Drawing.Size(75, 23);
+            this.banPlayer.TabIndex = 2;
+            this.banPlayer.Text = "Submit";
+            this.banPlayer.UseVisualStyleBackColor = true;
+            this.banPlayer.Click += new System.EventHandler(this.banPlayer_Click);
             // 
             // nameChange
             // 
@@ -109,9 +110,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(11, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Ban Player";
+            this.label1.Text = "Ban Player (by ID)";
             // 
             // label2
             // 
@@ -148,9 +149,9 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.textBox1);
+            this.groupBox2.Controls.Add(this.banPlayerText);
             this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.banPlayer);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(209, 73);
@@ -161,7 +162,8 @@
             // messageLabel
             // 
             this.messageLabel.AutoSize = true;
-            this.messageLabel.Location = new System.Drawing.Point(23, 229);
+            this.messageLabel.Location = new System.Drawing.Point(12, 220);
+            this.messageLabel.MaximumSize = new System.Drawing.Size(190, 0);
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(29, 13);
             this.messageLabel.TabIndex = 12;
@@ -192,8 +194,8 @@
         #endregion
 
         private System.Windows.Forms.Button BackButton;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox banPlayerText;
+        private System.Windows.Forms.Button banPlayer;
         private System.Windows.Forms.Button nameChange;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.TextBox nameChangeText;
