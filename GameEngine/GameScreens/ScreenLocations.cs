@@ -44,7 +44,7 @@ namespace GameEngine.GameScreens
                 {"RollingText", new Vector2(_screenWidth - 500, _screeHeight - 200) },
                 {"BuyCardsPrompt", new Vector2(_screenWidth - 400, _screeHeight - 100) },
                 {"GameOver", new Vector2(_screenWidth - 400, _screeHeight - 100) },
-                {"ServerUpdateBox", new Vector2(200, _screeHeight - 300)  }
+                {"ServerUpdateBox", new Vector2(10, _screeHeight - 150)  }
             };
         }
 

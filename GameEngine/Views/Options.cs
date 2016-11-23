@@ -100,11 +100,13 @@ namespace GameEngine.Views
 
         private void banPlayer_Click(object sender, EventArgs e)
         {
+            var n = -1;
+
             if (NetworkClasses.IsAdmin(User.PlayerId))
             {
-                if (banPlayerText.TextLength > 0)
+                if (banPlayerText.TextLength > 0 && int.TryParse(banPlayerText.Lines[0], out n))
                 {
-                    if (NetworkClasses.BanPlayer(User.PlayerId))
+                    if (NetworkClasses.BanPlayer(n))
                     {
                         MessageBox.Show("Successfully Banned Player ID: " + banPlayerText.Lines[0], "Player Banned", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         banPlayerText.Lines[0] = "";
@@ -113,6 +115,10 @@ namespace GameEngine.Views
                     {
                         MessageBox.Show("Invalid Player ID", "Ban Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Player ID must be numeric.", "Ban Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else

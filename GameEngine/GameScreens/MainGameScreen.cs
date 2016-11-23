@@ -39,7 +39,7 @@ namespace GameEngine.GameScreens
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
             _pBlocks = InitializePlayerBlocks();
-            ServerUpdateBox = new ServerUpdateBox(Engine.GraphicsD, Engine.FontList["updateFont"]);
+            ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
         }
 
         //public static void SetLocalPlayerState(int i)
@@ -167,6 +167,7 @@ namespace GameEngine.GameScreens
             {
                 Engine.PlaySound("StartTurn");
                 firstPlay = false;
+                Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Turn " + MonsterController.Name(_localPlayer),
@@ -345,6 +346,7 @@ namespace GameEngine.GameScreens
                 ds.Update();
             foreach (var pb in _pBlocks)
                 pb.Update();
+            ServerUpdateBox.UpdateList();
         }
 
         private void DrawGraphicsPieces()

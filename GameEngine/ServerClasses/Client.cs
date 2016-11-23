@@ -187,6 +187,8 @@ namespace GameEngine.ServerClasses
         //Sends a message to the server, the server will return the message to all clients, which will then add it to their message history
         public static void SendMessage(string message)
         {
+            var timeStamp = DateTime.Now.ToString("mm:ss");
+            message = "[" + timeStamp + "] " + message;
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte)PacketTypes.Message);
             outMsg.Write(message);
