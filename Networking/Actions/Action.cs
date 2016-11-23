@@ -9,6 +9,7 @@
         RemoveCard,
         EndTurn,
         Yield,
+        NoYield,
         SaveDie,
         UnSaveDie
     }

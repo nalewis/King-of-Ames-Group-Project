@@ -227,7 +227,7 @@ namespace GameEngine.GameScreens
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                MonsterController.GetById(_localPlayer).CanYield = false;
+                ServerClasses.Client.SendActionPacket(GameStateController.NoYield(_localPlayer));
                 _gameState = GameState.Waiting;
                 Waiting();
             }
