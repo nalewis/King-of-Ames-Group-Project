@@ -16,6 +16,7 @@ namespace GameEngine.GraphicPieces
         protected Vector2 Position;
         protected int Index;
         private DiceRow _diceRow;
+        private colour color;
 
         /// <summary>
         /// Creates a new DiceSprite piece
@@ -31,6 +32,7 @@ namespace GameEngine.GraphicPieces
             Position = pos;
             _diceRow = diceRow;
             Update();
+            color = colour.White;
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace GameEngine.GraphicPieces
         /// <param name="sb">The SpriteBatch that is doing the drawing.</param>
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(CurrentFace, Position, Die.Save ? colour.Red : colour.White);
+            sb.Draw(CurrentFace, Position, color);
         }
 
         /// <summary>
@@ -103,10 +105,12 @@ namespace GameEngine.GraphicPieces
             if (Die.Save)
             {
                 ServerClasses.Client.SendActionPacket(Controllers.GameStateController.UnSaveDie(Index));
+                color = colour.White;
             }
             else
             {
                 ServerClasses.Client.SendActionPacket(Controllers.GameStateController.SaveDie(Index));
+                color = colour.Red;
             }
         }
     }
