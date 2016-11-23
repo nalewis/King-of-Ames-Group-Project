@@ -68,14 +68,13 @@ namespace GameEngine.Views
         private void join_Click(object sender, EventArgs e)
         {
             if (!join.Enabled) return;
-            var goodConnection = Client.Connect();
-            if(goodConnection)
+            if(Client.Connect())
             {
                 try
                 {
                     NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
                     NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
-                    var lobby = new PlayerLobby();
+                    Form lobby = new PlayerLobby();
                     lobby.Show();
                     Dispose();
                 }
@@ -130,7 +129,7 @@ namespace GameEngine.Views
                 Console.WriteLine(exception.Message);
                 var form = new MainMenuForm();
                 form.Show();
-                this.Dispose();
+                Dispose();
             }
         }
     }

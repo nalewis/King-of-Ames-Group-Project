@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Views
+﻿using System.Windows.Forms;
+
+namespace GameEngine.Views
 {
     partial class Options
     {
@@ -32,15 +34,14 @@
             this.banPlayerText = new System.Windows.Forms.TextBox();
             this.banPlayer = new System.Windows.Forms.Button();
             this.nameChange = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.passChange = new System.Windows.Forms.Button();
             this.nameChangeText = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.passChangeText = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.messageLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -82,14 +83,15 @@
             this.nameChange.UseVisualStyleBackColor = true;
             this.nameChange.Click += new System.EventHandler(this.nameChange_Click);
             // 
-            // button3
+            // passChange
             // 
-            this.button3.Location = new System.Drawing.Point(120, 83);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
+            this.passChange.Location = new System.Drawing.Point(120, 83);
+            this.passChange.Name = "passChange";
+            this.passChange.Size = new System.Drawing.Size(75, 23);
+            this.passChange.TabIndex = 4;
+            this.passChange.Text = "Submit";
+            this.passChange.UseVisualStyleBackColor = true;
+            this.passChange.Click += new System.EventHandler(this.passChange_Click);
             // 
             // nameChangeText
             // 
@@ -98,12 +100,12 @@
             this.nameChangeText.Size = new System.Drawing.Size(100, 20);
             this.nameChangeText.TabIndex = 5;
             // 
-            // textBox3
+            // passChangeText
             // 
-            this.textBox3.Location = new System.Drawing.Point(14, 83);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 20);
-            this.textBox3.TabIndex = 6;
+            this.passChangeText.Location = new System.Drawing.Point(14, 83);
+            this.passChangeText.Name = "passChangeText";
+            this.passChangeText.Size = new System.Drawing.Size(100, 20);
+            this.passChangeText.TabIndex = 6;
             // 
             // label1
             // 
@@ -134,10 +136,10 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button3);
+            this.groupBox1.Controls.Add(this.passChange);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox3);
+            this.groupBox1.Controls.Add(this.passChangeText);
             this.groupBox1.Controls.Add(this.nameChange);
             this.groupBox1.Controls.Add(this.nameChangeText);
             this.groupBox1.Location = new System.Drawing.Point(12, 91);
@@ -159,35 +161,25 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Admin Options";
             // 
-            // messageLabel
-            // 
-            this.messageLabel.AutoSize = true;
-            this.messageLabel.Location = new System.Drawing.Point(12, 220);
-            this.messageLabel.MaximumSize = new System.Drawing.Size(190, 0);
-            this.messageLabel.Name = "messageLabel";
-            this.messageLabel.Size = new System.Drawing.Size(29, 13);
-            this.messageLabel.TabIndex = 12;
-            this.messageLabel.Text = "label";
-            this.messageLabel.Visible = false;
-            // 
+
             // Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(251, 304);
-            this.Controls.Add(this.messageLabel);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.BackButton);
             this.Name = "Options";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Options";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Options_Closing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -197,14 +189,13 @@
         private System.Windows.Forms.TextBox banPlayerText;
         private System.Windows.Forms.Button banPlayer;
         private System.Windows.Forms.Button nameChange;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button passChange;
         private System.Windows.Forms.TextBox nameChangeText;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox passChangeText;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label messageLabel;
     }
 }
