@@ -1,8 +1,12 @@
 ﻿
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GamePieces.Cards;
+using GamePieces.Cards.Deck.Discard;
+using GamePieces.Cards.Deck.Keep;
+using GamePieces.Session;
 using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine.GameScreens
@@ -17,10 +21,12 @@ namespace GameEngine.GameScreens
         private Vector2 _position;
         public new bool IsPopup = true;
 
-
-        public BuyCards(List<Card> cardList, int energy, ref int choice)
+        public BuyCards(List<Card> cardList, int energy)
         {
-            _cardList = cardList;
+            _cardList = new List<Card>();// cardList;
+            _cardList.Add(new Acid_Attack());
+            _cardList.Add(new Commuter_Train());
+            _cardList.Add(new Corner_Store());
             _energy = energy;
             _font = Engine.FontList["MenuFont"];
             _selected = 0;
@@ -53,26 +59,13 @@ namespace GameEngine.GameScreens
                 }
             }
 
-            /*
+            
             if (Engine.InputManager.KeyPressed(Keys.Enter))
             {
-                switch (_selected)
-                {
-                    case 0:
-                        choice = 0;
-                        Engine.RemoveScreen(this);
-                        break;
-                    case 1:
-                        choice = 1;
-                        Engine.AddScreen(new OptionsMenu());
-                        break;
-                    case 2:
-                        choice = 2;
-                        Engine.ExitGame = true;
-                        break;
-                }
+                MainGameScreen.cardScreenChoice = _selected;
+                ScreenManager.RemoveScreen(this);
             }
-            */
+            
             base.Update(gameTime);
         }
 

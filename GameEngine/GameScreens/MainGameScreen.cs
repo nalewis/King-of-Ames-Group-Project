@@ -7,7 +7,9 @@ using System;
 using System.Linq;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
+using GamePieces.Cards;
 using GamePieces.Monsters;
+using GamePieces.Session;
 using Microsoft.Xna.Framework.Audio;
 
 namespace GameEngine.GameScreens
@@ -23,6 +25,8 @@ namespace GameEngine.GameScreens
         private static Monster _localMonster;
         private State _localPlayerState;
         private bool firstPlay = true;
+
+        public static int cardScreenChoice = -1;
 
         private static GameState _gameState = GameState.Waiting;
 
@@ -275,10 +279,10 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                //CardsForSale cfs; ?? can this be a variable?
-                //Engine.AddScreen(new BuyCards(KoTGame.CardsForSale, _currentMonster.Energy, playerChoice or cfs));
-                //wait until playerChoice is positive/not null
+                ScreenManager.AddScreen(new BuyCards(new List<Card>(), MonsterController.GetById(_localPlayer).Energy));
+                while(cardScreenChoice == -1) { }
                 //ServerClasses.Client.SendActionPacket(GameStateController.BuyCard())
+                cardScreenChoice = -1; //reset choice for next time.
                 _gameState = GameState.EndingTurn;
                 EndTurn();
             }
