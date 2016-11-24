@@ -10,6 +10,7 @@ namespace GameEngine.Views
         public Options()
         {
             InitializeComponent();
+            groupBox2.Visible = NetworkClasses.IsAdmin(User.PlayerId);
         }
 
         private void BackButton_Click(object sender, EventArgs e)

@@ -28,6 +28,7 @@ namespace GameEngine.ServerClasses
         public static bool CanContinue = true;
         public static bool IsStart = false;
         public static List<string> MessageHistory = new List<string>();
+        public static List<string> ChatHistory = new List<string>();
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -148,6 +149,10 @@ namespace GameEngine.ServerClasses
                         {
                             var message = inc.ReadString();
                             MessageHistory.Add(message);
+                        }
+                        else if (type == (byte) PacketTypes.Chat)
+                        {
+                            ChatHistory.Add(inc.ReadString());
                         }
                         break;
                     case NetIncomingMessageType.UnconnectedData:

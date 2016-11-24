@@ -84,6 +84,7 @@ namespace Networking
 
             connection.Close();
             DeleteServer(User.PlayerId);
+            UpdateCharacter(User.PlayerId, null);
             return true;
         }
 

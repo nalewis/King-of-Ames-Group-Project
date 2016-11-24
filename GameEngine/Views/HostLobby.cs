@@ -14,6 +14,7 @@ namespace GameEngine.Views
     {
         //Timer to facilitate the updating of the view
         private readonly Timer _timer;
+        private readonly Form _chat = new LobbyChat();
 
         /// <summary>
         /// Initializing variables
@@ -21,8 +22,7 @@ namespace GameEngine.Views
         public HostGameListForm()
         {
             InitializeComponent();
-            Form form = new LobbyChat();
-            form.Show();
+            _chat.Show();
             start_game.Enabled = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
@@ -56,6 +56,7 @@ namespace GameEngine.Views
             //if (e.CloseReason == CloseReason.UserClosing)
             //{
                 _timer.Stop();
+                _chat.Dispose();
                 Dispose();
                 Host.ServerStop();
                 Environment.Exit(0);
@@ -74,6 +75,7 @@ namespace GameEngine.Views
             Host.ServerStop();
             Form form = new MainMenuForm();
             form.Show();
+            _chat.Dispose();
             Dispose();
         }
 

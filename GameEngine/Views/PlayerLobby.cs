@@ -12,6 +12,7 @@ namespace GameEngine.Views
     {
         //Timer to handle view updates
         private readonly Timer _timer;
+        private readonly Form _chat = new LobbyChat();
 
         /// <summary>
         /// Initializing variables
@@ -19,6 +20,7 @@ namespace GameEngine.Views
         public PlayerLobby()
         {
             InitializeComponent();
+            _chat.Show();
             UpdateList();
 
             _timer = new Timer {Interval = (1*1000)};//Ticks every 1 seconds
@@ -49,6 +51,7 @@ namespace GameEngine.Views
             Client.ClientStop();
             Form form = new MainMenuForm();
             form.Show();
+            _chat.Dispose();
             Dispose();
         }
 
@@ -61,6 +64,7 @@ namespace GameEngine.Views
         {
             if (e.CloseReason != CloseReason.UserClosing) return;
             _timer.Stop();
+            _chat.Dispose();
             Dispose();
             NetworkClasses.UpdateCharacter(User.PlayerId, null);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);

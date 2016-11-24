@@ -112,7 +112,10 @@ namespace GameEngine.ServerClasses
 
                         else if (type == (byte) PacketTypes.Chat)
                         {
-
+                            var outMsg = _server.CreateMessage();
+                            outMsg.Write((byte)PacketTypes.Chat);
+                            outMsg.Write(inc.ReadString());
+                            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
                         }
                         else if (type == (byte) PacketTypes.Message)
                         {
