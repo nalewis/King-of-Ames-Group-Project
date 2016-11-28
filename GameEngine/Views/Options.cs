@@ -10,7 +10,7 @@ namespace GameEngine.Views
         public Options()
         {
             InitializeComponent();
-            groupBox2.Visible = NetworkClasses.IsAdmin(User.PlayerId);
+            groupBox2.Visible = (NetworkClasses.GetPlayer(User.PlayerId).Tables[0].Rows[0]["IsAdmin"].ToString() == "1");
         }
 
         private void BackButton_Click(object sender, EventArgs e)
@@ -38,7 +38,7 @@ namespace GameEngine.Views
             {
                 if (ContainsVaildChars(nameChangeText.Text))
                 {
-                    if (NetworkClasses.UpdateUsername(User.PlayerId, nameChangeText.Text))
+                    if (NetworkClasses.UpdateUserValue("User_List", "_Character", nameChangeText.Text, User.PlayerId))
                     {
                         MessageBox.Show("Username has been changed to " + nameChangeText.Text + ".", "Username Updated",
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -67,7 +67,7 @@ namespace GameEngine.Views
             {
                 if (ContainsVaildChars(passChangeText.Text))
                 {
-                    if (NetworkClasses.UpdatePassword(User.PlayerId, passChangeText.Text))
+                    if (NetworkClasses.UpdateUserValue("User_List","Password",passChangeText.Text,User.PlayerId))
                     {
                         MessageBox.Show("Password has been changed", "Password Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         passChangeText.Text = "";
@@ -104,7 +104,7 @@ namespace GameEngine.Views
             var n = -1;
 
             //Checks if user is admin
-            if (NetworkClasses.IsAdmin(User.PlayerId))
+            if (NetworkClasses.GetPlayer(User.PlayerId).Tables[0].Rows[0]["IsAdmin"].ToString() == "1")
             {
                 //Checks for empty textbox and if the value is an int
                 if (banPlayerText.TextLength > 0 && int.TryParse(banPlayerText.Lines[0], out n))

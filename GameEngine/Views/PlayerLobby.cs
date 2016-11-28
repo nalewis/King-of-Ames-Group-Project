@@ -46,7 +46,7 @@ namespace GameEngine.Views
         private void leaveGame_Click(object sender, EventArgs e)
         {
             _timer.Stop();
-            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             Form form = new MainMenuForm();
@@ -66,7 +66,7 @@ namespace GameEngine.Views
             _timer.Stop();
             _chat.Dispose();
             Dispose();
-            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             Environment.Exit(0);
@@ -132,7 +132,7 @@ namespace GameEngine.Views
                 form.Show();
                 _timer.Stop();
                 Client.ClientStop();
-                NetworkClasses.UpdateCharacter(User.PlayerId, null);
+                NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
                 MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Dispose();
             }
@@ -142,7 +142,7 @@ namespace GameEngine.Views
         {
             try
             {
-                NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
+                NetworkClasses.UpdateUserValue("User_List", "_Character", char_list.SelectedItem.ToString(), User.PlayerId);
                 UpdateList();
             }
             catch (Exception)

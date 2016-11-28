@@ -84,7 +84,7 @@ namespace GameEngine.ServerClasses
                             Players.Add(inc.ReadInt32());
                             if (Players.Count == 6)
                             {
-                                NetworkClasses.UpdateServerStatus("Starting", User.PlayerId);
+                                NetworkClasses.UpdateServerValue("Status", "Starting", "Host", User.PlayerId);
                             }
 
                             Console.WriteLine("Approved new connection");
@@ -100,7 +100,7 @@ namespace GameEngine.ServerClasses
 
                         if (type == (byte) PacketTypes.Leave)
                         {
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Creating", User.PlayerId); }
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerValue("Status", "Creating", "Host", User.PlayerId); }
                             Players.Remove(inc.ReadInt32());
                         }
                         else if (type == (byte) PacketTypes.Action)

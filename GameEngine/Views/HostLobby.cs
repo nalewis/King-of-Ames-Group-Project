@@ -71,7 +71,7 @@ namespace GameEngine.Views
         private void leaveGame_Click(object sender, EventArgs e)
         {
             _timer.Stop();
-            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             Host.ServerStop();
             Form form = new MainMenuForm();
             form.Show();
@@ -157,7 +157,7 @@ namespace GameEngine.Views
                 grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
                 LobbyController.AddPlayer(int.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
             }
-            NetworkClasses.UpdateServerStatus("In Progress", User.PlayerId);
+            NetworkClasses.UpdateServerValue("Status", "In Progress", "Host", User.PlayerId);
             LobbyController.StartGame();
             Host.StartGame();
             _timer.Stop();
@@ -168,7 +168,7 @@ namespace GameEngine.Views
         {
             try
             {
-                NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
+                NetworkClasses.UpdateUserValue("User_List", "_Character", char_list.SelectedItem.ToString(), User.PlayerId);
                 UpdateList();
             }
             catch (Exception)
