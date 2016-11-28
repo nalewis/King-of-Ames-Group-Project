@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Views
+﻿using System.Windows.Forms;
+
+namespace GameEngine.Views
 {
     partial class MainMenuForm
     {
@@ -34,6 +36,7 @@
             this.ProfileButton = new System.Windows.Forms.Button();
             this.logoutButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.friends = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,7 +82,7 @@
             // 
             // logoutButton
             // 
-            this.logoutButton.Location = new System.Drawing.Point(34, 135);
+            this.logoutButton.Location = new System.Drawing.Point(34, 164);
             this.logoutButton.Name = "logoutButton";
             this.logoutButton.Size = new System.Drawing.Size(75, 23);
             this.logoutButton.TabIndex = 4;
@@ -89,6 +92,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.friends);
             this.groupBox1.Controls.Add(this.HostButton);
             this.groupBox1.Controls.Add(this.logoutButton);
             this.groupBox1.Controls.Add(this.JoinButton);
@@ -96,21 +100,30 @@
             this.groupBox1.Controls.Add(this.OptionsButton);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(141, 177);
+            this.groupBox1.Size = new System.Drawing.Size(141, 207);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Command Menu";
+            // 
+            // friends
+            // 
+            this.friends.Location = new System.Drawing.Point(34, 135);
+            this.friends.Name = "friends";
+            this.friends.Size = new System.Drawing.Size(75, 23);
+            this.friends.TabIndex = 5;
+            this.friends.Text = "Friends";
+            this.friends.UseVisualStyleBackColor = true;
+            this.friends.Click += new System.EventHandler(this.friends_Click);
             // 
             // MainMenuForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
-            this.ClientSize = new System.Drawing.Size(165, 203);
+            this.ClientSize = new System.Drawing.Size(165, 231);
             this.Controls.Add(this.groupBox1);
             this.Name = "MainMenuForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MainMenuForm";
+            this.Text = "King of Ames";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainMenuForm_Closing);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -125,5 +138,6 @@
         private System.Windows.Forms.Button ProfileButton;
         private System.Windows.Forms.Button logoutButton;
         private System.Windows.Forms.GroupBox groupBox1;
+        private Button friends;
     }
 }

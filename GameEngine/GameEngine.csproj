@@ -76,6 +76,12 @@
     <Compile Include="ServerClasses\Client.cs" />
     <Compile Include="ServerClasses\Host.cs" />
     <Compile Include="ServerClasses\PacketTypes.cs" />
+    <Compile Include="Views\FriendsList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\FriendsList.Designer.cs">
+      <DependentUpon>FriendsList.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\HostLobby.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +157,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
+    <EmbeddedResource Include="Views\FriendsList.resx">
+      <DependentUpon>FriendsList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\HostLobby.resx">
       <DependentUpon>HostLobby.cs</DependentUpon>
     </EmbeddedResource>

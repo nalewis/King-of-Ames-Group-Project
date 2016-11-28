@@ -10,6 +10,7 @@ namespace GameEngine.Views
     /// </summary>
     public partial class MainMenuForm : Form
     {
+
         /// <summary>
         /// Intializing variables
         /// </summary>
@@ -75,6 +76,13 @@ namespace GameEngine.Views
         {
             Form login = new LoginForm();
             login.Show();
+            Dispose();
+        }
+
+        private void friends_Click(object sender, EventArgs e)
+        {
+            Form form = new FriendsList();
+            form.Show();
             Dispose();
         }
     }
