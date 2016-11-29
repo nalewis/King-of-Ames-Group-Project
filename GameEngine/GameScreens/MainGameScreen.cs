@@ -23,8 +23,8 @@ namespace GameEngine.GameScreens
         private static int _localPlayer;
         private static Monster _localMonster;
         private State _localPlayerState;
-        private bool firstPlay = true;
-        private List<Monster> monsterList;
+        private bool _firstPlay = true;
+        private List<Monster> _monsterList;
 
 
         public static int cardScreenChoice = -1;
@@ -41,7 +41,7 @@ namespace GameEngine.GameScreens
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
-            monsterList = GetMonsterList();
+            _monsterList = GetMonsterList();
             _pBlocks = GetPlayerBlocks();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
 
@@ -59,7 +59,7 @@ namespace GameEngine.GameScreens
             {
                 return;
             }
-            if (GetMonsterList().Count != monsterList.Count)
+            if (GetMonsterList().Count != _monsterList.Count)
             {
                 GetPlayerBlocks();
             }
@@ -182,10 +182,10 @@ namespace GameEngine.GameScreens
             RollingDice.Clear();
 
             _textPrompts.Clear();
-            if (firstPlay)
+            if (_firstPlay)
             {
                 Engine.PlaySound("StartTurn");
-                firstPlay = false;
+                _firstPlay = false;
                 Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
@@ -325,11 +325,13 @@ namespace GameEngine.GameScreens
                     case 2:
                         cfs = CardsForSale.Three;
                         break;
+                    case -2:
+                        break;
                     default:
                         Console.Out.WriteLine("Something went wrong with cardScreenChoice");
                         break;
                 }
-                ServerClasses.Client.SendActionPacket(GameStateController.BuyCard(cfs));
+                if(cardScreenChoice >= 0) { Client.SendActionPacket(GameStateController.BuyCard(cfs)); }
                 cardScreenChoice = -1; //reset choice for next time.
                 _gameState = GameState.EndingTurn;
                 EndTurn();
@@ -365,7 +367,6 @@ namespace GameEngine.GameScreens
                 tp.Position = ScreenLocations.GetPosition(tp.Name);
             }
             _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
-
             RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
         }
 
