@@ -91,6 +91,7 @@ namespace GameEngine.Views
                 var ds = NetworkClasses.GetServer(Client.Conn);
                 if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
                 {
+                    _chat.Dispose();
                     _timer.Stop();
                     Dispose();
                 }
@@ -127,14 +128,24 @@ namespace GameEngine.Views
             }
             catch (Exception) //Thrown if server no longer exists
             {
-                NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
+                //If the host leaves, the server no longer exists and the removing the player will throw an exception
+                try
+                {
+                    NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+                _chat.Dispose();
                 Form form = new MainMenuForm();
                 form.Show();
                 _timer.Stop();
                 Client.ClientStop();
+
                 NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
-                MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Dispose();
+                MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

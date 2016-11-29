@@ -24,6 +24,7 @@ namespace GameEngine.GameScreens
         private static Monster _localMonster;
         private State _localPlayerState;
         private bool firstPlay = true;
+        private List<Monster> monsterList;
 
 
         public static int cardScreenChoice = -1;
@@ -40,7 +41,8 @@ namespace GameEngine.GameScreens
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
-            _pBlocks = InitializePlayerBlocks();
+            monsterList = GetMonsterList();
+            _pBlocks = GetPlayerBlocks();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
 
             RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
@@ -56,6 +58,10 @@ namespace GameEngine.GameScreens
             if (GameStateController.GameOver)
             {
                 return;
+            }
+            if (GetMonsterList().Count != monsterList.Count)
+            {
+                GetPlayerBlocks();
             }
             UpdatePositions();
             UpdateGraphicsPieces();
@@ -402,17 +408,17 @@ namespace GameEngine.GameScreens
         private static List<Monster> GetMonsterList()
         {
             var mon = MonsterController.GetById(_localPlayer);
-            var monsterList = new List<Monster> { mon };
+            var monList = new List<Monster> { mon };
             mon = mon.Next;
             while (mon != _localMonster)
             {
-                monsterList.Add(mon);
+                monList.Add(mon);
                 mon = mon.Next;
             }
-            return monsterList;
+            return monList;
         }
 
-        private static List<PlayerBlock> InitializePlayerBlocks()
+        private static List<PlayerBlock> GetPlayerBlocks()
         {
             var monList = GetMonsterList();
             var toReturn = new List<PlayerBlock>();

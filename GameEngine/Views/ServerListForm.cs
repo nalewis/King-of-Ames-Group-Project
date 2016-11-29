@@ -136,9 +136,6 @@ namespace GameEngine.Views
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
-                var form = new MainMenuForm();
-                form.Show();
-                Dispose();
             }
         }
     }
