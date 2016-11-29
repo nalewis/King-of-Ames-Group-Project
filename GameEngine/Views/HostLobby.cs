@@ -99,14 +99,7 @@ namespace GameEngine.Views
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
             var row = ds.Tables[0].Rows[0];
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
-            var character = "";
-            
-            //Gets ping values for all players
-            var pings = new List<int>();
-            while(pings.Count < 1 )
-            {
-                pings = Host.GetPing();
-            }
+            var character = "";      
 
             //Host
             var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
@@ -161,6 +154,7 @@ namespace GameEngine.Views
             LobbyController.StartGame();
             Host.StartGame();
             _timer.Stop();
+            _chat.Dispose();
             Dispose();
         }
 
