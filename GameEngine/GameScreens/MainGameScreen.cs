@@ -26,6 +26,7 @@ namespace GameEngine.GameScreens
         private State _localPlayerState;
         private bool _firstPlay = true;
         private List<Monster> _monsterList;
+        private TextBlock cardList;
 
 
         public static int cardScreenChoice = -1;
@@ -66,6 +67,12 @@ namespace GameEngine.GameScreens
             }
             UpdatePositions();
             UpdateGraphicsPieces();
+            cardList = new TextBlock("cardList", new List<string>()
+            {
+                GamePieces.Session.Game.CardsForSale[0].Name,
+                GamePieces.Session.Game.CardsForSale[1].Name,
+                GamePieces.Session.Game.CardsForSale[2].Name
+            });
 
             //if(Client.isStart) _gameState = GameState.StartTurn;
 
