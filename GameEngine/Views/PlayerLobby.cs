@@ -138,8 +138,8 @@ namespace GameEngine.Views
                 _timer.Stop();
                 Client.ClientStop();
                 NetworkClasses.UpdateCharacter(User.PlayerId, null);
-                MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Dispose();
+                MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
