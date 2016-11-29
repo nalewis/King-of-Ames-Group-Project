@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Controllers;
-using GamePieces.Cards;
 using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
@@ -14,7 +13,9 @@ namespace GameEngine.ServerClasses
 {
     public static class Host
     {
+        //List of player ID's connected to the server
         public static List<int> Players = new List<int>();
+        //Variable for the Lidgren server stuff
         private static NetServer _server;
 
         /// <summary>
@@ -22,6 +23,7 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void ServerStart()
         {
+            //Server Setup
             var config = new NetPeerConfiguration("King of Ames") {Port = 6969};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
@@ -35,7 +37,7 @@ namespace GameEngine.ServerClasses
             var recieve = new Thread(RecieveLoop);
             recieve.Start();
 
-            //The host contains a client to behave like a user
+            //Setting up Client 
             Client.Conn = User.LocalIp;
             Client.NetClient.Start();
             Client.Connect();
@@ -46,10 +48,13 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void ServerStop()
         {
+            //Disconnects local Client
             Client.ClientStop();
+            //Sends message to clients that the server is closing
             var outMsg = _server.CreateMessage();
             outMsg.Write((byte) PacketTypes.Closed);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+            //Shuts down server and deletes it from the database
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
         }
@@ -59,18 +64,22 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void RecieveLoop()
         {
+            //Always checking for messages while server is open
             while (true)
             {
+                //Message from Client
                 NetIncomingMessage inc;
                 if ((inc = _server.ReadMessage()) == null) continue;
+                //Diverts based on what the client is doing
                 switch (inc.MessageType)
                 {
                     case NetIncomingMessageType.Error:
                         break;
+                    //Client connecting/disconnecting
                     case NetIncomingMessageType.StatusChanged:
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
-                            Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " +
+                            Console.WriteLine("Client " + inc.SenderConnection + " status changed: " +
                                               inc.SenderConnection.Status);
                         }
                         break;
@@ -164,10 +173,8 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
-            //Console.WriteLine("Packet: " + packet.Action);
-            //Console.WriteLine("Before: " + Game.Current.State + " id: " + Game.Current.PlayerId);
             GameStateController.AcceptAction(packet);
-            //Console.WriteLine("After: " + Game.Current.State + " id: " + Game.Current.PlayerId);
+            //Checks if anyone has won the game
             if (GameStateController.GameOver)
             {
                 DeclareWinner();
@@ -186,6 +193,8 @@ namespace GameEngine.ServerClasses
         /// Sends packets to clients 
         /// </summary>
         /// <param name="start"></param>
+        /// <param name="sendDice"></param>
+        /// <param name="sendCards"></param>
         public static void SendMonsterPackets(bool start = false, bool sendDice = false, bool sendCards = false)
         {
             var outMsg = _server.CreateMessage();
