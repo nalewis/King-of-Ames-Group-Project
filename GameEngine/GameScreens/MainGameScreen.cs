@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
+using GamePieces.Cards;
 using GamePieces.Monsters;
 using GamePieces.Session;
 
@@ -215,7 +216,7 @@ namespace GameEngine.GameScreens
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
-                _gameState = GameState.BuyingCards;
+                _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
                 return;
             }
 
@@ -358,6 +359,19 @@ namespace GameEngine.GameScreens
         #endregion
 
         #region PrivateHelpers
+
+        private bool AskForCards(int playerEnergy)
+        {
+            var ask = false;
+            foreach (var card in GamePieces.Session.Game.CardsForSale)
+            {
+                if (card.Cost < playerEnergy)
+                {
+                    ask = true;
+                }
+            }
+            return ask;
+        }
 
         private void UpdatePositions()
         {
