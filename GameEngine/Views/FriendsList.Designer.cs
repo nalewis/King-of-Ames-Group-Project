@@ -72,6 +72,7 @@
             this.addFriend.TabIndex = 2;
             this.addFriend.Text = "Add Friend";
             this.addFriend.UseVisualStyleBackColor = true;
+            this.addFriend.Click += new System.EventHandler(this.addFriend_Click);
             // 
             // FriendsList
             // 

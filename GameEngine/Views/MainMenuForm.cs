@@ -78,12 +78,5 @@ namespace GameEngine.Views
             login.Show();
             Dispose();
         }
-
-        private void friends_Click(object sender, EventArgs e)
-        {
-            Form form = new FriendsList();
-            form.Show();
-            Dispose();
-        }
     }
 }

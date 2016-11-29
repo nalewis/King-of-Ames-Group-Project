@@ -31,5 +31,10 @@ namespace GameEngine.Views
             form.Show();
             Dispose();
         }
+
+        private void addFriend_Click(object sender, System.EventArgs e)
+        {
+            //MessageBox.Show("Add Friend", "Add Friend?", );
+        }
     }
 }
