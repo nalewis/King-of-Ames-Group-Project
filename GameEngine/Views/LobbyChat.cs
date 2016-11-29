@@ -19,15 +19,25 @@ namespace GameEngine.Views
 
         private void sendMessage_Click(object sender, EventArgs e)
         {
-            if (writeMessage.TextLength <= 0 || writeMessage.TextLength >= 100) return;
-            if (!ContainsVaildChars(writeMessage.Text)) return;
-            Client.SendChatMessage(User.Username + ": " + writeMessage.Text + "\n");
-            writeMessage.Text = "";
+            Send();
         }
 
         private void clearChat_Click(object sender, EventArgs e)
         {
             Chat.Text = "";
+        }
+
+        private void wrtieMessage_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if(e.KeyChar == 13) { Send();}
+        }
+
+        private void Send()
+        {
+            if (writeMessage.TextLength <= 0 || writeMessage.TextLength >= 100) return;
+            if (!ContainsVaildChars(writeMessage.Text)) return;
+            Client.SendChatMessage(User.Username + ": " + writeMessage.Text + "\n");
+            writeMessage.Text = "";
         }
 
         private void CheckUpdate(object sender, EventArgs e)
@@ -42,7 +52,7 @@ namespace GameEngine.Views
 
         /// <summary>
         /// Checks if all characters in the given string are valid
-        /// Valid chars include 0-9, A-Z, and a-z
+        /// Valid chars include 0-9, A-Z, a-z, and spaces
         /// </summary>
         /// <param name="s"></param>
         /// <returns>true if valid, false otherwise</returns>

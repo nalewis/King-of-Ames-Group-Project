@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Views
+﻿using System.Windows.Forms;
+
+namespace GameEngine.Views
 {
     partial class LobbyChat
     {
@@ -29,11 +31,11 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.username = new System.Windows.Forms.Label();
+            this.clearChat = new System.Windows.Forms.Button();
             this.sendMessage = new System.Windows.Forms.Button();
             this.writeMessage = new System.Windows.Forms.RichTextBox();
             this.Chat = new System.Windows.Forms.RichTextBox();
-            this.clearChat = new System.Windows.Forms.Button();
-            this.username = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -51,32 +53,15 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Chat";
             // 
-            // sendMessage
+            // username
             // 
-            this.sendMessage.Location = new System.Drawing.Point(42, 232);
-            this.sendMessage.Name = "sendMessage";
-            this.sendMessage.Size = new System.Drawing.Size(68, 23);
-            this.sendMessage.TabIndex = 1;
-            this.sendMessage.Text = "Send";
-            this.sendMessage.UseVisualStyleBackColor = true;
-            this.sendMessage.Click += new System.EventHandler(this.sendMessage_Click);
-            // 
-            // writeMessage
-            // 
-            this.writeMessage.Location = new System.Drawing.Point(67, 209);
-            this.writeMessage.Name = "writeMessage";
-            this.writeMessage.Size = new System.Drawing.Size(187, 21);
-            this.writeMessage.TabIndex = 1;
-            this.writeMessage.Text = "";
-            // 
-            // Chat
-            // 
-            this.Chat.Location = new System.Drawing.Point(6, 19);
-            this.Chat.Name = "Chat";
-            this.Chat.ReadOnly = true;
-            this.Chat.Size = new System.Drawing.Size(248, 184);
-            this.Chat.TabIndex = 0;
-            this.Chat.Text = "";
+            this.username.AutoSize = true;
+            this.username.BackColor = System.Drawing.Color.Chocolate;
+            this.username.Location = new System.Drawing.Point(6, 212);
+            this.username.Name = "username";
+            this.username.Size = new System.Drawing.Size(55, 13);
+            this.username.TabIndex = 3;
+            this.username.Text = "Username";
             // 
             // clearChat
             // 
@@ -88,15 +73,38 @@
             this.clearChat.UseVisualStyleBackColor = true;
             this.clearChat.Click += new System.EventHandler(this.clearChat_Click);
             // 
-            // username
+            // sendMessage
             // 
-            this.username.AutoSize = true;
-            this.username.BackColor = System.Drawing.Color.Chocolate;
-            this.username.Location = new System.Drawing.Point(6, 212);
-            this.username.Name = "username";
-            this.username.Size = new System.Drawing.Size(55, 13);
-            this.username.TabIndex = 3;
-            this.username.Text = "Username";
+            this.sendMessage.Location = new System.Drawing.Point(42, 232);
+            this.sendMessage.Name = "sendMessage";
+            this.sendMessage.Size = new System.Drawing.Size(68, 23);
+            this.sendMessage.TabIndex = 1;
+            this.sendMessage.Text = "Send";
+            this.sendMessage.UseVisualStyleBackColor = true;
+            this.sendMessage.Click += new System.EventHandler(this.sendMessage_Click);
+            this.sendMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wrtieMessage_KeyPressed);
+            // 
+            // writeMessage
+            // 
+            this.writeMessage.Location = new System.Drawing.Point(67, 209);
+            this.writeMessage.Multiline = false;
+            this.writeMessage.Name = "writeMessage";
+            this.writeMessage.Size = new System.Drawing.Size(187, 21);
+            this.writeMessage.TabIndex = 1;
+            this.writeMessage.Text = "";
+            this.writeMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wrtieMessage_KeyPressed);
+            // 
+            // Chat
+            // 
+            this.Chat.Enabled = false;
+            this.Chat.Location = new System.Drawing.Point(6, 19);
+            this.Chat.Name = "Chat";
+            this.Chat.ReadOnly = true;
+            this.Chat.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.Chat.Size = new System.Drawing.Size(248, 184);
+            this.Chat.TabIndex = 0;
+            this.Chat.Text = "";
+            this.Chat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wrtieMessage_KeyPressed);
             // 
             // LobbyChat
             // 
@@ -107,6 +115,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "LobbyChat";
             this.Text = "LobbyChat";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wrtieMessage_KeyPressed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
