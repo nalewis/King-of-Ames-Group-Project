@@ -358,7 +358,6 @@ namespace Networking
         /// <returns>false if any player hasn't selected a character, true otherwise</returns>
         public static bool CheckReady(List<int> players)
         {
-            Console.WriteLine(players.Count);
             return players.All(player => !string.IsNullOrEmpty(GetPlayer(player).Tables[0].Rows[0]["_Character"].ToString()));
         }
 
