@@ -425,6 +425,8 @@ namespace GameEngine.GameScreens
 
             foreach (var tp in _textPrompts)
                 tp.Draw(Engine.SpriteBatch);
+
+            cardList.Draw(Engine.SpriteBatch);
         }
 
         private static List<Monster> GetMonsterList()
