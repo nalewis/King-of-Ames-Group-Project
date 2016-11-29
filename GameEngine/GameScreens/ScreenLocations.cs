@@ -45,7 +45,7 @@ namespace GameEngine.GameScreens
                 {"BuyCardsPrompt", new Vector2(_screenWidth - 400, _screeHeight - 100) },
                 {"GameOver", new Vector2(_screenWidth - 400, _screeHeight - 100) },
                 {"ServerUpdateBox", new Vector2(10, _screeHeight - 150)  },
-                {"cardList", new Vector2(_screenWidth - 100, 500)  }
+                {"cardList", new Vector2(10, _screeHeight - 250)  }
             };
         }
 

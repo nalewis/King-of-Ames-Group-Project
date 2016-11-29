@@ -61,7 +61,7 @@ namespace GameEngine.GameScreens
             {
                 if (_cardList[_selected].Cost <= _energy)
                 {
-                    MainGameScreen.cardScreenChoice = _selected;
+                    MainGameScreen.CardScreenChoice = _selected;
                     ScreenManager.RemoveScreen(this);
                 }
                 else
@@ -72,7 +72,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Escape))
             {
-                MainGameScreen.cardScreenChoice = -2;
+                MainGameScreen.CardScreenChoice = -2;
                 ScreenManager.RemoveScreen(this);
             }
             

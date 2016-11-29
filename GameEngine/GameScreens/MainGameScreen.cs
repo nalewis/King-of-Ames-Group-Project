@@ -26,10 +26,10 @@ namespace GameEngine.GameScreens
         private State _localPlayerState;
         private bool _firstPlay = true;
         private List<Monster> _monsterList;
-        private TextBlock cardList;
+        private TextBlock _cardList;
 
 
-        public static int cardScreenChoice = -1;
+        public static int CardScreenChoice = -1;
 
         private int RollAnimation { get; set; } = 0;
         private DiceRow RollingDice { get; }
@@ -63,16 +63,22 @@ namespace GameEngine.GameScreens
             }
             if (GetMonsterList().Count != _monsterList.Count)
             {
+                _monsterList = GetMonsterList();
                 GetPlayerBlocks();
             }
             UpdatePositions();
             UpdateGraphicsPieces();
-            cardList = new TextBlock("cardList", new List<string>()
+            
+            if (GamePieces.Session.Game.CardsForSale.Count > 0)
+            {
+                _cardList = new TextBlock("cardList", new List<string>()
             {
                 GamePieces.Session.Game.CardsForSale[0].Name,
                 GamePieces.Session.Game.CardsForSale[1].Name,
                 GamePieces.Session.Game.CardsForSale[2].Name
             });
+            }
+
 
             //if(Client.isStart) _gameState = GameState.StartTurn;
 
@@ -320,9 +326,9 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
                 ScreenManager.AddScreen(new BuyCards(MonsterController.GetById(_localPlayer).Energy));
-                if (cardScreenChoice == -1) return;
+                if (CardScreenChoice == -1) return;
                 var cfs = CardsForSale.One;
-                switch (cardScreenChoice)
+                switch (CardScreenChoice)
                 {
                     case 0:
                         cfs = CardsForSale.One;
@@ -339,8 +345,8 @@ namespace GameEngine.GameScreens
                         Console.Out.WriteLine("Something went wrong with cardScreenChoice");
                         break;
                 }
-                if(cardScreenChoice >= 0) { Client.SendActionPacket(GameStateController.BuyCard(cfs)); }
-                cardScreenChoice = -1; //reset choice for next time.
+                if(CardScreenChoice >= 0) { Client.SendActionPacket(GameStateController.BuyCard(cfs)); }
+                CardScreenChoice = -1; //reset choice for next time.
                 _gameState = GameState.EndingTurn;
                 EndTurn();
             }
@@ -367,7 +373,7 @@ namespace GameEngine.GameScreens
 
         #region PrivateHelpers
 
-        private bool AskForCards(int playerEnergy)
+        private static bool AskForCards(int playerEnergy)
         {
             var ask = false;
             foreach (var card in GamePieces.Session.Game.CardsForSale)
@@ -426,7 +432,7 @@ namespace GameEngine.GameScreens
             foreach (var tp in _textPrompts)
                 tp.Draw(Engine.SpriteBatch);
 
-            cardList.Draw(Engine.SpriteBatch);
+            _cardList?.Draw(Engine.SpriteBatch);
         }
 
         private static List<Monster> GetMonsterList()
