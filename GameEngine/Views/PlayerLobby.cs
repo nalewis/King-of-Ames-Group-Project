@@ -127,14 +127,24 @@ namespace GameEngine.Views
             }
             catch (Exception) //Thrown if server no longer exists
             {
-                NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
+                //If the host leaves, the server no longer exists and the removing the player will throw an exception
+                try
+                {
+                    NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
+                }
+                catch (Exception)
+                {
+
+                }
+
                 Form form = new MainMenuForm();
                 form.Show();
                 _timer.Stop();
                 Client.ClientStop();
+
                 NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
-                MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Dispose();
+                MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
