@@ -55,10 +55,9 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void RecieveLoop()
         {
-            while (!_shouldStop)
+            NetIncomingMessage inc;
+            while ((inc = NetClient.ReadMessage()) != null && !_shouldStop)
             {
-                NetIncomingMessage inc;
-                if ((inc = NetClient.ReadMessage()) == null) continue;
                 switch (inc.MessageType)
                 {
                     case NetIncomingMessageType.Error:
@@ -135,9 +134,8 @@ namespace GameEngine.ServerClasses
                         else if (type == (byte) PacketTypes.Closed)
                         {
                             NetClient.Shutdown("Closed");
-                            //ends the receive loop
-                            _shouldStop = true;
                             Conn = "";
+                            break;
                         }
                         else if (type == (byte) PacketTypes.GameOver)
                         {
@@ -155,19 +153,10 @@ namespace GameEngine.ServerClasses
                             ChatHistory.Add(inc.ReadString());
                         }
                         break;
-                    case NetIncomingMessageType.UnconnectedData:
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        break;
-                    case NetIncomingMessageType.DebugMessage:
-                        break;
-                    case NetIncomingMessageType.WarningMessage:
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                NetClient.Recycle(inc);
             }
         }
 

@@ -100,13 +100,6 @@ namespace GameEngine.Views
             var row = ds.Tables[0].Rows[0];
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
             var character = "";
-            
-            //Gets ping values for all players
-            var pings = new List<int>();
-            while(pings.Count < 1 )
-            {
-                pings = Host.GetPing();
-            }
 
             //Host
             var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());

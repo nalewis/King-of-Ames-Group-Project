@@ -16,6 +16,7 @@ namespace GameEngine.ServerClasses
     {
         public static List<int> Players = new List<int>();
         private static NetServer _server;
+        private static bool _shouldStop = false;
 
         /// <summary>
         /// Initializes the server, starts the reiceve loop, creates a NetClient and connects it to the server
@@ -24,6 +25,15 @@ namespace GameEngine.ServerClasses
         {
             var config = new NetPeerConfiguration("King of Ames") {Port = 6969};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            config.DisableMessageType(NetIncomingMessageType.DebugMessage);
+            config.DisableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            config.DisableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            config.DisableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+            config.DisableMessageType(NetIncomingMessageType.Receipt);
+            config.DisableMessageType(NetIncomingMessageType.ErrorMessage);
+            config.DisableMessageType(NetIncomingMessageType.WarningMessage);
+            config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
+            config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
             _server = new NetServer(config);
             _server.Start();
             Console.WriteLine("Server started...");
@@ -32,6 +42,7 @@ namespace GameEngine.ServerClasses
             NetworkClasses.CreateServer(User.PlayerId, User.LocalIp);
 
             // Starts thread to handle input from clients
+            _shouldStop = false;
             var recieve = new Thread(RecieveLoop);
             recieve.Start();
 
@@ -52,6 +63,7 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
+            _shouldStop = true;
         }
 
         /// <summary>
@@ -59,14 +71,11 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void RecieveLoop()
         {
-            while (true)
+            NetIncomingMessage inc;
+            while ((inc = _server.ReadMessage()) != null && !_shouldStop)
             {
-                NetIncomingMessage inc;
-                if ((inc = _server.ReadMessage()) == null) continue;
                 switch (inc.MessageType)
                 {
-                    case NetIncomingMessageType.Error:
-                        break;
                     case NetIncomingMessageType.StatusChanged:
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
@@ -123,29 +132,10 @@ namespace GameEngine.ServerClasses
                             PassMessageAlong(message);
                         }
                         break;
-                    case NetIncomingMessageType.UnconnectedData:
-                        break;
-                    case NetIncomingMessageType.Receipt:
-                        break;
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        break;
-                    case NetIncomingMessageType.DebugMessage:
-                        break;
-                    case NetIncomingMessageType.WarningMessage:
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        break;
-                    case NetIncomingMessageType.NatIntroductionSuccess:
-                        break;
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                _server.Recycle(inc);
             }
         }
 
