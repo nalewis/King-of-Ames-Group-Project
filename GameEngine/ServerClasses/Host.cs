@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Controllers;
+using GamePieces.Cards;
 using GamePieces.Session;
 using Lidgren.Network;
 using Networking;
@@ -21,7 +22,7 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void ServerStart()
         {
-            var config = new NetPeerConfiguration("King of Ames") { Port = 6969 };
+            var config = new NetPeerConfiguration("King of Ames") {Port = 6969};
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
             _server.Start();
@@ -47,7 +48,7 @@ namespace GameEngine.ServerClasses
         {
             Client.ClientStop();
             var outMsg = _server.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Closed);
+            outMsg.Write((byte) PacketTypes.Closed);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
@@ -69,18 +70,22 @@ namespace GameEngine.ServerClasses
                     case NetIncomingMessageType.StatusChanged:
                         if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                         {
-                            Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " + inc.SenderConnection.Status);
+                            Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " +
+                                              inc.SenderConnection.Status);
                         }
                         break;
                     case NetIncomingMessageType.ConnectionApproval:
                         //Initially approves connecting clients based on their login byte
-                        if (inc.ReadByte() == (byte)PacketTypes.Login)
+                        if (inc.ReadByte() == (byte) PacketTypes.Login)
                         {
                             Console.WriteLine(inc.MessageType);
 
                             inc.SenderConnection.Approve();
                             Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerStatus("Starting", User.PlayerId); }
+                            if (Players.Count == 6)
+                            {
+                                NetworkClasses.UpdateServerValue("Status", "Starting", "Host", User.PlayerId);
+                            }
 
                             Console.WriteLine("Approved new connection");
                             Console.WriteLine(inc.SenderConnection + " has connected");
@@ -93,17 +98,26 @@ namespace GameEngine.ServerClasses
                         //can only call readByte once, otherwise it continues reading the following bytes
                         var type = inc.ReadByte();
 
-                        if (type == (byte)PacketTypes.Leave)
+                        if (type == (byte) PacketTypes.Leave)
                         {
+                            if (Players.Count == 6) { NetworkClasses.UpdateServerValue("Status", "Creating", "Host", User.PlayerId); }
                             Players.Remove(inc.ReadInt32());
                         }
-                        else if(type == (byte)PacketTypes.Action)
+                        else if (type == (byte) PacketTypes.Action)
                         {
                             var json = inc.ReadString();
                             var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
                             ReceiveActionUpdate(packet);
                         }
-                        else if (type == (byte)PacketTypes.Message)
+
+                        else if (type == (byte) PacketTypes.Chat)
+                        {
+                            var outMsg = _server.CreateMessage();
+                            outMsg.Write((byte)PacketTypes.Chat);
+                            outMsg.Write(inc.ReadString());
+                            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+                        }
+                        else if (type == (byte) PacketTypes.Message)
                         {
                             var message = inc.ReadString();
                             PassMessageAlong(message);
@@ -175,8 +189,14 @@ namespace GameEngine.ServerClasses
         public static void SendMonsterPackets(bool start = false, bool sendDice = false, bool sendCards = false)
         {
             var outMsg = _server.CreateMessage();
-            if (start) { outMsg.Write((byte)PacketTypes.Start);}
-            else { outMsg.Write((byte)PacketTypes.Update); }
+            if (start)
+            {
+                outMsg.Write((byte) PacketTypes.Start);
+            }
+            else
+            {
+                outMsg.Write((byte) PacketTypes.Update);
+            }
             var packets = MonsterController.GetDataPackets();
             outMsg.Write(packets.Length);
             foreach (var packet in packets)
@@ -187,24 +207,24 @@ namespace GameEngine.ServerClasses
 
             if (sendDice)
             {
-                outMsg.Write((byte)PacketTypes.Dice);
+                outMsg.Write((byte) PacketTypes.Dice);
                 var dice = DiceController.GetDataPacket();
                 outMsg.Write(JsonConvert.SerializeObject(dice));
             }
-            else if(!start)
+            else if (!start)
             {
-                outMsg.Write((byte)PacketTypes.NoDice);
+                outMsg.Write((byte) PacketTypes.NoDice);
             }
 
             if (sendCards)
             {
-                outMsg.Write((byte)PacketTypes.Cards);
-                var cards = CardController.GetDataPacket();
+                outMsg.Write((byte) PacketTypes.Cards);
+                var cards = CardController.GetCardsForSale().Select(CardController.CreateDataPacket).ToArray();
                 outMsg.Write(JsonConvert.SerializeObject(cards));
             }
-            else if(!start)
+            else if (!start)
             {
-                outMsg.Write((byte)PacketTypes.NoCards);
+                outMsg.Write((byte) PacketTypes.NoCards);
             }
 
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
@@ -214,7 +234,7 @@ namespace GameEngine.ServerClasses
         {
             //send packet type game over, update player stats, show final scores
             var outMsg = _server.CreateMessage();
-            outMsg.Write((byte)PacketTypes.GameOver);
+            outMsg.Write((byte) PacketTypes.GameOver);
             outMsg.Write(Game.Winner.Name);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
@@ -222,7 +242,7 @@ namespace GameEngine.ServerClasses
         public static void PassMessageAlong(string message)
         {
             var outMsg = _server.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Message);
+            outMsg.Write((byte) PacketTypes.Message);
             outMsg.Write(message);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
@@ -233,7 +253,24 @@ namespace GameEngine.ServerClasses
         /// <returns>Int list</returns>
         public static List<int> GetPing()
         {
-            return _server.Connections.Select(conn => (int)(conn.AverageRoundtripTime * 1000)).ToList();
+            return _server.Connections.Select(conn => (int) (conn.AverageRoundtripTime * 1000)).ToList();
+        }
+
+        private enum PacketTypes
+        {
+            Login,
+            Leave,
+            Start,
+            Action,
+            Update,
+            Dice,
+            NoDice,
+            GameOver,
+            Closed,
+            Chat,
+            Cards,
+            NoCards,
+            Message
         }
     }
 }

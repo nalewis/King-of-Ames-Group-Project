@@ -38,7 +38,7 @@ namespace GameEngine.Views
         private void HostButton_Click(object sender, EventArgs e)
         {
             Host.ServerStart();
-            NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Hosted", 1);
+            NetworkClasses.UpdateUserValue("User_Stats", "Games_Hosted", "Games_Hosted + 1", User.PlayerId);
             Form gameList = new HostGameListForm();
             gameList.Show();
             Dispose();

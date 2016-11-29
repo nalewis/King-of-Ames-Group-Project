@@ -14,6 +14,7 @@ namespace GameEngine.Views
     {
         //Timer to facilitate the updating of the view
         private readonly Timer _timer;
+        private readonly Form _chat = new LobbyChat();
 
         /// <summary>
         /// Initializing variables
@@ -21,6 +22,7 @@ namespace GameEngine.Views
         public HostGameListForm()
         {
             InitializeComponent();
+            _chat.Show();
             start_game.Enabled = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
@@ -54,6 +56,7 @@ namespace GameEngine.Views
             //if (e.CloseReason == CloseReason.UserClosing)
             //{
                 _timer.Stop();
+                _chat.Dispose();
                 Dispose();
                 Host.ServerStop();
                 Environment.Exit(0);
@@ -68,10 +71,11 @@ namespace GameEngine.Views
         private void leaveGame_Click(object sender, EventArgs e)
         {
             _timer.Stop();
-            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             Host.ServerStop();
             Form form = new MainMenuForm();
             form.Show();
+            _chat.Dispose();
             Dispose();
         }
 
@@ -89,6 +93,7 @@ namespace GameEngine.Views
             char_list.Items.Add("Kraken");
             char_list.Items.Add("Meka Dragon");
             char_list.Items.Add("The King");
+            char_list.Items.Add("The Real King");
 
             //Gets server info and puts it into a dataset
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
@@ -152,7 +157,7 @@ namespace GameEngine.Views
                 grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
                 LobbyController.AddPlayer(int.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
             }
-            NetworkClasses.UpdateServerStatus("In Progress", User.PlayerId);
+            NetworkClasses.UpdateServerValue("Status", "In Progress", "Host", User.PlayerId);
             LobbyController.StartGame();
             Host.StartGame();
             _timer.Stop();
@@ -163,7 +168,7 @@ namespace GameEngine.Views
         {
             try
             {
-                NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
+                NetworkClasses.UpdateUserValue("User_List", "_Character", char_list.SelectedItem.ToString(), User.PlayerId);
                 UpdateList();
             }
             catch (Exception)

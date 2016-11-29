@@ -158,7 +158,6 @@ namespace GamePieces.Monsters
             Location = Location.Default;
             RemainingRolls = 0;
             State = State.EndOfTurn;
-            Console.WriteLine("Name: " + Name);
         }
 
         /// <summary>

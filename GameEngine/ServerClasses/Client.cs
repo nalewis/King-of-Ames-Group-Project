@@ -10,6 +10,7 @@ using System.Threading;
 using GameEngine.GameScreens;
 using GamePieces.Cards;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameEngine.ServerClasses
 {
@@ -21,13 +22,13 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
-        private static Thread _gameLoop = new Thread(Program.Run);
+        private static readonly Thread GameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
-        public static bool canContinue = true;
-        public static bool isStart = false;
-        public static string[] cardNames;
-        public static List<string> messageHistory = new List<string>();
+        public static bool CanContinue = true;
+        public static bool IsStart = false;
+        public static List<string> MessageHistory = new List<string>();
+        public static List<string> ChatHistory = new List<string>();
 
         /// <summary>
         /// Connects the client to the server using the current ip
@@ -37,7 +38,7 @@ namespace GameEngine.ServerClasses
         {
             //Sends login request to Host, with player ID attached
             var outMsg = NetClient.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Login);
+            outMsg.Write((byte) PacketTypes.Login);
             outMsg.Write(User.PlayerId);
 
             //resets the receive thread
@@ -75,7 +76,7 @@ namespace GameEngine.ServerClasses
                         break;
                     case NetIncomingMessageType.Data:
                         var type = inc.ReadByte();
-                        if (type == (byte)PacketTypes.Start)
+                        if (type == (byte) PacketTypes.Start)
                         {
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
@@ -87,10 +88,10 @@ namespace GameEngine.ServerClasses
 
                             LobbyController.StartGame(MonsterPackets);
                             //Makes this thread a STAThread, not sure if necessary...
-                            _gameLoop.SetApartmentState(ApartmentState.STA);
-                            _gameLoop.Start();
+                            GameLoop.SetApartmentState(ApartmentState.STA);
+                            GameLoop.Start();
                         }
-                        else if (type == (byte)PacketTypes.Update)
+                        else if (type == (byte) PacketTypes.Update)
                         {
                             var end = inc.ReadInt32();
                             MonsterPackets = new MonsterDataPacket[end];
@@ -105,7 +106,8 @@ namespace GameEngine.ServerClasses
                             //if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
                             //    MainGameScreen.SetLocalPlayerState(0);
 
-                            if (inc.ReadByte() == (byte)PacketTypes.Dice) {
+                            if (inc.ReadByte() == (byte) PacketTypes.Dice)
+                            {
                                 var diceJson = inc.ReadString();
                                 var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
                                 DiceController.AcceptDataPacket(dice);
@@ -115,37 +117,42 @@ namespace GameEngine.ServerClasses
                                 Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
                             }
 
-                            if (inc.ReadByte() == (byte)PacketTypes.Cards)
+                            if (inc.ReadByte() == (byte) PacketTypes.Cards)
                             {
                                 var cardJson = inc.ReadString();
-                                var cards = JsonConvert.DeserializeObject<CardDataPacket>(cardJson);
-                                cardNames = cards.Name;
-                                //CardController.AcceptDataPacket(cards);
+                                var cardsDataPackets = JsonConvert.DeserializeObject<CardDataPacket[]>(cardJson);
+                                CardController.SetCardsForSale(cardsDataPackets.ToList()
+                                    .Select(CardController.AcceptDataPacket)
+                                    .ToList());
                             }
                             else
                             {
                                 Console.Error.WriteLine("No Cards! (╯°□°）╯︵ ┻━┻");
                             }
 
-                            canContinue = true;
+                            CanContinue = true;
                         }
-                        else if (type == (byte)PacketTypes.Closed)
+                        else if (type == (byte) PacketTypes.Closed)
                         {
                             NetClient.Shutdown("Closed");
                             //ends the receive loop
                             _shouldStop = true;
                             Conn = "";
                         }
-                        else if (type == (byte)PacketTypes.GameOver)
+                        else if (type == (byte) PacketTypes.GameOver)
                         {
                             Console.WriteLine("Game Over!");
                             var winnerName = inc.ReadString();
                             MainGameScreen.EndGame(winnerName);
                         }
-                        else if (type == (byte)PacketTypes.Message)
+                        else if (type == (byte) PacketTypes.Message)
                         {
                             var message = inc.ReadString();
-                            messageHistory.Add(message);
+                            MessageHistory.Add(message);
+                        }
+                        else if (type == (byte) PacketTypes.Chat)
+                        {
+                            ChatHistory.Add(inc.ReadString());
                         }
                         break;
                     case NetIncomingMessageType.UnconnectedData:
@@ -170,18 +177,18 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void SendActionPacket(ActionPacket packet)
         {
-            while (!canContinue)
+            while (!CanContinue)
             {
-                System.Threading.Thread.Sleep(500);
+                Thread.Sleep(500);
                 Console.WriteLine("Sleeping packet type: " + packet.Action);
             }
             var outMsg = NetClient.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Action);
+            outMsg.Write((byte) PacketTypes.Action);
             var json = JsonConvert.SerializeObject(packet);
             JsonConvert.DeserializeObject<ActionPacket>(json);
             outMsg.Write(json);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
-            canContinue = false;
+            CanContinue = false;
         }
 
         //Sends a message to the server, the server will return the message to all clients, which will then add it to their message history
@@ -190,7 +197,15 @@ namespace GameEngine.ServerClasses
             var timeStamp = DateTime.Now.ToString("mm:ss");
             message = "[" + timeStamp + "] " + message;
             var outMsg = NetClient.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Message);
+            outMsg.Write((byte) PacketTypes.Message);
+            outMsg.Write(message);
+            NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendChatMessage(string message)
+        {
+            var outMsg = NetClient.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Chat);
             outMsg.Write(message);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
@@ -201,7 +216,7 @@ namespace GameEngine.ServerClasses
         public static void ClientStop()
         {
             var outMsg = NetClient.CreateMessage();
-            outMsg.Write((byte)PacketTypes.Leave);
+            outMsg.Write((byte) PacketTypes.Leave);
             outMsg.Write(User.PlayerId);
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
             NetClient.WaitMessage(1000);
@@ -209,7 +224,23 @@ namespace GameEngine.ServerClasses
             //ends the receive loop
             _shouldStop = true;
             Conn = "";
-            if (_gameLoop.IsAlive) { _gameLoop.Abort(); }
+            if (GameLoop.IsAlive) { GameLoop.Abort(); }
+        }
+
+        private enum PacketTypes
+        {
+            Login,
+            Leave,
+            Start,
+            Action,
+            Update,
+            Dice,
+            NoDice,
+            GameOver,
+            Closed,
+            Chat,
+            Cards,
+            Message
         }
     }
 }

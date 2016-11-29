@@ -11,19 +11,19 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine.GameScreens
 {
-    class BuyCards : GameScreen
+    internal class BuyCards : GameScreen
     {
         private const int OptionPadding = 60;
-        private readonly string[] _cardList;
+        private readonly List<Card> _cardList;
         private readonly SpriteFont _font;
-        private int _energy;
+        private readonly int _energy;
         private int _selected;
         private Vector2 _position;
         public new bool IsPopup = true;
 
-        public BuyCards(string[] cardList, int energy)
+        public BuyCards(int energy)
         {
-            _cardList = cardList;
+            _cardList = GamePieces.Session.Game.CardsForSale;
             _energy = energy;
             _font = Engine.FontList["MenuFont"];
             _selected = 0;
@@ -34,7 +34,7 @@ namespace GameEngine.GameScreens
         {
             if (Engine.InputManager.KeyPressed(Keys.Down))
             {
-                if (_selected == (_cardList.Length - 1))
+                if (_selected == (_cardList.Count - 1))
                 {
                     _selected = 0;
                 }
@@ -48,7 +48,7 @@ namespace GameEngine.GameScreens
             {
                 if (_selected == 0)
                 {
-                    _selected = _cardList.Length - 1;
+                    _selected = _cardList.Count - 1;
                 }
                 else
                 {
@@ -70,9 +70,9 @@ namespace GameEngine.GameScreens
             var energyPos = new Vector2(_position.X, _position.Y - 25);
             Engine.SpriteBatch.Begin();
             Engine.SpriteBatch.DrawString(_font, "Current Energy: " + _energy, energyPos, Color.Blue);
-            for (var i = 0; i < _cardList.Length; i++)
+            for (var i = 0; i < _cardList.Count; i++)
             {
-                var text = _cardList[i];
+                var text = _cardList[i].Name;
                 var pos = new Vector2(GetCenter(text, _font), _position.Y + (OptionPadding * i));
                 Engine.SpriteBatch.DrawString(_font, text, pos, _selected == i ? Color.Yellow : Color.Black);
             }

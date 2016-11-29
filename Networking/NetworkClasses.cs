@@ -53,6 +53,21 @@ namespace Networking
             return true;
         }
 
+        public static object GetUserValue(string value)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @user";
+            command.Parameters.AddWithValue("@user", User.PlayerId);
+            var adapter = new MySqlDataAdapter(command);
+            var ds = new DataSet();
+            adapter.Fill(ds);
+            if (ds.Tables[0].Rows.Count == 0) return false;
+            connection.Close();
+            return ds.Tables[0].Rows[0][value].ToString();
+        }
+
         /// <summary>
         /// Using inputs from the login form, opens a connection to the database, checks if username exsits, if it does, checks if password is correct
         /// Returns false if any checks fail
@@ -75,83 +90,16 @@ namespace Networking
             var dbpass = StringCipher.Decrypt(ds.Tables[0].Rows[0]["password"].ToString(), "thomas");
             if (dbpass != pass) return false;
             //update the players ip
-            UpdateIp(int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString()), ip);
+            UpdateUserValue("User_List", "Local_IP", ip, int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString()));
 
             User.Username = ds.Tables[0].Rows[0]["Username"].ToString();
             User.LocalIp = ip;
             User.PlayerId = int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString());
             User.Character = ds.Tables[0].Rows[0]["_Character"].ToString();
 
-            //Clear any invalid servers that are attached to the player
+            connection.Close();
             DeleteServer(User.PlayerId);
-
-            connection.Close();
-            return true;
-        }
-
-        /// <summary>
-        /// Updates the players IP in the database
-        /// This is called when the user succesfully logs in
-        /// </summary>
-        /// <param name="playerid"></param>
-        /// <param name="ip"></param>
-        /// <returns></returns>
-        public static bool UpdateIp(int playerid, string ip)
-        {
-            var connection = new MySqlConnection(ConnectString);
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "UPDATE User_List SET Local_IP = @ip WHERE Player_ID = @playerid";
-            command.Parameters.AddWithValue("@ip", ip);
-            command.Parameters.AddWithValue("@playerid", playerid);
-            command.ExecuteNonQuery();
-
-            connection.Close();
-            return true;
-        }
-
-        public static bool UpdateUsername(int playerid, string name)
-        {
-            try
-            {
-                var connection = new MySqlConnection(ConnectString);
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = "UPDATE User_List SET Username = @name WHERE Player_ID = @playerid";
-                command.Parameters.AddWithValue("@name", name);
-                command.Parameters.AddWithValue("@playerid", playerid);
-                command.ExecuteNonQuery();
-
-                connection.Close();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool UpdatePassword(int playerid, string pass)
-        {
-            try
-            {
-                pass = StringCipher.Encrypt(pass, "thomas");
-                var connection = new MySqlConnection(ConnectString);
-                connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = "UPDATE User_List SET Password = @pass WHERE Player_ID = @playerid";
-                command.Parameters.AddWithValue("@pass", pass);
-                command.Parameters.AddWithValue("@playerid", playerid);
-                command.ExecuteNonQuery();
-
-                connection.Close();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
+            UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             return true;
         }
 
@@ -294,42 +242,6 @@ namespace Networking
 
             connection.Close();
             return ds;
-        }
-
-        /// <summary>
-        /// Updates the players character field to the input
-        /// </summary>
-        /// <param name="playerid"></param>
-        /// <param name="character"></param>
-        public static void UpdateCharacter(int playerid, string character)
-        {
-            var connection = new MySqlConnection(ConnectString);
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "UPDATE User_List SET _Character = @character WHERE Player_ID = @playerid";
-            command.Parameters.AddWithValue("@character", character);
-            command.Parameters.AddWithValue("@playerid", playerid);
-            command.ExecuteNonQuery();
-
-            connection.Close();
-        }
-
-        /// <summary>
-        /// Updates the server status based on player count and game status
-        /// </summary>
-        /// <param name="status"></param>
-        /// <param name="playerid"></param>
-        public static void UpdateServerStatus(string status, int playerid)
-        {
-            var connection = new MySqlConnection(ConnectString);
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "UPDATE Server_List SET Status = @status WHERE Host = @id";
-            command.Parameters.AddWithValue("@status", status);
-            command.Parameters.AddWithValue("@id", playerid);
-            command.ExecuteNonQuery();
-
-            connection.Close();
         }
 
         /// <summary>
@@ -509,23 +421,51 @@ namespace Networking
             return players;
         }
 
-        /// <summary>
-        /// Updates specified player stat to specified value
-        /// </summary>
-        /// <param name="playerid"></param>
-        /// <param name="stat"></param>
-        /// <param name="value"></param>
-        public static void UpdatePlayerStat(int playerid, string stat, int value)
+        public static bool UpdateUserValue(string table, string column, string value, int playerid)
         {
-            var connection = new MySqlConnection(ConnectString);
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "UPDATE User_Stats SET " + stat + " = " + stat + " + @value WHERE Player_ID = @playerid";
-            command.Parameters.AddWithValue("@value", value);
-            command.Parameters.AddWithValue("@playerid", playerid);
-            command.ExecuteNonQuery();
+            try
+            {
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                if(value == null) { command.CommandText = "UPDATE " + table + " SET " + column + " = null WHERE Player_ID = " + playerid;}
+                else if(value.Contains("+")){ command.CommandText = "UPDATE " + table + " SET " + column + " = " + value + " WHERE Player_ID = " + playerid; }
+                else { command.CommandText = "UPDATE " + table + " SET " + column + " = '" + value + "' WHERE Player_ID = " + playerid; }
+                Console.WriteLine(command.CommandText);
+                command.ExecuteNonQuery();
 
-            connection.Close();
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool UpdateServerValue(string column, object value, string searchBy, object equals)
+        {
+            try
+            {
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE Server_List SET @column = @value WHERE @searchBy = @equals";
+                command.Parameters.AddWithValue("@column", column);
+                command.Parameters.AddWithValue("@value", value);
+                command.Parameters.AddWithValue("@stuff", searchBy);
+                command.Parameters.AddWithValue("@thing", equals);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+            return true;
         }
 
         public static bool BanPlayer(int playerid)
@@ -548,48 +488,5 @@ namespace Networking
             }
         }
 
-        public static bool IsBanned(int playerid)
-        {
-            var connection = new MySqlConnection(ConnectString);
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @playerid";
-            command.Parameters.AddWithValue("@playerid", playerid);
-            var adapter = new MySqlDataAdapter(command);
-            var ds = new DataSet();
-            adapter.Fill(ds);
-            if (int.Parse(ds.Tables[0].Rows[0]["IsBanned"].ToString()) == 1)
-            {
-                connection.Close();
-                return true;
-            }
-            else
-            {
-                connection.Close();
-                return false;
-            }
-        }
-
-        public static bool IsAdmin(int playerid)
-        {
-            var connection = new MySqlConnection(ConnectString);
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM User_List WHERE Player_ID = @playerid";
-            command.Parameters.AddWithValue("@playerid", playerid);
-            var adapter = new MySqlDataAdapter(command);
-            var ds = new DataSet();
-            adapter.Fill(ds);
-            if (int.Parse(ds.Tables[0].Rows[0]["IsAdmin"].ToString()) == 1)
-            {
-                connection.Close();
-                return true;
-            }
-            else
-            {
-                connection.Close();
-                return false;
-            }
-        }
     }
 }

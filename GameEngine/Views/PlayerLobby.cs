@@ -12,6 +12,7 @@ namespace GameEngine.Views
     {
         //Timer to handle view updates
         private readonly Timer _timer;
+        private readonly Form _chat = new LobbyChat();
 
         /// <summary>
         /// Initializing variables
@@ -19,6 +20,7 @@ namespace GameEngine.Views
         public PlayerLobby()
         {
             InitializeComponent();
+            _chat.Show();
             UpdateList();
 
             _timer = new Timer {Interval = (1*1000)};//Ticks every 1 seconds
@@ -44,11 +46,12 @@ namespace GameEngine.Views
         private void leaveGame_Click(object sender, EventArgs e)
         {
             _timer.Stop();
-            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             Form form = new MainMenuForm();
             form.Show();
+            _chat.Dispose();
             Dispose();
         }
 
@@ -61,8 +64,9 @@ namespace GameEngine.Views
         {
             if (e.CloseReason != CloseReason.UserClosing) return;
             _timer.Stop();
+            _chat.Dispose();
             Dispose();
-            NetworkClasses.UpdateCharacter(User.PlayerId, null);
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             Environment.Exit(0);
@@ -81,7 +85,7 @@ namespace GameEngine.Views
             char_list.Items.Add("Kraken");
             char_list.Items.Add("Meka Dragon");
             char_list.Items.Add("The King");
-            char_list.Items.Add("The Real King"); //TODO This unlocks something cool, is this enough tho or will this break things?
+            char_list.Items.Add("The Real King"); 
             try
             {
                 var ds = NetworkClasses.GetServer(Client.Conn);
@@ -137,7 +141,8 @@ namespace GameEngine.Views
                 form.Show();
                 _timer.Stop();
                 Client.ClientStop();
-                NetworkClasses.UpdateCharacter(User.PlayerId, null);
+
+                NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
                 Dispose();
                 MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -147,7 +152,7 @@ namespace GameEngine.Views
         {
             try
             {
-                NetworkClasses.UpdateCharacter(User.PlayerId, char_list.SelectedItem.ToString());
+                NetworkClasses.UpdateUserValue("User_List", "_Character", char_list.SelectedItem.ToString(), User.PlayerId);
                 UpdateList();
             }
             catch (Exception)

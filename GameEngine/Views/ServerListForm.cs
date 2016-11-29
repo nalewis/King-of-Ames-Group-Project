@@ -68,14 +68,16 @@ namespace GameEngine.Views
         private void join_Click(object sender, EventArgs e)
         {
             if (!join.Enabled) return;
-            if (!NetworkClasses.IsBanned(User.PlayerId))
+            //Checks if user is banned
+            if (NetworkClasses.GetPlayer(User.PlayerId).Tables[0].Rows[0]["IsBanned"].ToString() == "0")
             {
                 if (Client.Connect())
                 {
                     try
                     {
                         NetworkClasses.JoinServer(serverList.SelectedItems[0].SubItems[1].Text, User.PlayerId);
-                        NetworkClasses.UpdatePlayerStat(User.PlayerId, "Games_Joined", 1);
+                        //Increments games joined
+                        NetworkClasses.UpdateUserValue("User_Stats", "Games_Joined", "Games_Joined+1", User.PlayerId);
                         Form lobby = new PlayerLobby();
                         lobby.Show();
                         Dispose();
@@ -90,7 +92,7 @@ namespace GameEngine.Views
             }
             else
             {
-                MessageBox.Show("Can't connect to game, you have been banned. Please contact administrator to lift ban.", "Join Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Can't connect to game, you have been banned. Please contact administrator to lift ban.", "Join Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
