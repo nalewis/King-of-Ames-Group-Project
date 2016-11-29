@@ -32,7 +32,6 @@
             this.playerList = new System.Windows.Forms.ListView();
             this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ping = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.char_list = new System.Windows.Forms.ComboBox();
             this.char_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -52,8 +51,7 @@
             // 
             this.playerList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.playerName,
-            this.character,
-            this.ping});
+            this.character});
             this.playerList.FullRowSelect = true;
             this.playerList.GridLines = true;
             this.playerList.Location = new System.Drawing.Point(12, 12);
@@ -66,17 +64,12 @@
             // playerName
             // 
             this.playerName.Text = "Player Name";
-            this.playerName.Width = 90;
+            this.playerName.Width = 115;
             // 
             // character
             // 
             this.character.Text = "Character";
-            this.character.Width = 97;
-            // 
-            // ping
-            // 
-            this.ping.Text = "Ping";
-            this.ping.Width = 49;
+            this.character.Width = 138;
             // 
             // char_list
             // 
@@ -123,6 +116,5 @@
         private System.Windows.Forms.ColumnHeader character;
         private System.Windows.Forms.ComboBox char_list;
         private System.Windows.Forms.Label char_label;
-        private System.Windows.Forms.ColumnHeader ping;
     }
 }

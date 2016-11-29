@@ -99,11 +99,7 @@ namespace GameEngine.Views
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
             var row = ds.Tables[0].Rows[0];
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
-<<<<<<< HEAD
             var character = "";
-=======
-            var character = "";      
->>>>>>> 0dc9e9fe1f2c2e01a499329872505c5f8202da1a
 
             //Host
             var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
