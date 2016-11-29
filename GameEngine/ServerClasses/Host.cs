@@ -24,7 +24,6 @@ namespace GameEngine.ServerClasses
         public static void ServerStart()
         {
             var config = new NetPeerConfiguration("King of Ames") {Port = 6969};
-            config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             config.DisableMessageType(NetIncomingMessageType.DebugMessage);
             config.DisableMessageType(NetIncomingMessageType.DiscoveryRequest);
             config.DisableMessageType(NetIncomingMessageType.DiscoveryResponse);
@@ -34,6 +33,7 @@ namespace GameEngine.ServerClasses
             config.DisableMessageType(NetIncomingMessageType.WarningMessage);
             config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
             _server.Start();
             Console.WriteLine("Server started...");
@@ -72,70 +72,74 @@ namespace GameEngine.ServerClasses
         public static void RecieveLoop()
         {
             NetIncomingMessage inc;
-            while ((inc = _server.ReadMessage()) != null && !_shouldStop)
+            while (!_shouldStop)
             {
-                switch (inc.MessageType)
+                while ((inc = _server.ReadMessage()) != null)
                 {
-                    case NetIncomingMessageType.StatusChanged:
-                        if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
-                        {
-                            Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " +
-                                              inc.SenderConnection.Status);
-                        }
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        //Initially approves connecting clients based on their login byte
-                        if (inc.ReadByte() == (byte) PacketTypes.Login)
-                        {
-                            Console.WriteLine(inc.MessageType);
-
-                            inc.SenderConnection.Approve();
-                            Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6)
+                    switch (inc.MessageType)
+                    {
+                        case NetIncomingMessageType.StatusChanged:
+                            if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                             {
-                                NetworkClasses.UpdateServerValue("Status", "Starting", "Host", User.PlayerId);
+                                Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " +
+                                                  inc.SenderConnection.Status);
+                            }
+                            break;
+                        case NetIncomingMessageType.ConnectionApproval:
+                            //Initially approves connecting clients based on their login byte
+                            if (inc.ReadByte() == (byte)PacketTypes.Login)
+                            {
+                                Console.WriteLine(inc.MessageType);
+
+                                inc.SenderConnection.Approve();
+                                Players.Add(inc.ReadInt32());
+                                if (Players.Count == 6)
+                                {
+                                    NetworkClasses.UpdateServerValue("Status", "Starting", "Host", User.PlayerId);
+                                }
+
+                                Console.WriteLine("Approved new connection");
+                                Console.WriteLine(inc.SenderConnection + " has connected");
                             }
 
-                            Console.WriteLine("Approved new connection");
-                            Console.WriteLine(inc.SenderConnection + " has connected");
-                        }
+                            break;
+                        //The data message type encompasses all messages that aren't related to the running
+                        //of the lidgren library, to differentiate, we pass different PacketTypes
+                        case NetIncomingMessageType.Data:
+                            //can only call readByte once, otherwise it continues reading the following bytes
+                            var type = inc.ReadByte();
 
-                        break;
-                    //The data message type encompasses all messages that aren't related to the running
-                    //of the lidgren library, to differentiate, we pass different PacketTypes
-                    case NetIncomingMessageType.Data:
-                        //can only call readByte once, otherwise it continues reading the following bytes
-                        var type = inc.ReadByte();
+                            if (type == (byte)PacketTypes.Leave)
+                            {
+                                if (Players.Count == 6) { NetworkClasses.UpdateServerValue("Status", "Creating", "Host", User.PlayerId); }
+                                Players.Remove(inc.ReadInt32());
+                            }
+                            else if (type == (byte)PacketTypes.Action)
+                            {
+                                var json = inc.ReadString();
+                                var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
+                                ReceiveActionUpdate(packet);
+                            }
 
-                        if (type == (byte) PacketTypes.Leave)
-                        {
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerValue("Status", "Creating", "Host", User.PlayerId); }
-                            Players.Remove(inc.ReadInt32());
-                        }
-                        else if (type == (byte) PacketTypes.Action)
-                        {
-                            var json = inc.ReadString();
-                            var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
-                            ReceiveActionUpdate(packet);
-                        }
-
-                        else if (type == (byte) PacketTypes.Chat)
-                        {
-                            var outMsg = _server.CreateMessage();
-                            outMsg.Write((byte)PacketTypes.Chat);
-                            outMsg.Write(inc.ReadString());
-                            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-                        }
-                        else if (type == (byte) PacketTypes.Message)
-                        {
-                            var message = inc.ReadString();
-                            PassMessageAlong(message);
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                            else if (type == (byte)PacketTypes.Chat)
+                            {
+                                var outMsg = _server.CreateMessage();
+                                outMsg.Write((byte)PacketTypes.Chat);
+                                outMsg.Write(inc.ReadString());
+                                _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+                            }
+                            else if (type == (byte)PacketTypes.Message)
+                            {
+                                var message = inc.ReadString();
+                                PassMessageAlong(message);
+                            }
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    _server.Recycle(inc);
                 }
-                _server.Recycle(inc);
+                Thread.Sleep(50);
             }
         }
 

@@ -56,107 +56,111 @@ namespace GameEngine.ServerClasses
         public static void RecieveLoop()
         {
             NetIncomingMessage inc;
-            while ((inc = NetClient.ReadMessage()) != null && !_shouldStop)
+            while (!_shouldStop)
             {
-                switch (inc.MessageType)
+                while ((inc = NetClient.ReadMessage()) != null)
                 {
-                    case NetIncomingMessageType.Error:
-                        Console.WriteLine(inc.ToString());
-                        break;
-                    case NetIncomingMessageType.StatusChanged:
-                        Console.WriteLine("Status changed: " + inc.SenderConnection.Status);
-                        if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
-                        {
-                            NetClient.Shutdown("Closed");
-                            //ends the receive loop
-                            _shouldStop = true;
-                            Conn = "";
-                        }
-                        break;
-                    case NetIncomingMessageType.Data:
-                        var type = inc.ReadByte();
-                        if (type == (byte) PacketTypes.Start)
-                        {
-                            var end = inc.ReadInt32();
-                            MonsterPackets = new MonsterDataPacket[end];
-                            for (var i = 0; i < end; i++)
-                            {
-                                var json = inc.ReadString();
-                                MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                            }
-
-                            LobbyController.StartGame(MonsterPackets);
-                            //Makes this thread a STAThread, not sure if necessary...
-                            GameLoop.SetApartmentState(ApartmentState.STA);
-                            GameLoop.Start();
-                        }
-                        else if (type == (byte) PacketTypes.Update)
-                        {
-                            var end = inc.ReadInt32();
-                            MonsterPackets = new MonsterDataPacket[end];
-                            for (var i = 0; i < end; i++)
-                            {
-                                var json = inc.ReadString();
-                                MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
-                            }
-
-                            MonsterController.AcceptDataPackets(MonsterPackets);
-
-                            //if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
-                            //    MainGameScreen.SetLocalPlayerState(0);
-
-                            if (inc.ReadByte() == (byte) PacketTypes.Dice)
-                            {
-                                var diceJson = inc.ReadString();
-                                var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
-                                DiceController.AcceptDataPacket(dice);
-                            }
-                            else
-                            {
-                                Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
-                            }
-
-                            if (inc.ReadByte() == (byte) PacketTypes.Cards)
-                            {
-                                var cardJson = inc.ReadString();
-                                var cardsDataPackets = JsonConvert.DeserializeObject<CardDataPacket[]>(cardJson);
-                                CardController.SetCardsForSale(cardsDataPackets.ToList()
-                                    .Select(CardController.AcceptDataPacket)
-                                    .ToList());
-                            }
-                            else
-                            {
-                                Console.Error.WriteLine("No Cards! (╯°□°）╯︵ ┻━┻");
-                            }
-
-                            CanContinue = true;
-                        }
-                        else if (type == (byte) PacketTypes.Closed)
-                        {
-                            NetClient.Shutdown("Closed");
-                            Conn = "";
+                    switch (inc.MessageType)
+                    {
+                        case NetIncomingMessageType.Error:
+                            Console.WriteLine(inc.ToString());
                             break;
-                        }
-                        else if (type == (byte) PacketTypes.GameOver)
-                        {
-                            Console.WriteLine("Game Over!");
-                            var winnerName = inc.ReadString();
-                            MainGameScreen.EndGame(winnerName);
-                        }
-                        else if (type == (byte) PacketTypes.Message)
-                        {
-                            var message = inc.ReadString();
-                            MessageHistory.Add(message);
-                        }
-                        else if (type == (byte) PacketTypes.Chat)
-                        {
-                            ChatHistory.Add(inc.ReadString());
-                        }
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                        case NetIncomingMessageType.StatusChanged:
+                            Console.WriteLine("Status changed: " + inc.SenderConnection.Status);
+                            if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
+                            {
+                                NetClient.Shutdown("Closed");
+                                //ends the receive loop
+                                _shouldStop = true;
+                                Conn = "";
+                            }
+                            break;
+                        case NetIncomingMessageType.Data:
+                            var type = inc.ReadByte();
+                            if (type == (byte)PacketTypes.Start)
+                            {
+                                var end = inc.ReadInt32();
+                                MonsterPackets = new MonsterDataPacket[end];
+                                for (var i = 0; i < end; i++)
+                                {
+                                    var json = inc.ReadString();
+                                    MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                }
+
+                                LobbyController.StartGame(MonsterPackets);
+                                //Makes this thread a STAThread, not sure if necessary...
+                                GameLoop.SetApartmentState(ApartmentState.STA);
+                                GameLoop.Start();
+                            }
+                            else if (type == (byte)PacketTypes.Update)
+                            {
+                                var end = inc.ReadInt32();
+                                MonsterPackets = new MonsterDataPacket[end];
+                                for (var i = 0; i < end; i++)
+                                {
+                                    var json = inc.ReadString();
+                                    MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                }
+
+                                MonsterController.AcceptDataPackets(MonsterPackets);
+
+                                //if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
+                                //    MainGameScreen.SetLocalPlayerState(0);
+
+                                if (inc.ReadByte() == (byte)PacketTypes.Dice)
+                                {
+                                    var diceJson = inc.ReadString();
+                                    var dice = JsonConvert.DeserializeObject<DiceDataPacket>(diceJson);
+                                    DiceController.AcceptDataPacket(dice);
+                                }
+                                else
+                                {
+                                    Console.Error.WriteLine("No Dice! (╯°□°）╯︵ ┻━┻");
+                                }
+
+                                if (inc.ReadByte() == (byte)PacketTypes.Cards)
+                                {
+                                    var cardJson = inc.ReadString();
+                                    var cardsDataPackets = JsonConvert.DeserializeObject<CardDataPacket[]>(cardJson);
+                                    CardController.SetCardsForSale(cardsDataPackets.ToList()
+                                        .Select(CardController.AcceptDataPacket)
+                                        .ToList());
+                                }
+                                else
+                                {
+                                    Console.Error.WriteLine("No Cards! (╯°□°）╯︵ ┻━┻");
+                                }
+
+                                CanContinue = true;
+                            }
+                            else if (type == (byte)PacketTypes.Closed)
+                            {
+                                NetClient.Shutdown("Closed");
+                                Conn = "";
+                                break;
+                            }
+                            else if (type == (byte)PacketTypes.GameOver)
+                            {
+                                Console.WriteLine("Game Over!");
+                                var winnerName = inc.ReadString();
+                                MainGameScreen.EndGame(winnerName);
+                            }
+                            else if (type == (byte)PacketTypes.Message)
+                            {
+                                var message = inc.ReadString();
+                                MessageHistory.Add(message);
+                            }
+                            else if (type == (byte)PacketTypes.Chat)
+                            {
+                                ChatHistory.Add(inc.ReadString());
+                            }
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    NetClient.Recycle(inc);
                 }
-                NetClient.Recycle(inc);
+                Thread.Sleep(50);
             }
         }
 
