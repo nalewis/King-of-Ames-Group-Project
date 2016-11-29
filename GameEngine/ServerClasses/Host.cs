@@ -237,15 +237,6 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
-        /// <summary>
-        /// Gets the ping values for all connected users
-        /// </summary>
-        /// <returns>Int list</returns>
-        public static List<int> GetPing()
-        {
-            return _server.Connections.Select(conn => (int) (conn.AverageRoundtripTime * 1000)).ToList();
-        }
-
         private enum PacketTypes
         {
             Login,

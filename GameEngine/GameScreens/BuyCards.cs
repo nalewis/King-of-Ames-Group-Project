@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using Microsoft.Xna.Framework;
@@ -58,7 +59,20 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Enter))
             {
-                MainGameScreen.cardScreenChoice = _selected;
+                if (_cardList[_selected].Cost <= _energy)
+                {
+                    MainGameScreen.cardScreenChoice = _selected;
+                    ScreenManager.RemoveScreen(this);
+                }
+                else
+                {
+                    Console.WriteLine("You do not have enough energy for this! Try again, or press escape to leave.");
+                }
+            }
+
+            if (Engine.InputManager.KeyPressed(Keys.Escape))
+            {
+                MainGameScreen.cardScreenChoice = -2;
                 ScreenManager.RemoveScreen(this);
             }
             
@@ -67,12 +81,12 @@ namespace GameEngine.GameScreens
 
         public override void Draw(GameTime gameTime)
         {
-            var energyPos = new Vector2(_position.X, _position.Y - 25);
+            var energyPos = new Vector2(_position.X, _position.Y - 15);
             Engine.SpriteBatch.Begin();
             Engine.SpriteBatch.DrawString(_font, "Current Energy: " + _energy, energyPos, Color.Blue);
             for (var i = 0; i < _cardList.Count; i++)
             {
-                var text = _cardList[i].Name;
+                var text = _cardList[i].Name + " cost: " + _cardList[i].Cost;
                 var pos = new Vector2(GetCenter(text, _font), _position.Y + (OptionPadding * i));
                 Engine.SpriteBatch.DrawString(_font, text, pos, _selected == i ? Color.Yellow : Color.Black);
             }

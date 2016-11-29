@@ -91,6 +91,7 @@ namespace GameEngine.Views
                 var ds = NetworkClasses.GetServer(Client.Conn);
                 if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
                 {
+                    _chat.Dispose();
                     _timer.Stop();
                     Dispose();
                 }
@@ -132,11 +133,11 @@ namespace GameEngine.Views
                 {
                     NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-
+                    Console.WriteLine(e);
                 }
-
+                _chat.Dispose();
                 Form form = new MainMenuForm();
                 form.Show();
                 _timer.Stop();
