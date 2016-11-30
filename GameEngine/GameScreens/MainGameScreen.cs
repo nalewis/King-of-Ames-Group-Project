@@ -7,8 +7,10 @@ using System;
 using System.Linq;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
+using GamePieces.Cards;
 using GamePieces.Monsters;
 using GamePieces.Session;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GameEngine.GameScreens
 {
@@ -23,25 +25,28 @@ namespace GameEngine.GameScreens
         private static int _localPlayer;
         private static Monster _localMonster;
         private State _localPlayerState;
-        private bool firstPlay = true;
-        private List<Monster> monsterList;
+        private bool _firstPlay = true;
+        private List<Monster> _monsterList;
+        private TextBlock _cardList;
 
 
-        public static int cardScreenChoice = -1;
+        public static int CardScreenChoice = -1;
 
         private int RollAnimation { get; set; } = 0;
         private DiceRow RollingDice { get; }
 
         private static GameState _gameState = GameState.Waiting;
+        private Texture2D backgroundImage;
 
         public MainGameScreen()
         {
+            backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
             _localMonster = MonsterController.GetById(_localPlayer);
-            monsterList = GetMonsterList();
+            _monsterList = GetMonsterList();
             _pBlocks = GetPlayerBlocks();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
 
@@ -59,12 +64,25 @@ namespace GameEngine.GameScreens
             {
                 return;
             }
-            if (GetMonsterList().Count != monsterList.Count)
+            if (GetMonsterList().Count != _monsterList.Count)
             {
+                _monsterList = GetMonsterList();
                 GetPlayerBlocks();
             }
             UpdatePositions();
             UpdateGraphicsPieces();
+            
+            if (GamePieces.Session.Game.CardsForSale.Count > 0)
+            {
+                _cardList = new TextBlock("cardList", new List<string>()
+            {
+                "Cards For Sale:",
+                GamePieces.Session.Game.CardsForSale[0].Name,
+                GamePieces.Session.Game.CardsForSale[1].Name,
+                GamePieces.Session.Game.CardsForSale[2].Name
+            });
+            }
+
 
             //if(Client.isStart) _gameState = GameState.StartTurn;
 
@@ -157,6 +175,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
+            Engine.SpriteBatch.Draw(backgroundImage, Vector2.Zero, Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
@@ -182,10 +201,10 @@ namespace GameEngine.GameScreens
             RollingDice.Clear();
 
             _textPrompts.Clear();
-            if (firstPlay)
+            if (_firstPlay)
             {
                 Engine.PlaySound("StartTurn");
-                firstPlay = false;
+                _firstPlay = false;
                 Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
@@ -215,7 +234,7 @@ namespace GameEngine.GameScreens
             {
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
-                _gameState = GameState.BuyingCards;
+                _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
                 return;
             }
 
@@ -312,9 +331,9 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
                 ScreenManager.AddScreen(new BuyCards(MonsterController.GetById(_localPlayer).Energy));
-                if (cardScreenChoice == -1) return;
+                if (CardScreenChoice == -1) return;
                 var cfs = CardsForSale.One;
-                switch (cardScreenChoice)
+                switch (CardScreenChoice)
                 {
                     case 0:
                         cfs = CardsForSale.One;
@@ -325,12 +344,14 @@ namespace GameEngine.GameScreens
                     case 2:
                         cfs = CardsForSale.Three;
                         break;
+                    case -2:
+                        break;
                     default:
                         Console.Out.WriteLine("Something went wrong with cardScreenChoice");
                         break;
                 }
-                ServerClasses.Client.SendActionPacket(GameStateController.BuyCard(cfs));
-                cardScreenChoice = -1; //reset choice for next time.
+                if(CardScreenChoice >= 0) { Client.SendActionPacket(GameStateController.BuyCard(cfs)); }
+                CardScreenChoice = -1; //reset choice for next time.
                 _gameState = GameState.EndingTurn;
                 EndTurn();
             }
@@ -357,6 +378,19 @@ namespace GameEngine.GameScreens
 
         #region PrivateHelpers
 
+        private static bool AskForCards(int playerEnergy)
+        {
+            var ask = false;
+            foreach (var card in GamePieces.Session.Game.CardsForSale)
+            {
+                if (card.Cost < playerEnergy)
+                {
+                    ask = true;
+                }
+            }
+            return ask;
+        }
+
         private void UpdatePositions()
         {
             ScreenLocations.Update();
@@ -365,7 +399,6 @@ namespace GameEngine.GameScreens
                 tp.Position = ScreenLocations.GetPosition(tp.Name);
             }
             _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
-
             RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
         }
 
@@ -403,6 +436,8 @@ namespace GameEngine.GameScreens
 
             foreach (var tp in _textPrompts)
                 tp.Draw(Engine.SpriteBatch);
+
+            _cardList?.Draw(Engine.SpriteBatch);
         }
 
         private static List<Monster> GetMonsterList()

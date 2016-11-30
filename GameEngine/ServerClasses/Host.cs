@@ -17,6 +17,7 @@ namespace GameEngine.ServerClasses
         public static List<int> Players = new List<int>();
         //Variable for the Lidgren server stuff
         private static NetServer _server;
+        private static bool _shouldStop = false;
 
         /// <summary>
         /// Initializes the server, starts the reiceve loop, creates a NetClient and connects it to the server
@@ -25,6 +26,15 @@ namespace GameEngine.ServerClasses
         {
             //Server Setup
             var config = new NetPeerConfiguration("King of Ames") {Port = 6969};
+            config.DisableMessageType(NetIncomingMessageType.DebugMessage);
+            config.DisableMessageType(NetIncomingMessageType.DiscoveryRequest);
+            config.DisableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            config.DisableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+            config.DisableMessageType(NetIncomingMessageType.Receipt);
+            config.DisableMessageType(NetIncomingMessageType.ErrorMessage);
+            config.DisableMessageType(NetIncomingMessageType.WarningMessage);
+            config.DisableMessageType(NetIncomingMessageType.UnconnectedData);
+            config.DisableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
             config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             _server = new NetServer(config);
             _server.Start();
@@ -34,6 +44,7 @@ namespace GameEngine.ServerClasses
             NetworkClasses.CreateServer(User.PlayerId, User.LocalIp);
 
             // Starts thread to handle input from clients
+            _shouldStop = false;
             var recieve = new Thread(RecieveLoop);
             recieve.Start();
 
@@ -57,6 +68,7 @@ namespace GameEngine.ServerClasses
             //Shuts down server and deletes it from the database
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
+            _shouldStop = true;
         }
 
         /// <summary>
@@ -64,97 +76,75 @@ namespace GameEngine.ServerClasses
         /// </summary>
         public static void RecieveLoop()
         {
-            //Always checking for messages while server is open
-            while (true)
+            NetIncomingMessage inc;
+            while (!_shouldStop)
             {
-                //Message from Client
-                NetIncomingMessage inc;
-                if ((inc = _server.ReadMessage()) == null) continue;
-                //Diverts based on what the client is doing
-                switch (inc.MessageType)
+                while ((inc = _server.ReadMessage()) != null)
                 {
-                    case NetIncomingMessageType.Error:
-                        break;
-                    //Client connecting/disconnecting
-                    case NetIncomingMessageType.StatusChanged:
-                        if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
-                        {
-                            Console.WriteLine("Client " + inc.SenderConnection + " status changed: " +
-                                              inc.SenderConnection.Status);
-                        }
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        //Initially approves connecting clients based on their login byte
-                        if (inc.ReadByte() == (byte) PacketTypes.Login)
-                        {
-                            Console.WriteLine(inc.MessageType);
-
-                            inc.SenderConnection.Approve();
-                            Players.Add(inc.ReadInt32());
-                            if (Players.Count == 6)
+                    switch (inc.MessageType)
+                    {
+                        case NetIncomingMessageType.StatusChanged:
+                            if (inc.SenderConnection.Status == NetConnectionStatus.Disconnected)
                             {
-                                NetworkClasses.UpdateServerValue("Status", "Starting", "Host", User.PlayerId);
+                                Console.WriteLine("Client " + inc.SenderConnection.ToString() + " status changed: " +
+                                                  inc.SenderConnection.Status);
+                            }
+                            break;
+                        case NetIncomingMessageType.ConnectionApproval:
+                            //Initially approves connecting clients based on their login byte
+                            if (inc.ReadByte() == (byte)PacketTypes.Login)
+                            {
+                                Console.WriteLine(inc.MessageType);
+
+                                inc.SenderConnection.Approve();
+                                Players.Add(inc.ReadInt32());
+                                if (Players.Count == 6)
+                                {
+                                    NetworkClasses.UpdateServerValue("Status", "Starting", "Host", User.PlayerId);
+                                }
+
+                                Console.WriteLine("Approved new connection");
+                                Console.WriteLine(inc.SenderConnection + " has connected");
                             }
 
-                            Console.WriteLine("Approved new connection");
-                            Console.WriteLine(inc.SenderConnection + " has connected");
-                        }
+                            break;
+                        //The data message type encompasses all messages that aren't related to the running
+                        //of the lidgren library, to differentiate, we pass different PacketTypes
+                        case NetIncomingMessageType.Data:
+                            //can only call readByte once, otherwise it continues reading the following bytes
+                            var type = inc.ReadByte();
 
-                        break;
-                    //The data message type encompasses all messages that aren't related to the running
-                    //of the lidgren library, to differentiate, we pass different PacketTypes
-                    case NetIncomingMessageType.Data:
-                        //can only call readByte once, otherwise it continues reading the following bytes
-                        var type = inc.ReadByte();
+                            if (type == (byte)PacketTypes.Leave)
+                            {
+                                if (Players.Count == 6) { NetworkClasses.UpdateServerValue("Status", "Creating", "Host", User.PlayerId); }
+                                Players.Remove(inc.ReadInt32());
+                            }
+                            else if (type == (byte)PacketTypes.Action)
+                            {
+                                var json = inc.ReadString();
+                                var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
+                                ReceiveActionUpdate(packet);
+                            }
 
-                        if (type == (byte) PacketTypes.Leave)
-                        {
-                            if (Players.Count == 6) { NetworkClasses.UpdateServerValue("Status", "Creating", "Host", User.PlayerId); }
-                            Players.Remove(inc.ReadInt32());
-                        }
-                        else if (type == (byte) PacketTypes.Action)
-                        {
-                            var json = inc.ReadString();
-                            var packet = JsonConvert.DeserializeObject<ActionPacket>(json);
-                            ReceiveActionUpdate(packet);
-                        }
-
-                        else if (type == (byte) PacketTypes.Chat)
-                        {
-                            var outMsg = _server.CreateMessage();
-                            outMsg.Write((byte)PacketTypes.Chat);
-                            outMsg.Write(inc.ReadString());
-                            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-                        }
-                        else if (type == (byte) PacketTypes.Message)
-                        {
-                            var message = inc.ReadString();
-                            PassMessageAlong(message);
-                        }
-                        break;
-                    case NetIncomingMessageType.UnconnectedData:
-                        break;
-                    case NetIncomingMessageType.Receipt:
-                        break;
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        break;
-                    case NetIncomingMessageType.DebugMessage:
-                        break;
-                    case NetIncomingMessageType.WarningMessage:
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        break;
-                    case NetIncomingMessageType.NatIntroductionSuccess:
-                        break;
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                            else if (type == (byte)PacketTypes.Chat)
+                            {
+                                var outMsg = _server.CreateMessage();
+                                outMsg.Write((byte)PacketTypes.Chat);
+                                outMsg.Write(inc.ReadString());
+                                _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+                            }
+                            else if (type == (byte)PacketTypes.Message)
+                            {
+                                var message = inc.ReadString();
+                                PassMessageAlong(message);
+                            }
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    _server.Recycle(inc);
                 }
+                Thread.Sleep(50);
             }
         }
 
@@ -254,15 +244,6 @@ namespace GameEngine.ServerClasses
             outMsg.Write((byte) PacketTypes.Message);
             outMsg.Write(message);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        /// <summary>
-        /// Gets the ping values for all connected users
-        /// </summary>
-        /// <returns>Int list</returns>
-        public static List<int> GetPing()
-        {
-            return _server.Connections.Select(conn => (int) (conn.AverageRoundtripTime * 1000)).ToList();
         }
 
         private enum PacketTypes
