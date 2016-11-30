@@ -48,6 +48,7 @@ namespace GameEngine.Views
             this.HostButton.Text = "Host Game";
             this.HostButton.UseVisualStyleBackColor = true;
             this.HostButton.Click += new System.EventHandler(this.HostButton_Click);
+            this.HostButton.KeyPress += new KeyPressEventHandler(MainMenuForm_KeyPressed);
             // 
             // JoinButton
             // 
@@ -58,6 +59,7 @@ namespace GameEngine.Views
             this.JoinButton.Text = "Join Game";
             this.JoinButton.UseVisualStyleBackColor = true;
             this.JoinButton.Click += new System.EventHandler(this.JoinButton_Click);
+            this.JoinButton.KeyPress += new KeyPressEventHandler(MainMenuForm_KeyPressed);
             // 
             // OptionsButton
             // 
@@ -68,6 +70,7 @@ namespace GameEngine.Views
             this.OptionsButton.Text = "Options";
             this.OptionsButton.UseVisualStyleBackColor = true;
             this.OptionsButton.Click += new System.EventHandler(this.OptionsButton_Click);
+            this.OptionsButton.KeyPress += new KeyPressEventHandler(MainMenuForm_KeyPressed);
             // 
             // ProfileButton
             // 
@@ -78,6 +81,7 @@ namespace GameEngine.Views
             this.ProfileButton.Text = "View Profile";
             this.ProfileButton.UseVisualStyleBackColor = true;
             this.ProfileButton.Click += new System.EventHandler(this.ProfileButton_Click);
+            this.ProfileButton.KeyPress += new KeyPressEventHandler(MainMenuForm_KeyPressed);
             // 
             // logoutButton
             // 
@@ -88,6 +92,7 @@ namespace GameEngine.Views
             this.logoutButton.Text = "Logout";
             this.logoutButton.UseVisualStyleBackColor = true;
             this.logoutButton.Click += new System.EventHandler(this.logoutButton_Click);
+            this.logoutButton.KeyPress += new KeyPressEventHandler(MainMenuForm_KeyPressed);
             // 
             // groupBox1
             // 
@@ -101,6 +106,7 @@ namespace GameEngine.Views
             this.groupBox1.Size = new System.Drawing.Size(141, 185);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
+            this.groupBox1.KeyPress += new KeyPressEventHandler(MainMenuForm_KeyPressed);
             // 
             // MainMenuForm
             // 
@@ -113,6 +119,7 @@ namespace GameEngine.Views
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "King of Ames";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainMenuForm_Closing);
+            this.KeyPress += new KeyPressEventHandler(MainMenuForm_KeyPressed);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -246,6 +246,33 @@ namespace Networking
         }
 
         /// <summary>
+        /// Gets player info using a given username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Dataset containing player info</returns>
+        public static DataSet GetPlayer(string username)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            try
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM User_List WHERE Username = @user";
+                command.Parameters.AddWithValue("@user", username);
+                var adapter = new MySqlDataAdapter(command);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                connection.Close();
+                return ds;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Adds the new player into the server info
         /// </summary>
         /// <param name="hostip"></param>
@@ -464,6 +491,55 @@ namespace Networking
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return false;
+            }
+            return true;
+        }
+
+        public static bool AddFriend(string username)
+        {
+            try
+            {
+                var ds1 = GetPlayer(username);
+                var ds2 = GetPlayer(User.PlayerId);
+                var friends = ds2.Tables[0].Rows[0]["Friends"].ToString();
+                if (friends.Length < 1)
+                {
+                    UpdateUserValue("User_List", "Friends", friends, User.PlayerId);
+                }
+                else
+                {
+                    UpdateUserValue("User_List", "Friends", friends + "," + ds1.Tables[0].Rows[0]["Player_ID"].ToString(), User.PlayerId);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool DelFriend(string username)
+        {
+            try
+            {
+                var ds1 = GetPlayer(username);
+                var toRemove = ds1.Tables[0].Rows[0]["Player_ID"].ToString();
+                var ds2 = GetPlayer(User.PlayerId);
+                var friends = ds2.Tables[0].Rows[0]["Friends"].ToString().Split(',');
+                var newFriends = "";
+                foreach (var person in friends)
+                {
+                    if (person != toRemove)
+                    {
+                        newFriends += person + ",";
+                    }
+                }
+                newFriends = newFriends.TrimEnd(',');
+                UpdateUserValue("User_List", "Friends", newFriends, User.PlayerId);
+            }
+            catch (Exception)
+            {
                 return false;
             }
             return true;
