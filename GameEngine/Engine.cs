@@ -173,6 +173,8 @@ namespace GameEngine {
 
         private void LoadTextures()
         {
+            //Load Background
+            AddTexture("background", "background720");
             //Load monster sprites
             AddTexture("monsterTextures\\cthulhu", "cthulhu");
             AddTexture("monsterTextures\\alienoid", "Alienoid");

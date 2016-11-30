@@ -10,6 +10,7 @@ using GameEngine.ServerClasses;
 using GamePieces.Cards;
 using GamePieces.Monsters;
 using GamePieces.Session;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GameEngine.GameScreens
 {
@@ -35,9 +36,11 @@ namespace GameEngine.GameScreens
         private DiceRow RollingDice { get; }
 
         private static GameState _gameState = GameState.Waiting;
+        private Texture2D backgroundImage;
 
         public MainGameScreen()
         {
+            backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
@@ -73,6 +76,7 @@ namespace GameEngine.GameScreens
             {
                 _cardList = new TextBlock("cardList", new List<string>()
             {
+                "Cards For Sale:",
                 GamePieces.Session.Game.CardsForSale[0].Name,
                 GamePieces.Session.Game.CardsForSale[1].Name,
                 GamePieces.Session.Game.CardsForSale[2].Name
@@ -171,6 +175,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
+            Engine.SpriteBatch.Draw(backgroundImage, Vector2.Zero, Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
