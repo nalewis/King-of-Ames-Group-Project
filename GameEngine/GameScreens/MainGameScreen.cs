@@ -7,7 +7,6 @@ using System;
 using System.Linq;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
-using GamePieces.Cards;
 using GamePieces.Monsters;
 using GamePieces.Session;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,15 +31,15 @@ namespace GameEngine.GameScreens
 
         public static int CardScreenChoice = -1;
 
-        private int RollAnimation { get; set; } = 0;
+        private int RollAnimation { get; set; }
         private DiceRow RollingDice { get; }
 
         private static GameState _gameState = GameState.Waiting;
-        private Texture2D backgroundImage;
+        private Texture2D _backgroundImage;
 
         public MainGameScreen()
         {
-            backgroundImage = Engine.TextureList["background720"];
+            _backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
@@ -52,11 +51,6 @@ namespace GameEngine.GameScreens
 
             RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
         }
-
-        //public static void SetLocalPlayerState(int i)
-        //{
-        //    if(i == 0) _gameState = GameState.StartTurn;
-        //}
 
         public override void Update(GameTime gameTime)
         {
@@ -83,9 +77,6 @@ namespace GameEngine.GameScreens
             });
             }
 
-
-            //if(Client.isStart) _gameState = GameState.StartTurn;
-
             if (!MonsterController.IsDead(_localPlayer))
             {
                 _localPlayerState = MonsterController.State(_localPlayer);
@@ -109,7 +100,7 @@ namespace GameEngine.GameScreens
                     Waiting();
                     break;
                 case GameState.BuyingCards:
-                    BuyCardPrompt();
+                    AskBuyCards();
                     break;
                 case GameState.EndingTurn:
                     EndTurn();
@@ -132,50 +123,13 @@ namespace GameEngine.GameScreens
                 ScreenManager.AddScreen(new PauseMenu());
             }
 
-           // _localPlayerState = MonsterController.State(_localPlayer);
-          //  if (_localPlayerState == State.StartOfTurn) StartingTurn(); // Setup To Roll
-          //  else if (_localPlayerState == State.Rolling) Rolling();
-
-            //if (GameStateController.IsCurrent) { Console.WriteLine("Is Current: True"); }
-
-            /*
-            if (GameStateController.IsCurrent)
-            {
-                _localPlayerState = MonsterController.State(_localPlayer);
-                if (_localPlayerState == State.StartOfTurn) StartingTurn(); // Setup To Roll
-                else Rolling(); // Function for Rolling
-                //else BuyCardPrompt();
-
-            }
-            else // Local Player is not Current.
-            {
-                //Console.WriteLine("Not Current! (╯°□°）╯︵ ┻━┻");
-                if(_localMonster.CanYield) AskYield();
-            }
-            */
-
             base.Update(gameTime);
-        }
-
-        private void IsDead()
-        {
-            _diceRow.Hidden = true;
-            _diceRow.Clear();
-
-            RollingDice.Hidden = true;
-            RollingDice.Clear();
-
-            _textPrompts.Clear();
-
-            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "Your Dead."
-                }));
         }
 
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            Engine.SpriteBatch.Draw(backgroundImage, Vector2.Zero, Color.White);
+            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
@@ -294,6 +248,20 @@ namespace GameEngine.GameScreens
             }
         }
 
+        private void IsDead()
+        {
+            _diceRow.Hidden = true;
+            _diceRow.Clear();
+
+            RollingDice.Hidden = true;
+            RollingDice.Clear();
+
+            _textPrompts.Clear();
+
+            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
+                "Your Dead."
+                }));
+        }
 
         private void AskYield()
         {
@@ -316,7 +284,7 @@ namespace GameEngine.GameScreens
             }
         }
 
-        private void BuyCardPrompt()
+        private void AskBuyCards()
         {
             _textPrompts.Clear();
 
