@@ -34,11 +34,18 @@ namespace GameEngine.ServerClasses
         /// Connects the client to the server using the current ip
         /// </summary>
         /// <returns>returns true if connected, false otherwise</returns>
-        public static bool Connect()
+        public static bool Connect(bool login = true)
         {
             //Sends login request to Host, with player ID attached
             var outMsg = NetClient.CreateMessage();
-            outMsg.Write((byte) PacketTypes.Login);
+            if (login)
+            {
+                outMsg.Write((byte)PacketTypes.Login);
+            }
+            else
+            {
+                outMsg.Write((byte)PacketTypes.Spectate);
+            }
             outMsg.Write(User.PlayerId);
 
             //resets the receive thread
@@ -218,22 +225,6 @@ namespace GameEngine.ServerClasses
             _shouldStop = true;
             Conn = "";
             if (GameLoop.IsAlive) { GameLoop.Abort(); }
-        }
-
-        private enum PacketTypes
-        {
-            Login,
-            Leave,
-            Start,
-            Action,
-            Update,
-            Dice,
-            NoDice,
-            GameOver,
-            Closed,
-            Chat,
-            Cards,
-            Message
         }
     }
 }

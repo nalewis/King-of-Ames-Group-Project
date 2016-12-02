@@ -127,15 +127,52 @@ namespace GameEngine.Views
         {
             try
             {
-                //selected items[0] is the row, subitems[1] is the ip
+                var inProgress = serverList.SelectedItems[0].SubItems[3].Text;
                 var data = serverList.SelectedItems[0].SubItems[1].Text;
-                Client.Conn = data;
-                join.Enabled = true;
-                join.BackColor = Color.LightGray;
+                //selected items[0] is the row, subitems[1] is the ip
+                if (inProgress == "In Progress")
+                {
+                    Client.Conn = data;
+                    spectateButton.Enabled = true;
+                    spectateButton.BackColor = Color.LightGray;
+                }
+                else
+                {
+                    Client.Conn = data;
+                    join.Enabled = true;
+                    join.BackColor = Color.LightGray;
+                }
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
+            }
+        }
+
+        private void spectateButton_Click(object sender, EventArgs e)
+        {
+            if (!spectateButton.Enabled) return;
+            //Checks if user is banned
+            if (NetworkClasses.GetPlayer(User.PlayerId).Tables[0].Rows[0]["IsBanned"].ToString() == "0")
+            {
+                //Connect as a spectator
+                if (Client.Connect(false))
+                {
+                    try
+                    {
+                        //TODO Start game?
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
+
+                }
+                else { Console.WriteLine("Couldn't Connect"); }
+            }
+            else
+            {
+                MessageBox.Show("Can't connect to game, you have been banned. Please contact administrator to lift ban.", "Join Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -36,6 +36,7 @@ namespace GameEngine.Views
             this.ip = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.players = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.spectateButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // mainMenu
@@ -53,9 +54,9 @@ namespace GameEngine.Views
             // 
             this.join.BackColor = System.Drawing.SystemColors.ControlDark;
             this.join.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.join.Location = new System.Drawing.Point(43, 232);
+            this.join.Location = new System.Drawing.Point(12, 233);
             this.join.Name = "join";
-            this.join.Size = new System.Drawing.Size(230, 28);
+            this.join.Size = new System.Drawing.Size(152, 28);
             this.join.TabIndex = 5;
             this.join.Text = "Join Game";
             this.join.UseVisualStyleBackColor = false;
@@ -110,12 +111,25 @@ namespace GameEngine.Views
             this.status.Text = "Status";
             this.status.Width = 112;
             // 
+            // spectateButton
+            // 
+            this.spectateButton.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.spectateButton.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.spectateButton.Location = new System.Drawing.Point(167, 233);
+            this.spectateButton.Name = "spectateButton";
+            this.spectateButton.Size = new System.Drawing.Size(152, 28);
+            this.spectateButton.TabIndex = 9;
+            this.spectateButton.Text = "Spectate Game";
+            this.spectateButton.UseVisualStyleBackColor = false;
+            this.spectateButton.Click += new System.EventHandler(this.spectateButton_Click);
+            // 
             // ServerListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
             this.ClientSize = new System.Drawing.Size(331, 273);
+            this.Controls.Add(this.spectateButton);
             this.Controls.Add(this.serverList);
             this.Controls.Add(this.refresh);
             this.Controls.Add(this.join);
@@ -137,5 +151,6 @@ namespace GameEngine.Views
         private System.Windows.Forms.ColumnHeader ip;
         private System.Windows.Forms.ColumnHeader players;
         private System.Windows.Forms.ColumnHeader status;
+        private System.Windows.Forms.Button spectateButton;
     }
 }

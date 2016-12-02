@@ -87,7 +87,8 @@ namespace GameEngine.ServerClasses
                             break;
                         case NetIncomingMessageType.ConnectionApproval:
                             //Initially approves connecting clients based on their login byte
-                            if (inc.ReadByte() == (byte)PacketTypes.Login)
+                            var connectType = inc.ReadByte();
+                            if (connectType == (byte)PacketTypes.Login)
                             {
                                 Console.WriteLine(inc.MessageType);
 
@@ -100,6 +101,10 @@ namespace GameEngine.ServerClasses
 
                                 Console.WriteLine("Approved new connection");
                                 Console.WriteLine(inc.SenderConnection + " has connected");
+                            }
+                            else if(connectType == (byte)PacketTypes.Spectate)
+                            {
+                                //TODO
                             }
 
                             break;
@@ -239,23 +244,6 @@ namespace GameEngine.ServerClasses
             outMsg.Write((byte) PacketTypes.Message);
             outMsg.Write(message);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        private enum PacketTypes
-        {
-            Login,
-            Leave,
-            Start,
-            Action,
-            Update,
-            Dice,
-            NoDice,
-            GameOver,
-            Closed,
-            Chat,
-            Cards,
-            NoCards,
-            Message
         }
     }
 }
