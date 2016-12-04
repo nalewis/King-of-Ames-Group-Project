@@ -90,8 +90,6 @@ namespace GameEngine.ServerClasses
                             var connectType = inc.ReadByte();
                             if (connectType == (byte)PacketTypes.Login)
                             {
-                                Console.WriteLine(inc.MessageType);
-
                                 inc.SenderConnection.Approve();
                                 Players.Add(inc.ReadInt32());
                                 if (Players.Count == 6)
@@ -105,6 +103,10 @@ namespace GameEngine.ServerClasses
                             else if(connectType == (byte)PacketTypes.Spectate)
                             {
                                 //TODO
+                                inc.SenderConnection.Approve();
+
+                                Console.WriteLine("Approved new spectator");
+                                Console.WriteLine(inc.SenderConnection + " has connected");
                             }
 
                             break;

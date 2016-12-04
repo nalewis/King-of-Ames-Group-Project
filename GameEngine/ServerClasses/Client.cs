@@ -27,6 +27,7 @@ namespace GameEngine.ServerClasses
         public static MonsterDataPacket[] MonsterPackets;
         public static bool CanContinue = true;
         public static bool IsStart = false;
+        public static bool isSpectator = false;
         public static List<string> MessageHistory = new List<string>();
         public static List<string> ChatHistory = new List<string>();
 
@@ -41,10 +42,12 @@ namespace GameEngine.ServerClasses
             if (login)
             {
                 outMsg.Write((byte)PacketTypes.Login);
+                isSpectator = false;
             }
             else
             {
                 outMsg.Write((byte)PacketTypes.Spectate);
+                isSpectator = true;
             }
             outMsg.Write(User.PlayerId);
 
@@ -111,9 +114,6 @@ namespace GameEngine.ServerClasses
 
                                 MonsterController.AcceptDataPackets(MonsterPackets);
 
-                                //if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
-                                //    MainGameScreen.SetLocalPlayerState(0);
-
                                 if (inc.ReadByte() == (byte)PacketTypes.Dice)
                                 {
                                     var diceJson = inc.ReadString();
@@ -140,9 +140,15 @@ namespace GameEngine.ServerClasses
 
                                 CanContinue = true;
                             }
+                            else if (type == (byte)PacketTypes.Spectate && isSpectator)
+                            {
+                                //TODO accept data packets
+                                break;
+                            }
                             else if (type == (byte)PacketTypes.Closed)
                             {
                                 NetClient.Shutdown("Closed");
+                                isSpectator = false;
                                 Conn = "";
                                 break;
                             }
@@ -224,6 +230,7 @@ namespace GameEngine.ServerClasses
             //ends the receive loop
             _shouldStop = true;
             Conn = "";
+            isSpectator = false;
             if (GameLoop.IsAlive) { GameLoop.Abort(); }
         }
     }
