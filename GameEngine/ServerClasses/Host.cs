@@ -15,6 +15,7 @@ namespace GameEngine.ServerClasses
     public static class Host
     {
         public static List<int> Players = new List<int>();
+        public static List<NetConnection> Spectators = new List<NetConnection>();
         private static NetServer _server;
         private static bool _shouldStop = false;
 
@@ -107,6 +108,8 @@ namespace GameEngine.ServerClasses
 
                                 Console.WriteLine("Approved new spectator");
                                 Console.WriteLine(inc.SenderConnection + " has connected");
+                                Spectators.Add(inc.SenderConnection);
+                                SendSpecatorStart(inc.SenderConnection);
                             }
 
                             break;
@@ -229,6 +232,21 @@ namespace GameEngine.ServerClasses
             }
 
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        public static void SendSpecatorStart(NetConnection recipient)
+        {
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Spectate);
+            var packets = MonsterController.GetDataPackets();
+            outMsg.Write(packets.Length);
+            foreach (var packet in packets)
+            {
+                var json = JsonConvert.SerializeObject(packet);
+                outMsg.Write(json);
+            }
+
+            _server.SendMessage(outMsg, recipient, NetDeliveryMethod.ReliableOrdered);
         }
 
         public static void DeclareWinner()

@@ -18,7 +18,6 @@ namespace GameEngine.Views
         public ServerListForm()
         {
             InitializeComponent();
-            join.Enabled = false;
             ListServers();
         }
 
@@ -31,6 +30,11 @@ namespace GameEngine.Views
         {
             serverList.Items.Clear();
             ListServers();
+
+            spectateButton.Enabled = false;
+            join.Enabled = false;
+            spectateButton.BackColor = Color.DarkGray;
+            join.BackColor = Color.DarkGray;
         }
 
         /// <summary>
@@ -84,6 +88,9 @@ namespace GameEngine.Views
                     }
                     catch (Exception exception)
                     {
+                        //if invalid, refresh the list (game may no longer exist or be in a joinable state)
+                        serverList.Items.Clear();
+                        ListServers();
                         Console.WriteLine(exception);
                     }
 
@@ -136,15 +143,26 @@ namespace GameEngine.Views
                     spectateButton.Enabled = true;
                     spectateButton.BackColor = Color.LightGray;
                 }
-                else
+                else if(data != null)
                 {
                     Client.Conn = data;
                     join.Enabled = true;
                     join.BackColor = Color.LightGray;
                 }
+                else
+                {
+                    spectateButton.Enabled = false;
+                    join.Enabled = false;
+                    spectateButton.BackColor = Color.DarkGray;
+                    join.BackColor = Color.DarkGray;
+                }
             }
             catch (Exception exception)
             {
+                spectateButton.Enabled = false;
+                join.Enabled = false;
+                spectateButton.BackColor = Color.DarkGray;
+                join.BackColor = Color.DarkGray;
                 Console.WriteLine(exception.Message);
             }
         }

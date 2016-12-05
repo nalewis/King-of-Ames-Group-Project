@@ -168,8 +168,13 @@ namespace GameEngine.ServerClasses
                                 ChatHistory.Add(inc.ReadString());
                             }
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        case NetIncomingMessageType.WarningMessage:
+                            Console.WriteLine("WARNING");
+                            break;
+                        default://TODO catch attempts to connect non-existing servers
+                            Console.WriteLine("Unhandled message of type: " + inc.MessageType);
+                            //throw new ArgumentOutOfRangeException();
+                            break;
                     }
                     NetClient.Recycle(inc);
                 }

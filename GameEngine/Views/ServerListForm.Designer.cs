@@ -52,7 +52,8 @@ namespace GameEngine.Views
             // 
             // join
             // 
-            this.join.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.join.BackColor = System.Drawing.Color.DarkGray;
+            this.join.Enabled = false;
             this.join.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.join.Location = new System.Drawing.Point(12, 233);
             this.join.Name = "join";
@@ -113,7 +114,8 @@ namespace GameEngine.Views
             // 
             // spectateButton
             // 
-            this.spectateButton.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.spectateButton.BackColor = System.Drawing.Color.DarkGray;
+            this.spectateButton.Enabled = false;
             this.spectateButton.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.spectateButton.Location = new System.Drawing.Point(167, 233);
             this.spectateButton.Name = "spectateButton";
