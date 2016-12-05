@@ -86,14 +86,14 @@ namespace GameEngine.Views
         {
             //Resets the view
             playerList.Items.Clear();
-            char_list.Items.Clear();
+            /*char_list.Items.Clear();
             char_list.Items.Add("Alienoid");
             char_list.Items.Add("Cyber Bunny");
             char_list.Items.Add("Giga Zaur");
             char_list.Items.Add("Kraken");
             char_list.Items.Add("Meka Dragon");
             char_list.Items.Add("The King");
-            char_list.Items.Add("The Real King");
+            char_list.Items.Add("The Real King");*/
 
             //Gets server info and puts it into a dataset
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
@@ -105,10 +105,10 @@ namespace GameEngine.Views
             var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
             character = grabber.Tables[0].Rows[0]["_Character"].ToString();
             listItem.SubItems.Add(character);
-            if (char_list.Items.Contains(character))
+            /*if (char_list.Items.Contains(character))
             {
                 char_list.Items.Remove(character);
-            }
+            }*/
             //listItem.SubItems.Add(pings[0].ToString() + " ms");
 
             //Add the clients to the listview
@@ -120,10 +120,10 @@ namespace GameEngine.Views
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 character = grabber.Tables[0].Rows[0]["_Character"].ToString();
                 listItem.SubItems.Add(character);
-                if (char_list.Items.Contains(character))
+                /*if (char_list.Items.Contains(character))
                 {
                     char_list.Items.Remove(character);
-                }
+                }*/
                 //stItem.SubItems.Add(pings[i-1] + " ms");
                 playerList.Items.Add(listItem);
             }
@@ -162,8 +162,14 @@ namespace GameEngine.Views
         {
             try
             {
-                NetworkClasses.UpdateUserValue("User_List", "_Character", char_list.SelectedItem.ToString(), User.PlayerId);
-                UpdateList();
+                if (NetworkClasses.CheckCharacterAvailable(Client.Conn, char_list.SelectedItem.ToString()))
+                {
+                    NetworkClasses.UpdateUserValue("User_List", "_Character", char_list.SelectedItem.ToString(), User.PlayerId);
+                }
+                else
+                {
+                    MessageBox.Show("Character Unavailable", "Character has already been selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception)
             {
