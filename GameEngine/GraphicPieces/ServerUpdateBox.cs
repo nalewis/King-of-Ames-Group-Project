@@ -39,7 +39,8 @@ namespace GameEngine.GraphicPieces
 
         public void UpdateList()
         {
-            _stringList = _stringList.Count < 6 ? Client.MessageHistory : Client.MessageHistory.GetRange(Client.MessageHistory.Count - 6, 5);
+            _stringList = null;
+            _stringList = Client.MessageHistory.Count < 6 ? Client.MessageHistory : Client.MessageHistory.GetRange(Client.MessageHistory.Count - 6, 5);
         }
 
         public void Draw(SpriteBatch sB)
