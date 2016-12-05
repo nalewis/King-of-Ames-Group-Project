@@ -154,6 +154,7 @@ namespace GameEngine.GameScreens
 
         private static void Spectate()
         {
+            _textPrompts.Clear();
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
                 "Your Spectating!",
                 }));
