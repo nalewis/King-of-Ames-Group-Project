@@ -451,11 +451,7 @@ namespace Networking
                 var connection = new MySqlConnection(ConnectString);
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "UPDATE Server_List SET @column = @value WHERE @searchBy = @equals";
-                command.Parameters.AddWithValue("@column", column);
-                command.Parameters.AddWithValue("@value", value);
-                command.Parameters.AddWithValue("@searchBy", searchBy);
-                command.Parameters.AddWithValue("@equals", equals);
+                command.CommandText = "UPDATE Server_List SET " + column + " = '" + value + "' WHERE " + searchBy + " = " + equals;
                 command.ExecuteNonQuery();
 
                 connection.Close();
