@@ -35,11 +35,11 @@ namespace GameEngine.GameScreens
         private DiceRow RollingDice { get; }
 
         private static GameState _gameState = GameState.Waiting;
-        //private Texture2D _backgroundImage;
+        private Texture2D _backgroundImage;
 
         public MainGameScreen()
         {
-            //_backgroundImage = Engine.TextureList["background720"];
+            _backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
             _textPrompts = new List<TextBlock>();
@@ -135,7 +135,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            //Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Color.White);
+            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
