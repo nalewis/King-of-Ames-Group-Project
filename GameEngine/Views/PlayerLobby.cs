@@ -72,6 +72,19 @@ namespace GameEngine.Views
             Environment.Exit(0);
         }
 
+        private void PlayerLobby_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 'c') return;
+            if (_chat.Visible)
+            {
+                _chat.Hide();
+            }
+            else
+            {
+                _chat.Show();
+            }
+        }
+
         /// <summary>
         /// Updates the list of players with the current information about the server via the database
         /// </summary>

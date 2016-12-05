@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Views
+﻿using System.Windows.Forms;
+
+namespace GameEngine.Views
 {
     partial class HostGameListForm
     {
@@ -50,6 +52,7 @@
             this.playerList.TabIndex = 0;
             this.playerList.UseCompatibleStateImageBehavior = false;
             this.playerList.View = System.Windows.Forms.View.Details;
+            this.playerList.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
             // 
             // playerName
             // 
@@ -71,6 +74,7 @@
             this.leaveGame.Text = "Leave Game";
             this.leaveGame.UseVisualStyleBackColor = true;
             this.leaveGame.Click += new System.EventHandler(this.leaveGame_Click);
+            this.leaveGame.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
             // 
             // char_label
             // 
@@ -80,6 +84,8 @@
             this.char_label.Size = new System.Drawing.Size(56, 13);
             this.char_label.TabIndex = 11;
             this.char_label.Text = "Character:";
+            this.char_label.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
+
             // 
             // char_list
             // 
@@ -97,6 +103,7 @@
             this.char_list.Size = new System.Drawing.Size(102, 21);
             this.char_list.TabIndex = 9;
             this.char_list.SelectedIndexChanged += new System.EventHandler(this.char_list_SelectedIndexChanged);
+            this.char_list.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
             // 
             // start_game
             // 
@@ -109,6 +116,7 @@
             this.start_game.Text = "Start Game";
             this.start_game.UseVisualStyleBackColor = true;
             this.start_game.Click += new System.EventHandler(this.start_game_Click);
+            this.start_game.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
             // 
             // HostGameListForm
             // 
@@ -125,6 +133,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ServerListForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HostGameListForm_Closing);
+            this.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

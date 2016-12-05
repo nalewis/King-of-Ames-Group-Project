@@ -16,7 +16,7 @@ namespace GameEngine.Views
             delFriend.Enabled = false;
             _add = new AddFriendForm();
             GetFriends();
-            _timer = new Timer {Interval = 1000};
+            _timer = new Timer {Interval = 2000};
             _timer.Tick += timer_tick;
             _timer.Start();
         }
@@ -29,6 +29,11 @@ namespace GameEngine.Views
         public void GetFriends()
         {
             var ds = NetworkClasses.GetPlayer(User.PlayerId);
+            if (ds.Tables[0].Rows[0]["Friends"].ToString() == "0")
+            {
+                BoxOFriends.Items.Clear();
+                return;
+            }
             var friends = ds.Tables[0].Rows[0]["Friends"].ToString().Split(',');
             if(friends.Length == 20) { addFriend.Enabled = false; }
             else if (friends.Length < 20 && !addFriend.Enabled)
@@ -41,12 +46,19 @@ namespace GameEngine.Views
             }
             BoxOFriends.Items.Clear();
             _old = friends;
-            foreach (var friend in friends)
+            try
             {
-                ds = NetworkClasses.GetPlayer(int.Parse(friend));
-                var item = new ListViewItem(ds.Tables[0].Rows[0]["Username"].ToString());
-                item.SubItems.Add(ds.Tables[0].Rows[0]["Online"].ToString() == "1" ? "Online" : "Offline");    
-                BoxOFriends.Items.Add(item);
+                foreach (var friend in friends)
+                {
+                    ds = NetworkClasses.GetPlayer(int.Parse(friend));
+                    var item = new ListViewItem(ds.Tables[0].Rows[0]["Username"].ToString());
+                    item.SubItems.Add(ds.Tables[0].Rows[0]["Online"].ToString() == "1" ? "Online" : "Offline");
+                    BoxOFriends.Items.Add(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 

@@ -8,13 +8,15 @@ namespace GameEngine.Views
 {
     public partial class LobbyChat : Form
     {
+
+        private readonly Timer _timer = new Timer { Interval = (1000) };
+
         public LobbyChat()
         {
             InitializeComponent();
             username.Text = User.Username + ": ";
-            var timer = new Timer {Interval = (1000)};
-            timer.Tick += CheckUpdate;
-            timer.Start();
+            _timer.Tick += CheckUpdate;
+            _timer.Start();
         }
 
         private void sendMessage_Click(object sender, EventArgs e)
@@ -48,6 +50,23 @@ namespace GameEngine.Views
                 Chat.Text += mess;
             }
             Client.ChatHistory.Clear();
+        }
+
+        private void LobbyChat_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason != CloseReason.UserClosing)
+            {
+                _timer.Stop();
+                return;
+            }
+            e.Cancel = true;
+            Hide();
+        }
+
+        private void LobbyChat_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 'c') return;
+            Hide();
         }
 
         /// <summary>

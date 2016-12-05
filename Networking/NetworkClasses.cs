@@ -528,9 +528,9 @@ namespace Networking
                 {
                     return "Preexisting";
                 }
-                if (friends.Length < 1)
+                if (friends == "0")
                 {
-                    UpdateUserValue("User_List", "Friends", friends, User.PlayerId);
+                    UpdateUserValue("User_List", "Friends", ds1.Tables[0].Rows[0]["Player_ID"].ToString(), User.PlayerId);
                 }
                 else
                 {
@@ -561,6 +561,7 @@ namespace Networking
                     }
                 }
                 newFriends = newFriends.TrimEnd(',');
+                if (newFriends.Length < 1) newFriends = "0";
                 UpdateUserValue("User_List", "Friends", newFriends, User.PlayerId);
             }
             catch (Exception)

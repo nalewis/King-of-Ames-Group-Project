@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Views
+﻿using System.Windows.Forms;
+
+namespace GameEngine.Views
 {
     partial class PlayerLobby
     {
@@ -46,6 +48,7 @@
             this.leaveGame.Text = "Leave Game";
             this.leaveGame.UseVisualStyleBackColor = true;
             this.leaveGame.Click += new System.EventHandler(this.leaveGame_Click);
+            this.leaveGame.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
             // 
             // playerList
             // 
@@ -60,6 +63,7 @@
             this.playerList.TabIndex = 3;
             this.playerList.UseCompatibleStateImageBehavior = false;
             this.playerList.View = System.Windows.Forms.View.Details;
+            this.playerList.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
             // 
             // playerName
             // 
@@ -87,6 +91,7 @@
             this.char_list.Size = new System.Drawing.Size(93, 21);
             this.char_list.TabIndex = 5;
             this.char_list.SelectedIndexChanged += new System.EventHandler(this.char_list_SelectedIndexChanged);
+            this.char_list.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
             // 
             // char_label
             // 
@@ -96,6 +101,7 @@
             this.char_label.Size = new System.Drawing.Size(56, 13);
             this.char_label.TabIndex = 7;
             this.char_label.Text = "Character:";
+            this.char_label.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
             // 
             // PlayerLobby
             // 
@@ -113,6 +119,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerLobby_Closing);
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
 
         }
 

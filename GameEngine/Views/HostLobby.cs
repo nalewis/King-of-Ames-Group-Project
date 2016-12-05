@@ -46,6 +46,19 @@ namespace GameEngine.Views
             UpdateList();
         }
 
+        private void HostGameListForm_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 'c') return;
+            if (_chat.Visible)
+            {
+                _chat.Hide();
+            }
+            else
+            {
+                _chat.Show();
+            }
+        }
+
         /// <summary>
         /// When the window is closed, the server is stopped, and the application is closed
         /// </summary>
