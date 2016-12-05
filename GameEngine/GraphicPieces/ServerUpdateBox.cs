@@ -23,6 +23,7 @@ namespace GameEngine.GraphicPieces
             _font = font;
             _positionVector = MainGameScreen.ScreenLocations.GetPosition("ServerUpdateBox");
             _stringList = new List<string>();
+            _backgroundRect = GetBackground();
         }
 
         private Texture2D GetBackground()
@@ -39,14 +40,20 @@ namespace GameEngine.GraphicPieces
 
         public void UpdateList()
         {
-            _stringList = Client.MessageHistory;
+            if (Client.MessageHistory.Count < 3)
+            {
+                _stringList = Client.MessageHistory;
+            }
+            else
+            {
+                _stringList = Client.MessageHistory.GetRange(Client.MessageHistory.Count - 4,
+                    Client.MessageHistory.Count - 1);
+            }
         }
 
         public void Draw(SpriteBatch sB)
         {
-            _backgroundRect = GetBackground();
             sB.Draw(_backgroundRect, _positionVector, Color.Black);
-
             var textPos = _positionVector;
             var listCopy = _stringList;
             foreach (var line in listCopy)
