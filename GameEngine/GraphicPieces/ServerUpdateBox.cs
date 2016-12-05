@@ -9,7 +9,7 @@ namespace GameEngine.GraphicPieces
 {
     internal class ServerUpdateBox
     {
-        private const int Width = 300;
+        private const int Width = 500;
         private const int Height = 150;
         private readonly SpriteFont _font;
         private readonly Texture2D _backgroundRect;
@@ -40,7 +40,7 @@ namespace GameEngine.GraphicPieces
         public void UpdateList()
         {
             _stringList = null;
-            _stringList = Client.MessageHistory.Count < 6 ? Client.MessageHistory : Client.MessageHistory.GetRange(Client.MessageHistory.Count - 6, 5);
+            _stringList = Client.MessageHistory.Count < 8 ? Client.MessageHistory : Client.MessageHistory.GetRange(Client.MessageHistory.Count - 8, 7);
         }
 
         public void Draw(SpriteBatch sB)
