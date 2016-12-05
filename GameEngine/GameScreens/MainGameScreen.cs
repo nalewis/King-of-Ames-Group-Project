@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
+using System.Net;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
@@ -23,7 +24,6 @@ namespace GameEngine.GameScreens
 
         private static int _localPlayer;
         private static Monster _localMonster;
-        private State _localPlayerState;
         private bool _firstPlay = true;
         private List<Monster> _monsterList;
         private TextBlock _cardList;
@@ -83,8 +83,7 @@ namespace GameEngine.GameScreens
 
             if (!MonsterController.IsDead(_localPlayer))
             {
-                _localPlayerState = MonsterController.State(_localPlayer);
-                if (_localPlayerState == State.StartOfTurn)
+                if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
                     _gameState = GameState.StartTurn;
             }
             else
