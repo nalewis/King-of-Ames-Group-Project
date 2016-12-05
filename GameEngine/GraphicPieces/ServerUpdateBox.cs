@@ -48,7 +48,8 @@ namespace GameEngine.GraphicPieces
             sB.Draw(_backgroundRect, _positionVector, Color.Black);
 
             var textPos = _positionVector;
-            foreach (var line in _stringList)
+            var listCopy = _stringList;
+            foreach (var line in listCopy)
             {
                 sB.DrawString(_font, line, textPos, Color.WhiteSmoke);
                 textPos.Y = textPos.Y + LineSpacing;
