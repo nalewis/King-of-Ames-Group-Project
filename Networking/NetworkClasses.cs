@@ -343,11 +343,17 @@ namespace Networking
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";
-            command.Parameters.AddWithValue("@hostip", hostip);
-            command.ExecuteNonQuery();
+            try
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostip", hostip);
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
+                Console.WriteLine("Can't set player to null, server no longer exist");
+            }
 
             connection.Close();
         }

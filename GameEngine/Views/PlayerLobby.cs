@@ -78,14 +78,6 @@ namespace GameEngine.Views
         private void UpdateList()
         {
             playerList.Items.Clear();
-            /*char_list.Items.Clear();
-            char_list.Items.Add("Alienoid");
-            char_list.Items.Add("Cyber Bunny");
-            char_list.Items.Add("Giga Zaur");
-            char_list.Items.Add("Kraken");
-            char_list.Items.Add("Meka Dragon");
-            char_list.Items.Add("The King");
-            char_list.Items.Add("The Real King"); */
             try
             {
                 var ds = NetworkClasses.GetServer(Client.Conn);
@@ -104,10 +96,6 @@ namespace GameEngine.Views
                 var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
                 listItem.SubItems.Add(Character);
-                /*if (char_list.Items.Contains(Character))
-                {
-                    char_list.Items.Remove(Character);
-                }*/
 
                 //Add the row entry to the listview
                 playerList.Items.Add(listItem);
@@ -119,10 +107,6 @@ namespace GameEngine.Views
                     listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                     Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
                     listItem.SubItems.Add(Character);
-                    /*if (char_list.Items.Contains(Character))
-                    {
-                        char_list.Items.Remove(Character);
-                    }*/
                     playerList.Items.Add(listItem);
                 }
             }
