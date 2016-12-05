@@ -102,6 +102,21 @@ namespace GameEngine.ServerClasses
                                 GameLoop.SetApartmentState(ApartmentState.STA);
                                 GameLoop.Start();
                             }
+                            else if (type == (byte)PacketTypes.Spectate)//The initial message to catch the new spectator up
+                            {
+                                var end = inc.ReadInt32();
+                                MonsterPackets = new MonsterDataPacket[end];
+                                for (var i = 0; i < end; i++)
+                                {
+                                    var json = inc.ReadString();
+                                    MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                }
+
+                                LobbyController.StartGame(MonsterPackets);
+                                //Makes this thread a STAThread, not sure if necessary...
+                                GameLoop.SetApartmentState(ApartmentState.STA);
+                                GameLoop.Start();
+                            }
                             else if (type == (byte)PacketTypes.Update)
                             {
                                 var end = inc.ReadInt32();
