@@ -9,7 +9,7 @@ namespace GameEngine.GraphicPieces
 {
     internal class ServerUpdateBox
     {
-        private const int Width = 500;
+        private const int Width = 450;
         private const int Height = 150;
         private readonly SpriteFont _font;
         private readonly Texture2D _backgroundRect;

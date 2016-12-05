@@ -197,13 +197,13 @@ namespace GameEngine.GameScreens
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
                 "or E to End Rolling",
-                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
+                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
             {   
                 _gameState = GameState.Rolling;
-                ServerClasses.Client.SendActionPacket(GameStateController.Roll());
+                Client.SendActionPacket(GameStateController.Roll());
                 System.Threading.Thread.Sleep(500);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
@@ -222,7 +222,7 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 Client.SendMessage(_localMonster.Name + "'s Roll: " + GetDiceText(DiceController.GetDice()));
-                ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
+                Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
                 _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
                 return;
@@ -275,8 +275,8 @@ namespace GameEngine.GameScreens
             _firstPlay = true;
 
             _gameState = GameState.Waiting;
-            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
-            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
+            Client.SendActionPacket(GameStateController.EndTurn());
+            Client.SendActionPacket(GameStateController.StartTurn());
         }
 
         /// <summary>
@@ -324,14 +324,14 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                ServerClasses.Client.SendActionPacket(GameStateController.Yield(_localPlayer));
+                Client.SendActionPacket(GameStateController.Yield(_localPlayer));
                 _gameState = GameState.Waiting;
                 Waiting();
 
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                ServerClasses.Client.SendActionPacket(GameStateController.NoYield(_localPlayer));
+                Client.SendActionPacket(GameStateController.NoYield(_localPlayer));
                 _gameState = GameState.Waiting;
                 Waiting();
             }
