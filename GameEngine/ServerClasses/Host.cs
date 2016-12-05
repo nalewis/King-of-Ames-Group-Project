@@ -109,6 +109,7 @@ namespace GameEngine.ServerClasses
                                 Console.WriteLine("Approved new spectator");
                                 Console.WriteLine(inc.SenderConnection + " has connected");
                                 Spectators.Add(inc.SenderConnection);
+                                Thread.Sleep(50);
                                 SendSpecatorStart(inc.SenderConnection);
                             }
 
@@ -247,6 +248,7 @@ namespace GameEngine.ServerClasses
             }
 
             _server.SendMessage(outMsg, recipient, NetDeliveryMethod.ReliableOrdered);
+            Thread.Sleep(50);
         }
 
         public static void DeclareWinner()
@@ -260,6 +262,8 @@ namespace GameEngine.ServerClasses
 
         public static void PassMessageAlong(string message)
         {
+            var timeStamp = DateTime.Now.ToString("hh:mm");
+            message = "[" + timeStamp + "] " + message;
             var outMsg = _server.CreateMessage();
             outMsg.Write((byte) PacketTypes.Message);
             outMsg.Write(message);

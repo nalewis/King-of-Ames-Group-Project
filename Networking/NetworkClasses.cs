@@ -343,11 +343,17 @@ namespace Networking
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";
-            command.Parameters.AddWithValue("@hostip", hostip);
-            command.ExecuteNonQuery();
+            try
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostip", hostip);
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
+                Console.WriteLine("Can't set player to null, server no longer exist");
+            }
 
             connection.Close();
         }
@@ -420,6 +426,24 @@ namespace Networking
                 }
             }
             return players;
+        }
+
+        public static bool CheckCharacterAvailable(string hostip, string character)
+        {
+            var players = GetPlayerIDs(hostip);
+            for(var i = 0; i < players.Length; i++)
+            {
+                if(players[i] != -1 && players[i] != User.PlayerId)
+                {
+                    var ds = GetPlayer(players[i]);
+                    if (ds.Tables[0].Rows[0]["_Character"].ToString() == character)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         public static bool UpdateUserValue(string table, string column, string value, int playerid)
