@@ -40,15 +40,7 @@ namespace GameEngine.GraphicPieces
 
         public void UpdateList()
         {
-            if (Client.MessageHistory.Count < 3)
-            {
-                _stringList = Client.MessageHistory;
-            }
-            else
-            {
-                _stringList = Client.MessageHistory.GetRange(Client.MessageHistory.Count - 4,
-                    Client.MessageHistory.Count - 1);
-            }
+            _stringList = _stringList.Count < 5 ? Client.MessageHistory : Client.MessageHistory.GetRange(Client.MessageHistory.Count - 6, 5);
         }
 
         public void Draw(SpriteBatch sB)
