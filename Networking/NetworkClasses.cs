@@ -422,6 +422,21 @@ namespace Networking
             return players;
         }
 
+        public static bool CheckCharacterAvailable(string hostip, string character)
+        {
+            var players = GetPlayerIDs(hostip);
+            for(var i = 0; i < players.Length; i++)
+            {
+                var ds = GetPlayer(players[i]);
+                if(ds.Tables[0].Rows[0]["_Character"].ToString() == character)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public static bool UpdateUserValue(string table, string column, string value, int playerid)
         {
             try
