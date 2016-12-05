@@ -11,6 +11,7 @@ using GameEngine.ServerClasses;
 using GamePieces.Monsters;
 using GamePieces.Session;
 using Microsoft.Xna.Framework.Graphics;
+using GamePieces.Dice;
 
 namespace GameEngine.GameScreens
 {
@@ -200,6 +201,13 @@ namespace GameEngine.GameScreens
         {
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
+                Client.SendMessage(_localMonster.Name + "'s Roll: " + GetDiceText(DiceController.GetDice()));
+                                    DiceController.GetDice()[0].Symbol + ", " +
+                                    DiceController.GetDice()[1].Symbol + ", " + 
+                                    DiceController.GetDice()[2].Symbol + ", " + 
+                                    DiceController.GetDice()[3].Symbol + ", " + 
+                                    DiceController.GetDice()[4].Symbol + ", " +
+                                    DiceController.GetDice()[5].Symbol);
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
                 _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
@@ -235,6 +243,53 @@ namespace GameEngine.GameScreens
                 MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!",
                 //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
+        }
+
+        private static string GetDiceText(List<Die> list)
+        {
+            return list[0].Symbol + ", " + list[1].Symbol + ", " + list[2].Symbol + ", " + list[3].Symbol + ", " +
+                   list[4].Symbol + ", " + list[5].Symbol;
+
+
+            /*
+            var attackRolled = 0;
+            var energyRolled = 0;
+            var healthRolled = 0;
+            var pointsRolled = new int[3];
+
+            foreach (var die in list)
+            {
+                if (die.Symbol.Equals(Symbol.Attack))
+                {
+                    attackRolled++;
+                }
+                else if (die.Symbol.Equals(Symbol.Energy))
+                {
+                    energyRolled++;
+                }
+                else if (die.Symbol.Equals(Symbol.Heal))
+                {
+                    healthRolled++;
+                }
+                else
+                {
+                    if (die.Symbol.Equals(Symbol.One))
+                    {
+                        pointsRolled[0]++;
+                    }
+                    else if (die.Symbol.Equals(Symbol.Two))
+                    {
+                        pointsRolled[1]++;
+                    }
+                    else if (die.Symbol.Equals(Symbol.Three))
+                    {
+                        pointsRolled[2]++;
+                    }
+                }
+            }
+
+            return "Attack: " + attackRolled + " Energy: " + energyRolled + " Health: " + healthRolled + " Points: " + pointsRolled;
+            */
         }
 
         private void EndTurn()
