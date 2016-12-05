@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
-using System.Net;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
@@ -136,7 +135,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Color.White);
+            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
@@ -202,12 +201,6 @@ namespace GameEngine.GameScreens
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 Client.SendMessage(_localMonster.Name + "'s Roll: " + GetDiceText(DiceController.GetDice()));
-                                    DiceController.GetDice()[0].Symbol + ", " +
-                                    DiceController.GetDice()[1].Symbol + ", " + 
-                                    DiceController.GetDice()[2].Symbol + ", " + 
-                                    DiceController.GetDice()[3].Symbol + ", " + 
-                                    DiceController.GetDice()[4].Symbol + ", " +
-                                    DiceController.GetDice()[5].Symbol);
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
                 _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
