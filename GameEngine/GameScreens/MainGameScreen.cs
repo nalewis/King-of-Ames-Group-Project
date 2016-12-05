@@ -168,7 +168,7 @@ namespace GameEngine.GameScreens
                 "Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
-            if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
+            if (Engine.InputManager.KeyPressed(Keys.R)) // && RollAnimation <= 0
             {   
                 _gameState = GameState.Rolling;
                 //Client.isStart = false;
@@ -232,6 +232,8 @@ namespace GameEngine.GameScreens
             RollingDice.Clear();
             RollingDice.Hidden = true;
 
+            _firstPlay = true;
+
             _gameState = GameState.Waiting;
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
@@ -240,7 +242,6 @@ namespace GameEngine.GameScreens
         private void Waiting()
         {
             _textPrompts.Clear();
-            Console.WriteLine("Local Player Can Yeild: " + MonsterController.GetById(_localPlayer).CanYield);
             if (MonsterController.GetById(_localPlayer).CanYield)
             {
                 _gameState = GameState.AskYield;
@@ -259,7 +260,7 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "Your Dead."
+                "You're Dead."
                 }));
         }
 
