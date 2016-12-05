@@ -10,6 +10,7 @@ using GameEngine.ServerClasses;
 using GamePieces.Monsters;
 using GamePieces.Session;
 using Microsoft.Xna.Framework.Graphics;
+using GamePieces.Dice;
 
 namespace GameEngine.GameScreens
 {
@@ -23,7 +24,6 @@ namespace GameEngine.GameScreens
 
         private static int _localPlayer;
         private static Monster _localMonster;
-        private State _localPlayerState;
         private bool _firstPlay = true;
         private List<Monster> _monsterList;
         private TextBlock _cardList;
@@ -41,14 +41,18 @@ namespace GameEngine.GameScreens
         {
             _backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
+            ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
             _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
+            if (Client.isSpectator)
+            {
+                _gameState = GameState.Spectating;
+                _localPlayer = MonsterController.GetDataPackets()[0].PlayerId;
+            }
             _localMonster = MonsterController.GetById(_localPlayer);
             _monsterList = GetMonsterList();
             _pBlocks = GetPlayerBlocks();
-            ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
-
             RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
         }
 
@@ -79,8 +83,7 @@ namespace GameEngine.GameScreens
 
             if (!MonsterController.IsDead(_localPlayer))
             {
-                _localPlayerState = MonsterController.State(_localPlayer);
-                if (_localPlayerState == State.StartOfTurn)
+                if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
                     _gameState = GameState.StartTurn;
             }
             else
@@ -113,6 +116,9 @@ namespace GameEngine.GameScreens
                     break;
                 case GameState.EndGame:
                     break;
+                case GameState.Spectating:
+                    Spectate();
+                    break;
                 default:
                     Console.Write("switch hit default.");
                     break;
@@ -129,7 +135,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Color.White);
+            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
@@ -145,6 +151,14 @@ namespace GameEngine.GameScreens
         }
 
         #region GameStateFunctions
+
+        private static void Spectate()
+        {
+            _textPrompts.Clear();
+            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
+                "Your Spectating!",
+                }));
+        }
 
         private void StartingTurn()
         {
@@ -165,10 +179,10 @@ namespace GameEngine.GameScreens
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
                 "or E to End Rolling",
-                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
+                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
-            if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
+            if (Engine.InputManager.KeyPressed(Keys.R)) // && RollAnimation <= 0
             {   
                 _gameState = GameState.Rolling;
                 //Client.isStart = false;
@@ -186,6 +200,7 @@ namespace GameEngine.GameScreens
         {
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
+                Client.SendMessage(_localMonster.Name + "'s Roll: " + GetDiceText(DiceController.GetDice()));
                 ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
                 _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
@@ -223,6 +238,53 @@ namespace GameEngine.GameScreens
                 }));
         }
 
+        private static string GetDiceText(List<Die> list)
+        {
+            return list[0].Symbol + ", " + list[1].Symbol + ", " + list[2].Symbol + ", " + list[3].Symbol + ", " +
+                   list[4].Symbol + ", " + list[5].Symbol;
+
+
+            /*
+            var attackRolled = 0;
+            var energyRolled = 0;
+            var healthRolled = 0;
+            var pointsRolled = new int[3];
+
+            foreach (var die in list)
+            {
+                if (die.Symbol.Equals(Symbol.Attack))
+                {
+                    attackRolled++;
+                }
+                else if (die.Symbol.Equals(Symbol.Energy))
+                {
+                    energyRolled++;
+                }
+                else if (die.Symbol.Equals(Symbol.Heal))
+                {
+                    healthRolled++;
+                }
+                else
+                {
+                    if (die.Symbol.Equals(Symbol.One))
+                    {
+                        pointsRolled[0]++;
+                    }
+                    else if (die.Symbol.Equals(Symbol.Two))
+                    {
+                        pointsRolled[1]++;
+                    }
+                    else if (die.Symbol.Equals(Symbol.Three))
+                    {
+                        pointsRolled[2]++;
+                    }
+                }
+            }
+
+            return "Attack: " + attackRolled + " Energy: " + energyRolled + " Health: " + healthRolled + " Points: " + pointsRolled;
+            */
+        }
+
         private void EndTurn()
         {
             _textPrompts.Clear();
@@ -232,6 +294,8 @@ namespace GameEngine.GameScreens
             RollingDice.Clear();
             RollingDice.Hidden = true;
 
+            _firstPlay = true;
+
             _gameState = GameState.Waiting;
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
             ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
@@ -240,7 +304,6 @@ namespace GameEngine.GameScreens
         private void Waiting()
         {
             _textPrompts.Clear();
-            //Console.WriteLine("Local Player Can Yeild: " + MonsterController.GetById(_localPlayer).CanYield);
             if (MonsterController.GetById(_localPlayer).CanYield)
             {
                 _gameState = GameState.AskYield;
@@ -259,7 +322,7 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
 
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "Your Dead."
+                "You're Dead."
                 }));
         }
 
@@ -387,6 +450,10 @@ namespace GameEngine.GameScreens
 
             if (!_diceRow.Hidden)
             {
+                foreach(var ds in _diceRow.DiceSprites)
+                    ds.Draw(Engine.SpriteBatch);
+
+                
                 for (var i = 0; i < _diceRow.DiceSprites.Count; i++)
                 {
                     if (RollAnimation <= 0 || _diceRow.DiceSprites[i].Save)
@@ -400,6 +467,7 @@ namespace GameEngine.GameScreens
                         RollAnimation--;
                     }
                 }
+                
             }
 
             foreach (var tp in _textPrompts)
@@ -475,7 +543,8 @@ namespace GameEngine.GameScreens
             Waiting,
             EndingTurn,
             EndGame,
-            IsDead
+            IsDead,
+            Spectating
         }
     }
 }

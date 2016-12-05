@@ -27,6 +27,7 @@ namespace GameEngine.ServerClasses
         public static MonsterDataPacket[] MonsterPackets;
         public static bool CanContinue = true;
         public static bool IsStart = false;
+        public static bool isSpectator = false;
         public static List<string> MessageHistory = new List<string>();
         public static List<string> ChatHistory = new List<string>();
 
@@ -34,11 +35,20 @@ namespace GameEngine.ServerClasses
         /// Connects the client to the server using the current ip
         /// </summary>
         /// <returns>returns true if connected, false otherwise</returns>
-        public static bool Connect()
+        public static bool Connect(bool login = true)
         {
             //Sends login request to Host, with player ID attached
             var outMsg = NetClient.CreateMessage();
-            outMsg.Write((byte) PacketTypes.Login);
+            if (login)
+            {
+                outMsg.Write((byte)PacketTypes.Login);
+                isSpectator = false;
+            }
+            else
+            {
+                outMsg.Write((byte)PacketTypes.Spectate);
+                isSpectator = true;
+            }
             outMsg.Write(User.PlayerId);
 
             //resets the receive thread
@@ -92,6 +102,21 @@ namespace GameEngine.ServerClasses
                                 GameLoop.SetApartmentState(ApartmentState.STA);
                                 GameLoop.Start();
                             }
+                            else if (type == (byte)PacketTypes.Spectate)//The initial message to catch the new spectator up
+                            {
+                                var end = inc.ReadInt32();
+                                MonsterPackets = new MonsterDataPacket[end];
+                                for (var i = 0; i < end; i++)
+                                {
+                                    var json = inc.ReadString();
+                                    MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                }
+
+                                LobbyController.StartGame(MonsterPackets);
+                                //Makes this thread a STAThread, not sure if necessary...
+                                GameLoop.SetApartmentState(ApartmentState.STA);
+                                GameLoop.Start();
+                            }
                             else if (type == (byte)PacketTypes.Update)
                             {
                                 var end = inc.ReadInt32();
@@ -103,9 +128,6 @@ namespace GameEngine.ServerClasses
                                 }
 
                                 MonsterController.AcceptDataPackets(MonsterPackets);
-
-                                //if (MonsterController.GetById(User.PlayerId).State == State.StartOfTurn)
-                                //    MainGameScreen.SetLocalPlayerState(0);
 
                                 if (inc.ReadByte() == (byte)PacketTypes.Dice)
                                 {
@@ -136,6 +158,7 @@ namespace GameEngine.ServerClasses
                             else if (type == (byte)PacketTypes.Closed)
                             {
                                 NetClient.Shutdown("Closed");
+                                isSpectator = false;
                                 Conn = "";
                                 break;
                             }
@@ -155,8 +178,13 @@ namespace GameEngine.ServerClasses
                                 ChatHistory.Add(inc.ReadString());
                             }
                             break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        case NetIncomingMessageType.WarningMessage:
+                            Console.WriteLine("WARNING");
+                            break;
+                        default://TODO catch attempts to connect non-existing servers
+                            Console.WriteLine("Unhandled message of type: " + inc.MessageType);
+                            //throw new ArgumentOutOfRangeException();
+                            break;
                     }
                     NetClient.Recycle(inc);
                 }
@@ -187,8 +215,6 @@ namespace GameEngine.ServerClasses
         //Sends a message to the server, the server will return the message to all clients, which will then add it to their message history
         public static void SendMessage(string message)
         {
-            var timeStamp = DateTime.Now.ToString("mm:ss");
-            message = "[" + timeStamp + "] " + message;
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte) PacketTypes.Message);
             outMsg.Write(message);
@@ -217,23 +243,8 @@ namespace GameEngine.ServerClasses
             //ends the receive loop
             _shouldStop = true;
             Conn = "";
+            isSpectator = false;
             if (GameLoop.IsAlive) { GameLoop.Abort(); }
-        }
-
-        private enum PacketTypes
-        {
-            Login,
-            Leave,
-            Start,
-            Action,
-            Update,
-            Dice,
-            NoDice,
-            GameOver,
-            Closed,
-            Chat,
-            Cards,
-            Message
         }
     }
 }

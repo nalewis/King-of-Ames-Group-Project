@@ -44,6 +44,13 @@ namespace GameEngine.Views
             }
         }
 
+        private void addFriendForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            e.Cancel = true;
+            Hide();
+        }
+
         /// <summary>
         /// Checks if all characters in the given string are valid
         /// Valid chars include 0-9, A-Z, a-z, and spaces

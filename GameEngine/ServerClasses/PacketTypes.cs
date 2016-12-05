@@ -3,6 +3,7 @@
     public enum PacketTypes
     {
         Login,
+        Spectate,
         Leave,
         Start,
         Action,
@@ -12,6 +13,7 @@
         Cards,
         NoCards,
         Message,
+        Chat,
         GameOver,
         Closed
     }

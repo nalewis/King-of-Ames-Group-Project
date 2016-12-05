@@ -1,4 +1,6 @@
-﻿namespace GameEngine.Views
+﻿using System.Windows.Forms;
+
+namespace GameEngine.Views
 {
     partial class AddFriendForm
     {
@@ -73,6 +75,7 @@
             this.Text = "addFriendForm";
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.FormClosing += new FormClosingEventHandler(addFriendForm_FormClosing);
 
         }
 

@@ -15,6 +15,7 @@ namespace GameEngine.ServerClasses
     {
         //List of player ID's connected to the server
         public static List<int> Players = new List<int>();
+        public static List<NetConnection> Spectators = new List<NetConnection>();
         //Variable for the Lidgren server stuff
         private static NetServer _server;
         private static bool _shouldStop = false;
@@ -92,10 +93,9 @@ namespace GameEngine.ServerClasses
                             break;
                         case NetIncomingMessageType.ConnectionApproval:
                             //Initially approves connecting clients based on their login byte
-                            if (inc.ReadByte() == (byte)PacketTypes.Login)
+                            var connectType = inc.ReadByte();
+                            if (connectType == (byte)PacketTypes.Login)
                             {
-                                Console.WriteLine(inc.MessageType);
-
                                 inc.SenderConnection.Approve();
                                 Players.Add(inc.ReadInt32());
                                 if (Players.Count == 6)
@@ -105,6 +105,17 @@ namespace GameEngine.ServerClasses
 
                                 Console.WriteLine("Approved new connection");
                                 Console.WriteLine(inc.SenderConnection + " has connected");
+                            }
+                            else if(connectType == (byte)PacketTypes.Spectate)
+                            {
+                                //TODO
+                                inc.SenderConnection.Approve();
+
+                                Console.WriteLine("Approved new spectator");
+                                Console.WriteLine(inc.SenderConnection + " has connected");
+                                Spectators.Add(inc.SenderConnection);
+                                Thread.Sleep(50);
+                                SendSpecatorStart(inc.SenderConnection);
                             }
 
                             break;
@@ -229,6 +240,22 @@ namespace GameEngine.ServerClasses
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void SendSpecatorStart(NetConnection recipient)
+        {
+            var outMsg = _server.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Spectate);
+            var packets = MonsterController.GetDataPackets();
+            outMsg.Write(packets.Length);
+            foreach (var packet in packets)
+            {
+                var json = JsonConvert.SerializeObject(packet);
+                outMsg.Write(json);
+            }
+
+            _server.SendMessage(outMsg, recipient, NetDeliveryMethod.ReliableOrdered);
+            Thread.Sleep(50);
+        }
+
         public static void DeclareWinner()
         {
             //send packet type game over, update player stats, show final scores
@@ -240,27 +267,12 @@ namespace GameEngine.ServerClasses
 
         public static void PassMessageAlong(string message)
         {
+            var timeStamp = DateTime.Now.ToString("hh:mm");
+            message = "[" + timeStamp + "] " + message;
             var outMsg = _server.CreateMessage();
             outMsg.Write((byte) PacketTypes.Message);
             outMsg.Write(message);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
-        }
-
-        private enum PacketTypes
-        {
-            Login,
-            Leave,
-            Start,
-            Action,
-            Update,
-            Dice,
-            NoDice,
-            GameOver,
-            Closed,
-            Chat,
-            Cards,
-            NoCards,
-            Message
         }
     }
 }

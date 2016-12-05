@@ -215,7 +215,8 @@ namespace Networking
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Server_List WHERE Status ='Creating'";
+            //command.CommandText = "SELECT * FROM Server_List WHERE Status ='Creating'";
+            command.CommandText = "SELECT * FROM Server_List";
             var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
@@ -370,11 +371,17 @@ namespace Networking
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
-
-            var command = connection.CreateCommand();
-            command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";
-            command.Parameters.AddWithValue("@hostip", hostip);
-            command.ExecuteNonQuery();
+            try
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE Server_List SET Player_" + playerPosition + " = null WHERE Host_IP = @hostip";
+                command.Parameters.AddWithValue("@hostip", hostip);
+                command.ExecuteNonQuery();
+            }
+            catch
+            {
+                Console.WriteLine("Can't set player to null, server no longer exist");
+            }
 
             connection.Close();
         }
@@ -449,6 +456,24 @@ namespace Networking
             return players;
         }
 
+        public static bool CheckCharacterAvailable(string hostip, string character)
+        {
+            var players = GetPlayerIDs(hostip);
+            for(var i = 0; i < players.Length; i++)
+            {
+                if(players[i] != -1 && players[i] != User.PlayerId)
+                {
+                    var ds = GetPlayer(players[i]);
+                    if (ds.Tables[0].Rows[0]["_Character"].ToString() == character)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public static bool UpdateUserValue(string table, string column, string value, int playerid)
         {
             try
@@ -479,11 +504,7 @@ namespace Networking
                 var connection = new MySqlConnection(ConnectString);
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = "UPDATE Server_List SET @column = @value WHERE @searchBy = @equals";
-                command.Parameters.AddWithValue("@column", column);
-                command.Parameters.AddWithValue("@value", value);
-                command.Parameters.AddWithValue("@stuff", searchBy);
-                command.Parameters.AddWithValue("@thing", equals);
+                command.CommandText = "UPDATE Server_List SET " + column + " = '" + value + "' WHERE " + searchBy + " = " + equals;
                 command.ExecuteNonQuery();
 
                 connection.Close();
