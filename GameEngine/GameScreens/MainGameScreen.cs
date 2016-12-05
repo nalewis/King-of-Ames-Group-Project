@@ -41,14 +41,18 @@ namespace GameEngine.GameScreens
         {
             //_backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
+            ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
             _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
+            if (Client.isSpectator)
+            {
+                _gameState = GameState.Spectating;
+                _localPlayer = MonsterController.GetDataPackets()[0].PlayerId;
+            }
             _localMonster = MonsterController.GetById(_localPlayer);
             _monsterList = GetMonsterList();
             _pBlocks = GetPlayerBlocks();
-            ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
-
             RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
         }
 
@@ -113,6 +117,9 @@ namespace GameEngine.GameScreens
                     break;
                 case GameState.EndGame:
                     break;
+                case GameState.Spectating:
+                    Spectate();
+                    break;
                 default:
                     Console.Write("switch hit default.");
                     break;
@@ -145,6 +152,13 @@ namespace GameEngine.GameScreens
         }
 
         #region GameStateFunctions
+
+        private static void Spectate()
+        {
+            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
+                "Your Spectating!",
+                }));
+        }
 
         private void StartingTurn()
         {
@@ -481,7 +495,8 @@ namespace GameEngine.GameScreens
             Waiting,
             EndingTurn,
             EndGame,
-            IsDead
+            IsDead,
+            Spectating
         }
     }
 }
