@@ -214,7 +214,8 @@ namespace Networking
             connection.Open();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Server_List WHERE Status ='Creating'";
+            //command.CommandText = "SELECT * FROM Server_List WHERE Status ='Creating'";
+            command.CommandText = "SELECT * FROM Server_List";
             var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
