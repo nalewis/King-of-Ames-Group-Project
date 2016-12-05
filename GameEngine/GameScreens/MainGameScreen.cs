@@ -79,10 +79,10 @@ namespace GameEngine.GameScreens
             {
                 _cardForSaleList = new TextBlock("cardList", new List<string>()
             {
-                "Cards For Sale:",
-                GamePieces.Session.Game.CardsForSale[0].Name,
-                GamePieces.Session.Game.CardsForSale[1].Name,
-                GamePieces.Session.Game.CardsForSale[2].Name
+                " Cards For Sale  -  Card Cost ",
+                GamePieces.Session.Game.CardsForSale[0].Name + " - " + GamePieces.Session.Game.CardsForSale[0].Cost,
+                GamePieces.Session.Game.CardsForSale[1].Name + " - " + GamePieces.Session.Game.CardsForSale[1].Cost,
+                GamePieces.Session.Game.CardsForSale[2].Name + " - " + GamePieces.Session.Game.CardsForSale[2].Cost
             });
             }
 
@@ -193,11 +193,8 @@ namespace GameEngine.GameScreens
                 _firstPlay = false;
                 Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
-            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "Your Turn " + MonsterController.Name(_localPlayer),
-                "Press R to Roll, P for Menu ",
-                "or E to End Rolling",
-                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
+            _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
+                "Your Turn! Press R to Roll."
                 }));
 
             if (Engine.InputManager.KeyPressed(Keys.R))
@@ -221,7 +218,7 @@ namespace GameEngine.GameScreens
         {
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
-                Client.SendMessage(_localMonster.Name + "'s Roll: " + GetDiceText(DiceController.GetDice()));
+                Client.SendMessage("Rolled: " + GetDiceText(DiceController.GetDice()));
                 Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
                 _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
@@ -250,12 +247,8 @@ namespace GameEngine.GameScreens
                 _textPrompts.Remove(_textPrompts[_textPrompts.Count - 1]);
             }
 
-            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "Your Turn " + MonsterController.Name(_localPlayer),
-                "Press R to Roll, P for Menu,",
-                "or E to End Rolling",
-                MonsterController.RollsRemaining(_localPlayer) + " Rolls Left!",
-                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
+            _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
+                "Your Turn! Press R to Roll."
                 }));
         }
 

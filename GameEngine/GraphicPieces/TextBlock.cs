@@ -31,7 +31,7 @@ namespace GameEngine.GraphicPieces
             foreach (string line in _text)
             {
                 pos.Y = pos.Y + LineSpacing;
-                sb.DrawString(font, line, pos, Color.White);
+                sb.DrawString(font, line, pos, Color.Black);
             }
         }
     }
