@@ -50,6 +50,7 @@ namespace GameEngine.Views
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Friends";
+            this.groupBox1.KeyPress += new KeyPressEventHandler(FriendsList_KeyPressed);
             // 
             // BoxOFriends
             // 
@@ -66,6 +67,7 @@ namespace GameEngine.Views
             this.BoxOFriends.UseCompatibleStateImageBehavior = false;
             this.BoxOFriends.View = System.Windows.Forms.View.Details;
             this.BoxOFriends.SelectedIndexChanged += new System.EventHandler(this.BoxOFriends_SelectedIndexChanged);
+            this.BoxOFriends.KeyPress += new KeyPressEventHandler(FriendsList_KeyPressed);
             // 
             // playerName
             // 
@@ -86,6 +88,7 @@ namespace GameEngine.Views
             this.addFriend.Text = "Add Friend";
             this.addFriend.UseVisualStyleBackColor = true;
             this.addFriend.Click += new System.EventHandler(this.addFriend_Click);
+            this.addFriend.KeyPress += new KeyPressEventHandler(FriendsList_KeyPressed);
             // 
             // delFriend
             // 
@@ -96,6 +99,7 @@ namespace GameEngine.Views
             this.delFriend.Text = "Delete Friend";
             this.delFriend.UseVisualStyleBackColor = true;
             this.delFriend.Click += new System.EventHandler(this.delFriend_Click);
+            this.delFriend.KeyPress += new KeyPressEventHandler(FriendsList_KeyPressed);
             // 
             // Location
             // 
@@ -115,6 +119,7 @@ namespace GameEngine.Views
             this.Text = "King of Ames";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FriendsList_FormClosing);
             this.Disposed += new System.EventHandler(this.FriendsList_Disposed);
+            this.KeyPress += new KeyPressEventHandler(FriendsList_KeyPressed);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 

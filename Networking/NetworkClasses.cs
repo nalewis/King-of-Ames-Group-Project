@@ -496,27 +496,31 @@ namespace Networking
             return true;
         }
 
-        public static bool AddFriend(string username)
+        public static string AddFriend(string username)
         {
             try
             {
                 var ds1 = GetPlayer(username);
                 var ds2 = GetPlayer(User.PlayerId);
                 var friends = ds2.Tables[0].Rows[0]["Friends"].ToString();
+                if (friends.Split(',').Contains(ds1.Tables[0].Rows[0]["Player_ID"].ToString()))
+                {
+                    return "Preexisting";
+                }
                 if (friends.Length < 1)
                 {
                     UpdateUserValue("User_List", "Friends", friends, User.PlayerId);
                 }
                 else
                 {
-                    UpdateUserValue("User_List", "Friends", friends + "," + ds1.Tables[0].Rows[0]["Player_ID"].ToString(), User.PlayerId);
+                    UpdateUserValue("User_List", "Friends", friends + "," + ds1.Tables[0].Rows[0]["Player_ID"], User.PlayerId);
                 }
             }
             catch (Exception)
             {
-                return false;
+                return "Nonexistant";
             }
-            return true;
+            return "Done";
         }
 
         public static bool DelFriend(string username)

@@ -89,7 +89,12 @@ namespace GameEngine.Views
 
         private void MainMenuForm_KeyPressed(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar == 'f')
+            if (e.KeyChar != 'f') return;
+            if (_friends.Visible)
+            {
+                _friends.Hide();
+            }
+            else
             {
                 _friends.Show();
             }

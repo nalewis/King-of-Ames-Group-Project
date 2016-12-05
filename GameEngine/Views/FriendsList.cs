@@ -30,6 +30,11 @@ namespace GameEngine.Views
         {
             var ds = NetworkClasses.GetPlayer(User.PlayerId);
             var friends = ds.Tables[0].Rows[0]["Friends"].ToString().Split(',');
+            if(friends.Length == 20) { addFriend.Enabled = false; }
+            else if (friends.Length < 20 && !addFriend.Enabled)
+            {
+                addFriend.Enabled = true;
+            }
             if (_old != null && friends.Length == _old.Length)
             {
                     return;
@@ -79,6 +84,12 @@ namespace GameEngine.Views
             {
                 NetworkClasses.DelFriend(BoxOFriends.SelectedItems[0].Text);
             }
+        }
+
+        private void FriendsList_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            _add.Hide();
+            Hide();
         }
     }
 }

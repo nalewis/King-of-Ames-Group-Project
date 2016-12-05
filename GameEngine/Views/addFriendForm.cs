@@ -18,12 +18,20 @@ namespace GameEngine.Views
             {
                 if(ContainsVaildChars(username.Text))
                 {
-                    if (NetworkClasses.AddFriend(username.Text))
+                    var status = NetworkClasses.AddFriend(username.Text);
+                    switch (status)
                     {
-                        username.Text = "";
-                        Hide();
+                        case "Done":
+                            username.Text = "";
+                            Hide();
+                            break;
+                        case "Nonexistant":
+                            MessageBox.Show("Username doesn't exist", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
+                        case "Preexisting":
+                            MessageBox.Show("Already Friends with " + username.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            break;
                     }
-                    else { MessageBox.Show("Username doesn't exist", "Error?", MessageBoxButtons.OK, MessageBoxIcon.Error);}
                 }
                 else
                 {
