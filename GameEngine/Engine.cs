@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using GameEngine.ServerClasses;
 using Microsoft.Xna.Framework.Audio;
-using System;
 
 namespace GameEngine {
     /// <summary>
@@ -18,7 +17,7 @@ namespace GameEngine {
         public static InputManager InputManager;
         public static ScreenManager ScreenManager;
         public static SpriteBatch SpriteBatch;
-        public static GraphicsDevice GraphicsD;
+        public static GraphicsDevice GraphicsDev;
         public static Dictionary<string, Texture2D> TextureList;
         public static Dictionary<string, SpriteFont> FontList;
         public static Dictionary<string, SoundEffect> SoundList;
@@ -29,7 +28,7 @@ namespace GameEngine {
         public Engine()
         {
             GraffixMngr = new GraphicsDeviceManager(this);
-            GraphicsD = GraphicsDevice;
+            GraphicsDev = GraphicsDevice;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             GraffixMngr.PreferredBackBufferHeight = 720; //1080
@@ -64,7 +63,7 @@ namespace GameEngine {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(base.GraphicsDevice);
         }
 
         /// <summary>
@@ -87,19 +86,17 @@ namespace GameEngine {
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            //if(InputManager.KeyPressed(Keys.Escape)) AddScreen(new PauseMenu());
-
             if (ExitGame)
             {
                 UnloadContent();
                 Client.ClientStop();
                 Exit();
             }
-                
-
-            ScreenWidth = GraffixMngr.GraphicsDevice.Viewport.Width;
-            ScreenHeight = GraffixMngr.GraphicsDevice.Viewport.Height;
-
+            if (ScreenWidth != GraffixMngr.GraphicsDevice.Viewport.Width)
+            {
+                ScreenWidth = GraffixMngr.GraphicsDevice.Viewport.Width;
+                ScreenHeight = GraffixMngr.GraphicsDevice.Viewport.Height;
+            }
             base.Update(gameTime);
         }
 
@@ -115,9 +112,7 @@ namespace GameEngine {
             {
                 index--;
             }
-
             GraphicsDevice.Clear(ScreenManager.ScreenList[index].BackgroundColor);
-
             for (var i = index; i < ScreenManager.ScreenList.Count; i++)
             {
                 ScreenManager.ScreenList[i].Draw(gameTime);
@@ -167,7 +162,7 @@ namespace GameEngine {
 
         private void AddSound(string filePath, string name)
         {
-            SoundEffect toAdd = Content.Load<SoundEffect>(filePath);
+            var toAdd = Content.Load<SoundEffect>(filePath);
             SoundList.Add(name, toAdd);
         }
 
