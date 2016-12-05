@@ -32,14 +32,14 @@ namespace GameEngine.GameScreens
         public static int CardScreenChoice = -1;
 
         private int RollAnimation { get; set; }
-        //private DiceRow RollingDice { get; }
+        private DiceRow RollingDice { get; }
 
         private static GameState _gameState = GameState.Waiting;
-        private Texture2D _backgroundImage;
+        //private Texture2D _backgroundImage;
 
         public MainGameScreen()
         {
-            _backgroundImage = Engine.TextureList["background720"];
+            //_backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             _textPrompts = new List<TextBlock>();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
@@ -49,7 +49,7 @@ namespace GameEngine.GameScreens
             _pBlocks = GetPlayerBlocks();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
 
-            //RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
+            RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
         }
 
         public override void Update(GameTime gameTime)
@@ -129,7 +129,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Color.White);
+            //Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
@@ -140,7 +140,7 @@ namespace GameEngine.GameScreens
             _pBlocks.Clear();
             _textPrompts.Clear();
             _diceRow.Clear();
-            //RollingDice.Clear();
+            RollingDice.Clear();
             base.UnloadAssets();
         }
 
@@ -151,8 +151,8 @@ namespace GameEngine.GameScreens
             _diceRow.Hidden = true;
             _diceRow.Clear();
 
-            //RollingDice.Hidden = true;
-            //RollingDice.Clear();
+            RollingDice.Hidden = true;
+            RollingDice.Clear();
 
             _textPrompts.Clear();
             if (_firstPlay)
@@ -165,7 +165,7 @@ namespace GameEngine.GameScreens
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
                 "or E to End Rolling",
-                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
+                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
             if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
@@ -177,8 +177,8 @@ namespace GameEngine.GameScreens
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
 
-                //RollingDice.AddDice(DiceController.GetDice());
-                //RollingDice.Hidden = false;
+                RollingDice.AddDice(DiceController.GetDice());
+                RollingDice.Hidden = false;
             }
         }
 
@@ -229,8 +229,8 @@ namespace GameEngine.GameScreens
             _diceRow.Clear();
             _diceRow.Hidden = true;
 
-           // RollingDice.Clear();
-            //RollingDice.Hidden = true;
+            RollingDice.Clear();
+            RollingDice.Hidden = true;
 
             _gameState = GameState.Waiting;
             ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
@@ -240,7 +240,7 @@ namespace GameEngine.GameScreens
         private void Waiting()
         {
             _textPrompts.Clear();
-            //Console.WriteLine("Local Player Can Yeild: " + MonsterController.GetById(_localPlayer).CanYield);
+            Console.WriteLine("Local Player Can Yeild: " + MonsterController.GetById(_localPlayer).CanYield);
             if (MonsterController.GetById(_localPlayer).CanYield)
             {
                 _gameState = GameState.AskYield;
@@ -253,8 +253,8 @@ namespace GameEngine.GameScreens
             _diceRow.Hidden = true;
             _diceRow.Clear();
 
-            //RollingDice.Hidden = true;
-            //RollingDice.Clear();
+            RollingDice.Hidden = true;
+            RollingDice.Clear();
 
             _textPrompts.Clear();
 
@@ -367,7 +367,7 @@ namespace GameEngine.GameScreens
                 tp.Position = ScreenLocations.GetPosition(tp.Name);
             }
             _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
-            //RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
+            RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
         }
 
         private void UpdateGraphicsPieces()
@@ -390,7 +390,7 @@ namespace GameEngine.GameScreens
                 foreach(var ds in _diceRow.DiceSprites)
                     ds.Draw(Engine.SpriteBatch);
 
-                /*
+                
                 for (var i = 0; i < _diceRow.DiceSprites.Count; i++)
                 {
                     if (RollAnimation <= 0 || _diceRow.DiceSprites[i].Save)
@@ -404,7 +404,7 @@ namespace GameEngine.GameScreens
                         RollAnimation--;
                     }
                 }
-                */
+                
             }
 
             foreach (var tp in _textPrompts)
