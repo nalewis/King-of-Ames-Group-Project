@@ -56,7 +56,7 @@ namespace GameEngine.Views
 
         private void gameTimer_tick(object sender, EventArgs e)
         {
-            if (!Client.gameEnd || !Client.gameClose) return;
+            if (!Client.gameClose) return;
             Host.ServerStop();
             _gameTimer.Stop();
             if (!_chat.IsDisposed) _chat.Dispose();
