@@ -55,7 +55,8 @@ namespace GameEngine.Views
 
         private void gameTimer_tick(object sender, EventArgs e)
         {
-            if (Client.Conn != "") return;
+            if (!Client.gameEnd) return;
+            Host.ServerStop();
             _gameTimer.Stop();
             if (!_chat.IsDisposed) _chat.Dispose();
             NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
