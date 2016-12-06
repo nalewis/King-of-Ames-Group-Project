@@ -340,17 +340,26 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void IsDead()
         {
-            _diceRow.Hidden = true;
-            _diceRow.Clear();
+            if (_winner == null)
+            {
+                _diceRow.Hidden = true;
+                _diceRow.Clear();
 
-            //RollingDice.Hidden = true;
-            //RollingDice.Clear();
+                //RollingDice.Hidden = true;
+                //RollingDice.Clear();
 
-            _textPrompts.Clear();
+                _textPrompts.Clear();
 
-            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "You're Dead."
+                _textPrompts.Add(new TextBlock("RollingText", new List<string>
+                {
+                    "You're Dead."
                 }));
+            }
+            else
+            {
+                EndGame(_winner);
+            }
+      
         }
 
         /// <summary>
