@@ -49,7 +49,7 @@ namespace GameEngine.Views
             this.playerList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.playerName,
             this.character});
-            //this.playerList.ContextMenuStrip = this.cm1;
+            this.playerList.ContextMenuStrip = this.cm1;
             this.playerList.FullRowSelect = true;
             this.playerList.GridLines = true;
             this.playerList.Location = new System.Drawing.Point(12, 12);
