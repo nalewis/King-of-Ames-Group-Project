@@ -256,7 +256,7 @@ namespace GameEngine.GameScreens
             {   
                 _gameState = GameState.Rolling;
                 Client.SendActionPacket(GameStateController.Roll());
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(200);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
                 //RollingDice.AddDice(DiceController.GetDice());
