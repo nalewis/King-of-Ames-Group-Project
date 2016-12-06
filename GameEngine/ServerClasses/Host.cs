@@ -70,6 +70,7 @@ namespace GameEngine.ServerClasses
             _shouldStop = true;
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
         }
 
         /// <summary>
@@ -148,6 +149,10 @@ namespace GameEngine.ServerClasses
                             {
                                 var message = inc.ReadString();
                                 PassMessageAlong(message);
+                            }
+                            else if (type == (byte)PacketTypes.Closed)
+                            {
+                                ServerStop();
                             }
                             break;
                         default:

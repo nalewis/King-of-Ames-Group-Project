@@ -440,7 +440,6 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.Escape))
             {
                 Engine.ExitGame = true;
-                //TODO set games won if applicable, end host server
             }
         }
 
