@@ -76,6 +76,7 @@ namespace GameEngine {
             InputManager.Dispose();
             TextureList.Clear();
             FontList.Clear();
+            SoundList.Clear();
             Content.Unload();
         }
 
