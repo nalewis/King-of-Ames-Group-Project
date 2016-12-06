@@ -99,6 +99,8 @@ namespace GameEngine.Views
                 if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
                 {
                     NetworkClasses.UpdateUserValue("User_List", "Online", "In Game", User.PlayerId);
+                    MainMenuForm form = new MainMenuForm();
+                    form.Show();
                     _chat.Dispose();
                     _timer.Stop();
                     Dispose();
