@@ -33,6 +33,7 @@ namespace GameEngine.GameScreens
         private static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
         private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
         private readonly RollButton _rollButton;
+        private static string _winner = null;
 
         /// <summary>
         /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
@@ -66,10 +67,12 @@ namespace GameEngine.GameScreens
         /// <param name="gameTime">Parameter for the game's GameTime</param>
         public override void Update(GameTime gameTime)
         {
+            /*
             if (GameStateController.GameOver)
             {
                 return;
             }
+            */
             if (GetMonsterList().Count != _monsterList.Count)   //A change has happened in the monster list
             {
                 _monsterList = GetMonsterList();
@@ -127,6 +130,7 @@ namespace GameEngine.GameScreens
                     IsDead();
                     break;
                 case GameState.EndGame:
+                    EndGame(_winner);
                     break;
                 case GameState.Spectating:
                     Spectate();
@@ -423,6 +427,7 @@ namespace GameEngine.GameScreens
         /// <param name="winner">The name of the game's winner</param>
         public static void EndGame(string winner)
         {
+            _winner = winner;
             _textPrompts.Clear();
             _textPrompts.Add(new TextBlock("GameOver", new List<string>()
             {
