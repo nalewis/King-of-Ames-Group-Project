@@ -303,6 +303,7 @@ namespace GameEngine.GameScreens
         private void Waiting()
         {
             _textPrompts.Clear();
+            Console.WriteLine("can yield: " + _localMonster.CanYield);
             if (MonsterController.GetById(_localPlayer).CanYield)
             {
                 _gameState = GameState.AskYield;
