@@ -11,8 +11,7 @@ namespace GameEngine.Views
     public partial class FriendsList : Form
     {
         private readonly Timer _timer;
-        private int _friendCount = 0;
-        private List<DataSet> friendInfo = new List<DataSet>();
+        private List<DataSet> _friendInfo = new List<DataSet>();
         private readonly Form _add;
         private Form _profile;
 
@@ -40,11 +39,25 @@ namespace GameEngine.Views
         {
             var playerFriends =
                 NetworkClasses.GetPlayer(User.PlayerId).Tables[0].Rows[0]["Friends"].ToString().Split(',');
-            if (playerFriends[0] == "0") return;
-            var datasets = playerFriends.Select(friend => NetworkClasses.GetPlayer(int.Parse(friend))).ToList();
-            if (datasets.Count != _friendCount)
+            if (playerFriends[0] == "0")
             {
-                _friendCount = datasets.Count;
+                if (BoxOFriends.Items.Count == 1)
+                {
+                    BoxOFriends.Items.Clear();
+                    delFriend.Enabled = false;
+                    addToolStripMenuItem.Visible = true;
+                    viewProfileToolStripMenuItem.Visible = false;
+                    deleteToolStripMenuItem.Visible = false;
+                    joinGameToolStripMenuItem.Visible = false;
+                    spectateToolStripMenuItem.Visible = false;
+                    _friendInfo = new List<DataSet>();
+                }
+                return;
+            }
+            var datasets = playerFriends.Select(friend => NetworkClasses.GetPlayer(int.Parse(friend))).ToList();
+            if (datasets.Count != _friendInfo.Count)
+            {
+                Console.WriteLine("Friend add/deleted");
                 BoxOFriends.Items.Clear();
                 foreach (var player in datasets)
                 {
@@ -52,13 +65,13 @@ namespace GameEngine.Views
                     listItem.SubItems.Add(player.Tables[0].Rows[0]["Online"].ToString());
                     BoxOFriends.Items.Add(listItem);
                 }
-                friendInfo = datasets;
+                _friendInfo = datasets;
                 return;
             }
             for (var i = 0; i < datasets.Count; i++)
             {
                 if (datasets[i].Tables[0].Rows[0]["Online"].ToString() ==
-                    friendInfo[i].Tables[0].Rows[0]["Online"].ToString()) continue;
+                    _friendInfo[i].Tables[0].Rows[0]["Online"].ToString()) continue;
                 BoxOFriends.Items.Clear();
                 foreach (var player in datasets)
                 {
@@ -66,7 +79,12 @@ namespace GameEngine.Views
                     listItem.SubItems.Add(player.Tables[0].Rows[0]["Online"].ToString());
                     BoxOFriends.Items.Add(listItem);
                 }
-                friendInfo = datasets;
+                _friendInfo = datasets;
+                if (BoxOFriends.Items.Count == 10)
+                {
+                    addToolStripMenuItem.Visible = false;
+                    addFriend.Enabled = false;
+                }
                 return;
             }
         }
@@ -95,7 +113,7 @@ namespace GameEngine.Views
 
         private void BoxOFriends_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (BoxOFriends.SelectedItems.Count == 1)
+            if (BoxOFriends.SelectedItems.Count == 1 && BoxOFriends.Items.Count > 0)
             {
                 delFriend.Enabled = true;
                 deleteToolStripMenuItem.Visible = true;
@@ -109,7 +127,7 @@ namespace GameEngine.Views
             else
             {
                 delFriend.Enabled = false;
-                addToolStripMenuItem.Visible = true;
+                if(BoxOFriends.Items.Count < 10) addToolStripMenuItem.Visible = true;
                 viewProfileToolStripMenuItem.Visible = false;
                 deleteToolStripMenuItem.Visible = false;
                 joinGameToolStripMenuItem.Visible = false;
@@ -128,6 +146,7 @@ namespace GameEngine.Views
 
         private void FriendsList_KeyPressed(object sender, KeyPressEventArgs e)
         {
+            if (e.KeyChar != 'f') return;
             _add.Hide();
             Hide();
         }

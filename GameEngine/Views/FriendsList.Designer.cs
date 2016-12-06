@@ -39,6 +39,7 @@ namespace GameEngine.Views
             this.status = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cm1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.joinGameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.spectateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,7 +50,6 @@ namespace GameEngine.Views
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
-            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.cm1.SuspendLayout();
             this.SuspendLayout();
@@ -112,33 +112,40 @@ namespace GameEngine.Views
             this.spectateToolStripMenuItem});
             this.cm1.Name = "cm1";
             this.cm1.ShowImageMargin = false;
-            this.cm1.Size = new System.Drawing.Size(128, 136);
+            this.cm1.Size = new System.Drawing.Size(112, 114);
             // 
             // addToolStripMenuItem
             // 
             this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-            this.addToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.addToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.addToolStripMenuItem.Text = "Add Friend";
             this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
+            // 
+            // viewProfileToolStripMenuItem
+            // 
+            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.viewProfileToolStripMenuItem.Text = "View Profile";
+            this.viewProfileToolStripMenuItem.Click += new System.EventHandler(this.viewProfileToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // joinGameToolStripMenuItem
             // 
             this.joinGameToolStripMenuItem.Name = "joinGameToolStripMenuItem";
-            this.joinGameToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.joinGameToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.joinGameToolStripMenuItem.Text = "Join Game";
             this.joinGameToolStripMenuItem.Click += new System.EventHandler(this.joinGameToolStripMenuItem_Click);
             // 
             // spectateToolStripMenuItem
             // 
             this.spectateToolStripMenuItem.Name = "spectateToolStripMenuItem";
-            this.spectateToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.spectateToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.spectateToolStripMenuItem.Text = "Spectate";
             this.spectateToolStripMenuItem.Click += new System.EventHandler(this.spectateToolStripMenuItem_Click);
             // 
@@ -199,13 +206,6 @@ namespace GameEngine.Views
             // ContentPanel
             // 
             this.ContentPanel.Size = new System.Drawing.Size(150, 150);
-            // 
-            // viewProfileToolStripMenuItem
-            // 
-            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
-            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
-            this.viewProfileToolStripMenuItem.Text = "View Profile";
-            this.viewProfileToolStripMenuItem.Click += new EventHandler(viewProfileToolStripMenuItem_Click);
             // 
             // FriendsList
             // 
