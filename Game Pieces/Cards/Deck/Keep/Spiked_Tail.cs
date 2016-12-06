@@ -6,6 +6,7 @@ namespace GamePieces.Cards.Deck.Keep
     {
         public override int Cost => 5;
         public override bool OncePerTurn => true;
+        public string Descrip = "Deal 1 extra damage when attacking";
 
         protected override bool MonsterShouldUpdate(Monster monster)
         {
@@ -15,6 +16,10 @@ namespace GamePieces.Cards.Deck.Keep
         protected override void UpdateLogic(Monster monster)
         {
             monster.AttackPoints += 1;
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
 
     }

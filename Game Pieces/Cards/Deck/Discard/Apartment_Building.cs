@@ -6,6 +6,7 @@ namespace GamePieces.Cards.Deck.Discard
     {
         public override int Cost => 5;
         public override CardType CardType => CardType.Discard;
+        public string Descrip = "+3 VP";
 
         /// <summary>
         /// Plus 3 victory points
@@ -14,6 +15,11 @@ namespace GamePieces.Cards.Deck.Discard
         protected override void UpdateLogic(Monster monster)
         {
             monster.VictoryPoints += 3;
+        }
+
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

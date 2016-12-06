@@ -6,6 +6,7 @@ namespace GamePieces.Cards.Deck.Discard
     {
         public override int Cost => 8;
         public override CardType CardType => CardType.Discard;
+        public string Descrip = "+9 energy";
 
         /// <summary>
         /// Gain 9 energy
@@ -14,6 +15,10 @@ namespace GamePieces.Cards.Deck.Discard
         protected override void UpdateLogic(Monster monster)
         {
            monster.Energy += 9;
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

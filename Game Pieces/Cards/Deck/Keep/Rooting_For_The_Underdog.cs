@@ -7,6 +7,7 @@ namespace GamePieces.Cards.Deck.Keep
     public class Rooting_For_The_Underdog : Card
     {
         public override bool OncePerTurn => true;
+        public string Descrip = "Gain 1 VP if you have lowest VP at end of turn";
 
         protected override bool MonsterShouldUpdate(Monster monster)
         {
@@ -19,6 +20,10 @@ namespace GamePieces.Cards.Deck.Keep
         protected override void UpdateLogic(Monster monster)
         {
             monster.VictoryPoints += 1;
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

@@ -8,6 +8,7 @@ namespace GamePieces.Cards.Deck.Discard
     {
         public override int Cost => 6;
         public override CardType CardType => CardType.Discard;
+        public string Descrip = "+2 VP & 3 damage to all other monsters";
 
         /// <summary>
         /// Plus 2 victory oints
@@ -20,6 +21,10 @@ namespace GamePieces.Cards.Deck.Discard
             Game.Monsters.Where(enemy => !enemy.Equals(monster))
                 .ToList()
                 .ForEach(enemy => enemy.Health -= 3);
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

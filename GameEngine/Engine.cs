@@ -197,6 +197,7 @@ namespace GameEngine {
             AddFont("Fonts\\BigFont", "BigFont");
             AddFont("Fonts\\MenuFont", "MenuFont");
             AddFont("Fonts\\Update", "updateFont");
+            AddFont("Fonts\\DescripFont", "DescripFont");
         }
 
         private void LoadSounds()

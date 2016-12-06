@@ -8,6 +8,7 @@ namespace GamePieces.Cards
 {
     public abstract class Card : Observer<Monster>
     {
+
         /// <summary>
         /// Gets all of the cards in the current namespace and shuffle them
         /// </summary>
@@ -74,5 +75,7 @@ namespace GamePieces.Cards
         {
             Activated = false;
         }
+
+        public abstract string GetDescrip();
     }
 }

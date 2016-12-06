@@ -6,6 +6,7 @@ namespace GamePieces.Cards.Deck.Keep
     {
         public override int Cost => 5;
         public override bool OncePerTurn => true;
+        public string Descrip = "No damage taken when yielding";
 
         protected override bool MonsterShouldUpdate(Monster monster)
         {
@@ -15,6 +16,11 @@ namespace GamePieces.Cards.Deck.Keep
         protected override void UpdateLogic(Monster monster)
         {
             monster.Health = monster.PreviousHealth;
+        }
+
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

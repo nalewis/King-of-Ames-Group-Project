@@ -7,6 +7,7 @@ namespace GamePieces.Cards.Deck.Keep
         public override CardType CardType => CardType.Stats;
         public override int Cost => 5;
         private bool canUse = true;
+        public string Descrip = "Max rolls increased by 1";
 
         protected override bool MonsterShouldUpdate(Monster monster)
         {
@@ -23,6 +24,10 @@ namespace GamePieces.Cards.Deck.Keep
         public override void UndoEffect(Monster monster)
         {
             monster.MaximumRolls -= 1;
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

@@ -6,6 +6,7 @@ namespace GamePieces.Cards.Deck.Keep
     {
         public override int Cost => 7;
         public override bool OncePerTurn => true;
+        public string Descrip = "If eliminated discard cards and lose VPs, but heal 10 health";
 
         protected override bool MonsterShouldUpdate(Monster monster)
         {
@@ -18,6 +19,11 @@ namespace GamePieces.Cards.Deck.Keep
                 monster.RemoveCard(monster.Cards[0]);
             monster.VictoryPoints = 0;
             monster.Health = 10;
+        }
+
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

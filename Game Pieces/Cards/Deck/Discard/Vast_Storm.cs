@@ -8,6 +8,7 @@ namespace GamePieces.Cards.Deck.Discard
     {
         public override int Cost => 6;
         public override CardType CardType => CardType.Discard;
+        public string Descrip = "+2 VP & other monsters lose 1 energy for every 2 they have";
 
         /// <summary>
         /// Plus 2 victory points
@@ -20,6 +21,10 @@ namespace GamePieces.Cards.Deck.Discard
             Game.Monsters.Where(enemy => !enemy.Equals(monster))
                 .ToList()
                 .ForEach(enemy => enemy.Energy -= enemy.Energy / 2);
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

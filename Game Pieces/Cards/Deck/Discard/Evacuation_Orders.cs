@@ -9,6 +9,7 @@ namespace GamePieces.Cards.Deck.Discard
         public override int Cost => 7;
         public override CardType CardType => CardType.Discard;
         public override int CardsPerDeck => 2;
+        public string Descrip = "All other monsters lose 5 VP";
 
         /// <summary>
         /// All other monsters lose 5 victory points
@@ -19,6 +20,10 @@ namespace GamePieces.Cards.Deck.Discard
             Game.Monsters.Where(enemy => !enemy.Equals(monster))
                 .ToList()
                 .ForEach(enemy => enemy.VictoryPoints -= 5);
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

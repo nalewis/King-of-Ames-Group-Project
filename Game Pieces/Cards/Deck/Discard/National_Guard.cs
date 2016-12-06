@@ -5,6 +5,7 @@ namespace GamePieces.Cards.Deck.Discard
     public class National_Guard : Card
     {
         public override CardType CardType => CardType.Discard;
+        public string Descrip = "+2 VP & take 2 damage";
 
         /// <summary>
         /// Plus 2 victory points
@@ -15,6 +16,10 @@ namespace GamePieces.Cards.Deck.Discard
         {
             monster.VictoryPoints += 2;
             monster.Health -= 2;
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

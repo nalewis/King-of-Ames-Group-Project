@@ -9,6 +9,7 @@ namespace GamePieces.Cards.Deck.Keep
         public override int Cost => 7;
         public override int CardsPerDeck => 2;
         private bool _canUse = true;
+        public string Descrip = "Get 1 extra die";
 
         protected override bool MonsterShouldUpdate(Monster monster)
         {
@@ -26,6 +27,10 @@ namespace GamePieces.Cards.Deck.Keep
         {
             monster.Dice -= 1;
             _canUse = true;
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }

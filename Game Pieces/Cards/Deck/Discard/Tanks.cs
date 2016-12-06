@@ -6,6 +6,7 @@ namespace GamePieces.Cards.Deck.Discard
     {
         public override int Cost => 4;
         public override CardType CardType => CardType.Discard;
+        public string Descrip = "+4 VP & take 3 damage";
 
         /// <summary>
         /// Plus 4 victory points
@@ -16,6 +17,10 @@ namespace GamePieces.Cards.Deck.Discard
         {
             monster.VictoryPoints += 4;
             monster.Health -= 3;
+        }
+        public override string GetDescrip()
+        {
+            return Descrip;
         }
     }
 }
