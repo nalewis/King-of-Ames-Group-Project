@@ -9,8 +9,9 @@ using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
 using GamePieces.Session;
-using Microsoft.Xna.Framework.Graphics; 
+using Microsoft.Xna.Framework.Graphics;
 using GamePieces.Dice;
+using GamePieces.Cards;
 
 namespace GameEngine.GameScreens
 {
@@ -34,6 +35,7 @@ namespace GameEngine.GameScreens
         private static RollButton _rollButton;
         private static string _winner = null;
         public static bool gameOver = false;
+        public PlayerCardList playerCardList;
 
         /// <summary>
         /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
@@ -57,6 +59,7 @@ namespace GameEngine.GameScreens
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             //RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _rollButton = new RollButton();
+            playerCardList = new PlayerCardList();
         }
 
         /// <summary>
@@ -106,6 +109,26 @@ namespace GameEngine.GameScreens
                 _gameState = GameState.IsDead;
             }
 
+            var mouseIsOver = false;
+            foreach (var playerBlock in _pBlocks)
+            {
+                if (playerBlock.MouseOver(Engine.InputManager.FreshMouseState))
+                {
+                    mouseIsOver = true;
+                    playerCardList.BoxPosition = new Vector2(Engine.InputManager.FreshMouseState.X, Engine.InputManager.FreshMouseState.Y);
+                    playerCardList._stringList = CardListToString(playerBlock.Monster.Cards);
+                }
+            }
+            if (mouseIsOver)
+            {
+                playerCardList.Hidden = false;
+            }
+            else
+            {
+                playerCardList.Hidden = true;
+            }
+            
+
             switch (_gameState)
             {
                 case GameState.StartTurn:
@@ -149,6 +172,16 @@ namespace GameEngine.GameScreens
             }
 
             base.Update(gameTime);
+        }
+
+        private List<string> CardListToString(List<Card> cards)
+        {
+            List<string> toReturn = new List<string>();
+            foreach (var card in cards)
+            {
+                toReturn.Add(card.Name);
+            }
+            return toReturn;
         }
 
         /// <summary>
@@ -555,6 +588,11 @@ namespace GameEngine.GameScreens
             if (!_rollButton.Hidden)
             {
                 _rollButton.Draw(Engine.SpriteBatch);
+            }
+
+            if (!playerCardList.Hidden)
+            {
+                playerCardList.Draw(Engine.SpriteBatch);
             }
 
             foreach (var tp in _textPrompts)

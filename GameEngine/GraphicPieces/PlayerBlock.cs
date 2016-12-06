@@ -15,7 +15,7 @@ namespace GameEngine.GraphicPieces
 
         public Vector2 DisplayPosition { get; set; }
         private Texture2D PlayerPortrait { get; }
-        private Monster Monster { get; }
+        public Monster Monster { get; }
         private string PlayerName { get; }
         private readonly string _positionString;
 
