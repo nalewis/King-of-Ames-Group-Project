@@ -67,9 +67,9 @@ namespace GameEngine.ServerClasses
             outMsg.Write((byte) PacketTypes.Closed);
             _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
             //Shuts down server and deletes it from the database
+            _shouldStop = true;
             _server.Shutdown("Closed");
             NetworkClasses.DeleteServer(User.PlayerId);
-            _shouldStop = true;
         }
 
         /// <summary>
