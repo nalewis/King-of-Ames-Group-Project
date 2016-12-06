@@ -237,9 +237,7 @@ namespace GamePieces.Monsters
             if (!CanYield) return;
             State = State.Yielding;
             Board.LeaveTokyo(this);
-            Console.WriteLine("Leaving: " + this.PlayerId);
             Board.MoveIntoTokyo(Game.Current);
-            Console.WriteLine("arriving: " + Game.Current.PlayerId);
             CanYield = false;
         }
 

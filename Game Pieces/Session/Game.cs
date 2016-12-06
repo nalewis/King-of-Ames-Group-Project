@@ -115,7 +115,6 @@ namespace GamePieces.Session
         public static void EndTurn()
         {
             Current.EndTurn();
-            Console.WriteLine("Current: " + Current.PlayerId + " next: " + Current.Next.PlayerId);
             Current = Current.Next;
             if(Winner == null)
             {
