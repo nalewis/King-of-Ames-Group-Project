@@ -67,7 +67,10 @@ namespace GameEngine.GameScreens
         /// <param name="gameTime">Parameter for the game's GameTime</param>
         public override void Update(GameTime gameTime)
         {
-            
+            if (Engine.ExitGame)
+            {
+                ScreenManager.RemoveScreen(this);
+            }
             if (gameOver)
             {
                 EndGame(_winner);
