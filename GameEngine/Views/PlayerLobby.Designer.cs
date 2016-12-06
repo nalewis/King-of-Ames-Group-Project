@@ -70,7 +70,7 @@ namespace GameEngine.Views
             this.playerList.View = System.Windows.Forms.View.Details;
             this.playerList.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
             this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
-            //this.playerList.ContextMenuStrip = cm1;
+            this.playerList.ContextMenuStrip = cm1;
             // 
             // playerName
             // 
