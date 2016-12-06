@@ -53,7 +53,12 @@ namespace GameEngine.GraphicPieces
             }
         }
 
-        /// <summary>
+        public void setColor(Color color)
+        {
+            _color = color;
+        }
+
+    /// <summary>
         /// Determines if the mouse is hovering over the die.
         /// </summary>
         /// <param name="mouse">Current state of the mouse.</param>

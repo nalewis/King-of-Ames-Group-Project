@@ -238,6 +238,8 @@ namespace GameEngine.GameScreens
             RollingDice.Hidden = false;
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
+                _rollButton.Hidden = true;
+                _textPrompts.Clear();
                 Client.SendMessage("Rolled: " + GetDiceText(DiceController.GetDice()));
                 Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
@@ -266,6 +268,17 @@ namespace GameEngine.GameScreens
                     {
                         ds.Click();
                     }
+                }
+            }
+            if (Engine.InputManager.FreshMouseState.LeftButton == ButtonState.Pressed)
+            {
+                if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState))
+                {
+                    _rollButton.setColor(Microsoft.Xna.Framework.Color.Blue);
+                }
+                else
+                {
+                    _rollButton.setColor(Microsoft.Xna.Framework.Color.DarkRed);
                 }
             }
 
