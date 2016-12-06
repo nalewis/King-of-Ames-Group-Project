@@ -22,7 +22,7 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
-        private static readonly Thread GameLoop = new Thread(Program.Run);
+        private static Thread GameLoop = new Thread(Program.Run);
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
         public static bool CanContinue = true;
@@ -261,6 +261,7 @@ namespace GameEngine.ServerClasses
             Conn = "";
             isSpectator = false;
             NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
+            GameLoop = new Thread(Program.Run);
             if (GameLoop.IsAlive) { GameLoop.Abort(); }
         }
     }
