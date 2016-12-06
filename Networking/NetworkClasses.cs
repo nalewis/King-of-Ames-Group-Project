@@ -68,13 +68,13 @@ namespace Networking
             return ds.Tables[0].Rows[0][value].ToString();
         }
 
-        public static string GetUserStat(string stat)
+        public static string GetUserStat(string username, string stat)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM User_Stats WHERE Player_ID = @user";
-            command.Parameters.AddWithValue("@user", User.PlayerId);
+            command.Parameters.AddWithValue("@user", GetPlayer(username).Tables[0].Rows[0]["Player_ID"]);
             var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);

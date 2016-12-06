@@ -10,11 +10,16 @@ namespace GameEngine.Views
         private readonly Timer _timer;
         private string[] _old;
         private readonly Form _add;
+        private Form _profile;
 
         public FriendsList()
         {
             InitializeComponent();
             delFriend.Enabled = false;
+            deleteToolStripMenuItem.Visible = false;
+            joinGameToolStripMenuItem.Visible = false;
+            spectateToolStripMenuItem.Visible = false;
+            viewProfileToolStripMenuItem.Visible = false;
             _add = new AddFriendForm();
             GetFriends();
             _timer = new Timer {Interval = 2000};
@@ -90,18 +95,22 @@ namespace GameEngine.Views
             if (BoxOFriends.SelectedItems.Count == 1)
             {
                 delFriend.Enabled = true;
-                deleteToolStripMenuItem.Enabled = true;
+                deleteToolStripMenuItem.Visible = true;
+                addToolStripMenuItem.Visible = false;
+                viewProfileToolStripMenuItem.Visible = true;
                 if (BoxOFriends.SelectedItems[0].SubItems[1].Text == "In Lobby")
-                    joinGameToolStripMenuItem.Enabled = true;
+                    joinGameToolStripMenuItem.Visible = true;
                 if (BoxOFriends.SelectedItems[0].SubItems[1].Text == "In Game")
-                    spectateToolStripMenuItem.Enabled = true;
+                    spectateToolStripMenuItem.Visible = true;
             }
             else
             {
                 delFriend.Enabled = false;
-                deleteToolStripMenuItem.Enabled = false;
-                joinGameToolStripMenuItem.Enabled = false;
-                spectateToolStripMenuItem.Enabled = false;
+                addToolStripMenuItem.Visible = true;
+                viewProfileToolStripMenuItem.Visible = false;
+                deleteToolStripMenuItem.Visible = false;
+                joinGameToolStripMenuItem.Visible = false;
+                spectateToolStripMenuItem.Visible = false;
             }
         }
 
@@ -159,6 +168,12 @@ namespace GameEngine.Views
             Client.Connect(false);
             NetworkClasses.UpdateUserValue("User_List", "Online", "Spectating", User.PlayerId);
             Dispose();
+        }
+
+        private void viewProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _profile = new Profile(BoxOFriends.SelectedItems[0].Text);
+            _profile.Show();
         }
     }
 }
