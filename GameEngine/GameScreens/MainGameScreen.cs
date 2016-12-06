@@ -112,10 +112,10 @@ namespace GameEngine.GameScreens
                     Waiting();
                     break;
                 case GameState.BuyCardPrompt:
-                    AskBuyCards();
+                   // AskBuyCards();
                     break;
                 case GameState.BuyingCards:
-                    BuySomeCards();
+                 //   BuySomeCards();
                     break;
                 case GameState.EndingTurn:
                     EndTurn();
@@ -234,7 +234,9 @@ namespace GameEngine.GameScreens
                 Client.SendMessage("Rolled: " + GetDiceText(DiceController.GetDice()));
                 Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
-                _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyCardPrompt : GameState.EndingTurn;
+                _gameState = GameState.EndingTurn;
+                
+                //_gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyCardPrompt : GameState.EndingTurn;
                 return;
             }
 
@@ -289,18 +291,9 @@ namespace GameEngine.GameScreens
 
             _firstPlay = true;
 
-            if (waitForYield)
-            {
-                Client.SendActionPacket(GameStateController.EndTurn());
-                waitForYield = false;
-            }
-
-            if (!(GetMonsterList().Any(mon => mon.CanYield)))
-            {
-                _gameState = GameState.Waiting;
-                Client.SendActionPacket(GameStateController.StartTurn());
-                waitForYield = true;
-            }
+            _gameState = GameState.Waiting;
+            Client.SendActionPacket(GameStateController.EndTurn());
+            Client.SendActionPacket(GameStateController.StartTurn());
         }
 
         /// <summary>
@@ -361,6 +354,7 @@ namespace GameEngine.GameScreens
             }
         }
 
+        /*
         /// <summary>
         /// Function for prompting to open the buyCards() screen and buy some cards.
         /// Only asks if they player has enough energy to purchase any of the cards.
@@ -414,6 +408,7 @@ namespace GameEngine.GameScreens
             CardScreenChoice = -1; //reset choice for next time.
             _gameState = GameState.EndingTurn;
         }
+        */
 
         /// <summary>
         /// Function for when the game comes to completion. Clears
