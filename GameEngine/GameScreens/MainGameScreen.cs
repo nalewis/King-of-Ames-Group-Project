@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
-using System.Xml;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
@@ -220,7 +219,7 @@ namespace GameEngine.GameScreens
             {   
                 _gameState = GameState.Rolling;
                 Client.SendActionPacket(GameStateController.Roll());
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(100);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
                 RollingDice.AddDice(DiceController.GetDice());

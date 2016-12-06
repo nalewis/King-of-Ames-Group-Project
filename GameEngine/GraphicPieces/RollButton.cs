@@ -40,7 +40,7 @@ namespace GameEngine.GraphicPieces
             {
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    _color = Color.Maroon;
+                    _color = Color.Blue;
                 }
                 else
                 {
