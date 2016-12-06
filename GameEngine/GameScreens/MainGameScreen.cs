@@ -438,12 +438,10 @@ namespace GameEngine.GameScreens
             _gameState = GameState.EndGame;
             if (Engine.InputManager.KeyPressed(Keys.Escape))
             {
-                Engine.ExitGame = true;
-                //TODO set games won if applicable, end host server
-                Client.ClientStop();
                 Views.MainMenuForm form = new Views.MainMenuForm();
                 form.Show();
-
+                Engine.ExitGame = true;
+                //TODO set games won if applicable, end host server
             }
         }
 
