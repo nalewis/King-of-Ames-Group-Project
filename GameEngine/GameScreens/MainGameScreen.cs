@@ -280,6 +280,7 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void EndTurn()
         {
+            if(GetMonsterList().Any(mon => mon.CanYield)) { return; }
             _textPrompts.Clear();
             _diceRow.Clear();
             _diceRow.Hidden = true;
@@ -303,9 +304,9 @@ namespace GameEngine.GameScreens
         private void Waiting()
         {
             _textPrompts.Clear();
-            Console.WriteLine("can yield: " + _localMonster.CanYield);
             if (MonsterController.GetById(_localPlayer).CanYield)
             {
+                Console.WriteLine("can yield: " + _localMonster.CanYield);
                 _gameState = GameState.AskYield;
                 AskYield();
             }
