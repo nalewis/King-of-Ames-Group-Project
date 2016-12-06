@@ -57,7 +57,6 @@ namespace GameEngine.Views
             var datasets = playerFriends.Select(friend => NetworkClasses.GetPlayer(int.Parse(friend))).ToList();
             if (datasets.Count != _friendInfo.Count)
             {
-                Console.WriteLine("Friend add/deleted");
                 BoxOFriends.Items.Clear();
                 foreach (var player in datasets)
                 {
