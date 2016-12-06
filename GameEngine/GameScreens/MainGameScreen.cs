@@ -270,17 +270,6 @@ namespace GameEngine.GameScreens
                     }
                 }
             }
-            if (Engine.InputManager.FreshMouseState.LeftButton == ButtonState.Pressed)
-            {
-                if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState))
-                {
-                    _rollButton.setColor(Microsoft.Xna.Framework.Color.Blue);
-                }
-                else
-                {
-                    _rollButton.setColor(Microsoft.Xna.Framework.Color.DarkRed);
-                }
-            }
 
             if (_textPrompts.Count > 0)
             {
@@ -503,6 +492,7 @@ namespace GameEngine.GameScreens
             foreach (var pb in _pBlocks)
                 pb.Update();
             ServerUpdateBox.UpdateList();
+            _rollButton.Update();
         }
 
         /// <summary>
