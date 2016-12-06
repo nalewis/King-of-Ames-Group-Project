@@ -98,6 +98,7 @@ namespace GameEngine.GameScreens
             });
             }
 
+            System.Threading.Thread.Sleep(100);
             if (!(MonsterController.IsDead(_localPlayer)))    //If a player isn't dead check for their startOfTurn
             {
                 if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
