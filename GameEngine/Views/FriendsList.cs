@@ -187,7 +187,7 @@ namespace GameEngine.Views
             Client.NetClient.Start();
             Client.Connect(false);
             NetworkClasses.UpdateUserValue("User_List", "Online", "Spectating", User.PlayerId);
-            Dispose();
+            //Dispose();
         }
 
         private void viewProfileToolStripMenuItem_Click(object sender, EventArgs e)
