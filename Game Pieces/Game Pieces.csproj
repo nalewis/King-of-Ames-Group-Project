@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Cards\Card.cs" />
     <Compile Include="Cards\CardType.cs" />
+    <Compile Include="Cards\DataPacketHelper.cs" />
     <Compile Include="Cards\Deck\Discard\Apartment_Building.cs" />
     <Compile Include="Cards\Deck\Discard\Commuter_Train.cs" />
     <Compile Include="Cards\Deck\Discard\Corner_Store.cs" />

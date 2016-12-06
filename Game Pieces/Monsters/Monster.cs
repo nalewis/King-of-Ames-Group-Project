@@ -315,7 +315,7 @@ namespace GamePieces.Monsters
         /// <returns>Data Packet</returns>
         public MonsterDataPacket GetPacket()
         {
-            return new MonsterDataPacket(PlayerId, Name, Location, Cards.ToArray(), NumberOfCards,
+            return new MonsterDataPacket(PlayerId, Name, Location, Cards.Select(DataPacketHelper.CreateDataPacket).ToArray(), NumberOfCards,
                 PreviousNumberOfCards, Energy, PreviousEnergy, VictoryPoints, PreviousVictoryPoints, Health,
                 PreviousHealth, MaximumHealth, AttackPoints, Dice, MaximumRolls, RemainingRolls, CanYield, State);
         }
@@ -329,7 +329,7 @@ namespace GamePieces.Monsters
             PlayerId = packet.PlayerId;
             Name = packet.Name;
             Location = packet.Location;
-            Cards = packet.Cards.ToList();
+            Cards = packet.Cards.Select(DataPacketHelper.AcceptDataPacket).ToList();
             NumberOfCards = packet.NumberOfCards;
             PreviousNumberOfCards = packet.PreviousNumberOfCards;
             Energy = packet.Energy;

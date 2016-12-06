@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
+using System.Xml;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
@@ -90,7 +91,7 @@ namespace GameEngine.GameScreens
 
             if (!MonsterController.IsDead(_localPlayer))    //If a player isn't dead check for their startOfTurn
             {
-                if (_gameState != GameState.Spectating && Client.IsStart)
+                if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
                     if(MonsterController.CanYield(_localPlayer) == false)
                         _gameState = GameState.StartTurn;
             }
@@ -203,8 +204,11 @@ namespace GameEngine.GameScreens
                 _firstPlay = false;
                 Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
+            var cardsOwned = "";
+            if (MonsterController.Cards(_localPlayer).Count > 0) cardsOwned = MonsterController.Cards(_localPlayer)[0].Name; //TODO only displays first cards owned, need to show all if this works
             _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
-                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls
+                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls,
+                "Cards: " + cardsOwned
                 }));
 
             if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState) && Engine.InputManager.LeftClick())
@@ -217,8 +221,6 @@ namespace GameEngine.GameScreens
                 RollingDice.AddDice(DiceController.GetDice());
                 RollingDice.Hidden = false;
             }
-
-            Client.IsStart = false;
         }
 
         /// <summary>
@@ -266,8 +268,11 @@ namespace GameEngine.GameScreens
                 _textPrompts.Remove(_textPrompts[_textPrompts.Count - 1]);
             }
 
+            var cardsOwned = "";
+            if (MonsterController.Cards(_localPlayer).Count > 0) cardsOwned = MonsterController.Cards(_localPlayer)[0].Name; //TODO only displays first cards owned, need to show all if this works
             _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
-                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls
+                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls,
+                "Cards: " + cardsOwned
                 }));
         }
 
@@ -277,6 +282,9 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void EndTurn()
         {
+            System.Threading.Thread.Sleep(100);
+            var data = GetMonsterList();
+            if (data.Any(mon => mon.CanYield)) { return; }
             _textPrompts.Clear();
             _diceRow.Clear();
             _diceRow.Hidden = true;
@@ -288,12 +296,9 @@ namespace GameEngine.GameScreens
 
             _firstPlay = true;
 
-            if (!(GetMonsterList().Any(mon => mon.CanYield)))
-            {
-                _gameState = GameState.Waiting;
-                Client.SendActionPacket(GameStateController.EndTurn());
-                Client.SendActionPacket(GameStateController.StartTurn());
-            }
+            _gameState = GameState.Waiting;
+            Client.SendActionPacket(GameStateController.EndTurn());
+            Client.SendActionPacket(GameStateController.StartTurn());
         }
 
         /// <summary>
@@ -354,6 +359,7 @@ namespace GameEngine.GameScreens
             }
         }
 
+        
         /// <summary>
         /// Function for prompting to open the buyCards() screen and buy some cards.
         /// Only asks if they player has enough energy to purchase any of the cards.
@@ -372,6 +378,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
+                _textPrompts.Clear();
                 _gameState = GameState.BuyingCards;
                 return;
             }
@@ -407,6 +414,7 @@ namespace GameEngine.GameScreens
             CardScreenChoice = -1; //reset choice for next time.
             _gameState = GameState.EndingTurn;
         }
+        
 
         /// <summary>
         /// Function for when the game comes to completion. Clears

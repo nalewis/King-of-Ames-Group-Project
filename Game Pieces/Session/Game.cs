@@ -88,18 +88,11 @@ namespace GamePieces.Session
 
         public static void BuyCard(int index)
         {
-            if (Host)
-            {
-                if (index < 0 || index >= CardsForSale.Count) return;
-                var card = CardsForSale[index];
-                CardsForSale.RemoveAt(index);
-                Current.BuyCard(card);
-                if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
-            }
-            else
-            {
-                //TODO ASK HOST TO BUY CARD
-            }
+            if (index < 0 || index >= CardsForSale.Count) return;
+            var card = CardsForSale[index];
+            CardsForSale.RemoveAt(index);
+            Current.BuyCard(card);
+            if (Deck.Count != 0) CardsForSale.Add(Deck.Pop());
         }
 
         public static void SellCard(Monster monster, Card card)
