@@ -10,8 +10,8 @@ namespace GameEngine.GraphicPieces
 {
     class PlayerCardList
     {
-        private const int width = 500;
-        private const int height = 500;
+        private const int width = 250;
+        private const int height = 250;
         private readonly SpriteFont _font;
         private readonly Texture2D _background;
         public Vector2 BoxPosition;
@@ -43,9 +43,19 @@ namespace GameEngine.GraphicPieces
         {
             sB.Draw(_background, BoxPosition, Color.Black);
             var textPos = BoxPosition;
+            int i = 0;
             foreach (var line in _stringList)
             {
-                sB.DrawString(_font, line, textPos, Color.White);
+                if (i == 0)
+                {
+                    sB.DrawString(_font, line, textPos, Color.White);
+                    i = 1;
+                }
+                else if (i == 1)
+                {
+                    sB.DrawString(_font, line, textPos, Color.AntiqueWhite);
+                    i = 0;
+                }
                 textPos.Y = textPos.Y + LineSpacing;
             }
         }
