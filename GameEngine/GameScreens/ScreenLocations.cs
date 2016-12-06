@@ -26,6 +26,14 @@ namespace GameEngine.GameScreens
             if (_screenWidth == Engine.GraffixMngr.GraphicsDevice.Viewport.Width) return;
             _screenWidth = Engine.GraffixMngr.GraphicsDevice.Viewport.Width;
             _screenHeight = Engine.GraffixMngr.GraphicsDevice.Viewport.Height;
+            if (_screenHeight == 720)
+            {
+                MainGameScreen.BackgroundImage = Engine.TextureList["background720"];
+            }
+            else
+            {
+                MainGameScreen.BackgroundImage = Engine.TextureList["background1080"];
+            }
             _positions = new Dictionary<string, Vector2>()
             {
                 {"TopLeft", new Vector2(DefaultPadding, DefaultPadding)},

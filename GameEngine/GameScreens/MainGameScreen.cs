@@ -30,7 +30,7 @@ namespace GameEngine.GameScreens
         private TextBlock _cardForSaleList;     //A TextBlock used specifically to show the cards currently up for sale
         public static int CardScreenChoice = -1;    //int changed based on the player's choice in the BuyCardScreen(), intialized to -1 for no choice.
         public static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
-        private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
+        public static Texture2D BackgroundImage;     //Will need to change based on resolution. Currently 720 only.
         private static RollButton _rollButton;
         private static string _winner = null;
         public static bool gameOver = false;
@@ -41,7 +41,7 @@ namespace GameEngine.GameScreens
         /// </summary>
         public MainGameScreen()
         {
-            _backgroundImage = Engine.TextureList["background720"];
+            BackgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
             _localPlayer = User.PlayerId;
@@ -158,7 +158,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
+            Engine.SpriteBatch.Draw(BackgroundImage, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
