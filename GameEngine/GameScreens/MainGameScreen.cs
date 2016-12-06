@@ -107,8 +107,11 @@ namespace GameEngine.GameScreens
                 case GameState.Waiting:
                     Waiting();
                     break;
-                case GameState.BuyingCards:
+                case GameState.BuyCardPrompt:
                     AskBuyCards();
+                    break;
+                case GameState.BuyingCards:
+                    BuySomeCards();
                     break;
                 case GameState.EndingTurn:
                     EndTurn();
@@ -221,7 +224,7 @@ namespace GameEngine.GameScreens
                 Client.SendMessage("Rolled: " + GetDiceText(DiceController.GetDice()));
                 Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
-                _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
+                _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyCardPrompt : GameState.EndingTurn;
                 return;
             }
 
@@ -334,7 +337,7 @@ namespace GameEngine.GameScreens
         /// Function for prompting to open the buyCards() screen and buy some cards.
         /// Only asks if they player has enough energy to purchase any of the cards.
         /// </summary>
-        private void AskBuyCards()
+        private static void AskBuyCards()
         {
             _textPrompts.Clear();
 
@@ -348,36 +351,40 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                ScreenManager.AddScreen(new BuyCards(MonsterController.GetById(_localPlayer).Energy));
-                if (CardScreenChoice == -1) return;
-                var cfs = CardsForSale.One;
-                switch (CardScreenChoice)
-                {
-                    case 0:
-                        cfs = CardsForSale.One;
-                        break;
-                    case 1:
-                        cfs = CardsForSale.Two;
-                        break;
-                    case 2:
-                        cfs = CardsForSale.Three;
-                        break;
-                    case -2:
-                        break;
-                    default:
-                        Console.Out.WriteLine("Something went wrong with cardScreenChoice");
-                        break;
-                }
-                if(CardScreenChoice >= 0) { Client.SendActionPacket(GameStateController.BuyCard(cfs)); }
-                CardScreenChoice = -1; //reset choice for next time.
-                _gameState = GameState.EndingTurn;
-                EndTurn();
+                _gameState = GameState.BuyingCards;
+                return;
             }
             if (Engine.InputManager.KeyPressed(Keys.N))
             {
                 _gameState = GameState.EndingTurn;
-                EndTurn();
             }
+        }
+
+        private static void BuySomeCards()
+        {
+            ScreenManager.AddScreen(new BuyCards(MonsterController.GetById(_localPlayer).Energy));
+            if (CardScreenChoice == -1) return;
+            var cfs = CardsForSale.One;
+            switch (CardScreenChoice)
+            {
+                case 0:
+                    cfs = CardsForSale.One;
+                    break;
+                case 1:
+                    cfs = CardsForSale.Two;
+                    break;
+                case 2:
+                    cfs = CardsForSale.Three;
+                    break;
+                case -2:
+                    break;
+                default:
+                    Console.Out.WriteLine("Something went wrong with cardScreenChoice");
+                    break;
+            }
+            if (CardScreenChoice >= 0) { Client.SendActionPacket(GameStateController.BuyCard(cfs)); }
+            CardScreenChoice = -1; //reset choice for next time.
+            _gameState = GameState.EndingTurn;
         }
 
         /// <summary>
@@ -608,12 +615,13 @@ namespace GameEngine.GameScreens
             StartTurn,
             Rolling,
             AskYield,
-            BuyingCards,
+            BuyCardPrompt,
             Waiting,
             EndingTurn,
             EndGame,
             IsDead,
-            Spectating
+            Spectating,
+            BuyingCards
         }
     }
 }
