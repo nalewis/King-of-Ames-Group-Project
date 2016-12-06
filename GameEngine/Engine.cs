@@ -91,7 +91,6 @@ namespace GameEngine {
             {
                 UnloadContent();
                 Client.ClientStop();
-                Program.StartUp(false);
             }
             if (ScreenWidth != GraffixMngr.GraphicsDevice.Viewport.Width)
             {

@@ -155,6 +155,9 @@ namespace GameEngine.Views
             _timer.Stop();
             _chat.Dispose();
             Dispose();
+
+            MainMenuForm waiter = new MainMenuForm();
+            waiter.Show();
         }
 
         private void char_list_SelectedIndexChanged(object sender, EventArgs e)
