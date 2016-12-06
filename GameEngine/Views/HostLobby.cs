@@ -19,7 +19,6 @@ namespace GameEngine.Views
         private readonly Timer _gameTimer;
         private readonly Form _chat = new LobbyChat();
         private Form _profile = new Profile();
-        private readonly List<DataSet> _players = new List<DataSet>();
 
         /// <summary>
         /// Initializing variables
@@ -120,47 +119,16 @@ namespace GameEngine.Views
         /// </summary>
         private void UpdateList()
         {
-            var done = true;
             //Gets server info and puts it into a dataset
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
 
-            //Checks if number of players has changed
-            var currentNumPlayers = NetworkClasses.GetNumPlayers(int.Parse(ds.Tables[0].Rows[0]["Server_ID"].ToString()));
-            if (_players.Count == currentNumPlayers && _players.Count >= 1)
-            {
-                //Check if characters have changed
-                var newPlayerChars = new List<DataSet>();
-                newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Host"].ToString())));
-                for (var i = 2; i <= 6; i++)
-                {
-                    if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString()))
-                    {
-                        newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Player_" + i].ToString())));
-                    }
-                }
-                for (var i = 0; i < newPlayerChars.Count; i++)
-                {
-                    if (_players[i].Tables[0].Rows[0]["_Character"].ToString() !=
-                        newPlayerChars[i].Tables[0].Rows[0]["_Character"].ToString())
-                    {
-                        done = false;
-                        break;
-                    }
-                }
-                if (done)
-                {
-                    return;
-                }
-            }
             //Updating
-            _players.Clear();
             playerList.Items.Clear();
             var row = ds.Tables[0].Rows[0];
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
             var _character = "";
 
             //Host
-            _players.Add(grabber);
             var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
             _character = grabber.Tables[0].Rows[0]["_Character"].ToString();
             listItem.SubItems.Add(_character);
@@ -171,7 +139,6 @@ namespace GameEngine.Views
             {
                 if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
                 grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
-                _players.Add(grabber);
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 _character = grabber.Tables[0].Rows[0]["_Character"].ToString();
                 listItem.SubItems.Add(_character);
