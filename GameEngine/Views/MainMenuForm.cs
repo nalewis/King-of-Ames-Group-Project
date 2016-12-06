@@ -10,12 +10,15 @@ namespace GameEngine.Views
     /// </summary>
     public partial class MainMenuForm : Form
     {
+        private readonly Form _friends;
+
         /// <summary>
         /// Intializing variables
         /// </summary>
         public MainMenuForm()
         {
             InitializeComponent();
+            _friends = new FriendsList();
         }
 
         /// <summary>
@@ -26,7 +29,9 @@ namespace GameEngine.Views
         public void MainMenuForm_Closing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason != CloseReason.UserClosing) return;
+            _friends.Dispose();
             Dispose();
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
             Environment.Exit(0);
         }
 
@@ -39,7 +44,9 @@ namespace GameEngine.Views
         {
             Host.ServerStart();
             NetworkClasses.UpdateUserValue("User_Stats", "Games_Hosted", "Games_Hosted + 1", User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "In Lobby", User.PlayerId);
             Form gameList = new HostGameListForm();
+            _friends.Dispose();
             gameList.Show();
             Dispose();
         }
@@ -53,6 +60,7 @@ namespace GameEngine.Views
         {
             Client.NetClient.Start();
             Form serverList = new ServerListForm();
+            _friends.Dispose();
             serverList.Show();
             Dispose();
         }
@@ -60,6 +68,7 @@ namespace GameEngine.Views
         private void OptionsButton_Click(object sender, EventArgs e)
         {
             Form option = new Options();
+            _friends.Dispose();
             option.Show();
             Dispose();
         }
@@ -67,15 +76,31 @@ namespace GameEngine.Views
         private void ProfileButton_Click(object sender, EventArgs e)
         {
             Form profile = new Profile();
+            _friends.Dispose();
             profile.Show();
             Dispose();
         }
 
         private void logoutButton_Click(object sender, EventArgs e)
         {
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
             Form login = new LoginForm();
+            _friends.Dispose();
             login.Show();
             Dispose();
+        }
+
+        private void MainMenuForm_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 'f') return;
+            if (_friends.Visible)
+            {
+                _friends.Hide();
+            }
+            else
+            {
+                _friends.Show();
+            }
         }
     }
 }

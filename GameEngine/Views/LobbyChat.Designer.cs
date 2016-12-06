@@ -52,6 +52,7 @@ namespace GameEngine.Views
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Chat";
+            this.groupBox1.KeyPress += new KeyPressEventHandler(LobbyChat_KeyPressed);
             // 
             // username
             // 
@@ -62,6 +63,7 @@ namespace GameEngine.Views
             this.username.Size = new System.Drawing.Size(55, 13);
             this.username.TabIndex = 3;
             this.username.Text = "Username";
+            this.username.KeyPress += new KeyPressEventHandler(LobbyChat_KeyPressed);
             // 
             // clearChat
             // 
@@ -72,6 +74,7 @@ namespace GameEngine.Views
             this.clearChat.Text = "Clear";
             this.clearChat.UseVisualStyleBackColor = true;
             this.clearChat.Click += new System.EventHandler(this.clearChat_Click);
+            this.clearChat.KeyPress += new KeyPressEventHandler(LobbyChat_KeyPressed);
             // 
             // sendMessage
             // 
@@ -82,7 +85,8 @@ namespace GameEngine.Views
             this.sendMessage.Text = "Send";
             this.sendMessage.UseVisualStyleBackColor = true;
             this.sendMessage.Click += new System.EventHandler(this.sendMessage_Click);
-            this.sendMessage.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wrtieMessage_KeyPressed);
+            this.sendMessage.KeyPress += new KeyPressEventHandler(wrtieMessage_KeyPressed);
+            this.sendMessage.KeyPress += new KeyPressEventHandler(LobbyChat_KeyPressed);
             // 
             // writeMessage
             // 
@@ -104,7 +108,8 @@ namespace GameEngine.Views
             this.Chat.Size = new System.Drawing.Size(248, 184);
             this.Chat.TabIndex = 0;
             this.Chat.Text = "";
-            this.Chat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wrtieMessage_KeyPressed);
+            this.Chat.KeyPress += new KeyPressEventHandler(wrtieMessage_KeyPressed);
+            this.Chat.KeyPress += new KeyPressEventHandler(LobbyChat_KeyPressed);
             // 
             // LobbyChat
             // 
@@ -115,10 +120,12 @@ namespace GameEngine.Views
             this.Controls.Add(this.groupBox1);
             this.Name = "LobbyChat";
             this.Text = "LobbyChat";
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.wrtieMessage_KeyPressed);
+            this.KeyPress += new KeyPressEventHandler(wrtieMessage_KeyPressed);
+            this.KeyPress += new KeyPressEventHandler(LobbyChat_KeyPressed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.FormClosing += new FormClosingEventHandler(LobbyChat_FormClosing);
 
         }
 
