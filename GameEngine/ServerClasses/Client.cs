@@ -125,6 +125,13 @@ namespace GameEngine.ServerClasses
                                 {
                                     var json = inc.ReadString();
                                     MonsterPackets[i] = JsonConvert.DeserializeObject<MonsterDataPacket>(json);
+                                    if (MonsterPackets[i].PlayerId == User.PlayerId)
+                                    {
+                                        if(MonsterPackets[i].State == State.StartOfTurn)
+                                        {
+                                            Client.IsStart = true;
+                                        }
+                                    }
                                 }
 
                                 MonsterController.AcceptDataPackets(MonsterPackets);
