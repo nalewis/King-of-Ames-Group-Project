@@ -50,7 +50,7 @@ namespace GameEngine.Views
             _gameTimer.Stop();
             if (!_chat.IsDisposed)_chat.Dispose();
             NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
-            MessageBox.Show("Results here", "Results", MessageBoxButtons.OK);
+            //MessageBox.Show("Results here", "Results", MessageBoxButtons.OK);
             Form form = new MainMenuForm();
             form.Show();
         }
