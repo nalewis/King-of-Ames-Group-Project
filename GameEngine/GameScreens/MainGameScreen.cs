@@ -545,8 +545,17 @@ namespace GameEngine.GameScreens
         /// <returns>List of monsters currently in the game</returns>
         private static List<Monster> GetMonsterList()
         {
-            var mon = MonsterController.GetById(_localPlayer);
-            var monList = new List<Monster> { mon };
+            var monList = new List<Monster>();
+            Monster mon;
+            if(GamePieces.Session.Game.Monsters.Any(monster => monster.PlayerId == _localPlayer))
+            {
+                mon = MonsterController.GetById(_localPlayer);
+                monList.Add(mon);
+            }
+            else
+            {
+                return monList;
+            }
             mon = mon.Next;
             while (mon != _localMonster)
             {
