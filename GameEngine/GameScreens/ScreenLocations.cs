@@ -47,7 +47,7 @@ namespace GameEngine.GameScreens
                 {"BuyCardsPrompt", new Vector2(DefaultPadding, _screenHeight - 350) },
                 {"GameOver", new Vector2(_screenWidth - 400, _screenHeight - 100) },
                 {"ServerUpdateBox", new Vector2(10, _screenHeight - 160)  },
-                {"cardList", new Vector2(_screenWidth - 350, _screenHeight - 200)  },
+                {"cardList", new Vector2(_screenWidth - 400, _screenHeight - 200)  },
                 {"RollButton", new Vector2(10, _screenHeight - 280) }
             };
         }

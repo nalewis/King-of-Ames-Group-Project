@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
+using System.Xml;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
@@ -203,8 +204,11 @@ namespace GameEngine.GameScreens
                 _firstPlay = false;
                 Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
+            var cardsOwned = "";
+            if (MonsterController.Cards(_localPlayer).Count > 0) cardsOwned = MonsterController.Cards(_localPlayer)[0].Name; //TODO only displays first cards owned, need to show all if this works
             _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
-                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls
+                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls,
+                "Cards: " + cardsOwned
                 }));
 
             if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState) && Engine.InputManager.LeftClick())
@@ -371,6 +375,7 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
+                _textPrompts.Clear();
                 _gameState = GameState.BuyingCards;
                 return;
             }
