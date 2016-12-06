@@ -167,7 +167,7 @@ namespace GameEngine.ServerClasses
                                 Console.WriteLine("Game Over!");
                                 MainGameScreen.gameOver = true;
                                 var winnerName = inc.ReadString();
-                                if (winnerName == NetworkClasses.GetUserValue("Character").ToString())
+                                if (winnerName == NetworkClasses.GetUserValue("_Character").ToString())
                                 {
                                     NetworkClasses.AddWin(User.PlayerId);
                                 }
