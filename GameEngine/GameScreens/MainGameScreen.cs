@@ -34,6 +34,7 @@ namespace GameEngine.GameScreens
         private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
         private readonly RollButton _rollButton;
         private static string _winner = null;
+        public static bool gameOver = false;
 
         /// <summary>
         /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
