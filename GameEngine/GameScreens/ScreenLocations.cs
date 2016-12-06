@@ -39,15 +39,16 @@ namespace GameEngine.GameScreens
                 {"DicePos", new Vector2(DefaultPadding, _screenHeight - LazyPaddingForDice)},
                 {"TextPrompt1", new Vector2(_screenWidth - 400, _screenHeight - 100) },
                 {"TextPrompt2", new Vector2(_screenWidth - 400, _screenHeight - 75) },
-                {"RollPrompt", new Vector2(DefaultPadding, _screenHeight - 300) },
+                {"RollPrompt", new Vector2(DefaultPadding, _screenHeight - 350) },
                 {"RollsLeft", new Vector2(_screenWidth - 400, _screenHeight - 200) },
                 {"WinText", new Vector2(_screenWidth - 400, _screenHeight - 100) },
-                {"YieldPrompt", new Vector2(_screenWidth - 400, _screenHeight - 100) },
-                {"RollingText", new Vector2(_screenWidth - 500, _screenHeight - 200) },
-                {"BuyCardsPrompt", new Vector2(_screenWidth - 400, _screenHeight - 100) },
+                {"YieldPrompt", new Vector2(DefaultPadding, _screenHeight - 350) },
+                {"RollingText", new Vector2(DefaultPadding, _screenHeight - 350) },
+                {"BuyCardsPrompt", new Vector2(DefaultPadding, _screenHeight - 350) },
                 {"GameOver", new Vector2(_screenWidth - 400, _screenHeight - 100) },
                 {"ServerUpdateBox", new Vector2(10, _screenHeight - 160)  },
-                {"cardList", new Vector2(_screenWidth - 350, _screenHeight - 200)  }
+                {"cardList", new Vector2(_screenWidth - 350, _screenHeight - 200)  },
+                {"RollButton", new Vector2(10, _screenHeight - 280) }
             };
         }
 

@@ -31,6 +31,7 @@ namespace GameEngine.GameScreens
         public static int CardScreenChoice = -1;    //int changed based on the player's choice in the BuyCardScreen(), intialized to -1 for no choice.
         private static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
         private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
+        private readonly RollButton _rollButton;
 
         /// <summary>
         /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
@@ -53,6 +54,7 @@ namespace GameEngine.GameScreens
             _pBlocks = GetPlayerBlocks();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
+            _rollButton = new RollButton();
         }
 
         /// <summary>
@@ -79,10 +81,10 @@ namespace GameEngine.GameScreens
             {
                 _cardForSaleList = new TextBlock("cardList", new List<string>()
             {
-                " Cards For Sale  -  Card Cost ",
-                GamePieces.Session.Game.CardsForSale[0].Name + " - " + GamePieces.Session.Game.CardsForSale[0].Cost,
-                GamePieces.Session.Game.CardsForSale[1].Name + " - " + GamePieces.Session.Game.CardsForSale[1].Cost,
-                GamePieces.Session.Game.CardsForSale[2].Name + " - " + GamePieces.Session.Game.CardsForSale[2].Cost
+                "Cards For Sale  -  Card Cost",
+                " " + GamePieces.Session.Game.CardsForSale[0].Name + " - " + GamePieces.Session.Game.CardsForSale[0].Cost,
+                " " + GamePieces.Session.Game.CardsForSale[1].Name + " - " + GamePieces.Session.Game.CardsForSale[1].Cost,
+                " " + GamePieces.Session.Game.CardsForSale[2].Name + " - " + GamePieces.Session.Game.CardsForSale[2].Cost
             });
             }
 
@@ -183,6 +185,10 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void StartingTurn()
         {
+            if (_rollButton.Hidden)
+            {
+                _rollButton.Hidden = false;
+            }
             _diceRow.Hidden = true;
             _diceRow.Clear();
 
@@ -197,10 +203,10 @@ namespace GameEngine.GameScreens
                 Client.SendMessage(_localMonster.Name + " is starting their turn!");
             }
             _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
-                "Your Turn! Press R to Roll."
+                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls
                 }));
 
-            if (Engine.InputManager.KeyPressed(Keys.R))
+            if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState) && Engine.InputManager.LeftClick())
             {   
                 _gameState = GameState.Rolling;
                 Client.SendActionPacket(GameStateController.Roll());
@@ -228,14 +234,21 @@ namespace GameEngine.GameScreens
                 return;
             }
 
+            /*
             if (Engine.InputManager.KeyPressed(Keys.R) && RollAnimation <= 0)
             {
                 Client.SendActionPacket(GameStateController.Roll());
                 RollAnimation = 30;
             }
+            */
 
             if (Engine.InputManager.LeftClick())
             {
+                if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState) && RollAnimation <= 0)
+                {
+                    Client.SendActionPacket(GameStateController.Roll());
+                    RollAnimation = 30;
+                }
                 foreach (var ds in _diceRow.DiceSprites)
                 {
                     if (ds.MouseOver(Engine.InputManager.FreshMouseState))
@@ -251,7 +264,7 @@ namespace GameEngine.GameScreens
             }
 
             _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
-                "Your Turn! Press R to Roll."
+                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls
                 }));
         }
 
@@ -267,6 +280,8 @@ namespace GameEngine.GameScreens
 
             RollingDice.Clear();
             RollingDice.Hidden = true;
+
+            _rollButton.Hidden = true;
 
             _firstPlay = true;
 
@@ -482,6 +497,11 @@ namespace GameEngine.GameScreens
                     }
                 }
                 
+            }
+
+            if (!_rollButton.Hidden)
+            {
+                _rollButton.Draw(Engine.SpriteBatch);
             }
 
             foreach (var tp in _textPrompts)
