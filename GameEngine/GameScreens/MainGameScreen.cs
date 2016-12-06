@@ -69,7 +69,7 @@ namespace GameEngine.GameScreens
         {
             if (Engine.ExitGame)
             {
-                ScreenManager.RemoveScreen(this);
+                ScreenManager.RemoveScreen(this);    
             }
             if (gameOver)
             {
