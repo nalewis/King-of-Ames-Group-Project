@@ -2,6 +2,7 @@
 using GamePieces.Monsters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine.GraphicPieces
 {
@@ -14,7 +15,7 @@ namespace GameEngine.GraphicPieces
 
         public Vector2 DisplayPosition { get; set; }
         private Texture2D PlayerPortrait { get; }
-        private Monster Monster { get; }
+        public Monster Monster { get; }
         private string PlayerName { get; }
         private readonly string _positionString;
 
@@ -76,6 +77,14 @@ namespace GameEngine.GraphicPieces
                     break;
             }
             SetTextPositions();
+        }
+
+        public bool MouseOver(MouseState mouse)
+        {
+            return mouse.Position.X > DisplayPosition.X &&
+                   mouse.Position.X < DisplayPosition.X + PlayerPortrait.Width &&
+                   mouse.Position.Y > DisplayPosition.Y &&
+                   mouse.Position.Y < DisplayPosition.Y + PlayerPortrait.Height;
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ using GamePieces.Monsters;
 using GamePieces.Session;
 using Microsoft.Xna.Framework.Graphics;
 using GamePieces.Dice;
+using GamePieces.Cards;
 
 namespace GameEngine.GameScreens
 {
@@ -19,9 +20,9 @@ namespace GameEngine.GameScreens
         public static ScreenLocations ScreenLocations;  //This is a static list of locations to be used for where to display Playerblocks (e.g., Mid-Left, Mid-Center)
         private readonly List<PlayerBlock> _pBlocks;    //A list of PlayerBlocks used to display player images + text related to their status
         private static List<TextBlock> _textPrompts;    //A list of textBlocks that are updated to display text on the screen as needed
-        private readonly DiceRow _diceRow;      //The dice that are updated to show what the player's real roll is
-        private DiceRow RollingDice { get; }        //The dice that are displayed during roll animation
-        private int RollAnimation { get; set; }     //int used for counting dice roll animation
+        private static DiceRow _diceRow;      //The dice that are updated to show what the player's real roll is
+        //private DiceRow RollingDice { get; }        //The dice that are displayed during roll animation
+        //private int RollAnimation { get; set; }     //int used for counting dice roll animation
         public ServerUpdateBox ServerUpdateBox;     //A box use used to display update messages from the server
         private static int _localPlayer;        //int used to store the local player's ID number
         private static Monster _localMonster;   //Copy of the local player's "monster" object used for display purposes
@@ -30,10 +31,11 @@ namespace GameEngine.GameScreens
         private TextBlock _cardForSaleList;     //A TextBlock used specifically to show the cards currently up for sale
         public static int CardScreenChoice = -1;    //int changed based on the player's choice in the BuyCardScreen(), intialized to -1 for no choice.
         public static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
-        private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
-        private readonly RollButton _rollButton;
+        public static Texture2D BackgroundImage;     //Will need to change based on resolution. Currently 720 only.
+        private static RollButton _rollButton;
         private static string _winner = null;
         public static bool gameOver = false;
+        public PlayerCardList playerCardList;
 
         /// <summary>
         /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
@@ -41,7 +43,7 @@ namespace GameEngine.GameScreens
         /// </summary>
         public MainGameScreen()
         {
-            _backgroundImage = Engine.TextureList["background720"];
+            BackgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
             _localPlayer = User.PlayerId;
@@ -57,6 +59,7 @@ namespace GameEngine.GameScreens
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             //RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _rollButton = new RollButton();
+            playerCardList = new PlayerCardList();
         }
 
         /// <summary>
@@ -106,6 +109,26 @@ namespace GameEngine.GameScreens
                 _gameState = GameState.IsDead;
             }
 
+            var mouseIsOver = false;
+            foreach (var playerBlock in _pBlocks)
+            {
+                if (playerBlock.MouseOver(Engine.InputManager.FreshMouseState))
+                {
+                    mouseIsOver = true;
+                    playerCardList.BoxPosition = new Vector2(Engine.InputManager.FreshMouseState.X, Engine.InputManager.FreshMouseState.Y);
+                    playerCardList._stringList = CardListToString(playerBlock.Monster.Cards);
+                }
+            }
+            if (mouseIsOver)
+            {
+                playerCardList.Hidden = false;
+            }
+            else
+            {
+                playerCardList.Hidden = true;
+            }
+            
+
             switch (_gameState)
             {
                 case GameState.StartTurn:
@@ -151,6 +174,16 @@ namespace GameEngine.GameScreens
             base.Update(gameTime);
         }
 
+        private List<string> CardListToString(List<Card> cards)
+        {
+            List<string> toReturn = new List<string>();
+            foreach (var card in cards)
+            {
+                toReturn.Add(card.Name);
+            }
+            return toReturn;
+        }
+
         /// <summary>
         /// Handles the calling of anything needing to be drawn to the screen
         /// </summary>
@@ -158,7 +191,7 @@ namespace GameEngine.GameScreens
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
-            Engine.SpriteBatch.Draw(_backgroundImage, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
+            Engine.SpriteBatch.Draw(BackgroundImage, Vector2.Zero, Microsoft.Xna.Framework.Color.White);
             DrawGraphicsPieces();
             Engine.SpriteBatch.End();
             base.Draw(gameTime);
@@ -340,17 +373,26 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void IsDead()
         {
-            _diceRow.Hidden = true;
-            _diceRow.Clear();
+            if (_winner == null)
+            {
+                _diceRow.Hidden = true;
+                _diceRow.Clear();
 
-            //RollingDice.Hidden = true;
-            //RollingDice.Clear();
+                //RollingDice.Hidden = true;
+                //RollingDice.Clear();
 
-            _textPrompts.Clear();
+                _textPrompts.Clear();
 
-            _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "You're Dead."
+                _textPrompts.Add(new TextBlock("RollingText", new List<string>
+                {
+                    "You're Dead."
                 }));
+            }
+            else
+            {
+                EndGame(_winner);
+            }
+      
         }
 
         /// <summary>
@@ -443,11 +485,14 @@ namespace GameEngine.GameScreens
         public static void EndGame(string winner)
         {
             _winner = winner;
+            _diceRow.Hidden = true;
+            _rollButton.Hidden = true;
             _textPrompts.Clear();
-            _textPrompts.Add(new TextBlock("GameOver", new List<string>()
+            _textPrompts.Add(new TextBlock("RollPrompt", new List<string>()
             {
                 "Game Over",
-                "Winner: " + winner + "!"
+                "Winner: " + winner + "!",
+                "Press Escape to Close"
             }));
             _gameState = GameState.EndGame;
             if (Engine.InputManager.KeyPressed(Keys.Escape))
@@ -543,6 +588,11 @@ namespace GameEngine.GameScreens
             if (!_rollButton.Hidden)
             {
                 _rollButton.Draw(Engine.SpriteBatch);
+            }
+
+            if (!playerCardList.Hidden)
+            {
+                playerCardList.Draw(Engine.SpriteBatch);
             }
 
             foreach (var tp in _textPrompts)
