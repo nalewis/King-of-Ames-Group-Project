@@ -90,7 +90,7 @@ namespace GameEngine.GameScreens
             Engine.SpriteBatch.DrawString(_font, "Current Energy: " + _energy, posE, Color.DarkRed);
             for (var i = 0; i < _cardList.Count; i++)
             {
-                var text = _cardList[i].Name + " cost: " + _cardList[i].Cost;
+                var text = _cardList[i].Name + " cost: " + _cardList[i].Cost + " type: " + _cardList[i].CardType;
                 var pos = new Vector2(GetCenter(text, _font), _position.Y + (OptionPadding * i));
                 Engine.SpriteBatch.DrawString(_font, text, pos, _selected == i ? Color.Yellow : Color.Black);
                 var text2 = _cardList[i].GetDescrip();

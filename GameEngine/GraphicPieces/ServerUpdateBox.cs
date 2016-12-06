@@ -13,7 +13,7 @@ namespace GameEngine.GraphicPieces
         private const int Height = 150;
         private readonly SpriteFont _font;
         private readonly Texture2D _backgroundRect;
-        private readonly Vector2 _positionVector;
+        private Vector2 _positionVector;
         private List<string> _stringList;
         private const int LineSpacing = 20;
 
@@ -39,6 +39,7 @@ namespace GameEngine.GraphicPieces
 
         public void UpdateList()
         {
+            _positionVector = MainGameScreen.ScreenLocations.GetPosition("ServerUpdateBox");
             _stringList = null;
             _stringList = Client.MessageHistory.Count < 8 ? Client.MessageHistory : Client.MessageHistory.GetRange(Client.MessageHistory.Count - 8, 7);
         }

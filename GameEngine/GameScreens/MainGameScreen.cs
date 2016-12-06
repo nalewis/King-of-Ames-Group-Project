@@ -98,6 +98,7 @@ namespace GameEngine.GameScreens
             });
             }
 
+            System.Threading.Thread.Sleep(100);
             if (!(MonsterController.IsDead(_localPlayer)))    //If a player isn't dead check for their startOfTurn
             {
                 if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
@@ -180,6 +181,7 @@ namespace GameEngine.GameScreens
             foreach (var card in cards)
             {
                 toReturn.Add(card.Name);
+                toReturn.Add(card.GetDescrip());
             }
             return toReturn;
         }
@@ -429,6 +431,7 @@ namespace GameEngine.GameScreens
         {
             _textPrompts.Clear();
 
+            _gameState = GameState.BuyCardPrompt;
             var monList = GetMonsterList();
             if (monList.Any(mon => mon.CanYield)) { return; }
 
@@ -543,6 +546,7 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void UpdateGraphicsPieces()
         {
+            _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
             foreach (var ds in _diceRow.DiceSprites)
                 ds.Update();
             foreach (var pb in _pBlocks)

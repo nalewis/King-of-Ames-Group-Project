@@ -11,7 +11,7 @@ namespace GameEngine.GraphicPieces
         private const int Height = 30;
         private readonly SpriteFont _font;
         private readonly Texture2D _background;
-        private readonly Vector2 _position;
+        private Vector2 _position;
         private Color _color;
         private Vector2 _textPosition;
         private const string Text = "Roll";
@@ -35,6 +35,8 @@ namespace GameEngine.GraphicPieces
 
         public void Update()
         {
+            _position = MainGameScreen.ScreenLocations.GetPosition("RollButton");
+            _textPosition = new Vector2(_position.X + 25, _position.Y + 10);
             MouseState mouseState = Engine.InputManager.FreshMouseState;
             if (MouseOver(mouseState))
             {
