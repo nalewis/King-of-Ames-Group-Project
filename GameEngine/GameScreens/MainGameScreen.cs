@@ -235,6 +235,8 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void Rolling()
         {
+            _diceRow.Hidden = false;
+            RollingDice.Hidden = false;
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 Client.SendMessage("Rolled: " + GetDiceText(DiceController.GetDice()));
