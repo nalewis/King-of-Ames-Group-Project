@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Controllers;
 using GameEngine.ServerClasses;
@@ -15,6 +17,7 @@ namespace GameEngine.Views
         //Timer to facilitate the updating of the view
         private readonly Timer _timer;
         private readonly Form _chat = new LobbyChat();
+        private readonly List<DataSet> _players = new List<DataSet>();
 
         /// <summary>
         /// Initializing variables
@@ -99,19 +102,50 @@ namespace GameEngine.Views
         /// </summary>
         private void UpdateList()
         {
-            //Resets the view
-            playerList.Items.Clear();
-
+            var done = true;
             //Gets server info and puts it into a dataset
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
+
+            //Checks if number of players has changed
+            var currentNumPlayers = NetworkClasses.GetNumPlayers(int.Parse(ds.Tables[0].Rows[0]["Server_ID"].ToString()));
+            if (_players.Count == currentNumPlayers && _players.Count >= 1)
+            {
+                //Check if characters have changed
+                var newPlayerChars = new List<DataSet>();
+                newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Host"].ToString())));
+                for (var i = 2; i <= 6; i++)
+                {
+                    if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString()))
+                    {
+                        newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Player_" + i].ToString())));
+                    }
+                }
+                for (var i = 0; i < newPlayerChars.Count; i++)
+                {
+                    if (_players[i].Tables[0].Rows[0]["_Character"].ToString() !=
+                        newPlayerChars[i].Tables[0].Rows[0]["_Character"].ToString())
+                    {
+                        done = false;
+                        break;
+                    }
+                }
+                if (done)
+                {
+                    return;
+                }
+            }
+            //Updating
+            _players.Clear();
+            playerList.Items.Clear();
             var row = ds.Tables[0].Rows[0];
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
-            var character = "";
+            var _character = "";
 
             //Host
+            _players.Add(grabber);
             var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-            character = grabber.Tables[0].Rows[0]["_Character"].ToString();
-            listItem.SubItems.Add(character);
+            _character = grabber.Tables[0].Rows[0]["_Character"].ToString();
+            listItem.SubItems.Add(_character);
 
             //Add the clients to the listview
             playerList.Items.Add(listItem);
@@ -119,9 +153,10 @@ namespace GameEngine.Views
             {
                 if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
                 grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
+                _players.Add(grabber);
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                character = grabber.Tables[0].Rows[0]["_Character"].ToString();
-                listItem.SubItems.Add(character);
+                _character = grabber.Tables[0].Rows[0]["_Character"].ToString();
+                listItem.SubItems.Add(_character);
 
                 playerList.Items.Add(listItem);
             }

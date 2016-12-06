@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
 using GameEngine.ServerClasses;
 using Networking;
@@ -13,6 +15,7 @@ namespace GameEngine.Views
         //Timer to handle view updates
         private readonly Timer _timer;
         private readonly Form _chat = new LobbyChat();
+        private readonly List<DataSet> _players = new List<DataSet>();
 
         /// <summary>
         /// Initializing variables
@@ -92,10 +95,13 @@ namespace GameEngine.Views
         /// </summary>
         private void UpdateList()
         {
-            playerList.Items.Clear();
+            var done = true;
             try
             {
+                //Gets server info and places it into a dataset
                 var ds = NetworkClasses.GetServer(Client.Conn);
+
+                //Checks if game has started
                 if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
                 {
                     NetworkClasses.UpdateUserValue("User_List", "Online", "In Game", User.PlayerId);
@@ -103,12 +109,45 @@ namespace GameEngine.Views
                     _timer.Stop();
                     Dispose();
                 }
+
+                //Checks if number of players has changed
+                var currentNumPlayers = NetworkClasses.GetNumPlayers(int.Parse(ds.Tables[0].Rows[0]["Server_ID"].ToString()));
+                if (_players.Count == currentNumPlayers && _players.Count >= 1)
+                {
+                    //Check if characters have changed
+                    var newPlayerChars = new List<DataSet>();
+                    newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Host"].ToString())));
+                    for (var i = 2; i <= 6; i++)
+                    {
+                        if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString()))
+                        {
+                            newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Player_" + i].ToString())));
+                        }
+                    }
+                    for (var i = 0; i < newPlayerChars.Count; i++)
+                    {
+                        if (_players[i].Tables[0].Rows[0]["_Character"].ToString() !=
+                            newPlayerChars[i].Tables[0].Rows[0]["_Character"].ToString())
+                        {
+                            done = false;
+                            break;
+                        }
+                    }
+                    if (done)
+                    {
+                        return;
+                    }
+                }
+                //Updating
+                _players.Clear();
+                playerList.Items.Clear();
                 var row = ds.Tables[0].Rows[0];
 
                 var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
                 var Character = "";
 
                 //Host
+                _players.Add(grabber);
                 var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
                 listItem.SubItems.Add(Character);
@@ -120,6 +159,7 @@ namespace GameEngine.Views
                 {
                     if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
                     grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
+                    _players.Add(grabber);
                     listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                     Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
                     listItem.SubItems.Add(Character);
@@ -162,7 +202,6 @@ namespace GameEngine.Views
                 {
                     MessageBox.Show("Character Unavailable", "Character has already been selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                UpdateList();
             }
             catch (Exception)
             {
