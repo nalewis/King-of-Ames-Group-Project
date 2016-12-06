@@ -104,6 +104,7 @@ namespace Networking
             if (ds.Tables[0].Rows.Count == 0) return false;
             var dbpass = StringCipher.Decrypt(ds.Tables[0].Rows[0]["password"].ToString(), "thomas");
             if (dbpass != pass) return false;
+            if (ds.Tables[0].Rows[0]["Online"].ToString() == "1") return false;
             //update the players ip
             UpdateUserValue("User_List", "Local_IP", ip, int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString()));
 
@@ -258,6 +259,33 @@ namespace Networking
 
             connection.Close();
             return ds;
+        }
+
+        /// <summary>
+        /// Gets player info using a given username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Dataset containing player info</returns>
+        public static DataSet GetPlayer(string username)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            try
+            {
+                var command = connection.CreateCommand();
+                command.CommandText = "SELECT * FROM User_List WHERE Username = @user";
+                command.Parameters.AddWithValue("@user", username);
+                var adapter = new MySqlDataAdapter(command);
+                var ds = new DataSet();
+                adapter.Fill(ds);
+
+                connection.Close();
+                return ds;
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -499,6 +527,60 @@ namespace Networking
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return false;
+            }
+            return true;
+        }
+
+        public static string AddFriend(string username)
+        {
+            try
+            {
+                var ds1 = GetPlayer(username);
+                var ds2 = GetPlayer(User.PlayerId);
+                var friends = ds2.Tables[0].Rows[0]["Friends"].ToString();
+                if (friends.Split(',').Contains(ds1.Tables[0].Rows[0]["Player_ID"].ToString()))
+                {
+                    return "Preexisting";
+                }
+                if (friends == "0")
+                {
+                    UpdateUserValue("User_List", "Friends", ds1.Tables[0].Rows[0]["Player_ID"].ToString(), User.PlayerId);
+                }
+                else
+                {
+                    UpdateUserValue("User_List", "Friends", friends + "," + ds1.Tables[0].Rows[0]["Player_ID"], User.PlayerId);
+                }
+            }
+            catch (Exception)
+            {
+                return "Nonexistant";
+            }
+            return "Done";
+        }
+
+        public static bool DelFriend(string username)
+        {
+            try
+            {
+                var ds1 = GetPlayer(username);
+                var toRemove = ds1.Tables[0].Rows[0]["Player_ID"].ToString();
+                var ds2 = GetPlayer(User.PlayerId);
+                var friends = ds2.Tables[0].Rows[0]["Friends"].ToString().Split(',');
+                var newFriends = "";
+                foreach (var person in friends)
+                {
+                    if (person != toRemove)
+                    {
+                        newFriends += person + ",";
+                    }
+                }
+                newFriends = newFriends.TrimEnd(',');
+                if (newFriends.Length < 1) newFriends = "0";
+                UpdateUserValue("User_List", "Friends", newFriends, User.PlayerId);
+            }
+            catch (Exception)
+            {
                 return false;
             }
             return true;

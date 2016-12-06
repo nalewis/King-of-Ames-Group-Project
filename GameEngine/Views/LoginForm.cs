@@ -68,6 +68,7 @@ namespace GameEngine.Views
                 //Else error message is shown
                 if (NetworkClasses.Login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIpAddress()))
                 {
+                    NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
                     Form form = new MainMenuForm();
                     form.Show();
                     Dispose();

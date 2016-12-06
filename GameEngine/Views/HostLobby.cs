@@ -46,6 +46,19 @@ namespace GameEngine.Views
             UpdateList();
         }
 
+        private void HostGameListForm_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 'c') return;
+            if (_chat.Visible)
+            {
+                _chat.Hide();
+            }
+            else
+            {
+                _chat.Show();
+            }
+        }
+
         /// <summary>
         /// When the window is closed, the server is stopped, and the application is closed
         /// </summary>
@@ -58,6 +71,7 @@ namespace GameEngine.Views
                 _timer.Stop();
                 _chat.Dispose();
                 Dispose();
+                NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
                 Host.ServerStop();
                 Environment.Exit(0);
             //}
@@ -72,6 +86,7 @@ namespace GameEngine.Views
         {
             _timer.Stop();
             NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
             Host.ServerStop();
             Form form = new MainMenuForm();
             form.Show();
@@ -134,6 +149,7 @@ namespace GameEngine.Views
                 LobbyController.AddPlayer(int.Parse(grabber.Tables[0].Rows[0]["Player_ID"].ToString()), grabber.Tables[0].Rows[0]["_Character"].ToString());
             }
             NetworkClasses.UpdateServerValue("Status", "In Progress", "Host", User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "In Game", User.PlayerId);
             LobbyController.StartGame();
             Host.StartGame();
             _timer.Stop();
