@@ -167,6 +167,10 @@ namespace GameEngine.ServerClasses
                                 Console.WriteLine("Game Over!");
                                 MainGameScreen.gameOver = true;
                                 var winnerName = inc.ReadString();
+                                if (winnerName == NetworkClasses.GetUserValue("Character").ToString())
+                                {
+                                    NetworkClasses.AddWin(User.PlayerId);
+                                }
                                 MainGameScreen.EndGame(winnerName);
                             }
                             else if (type == (byte)PacketTypes.Message)
@@ -234,6 +238,13 @@ namespace GameEngine.ServerClasses
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void CloseServer()
+        {
+            var outMsg = NetClient.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Closed);
+            NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Tells the server to delete it from list, stops loop and shuts down NetClient
         /// </summary>
@@ -249,6 +260,7 @@ namespace GameEngine.ServerClasses
             _shouldStop = true;
             Conn = "";
             isSpectator = false;
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             if (GameLoop.IsAlive) { GameLoop.Abort(); }
         }
     }

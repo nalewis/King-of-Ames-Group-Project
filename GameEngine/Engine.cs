@@ -90,6 +90,7 @@ namespace GameEngine {
             if (ExitGame)
             {
                 UnloadContent();
+                Client.CloseServer();
                 Client.ClientStop();
             }
             if (ScreenWidth != GraffixMngr.GraphicsDevice.Viewport.Width)
