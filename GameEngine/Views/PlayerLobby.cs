@@ -47,6 +47,7 @@ namespace GameEngine.Views
         {
             _timer.Stop();
             NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             Form form = new MainMenuForm();
@@ -67,6 +68,7 @@ namespace GameEngine.Views
             _chat.Dispose();
             Dispose();
             NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
             NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
             Client.ClientStop();
             Environment.Exit(0);
@@ -96,6 +98,7 @@ namespace GameEngine.Views
                 var ds = NetworkClasses.GetServer(Client.Conn);
                 if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
                 {
+                    NetworkClasses.UpdateUserValue("User_List", "Online", "In game", User.PlayerId);
                     _chat.Dispose();
                     _timer.Stop();
                     Dispose();
@@ -141,6 +144,7 @@ namespace GameEngine.Views
                 Client.ClientStop();
 
                 NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
+                NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
                 Dispose();
                 MessageBox.Show("Host left the game", "Server Disconnected", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

@@ -31,6 +31,7 @@ namespace GameEngine.Views
             if (e.CloseReason != CloseReason.UserClosing) return;
             _friends.Dispose();
             Dispose();
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
             Environment.Exit(0);
         }
 
@@ -43,6 +44,7 @@ namespace GameEngine.Views
         {
             Host.ServerStart();
             NetworkClasses.UpdateUserValue("User_Stats", "Games_Hosted", "Games_Hosted + 1", User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "In Lobby", User.PlayerId);
             Form gameList = new HostGameListForm();
             _friends.Dispose();
             gameList.Show();
@@ -81,6 +83,7 @@ namespace GameEngine.Views
 
         private void logoutButton_Click(object sender, EventArgs e)
         {
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
             Form login = new LoginForm();
             _friends.Dispose();
             login.Show();

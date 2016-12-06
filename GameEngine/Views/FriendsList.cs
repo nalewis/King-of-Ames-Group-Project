@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using GameEngine.ServerClasses;
 using Networking;
 
 namespace GameEngine.Views
@@ -52,7 +53,7 @@ namespace GameEngine.Views
                 {
                     ds = NetworkClasses.GetPlayer(int.Parse(friend));
                     var item = new ListViewItem(ds.Tables[0].Rows[0]["Username"].ToString());
-                    item.SubItems.Add(ds.Tables[0].Rows[0]["Online"].ToString() == "1" ? "Online" : "Offline");
+                    item.SubItems.Add(ds.Tables[0].Rows[0]["Online"].ToString());
                     BoxOFriends.Items.Add(item);
                 }
             }
@@ -86,7 +87,20 @@ namespace GameEngine.Views
 
         private void BoxOFriends_SelectedIndexChanged(object sender, EventArgs e)
         {
-            delFriend.Enabled = true;
+            if (BoxOFriends.SelectedItems.Count == 1)
+            {
+                delFriend.Enabled = true;
+                deleteToolStripMenuItem.Enabled = true;
+                if (BoxOFriends.SelectedItems[0].SubItems[1].Text == "In Lobby")
+                    joinGameToolStripMenuItem.Enabled = true;
+                else if (BoxOFriends.SelectedItems[0].SubItems[1].Text == "In Game")
+                    spectateToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                delFriend.Enabled = false;
+                deleteToolStripMenuItem.Enabled = false;
+            }
         }
 
         private void delFriend_Click(object sender, EventArgs e)
@@ -102,6 +116,25 @@ namespace GameEngine.Views
         {
             _add.Hide();
             Hide();
+        }
+
+        private void addToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _add.Show();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == DialogResult.Yes)
+            {
+                NetworkClasses.DelFriend(BoxOFriends.SelectedItems[0].Text);
+            }
+        }
+
+        private void joinGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Client.NetClient.Start();
         }
     }
 }

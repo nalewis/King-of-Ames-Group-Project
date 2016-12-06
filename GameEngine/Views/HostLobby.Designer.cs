@@ -37,6 +37,7 @@ namespace GameEngine.Views
             this.char_label = new System.Windows.Forms.Label();
             this.char_list = new System.Windows.Forms.ComboBox();
             this.start_game = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // playerList
@@ -52,7 +53,7 @@ namespace GameEngine.Views
             this.playerList.TabIndex = 0;
             this.playerList.UseCompatibleStateImageBehavior = false;
             this.playerList.View = System.Windows.Forms.View.Details;
-            this.playerList.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
+            this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
             // 
             // playerName
             // 
@@ -74,7 +75,7 @@ namespace GameEngine.Views
             this.leaveGame.Text = "Leave Game";
             this.leaveGame.UseVisualStyleBackColor = true;
             this.leaveGame.Click += new System.EventHandler(this.leaveGame_Click);
-            this.leaveGame.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
+            this.leaveGame.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
             // 
             // char_label
             // 
@@ -84,8 +85,7 @@ namespace GameEngine.Views
             this.char_label.Size = new System.Drawing.Size(56, 13);
             this.char_label.TabIndex = 11;
             this.char_label.Text = "Character:";
-            this.char_label.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
-
+            this.char_label.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
             // 
             // char_list
             // 
@@ -103,27 +103,37 @@ namespace GameEngine.Views
             this.char_list.Size = new System.Drawing.Size(102, 21);
             this.char_list.TabIndex = 9;
             this.char_list.SelectedIndexChanged += new System.EventHandler(this.char_list_SelectedIndexChanged);
-            this.char_list.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
+            this.char_list.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
             // 
             // start_game
             // 
             this.start_game.Enabled = false;
             this.start_game.ImageAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.start_game.Location = new System.Drawing.Point(15, 239);
+            this.start_game.Location = new System.Drawing.Point(29, 239);
             this.start_game.Name = "start_game";
             this.start_game.Size = new System.Drawing.Size(75, 23);
             this.start_game.TabIndex = 12;
             this.start_game.Text = "Start Game";
             this.start_game.UseVisualStyleBackColor = true;
             this.start_game.Click += new System.EventHandler(this.start_game_Click);
-            this.start_game.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
+            this.start_game.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(26, 265);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(171, 13);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Press \'c\' to view/hide chat window";
             // 
             // HostGameListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
-            this.ClientSize = new System.Drawing.Size(229, 271);
+            this.ClientSize = new System.Drawing.Size(229, 285);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.start_game);
             this.Controls.Add(this.char_label);
             this.Controls.Add(this.char_list);
@@ -133,7 +143,7 @@ namespace GameEngine.Views
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ServerListForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HostGameListForm_Closing);
-            this.KeyPress += new KeyPressEventHandler(HostGameListForm_KeyPressed);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,5 +158,6 @@ namespace GameEngine.Views
         private System.Windows.Forms.Label char_label;
         private System.Windows.Forms.ComboBox char_list;
         private System.Windows.Forms.Button start_game;
+        private Label label1;
     }
 }

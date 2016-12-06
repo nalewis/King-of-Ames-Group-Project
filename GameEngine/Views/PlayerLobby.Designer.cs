@@ -36,6 +36,7 @@ namespace GameEngine.Views
             this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.char_list = new System.Windows.Forms.ComboBox();
             this.char_label = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // leaveGame
@@ -48,7 +49,7 @@ namespace GameEngine.Views
             this.leaveGame.Text = "Leave Game";
             this.leaveGame.UseVisualStyleBackColor = true;
             this.leaveGame.Click += new System.EventHandler(this.leaveGame_Click);
-            this.leaveGame.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
+            this.leaveGame.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
             // 
             // playerList
             // 
@@ -63,7 +64,7 @@ namespace GameEngine.Views
             this.playerList.TabIndex = 3;
             this.playerList.UseCompatibleStateImageBehavior = false;
             this.playerList.View = System.Windows.Forms.View.Details;
-            this.playerList.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
+            this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
             // 
             // playerName
             // 
@@ -91,7 +92,7 @@ namespace GameEngine.Views
             this.char_list.Size = new System.Drawing.Size(93, 21);
             this.char_list.TabIndex = 5;
             this.char_list.SelectedIndexChanged += new System.EventHandler(this.char_list_SelectedIndexChanged);
-            this.char_list.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
+            this.char_list.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
             // 
             // char_label
             // 
@@ -101,14 +102,24 @@ namespace GameEngine.Views
             this.char_label.Size = new System.Drawing.Size(56, 13);
             this.char_label.TabIndex = 7;
             this.char_label.Text = "Character:";
-            this.char_label.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
+            this.char_label.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(55, 236);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(171, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Press \'c\' to view/hide chat window";
             // 
             // PlayerLobby
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
-            this.ClientSize = new System.Drawing.Size(284, 241);
+            this.ClientSize = new System.Drawing.Size(284, 257);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.char_label);
             this.Controls.Add(this.char_list);
             this.Controls.Add(this.leaveGame);
@@ -117,9 +128,9 @@ namespace GameEngine.Views
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "PlayerLobby";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerLobby_Closing);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.KeyPress += new KeyPressEventHandler(PlayerLobby_KeyPressed);
 
         }
 
@@ -131,5 +142,6 @@ namespace GameEngine.Views
         private System.Windows.Forms.ColumnHeader character;
         private System.Windows.Forms.ComboBox char_list;
         private System.Windows.Forms.Label char_label;
+        private Label label1;
     }
 }
