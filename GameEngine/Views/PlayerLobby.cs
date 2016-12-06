@@ -159,13 +159,15 @@ namespace GameEngine.Views
 
                 for (var i = 2; i <= 6; i++)
                 {
-                    if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
-                    grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
-                    _players.Add(grabber);
-                    listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
-                    Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
-                    listItem.SubItems.Add(Character);
-                    playerList.Items.Add(listItem);
+                    if (!string.IsNullOrEmpty(row["Player_" + i].ToString()))
+                    {
+                        grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
+                        _players.Add(grabber);
+                        listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
+                        Character = grabber.Tables[0].Rows[0]["_Character"].ToString();
+                        listItem.SubItems.Add(Character);
+                        playerList.Items.Add(listItem);
+                    }
                 }
             }
             catch (Exception) //Thrown if server no longer exists
