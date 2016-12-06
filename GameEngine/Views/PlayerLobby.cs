@@ -47,11 +47,11 @@ namespace GameEngine.Views
 
         private void gameTimer_tick(object sender, EventArgs e)
         {
-            if (!Client.gameEnd) return;
+            if (!Client.gameEnd || !Client.gameClose || Client.Conn == "") return;
             _gameTimer.Stop();
             if (!_chat.IsDisposed)_chat.Dispose();
             NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
-            //MessageBox.Show("Results here", "Results", MessageBoxButtons.OK);
+            MessageBox.Show("Game Closed.", "Update", MessageBoxButtons.OK);
             Form form = new MainMenuForm();
             form.Show();
         }
@@ -195,6 +195,7 @@ namespace GameEngine.Views
             }
             catch (Exception e) //Thrown if server no longer exists
             {
+                Console.WriteLine(e);
                 //If the host leaves, the server no longer exists and the removing the player will throw an exception
                 try
                 {

@@ -35,11 +35,11 @@ namespace GameEngine.Views
             this.playerList = new System.Windows.Forms.ListView();
             this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cm1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.char_list = new System.Windows.Forms.ComboBox();
             this.char_label = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.cm1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cm1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,6 +60,7 @@ namespace GameEngine.Views
             this.playerList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.playerName,
             this.character});
+            this.playerList.ContextMenuStrip = this.cm1;
             this.playerList.FullRowSelect = true;
             this.playerList.GridLines = true;
             this.playerList.Location = new System.Drawing.Point(12, 12);
@@ -70,7 +71,6 @@ namespace GameEngine.Views
             this.playerList.View = System.Windows.Forms.View.Details;
             this.playerList.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
             this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
-            this.playerList.ContextMenuStrip = cm1;
             // 
             // playerName
             // 
@@ -82,6 +82,20 @@ namespace GameEngine.Views
             this.character.Text = "Character";
             this.character.Width = 138;
             // 
+            // cm1
+            // 
+            this.cm1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewProfileToolStripMenuItem});
+            this.cm1.Name = "cm1";
+            this.cm1.Size = new System.Drawing.Size(137, 26);
+            // 
+            // viewProfileToolStripMenuItem
+            // 
+            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.viewProfileToolStripMenuItem.Text = "View Profile";
+            this.viewProfileToolStripMenuItem.Click += new System.EventHandler(this.viewProfileToolStripMenuItem_Click);
+            // 
             // char_list
             // 
             this.char_list.FormattingEnabled = true;
@@ -91,8 +105,7 @@ namespace GameEngine.Views
             "Giga Zaur",
             "Kraken",
             "Meka Dragon",
-            "The King",
-            "The Real King"});
+            "The King"});
             this.char_list.Location = new System.Drawing.Point(74, 212);
             this.char_list.Name = "char_list";
             this.char_list.Size = new System.Drawing.Size(93, 21);
@@ -118,20 +131,6 @@ namespace GameEngine.Views
             this.label1.Size = new System.Drawing.Size(171, 13);
             this.label1.TabIndex = 8;
             this.label1.Text = "Press \'c\' to view/hide chat window";
-            // 
-            // cm1
-            // 
-            this.cm1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewProfileToolStripMenuItem});
-            this.cm1.Name = "cm1";
-            this.cm1.Size = new System.Drawing.Size(153, 48);
-            // 
-            // viewProfileToolStripMenuItem
-            // 
-            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
-            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.viewProfileToolStripMenuItem.Text = "View Profile";
-            this.viewProfileToolStripMenuItem.Click += new System.EventHandler(this.viewProfileToolStripMenuItem_Click);
             // 
             // PlayerLobby
             // 

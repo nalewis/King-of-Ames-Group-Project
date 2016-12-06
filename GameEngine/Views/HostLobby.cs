@@ -56,12 +56,12 @@ namespace GameEngine.Views
 
         private void gameTimer_tick(object sender, EventArgs e)
         {
-            if (!Client.gameEnd) return;
+            if (!Client.gameEnd || !Client.gameClose) return;
             Host.ServerStop();
             _gameTimer.Stop();
             if (!_chat.IsDisposed) _chat.Dispose();
             NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
-            //MessageBox.Show("Results go here", "Results", MessageBoxButtons.OK);
+            MessageBox.Show("Game Closed", "Update", MessageBoxButtons.OK);
             Form form = new MainMenuForm();
             form.Show();
         }

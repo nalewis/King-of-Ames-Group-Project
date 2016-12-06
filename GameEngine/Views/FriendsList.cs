@@ -183,7 +183,6 @@ namespace GameEngine.Views
         private void spectateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var ds = NetworkClasses.GetServerByPlayerId(NetworkClasses.GetPlayer(BoxOFriends.SelectedItems[0].Text).Tables[0].Rows[0]["Player_ID"].ToString());
-            Console.WriteLine(ds.Tables[0].Rows[0]["Host"]);
             Client.Conn = ds.Tables[0].Rows[0]["Host_IP"].ToString();
             Client.NetClient.Start();
             Client.Connect(false);

@@ -116,8 +116,7 @@ namespace GameEngine.Views
             "Giga Zaur",
             "Kraken",
             "Meka Dragon",
-            "The King",
-            "The Real King"});
+            "The King"});
             this.char_list.Location = new System.Drawing.Point(74, 212);
             this.char_list.Name = "char_list";
             this.char_list.Size = new System.Drawing.Size(102, 21);

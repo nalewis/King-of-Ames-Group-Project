@@ -29,6 +29,7 @@ namespace GameEngine.ServerClasses
         public static bool IsStart = false;
         public static bool isSpectator = false;
         public static bool gameEnd = false;
+        public static bool gameClose = false;
         public static List<string> MessageHistory = new List<string>();
         public static List<string> ChatHistory = new List<string>();
 
