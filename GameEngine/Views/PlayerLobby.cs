@@ -129,6 +129,7 @@ namespace GameEngine.Views
                     _timer.Stop();
                     _gameTimer.Start();
                     Hide();
+                    return;
                 }
 
                 //Checks if number of players has changed
