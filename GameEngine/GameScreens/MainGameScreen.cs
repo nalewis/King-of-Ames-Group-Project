@@ -268,8 +268,11 @@ namespace GameEngine.GameScreens
                 _textPrompts.Remove(_textPrompts[_textPrompts.Count - 1]);
             }
 
+            var cardsOwned = "";
+            if (MonsterController.Cards(_localPlayer).Count > 0) cardsOwned = MonsterController.Cards(_localPlayer)[0].Name; //TODO only displays first cards owned, need to show all if this works
             _textPrompts.Add(new TextBlock("RollPrompt", new List<string> {
-                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls
+                "Your Turn! Rolls Left: " + MonsterController.GetById(_localPlayer).RemainingRolls,
+                "Cards: " + cardsOwned
                 }));
         }
 
