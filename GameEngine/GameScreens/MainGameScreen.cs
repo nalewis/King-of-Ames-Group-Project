@@ -68,12 +68,12 @@ namespace GameEngine.GameScreens
         /// <param name="gameTime">Parameter for the game's GameTime</param>
         public override void Update(GameTime gameTime)
         {
-            /*
-            if (GameStateController.GameOver)
+            
+            if (gameOver)
             {
-                return;
+                EndGame(_winner);
             }
-            */
+            
             if (GetMonsterList().Count != _monsterList.Count)   //A change has happened in the monster list
             {
                 _monsterList = GetMonsterList();
@@ -93,7 +93,7 @@ namespace GameEngine.GameScreens
             });
             }
 
-            if (!(MonsterController.IsDead(_localPlayer) || _gameState == GameState.EndGame))    //If a player isn't dead check for their startOfTurn
+            if (!(MonsterController.IsDead(_localPlayer)))    //If a player isn't dead check for their startOfTurn
             {
                 if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
                     if(MonsterController.CanYield(_localPlayer) == false)
