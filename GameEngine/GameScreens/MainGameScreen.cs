@@ -90,7 +90,7 @@ namespace GameEngine.GameScreens
 
             if (!MonsterController.IsDead(_localPlayer))    //If a player isn't dead check for their startOfTurn
             {
-                if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
+                if (_gameState != GameState.Spectating && MonsterController.CanYield(_localPlayer) == false && MonsterController.State(_localPlayer) == State.StartOfTurn)
                     _gameState = GameState.StartTurn;
             }
             else
