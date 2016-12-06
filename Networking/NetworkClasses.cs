@@ -46,7 +46,7 @@ namespace Networking
             var adapter = new MySqlDataAdapter(command);
             adapter.Fill(ds);
             command = connection.CreateCommand();
-            command.CommandText = "INSERT INTO User_Stats (Player_ID, Games_Joined, Games_Hosted) VALUES (@id,0,0)";
+            command.CommandText = "INSERT INTO User_Stats (Player_ID, Games_Joined, Games_Hosted, Games_Won) VALUES (@id,0,0,0)";
             command.Parameters.AddWithValue("@id", ds.Tables[0].Rows[0]["Player_ID"]);
             command.ExecuteNonQuery();
             connection.Close();
@@ -66,6 +66,21 @@ namespace Networking
             if (ds.Tables[0].Rows.Count == 0) return false;
             connection.Close();
             return ds.Tables[0].Rows[0][value].ToString();
+        }
+
+        public static string GetUserStat(string stat)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM User_Stats WHERE Player_ID = @user";
+            command.Parameters.AddWithValue("@user", User.PlayerId);
+            var adapter = new MySqlDataAdapter(command);
+            var ds = new DataSet();
+            adapter.Fill(ds);
+            if (ds.Tables[0].Rows.Count == 0) return "null";
+            connection.Close();
+            return ds.Tables[0].Rows[0][stat].ToString();
         }
 
         /// <summary>

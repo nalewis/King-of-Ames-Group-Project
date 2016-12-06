@@ -32,9 +32,9 @@ namespace GameEngine.Views
         {
             this.BackButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.wonGames = new System.Windows.Forms.Label();
+            this.hostedGames = new System.Windows.Forms.Label();
+            this.joinedGames = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,7 +43,7 @@ namespace GameEngine.Views
             // 
             // BackButton
             // 
-            this.BackButton.Location = new System.Drawing.Point(94, 170);
+            this.BackButton.Location = new System.Drawing.Point(83, 105);
             this.BackButton.Name = "BackButton";
             this.BackButton.Size = new System.Drawing.Size(75, 23);
             this.BackButton.TabIndex = 1;
@@ -53,63 +53,63 @@ namespace GameEngine.Views
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.wonGames);
+            this.groupBox1.Controls.Add(this.hostedGames);
+            this.groupBox1.Controls.Add(this.joinedGames);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(229, 152);
+            this.groupBox1.Size = new System.Drawing.Size(210, 87);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Player Stats";
             // 
-            // label6
+            // wonGames
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(111, 63);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 13);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "label6";
+            this.wonGames.AutoSize = true;
+            this.wonGames.Location = new System.Drawing.Point(111, 63);
+            this.wonGames.Name = "wonGames";
+            this.wonGames.Size = new System.Drawing.Size(35, 13);
+            this.wonGames.TabIndex = 5;
+            this.wonGames.Text = "label6";
             // 
-            // label5
+            // hostedGames
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(111, 41);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(35, 13);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "label5";
+            this.hostedGames.AutoSize = true;
+            this.hostedGames.Location = new System.Drawing.Point(111, 41);
+            this.hostedGames.Name = "hostedGames";
+            this.hostedGames.Size = new System.Drawing.Size(35, 13);
+            this.hostedGames.TabIndex = 4;
+            this.hostedGames.Text = "label5";
             // 
-            // label4
+            // joinedGames
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(111, 20);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "label4";
+            this.joinedGames.AutoSize = true;
+            this.joinedGames.Location = new System.Drawing.Point(111, 20);
+            this.joinedGames.Name = "joinedGames";
+            this.joinedGames.Size = new System.Drawing.Size(35, 13);
+            this.joinedGames.TabIndex = 3;
+            this.joinedGames.Text = "label4";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(16, 63);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(89, 13);
+            this.label3.Size = new System.Drawing.Size(69, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Favorite Monster:";
+            this.label3.Text = "Games Won:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 41);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(69, 13);
+            this.label2.Size = new System.Drawing.Size(80, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Games Won:";
+            this.label2.Text = "Games Hosted:";
             // 
             // label1
             // 
@@ -125,16 +125,16 @@ namespace GameEngine.Views
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Chocolate;
-            this.ClientSize = new System.Drawing.Size(261, 200);
+            this.ClientSize = new System.Drawing.Size(233, 143);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.BackButton);
             this.Name = "Profile";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Profile";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Profile_Closing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            this.FormClosing += new FormClosingEventHandler(Profile_Closing);
 
         }
 
@@ -142,9 +142,9 @@ namespace GameEngine.Views
 
         private System.Windows.Forms.Button BackButton;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label wonGames;
+        private System.Windows.Forms.Label hostedGames;
+        private System.Windows.Forms.Label joinedGames;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;

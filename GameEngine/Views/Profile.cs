@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Networking;
 
 namespace GameEngine.Views
 {
@@ -8,6 +9,7 @@ namespace GameEngine.Views
         public Profile()
         {
             InitializeComponent();
+            InitializeStats();
         }
 
         private void BackButton_Click(object sender, EventArgs e)
@@ -15,6 +17,13 @@ namespace GameEngine.Views
             Form menu = new MainMenuForm();
             menu.Show();
             Dispose();
+        }
+
+        private void InitializeStats()
+        {
+            joinedGames.Text = NetworkClasses.GetUserStat("Games_Joined");
+            hostedGames.Text = NetworkClasses.GetUserStat("Games_Hosted");
+            wonGames.Text = NetworkClasses.GetUserStat("Games_Won");
         }
 
         /// <summary>
