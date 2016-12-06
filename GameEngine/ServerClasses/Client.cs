@@ -22,7 +22,7 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
-        private static Thread GameLoop = new Thread(Program.Run);
+        private static Thread GameLoop;
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
         public static bool CanContinue = true;
@@ -99,6 +99,7 @@ namespace GameEngine.ServerClasses
 
                                 LobbyController.StartGame(MonsterPackets);
                                 //Makes this thread a STAThread, not sure if necessary...
+                                GameLoop = new Thread(Program.Run);
                                 GameLoop.SetApartmentState(ApartmentState.STA);
                                 GameLoop.Start();
                             }
@@ -114,6 +115,7 @@ namespace GameEngine.ServerClasses
 
                                 LobbyController.StartGame(MonsterPackets);
                                 //Makes this thread a STAThread, not sure if necessary...
+                                GameLoop = new Thread(Program.Run);
                                 GameLoop.SetApartmentState(ApartmentState.STA);
                                 GameLoop.Start();
                             }

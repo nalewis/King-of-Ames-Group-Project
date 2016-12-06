@@ -32,6 +32,7 @@ namespace GameEngine
             Application.Run();
         }
 
+        [STAThread]
         public static void Run()
         {
             using (var game = new Engine())
