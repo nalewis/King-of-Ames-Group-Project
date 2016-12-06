@@ -265,18 +265,19 @@ namespace GameEngine.GameScreens
                     Client.SendActionPacket(GameStateController.Roll());
                 }
 
-                /*
-                if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState) && RollAnimation <= 0)
-                {
-                    Client.SendActionPacket(GameStateController.Roll());
-                    RollAnimation = 30;
-                }
                 foreach (var ds in _diceRow.DiceSprites)
                 {
                     if (ds.MouseOver(Engine.InputManager.FreshMouseState))
                     {
                         ds.Click();
                     }
+                }
+
+                /*
+                if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState) && RollAnimation <= 0)
+                {
+                    Client.SendActionPacket(GameStateController.Roll());
+                    RollAnimation = 30;
                 }
                 */
             }
