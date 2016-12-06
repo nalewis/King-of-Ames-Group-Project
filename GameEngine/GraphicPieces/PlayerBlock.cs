@@ -2,6 +2,7 @@
 using GamePieces.Monsters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace GameEngine.GraphicPieces
 {
@@ -76,6 +77,14 @@ namespace GameEngine.GraphicPieces
                     break;
             }
             SetTextPositions();
+        }
+
+        public bool MouseOver(MouseState mouse)
+        {
+            return mouse.Position.X > DisplayPosition.X &&
+                   mouse.Position.X < DisplayPosition.X + PlayerPortrait.Width &&
+                   mouse.Position.Y > DisplayPosition.Y &&
+                   mouse.Position.Y < DisplayPosition.Y + PlayerPortrait.Height;
         }
 
         /// <summary>

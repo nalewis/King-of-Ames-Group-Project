@@ -20,8 +20,8 @@ namespace GameEngine.GameScreens
         private readonly List<PlayerBlock> _pBlocks;    //A list of PlayerBlocks used to display player images + text related to their status
         private static List<TextBlock> _textPrompts;    //A list of textBlocks that are updated to display text on the screen as needed
         private readonly DiceRow _diceRow;      //The dice that are updated to show what the player's real roll is
-        private DiceRow RollingDice { get; }        //The dice that are displayed during roll animation
-        private int RollAnimation { get; set; }     //int used for counting dice roll animation
+        //private DiceRow RollingDice { get; }        //The dice that are displayed during roll animation
+        //private int RollAnimation { get; set; }     //int used for counting dice roll animation
         public ServerUpdateBox ServerUpdateBox;     //A box use used to display update messages from the server
         private static int _localPlayer;        //int used to store the local player's ID number
         private static Monster _localMonster;   //Copy of the local player's "monster" object used for display purposes
@@ -440,14 +440,17 @@ namespace GameEngine.GameScreens
         /// the screen and displays the winner's name
         /// </summary>
         /// <param name="winner">The name of the game's winner</param>
-        public static void EndGame(string winner)
+        public void EndGame(string winner)
         {
             _winner = winner;
+            _diceRow.Hidden = true;
+            _rollButton.Hidden = true;
             _textPrompts.Clear();
-            _textPrompts.Add(new TextBlock("GameOver", new List<string>()
+            _textPrompts.Add(new TextBlock("RollPrompt", new List<string>()
             {
                 "Game Over",
-                "Winner: " + winner + "!"
+                "Winner: " + winner + "!",
+                "Press Escape to Close"
             }));
             _gameState = GameState.EndGame;
             if (Engine.InputManager.KeyPressed(Keys.Escape))
