@@ -6,8 +6,8 @@ namespace GameEngine.GameScreens
 {
     internal class ScreenLocations
     {
-        private const int PlayerBlockLength = 350;
-        private const int PlayerBlockHeight = 250;
+        private const int PlayerBlockLength = 300;
+        private const int PlayerBlockHeight = 200;
         private const int DefaultPadding = 10;
         private Dictionary<string, Vector2> _positions;
         private int _screenWidth;
@@ -44,7 +44,7 @@ namespace GameEngine.GameScreens
                 {"RollingText", new Vector2(_screenWidth - 500, _screeHeight - 200) },
                 {"BuyCardsPrompt", new Vector2(_screenWidth - 400, _screeHeight - 100) },
                 {"GameOver", new Vector2(_screenWidth - 400, _screeHeight - 100) },
-                {"ServerUpdateBox", new Vector2(10, _screeHeight - 150)  },
+                {"ServerUpdateBox", new Vector2(10, _screeHeight - 160)  },
                 {"cardList", new Vector2(10, _screeHeight - 300)  }
             };
         }

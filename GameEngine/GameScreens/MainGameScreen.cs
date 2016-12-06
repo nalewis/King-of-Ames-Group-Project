@@ -16,34 +16,31 @@ namespace GameEngine.GameScreens
 {
     class MainGameScreen : GameScreen
     {
-        public static ScreenLocations ScreenLocations;
-        private readonly List<PlayerBlock> _pBlocks;
-        private static List<TextBlock> _textPrompts;
-        private readonly DiceRow _diceRow;
-        public ServerUpdateBox ServerUpdateBox;
+        public static ScreenLocations ScreenLocations;  //This is a static list of locations to be used for where to display Playerblocks (e.g., Mid-Left, Mid-Center)
+        private readonly List<PlayerBlock> _pBlocks;    //A list of PlayerBlocks used to display player images + text related to their status
+        private static List<TextBlock> _textPrompts;    //A list of textBlocks that are updated to display text on the screen as needed
+        private readonly DiceRow _diceRow;      //The dice that are updated to show what the player's real roll is
+        private DiceRow RollingDice { get; }        //The dice that are displayed during roll animation
+        private int RollAnimation { get; set; }     //int used for counting dice roll animation
+        public ServerUpdateBox ServerUpdateBox;     //A box use used to display update messages from the server
+        private static int _localPlayer;        //int used to store the local player's ID number
+        private static Monster _localMonster;   //Copy of the local player's "monster" object used for display purposes
+        private bool _firstPlay = true;     //bool for deciding if it is the first time a player has entered the StartingTurn() function
+        private List<Monster> _monsterList;     //list of Monsters in the server
+        private TextBlock _cardForSaleList;     //A TextBlock used specifically to show the cards currently up for sale
+        public static int CardScreenChoice = -1;    //int changed based on the player's choice in the BuyCardScreen(), intialized to -1 for no choice.
+        private static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
+        private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
 
-        private static int _localPlayer;
-        private static Monster _localMonster;
-        private bool _firstPlay = true;
-        private List<Monster> _monsterList;
-        private TextBlock _cardList;
-
-
-        public static int CardScreenChoice = -1;
-
-        private int RollAnimation { get; set; }
-        private DiceRow RollingDice { get; }
-
-        private static GameState _gameState = GameState.Waiting;
-        private Texture2D _backgroundImage;
-
+        /// <summary>
+        /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
+        /// for display purposes. Also, detects whether a player is a spectator and acts accordingly.
+        /// </summary>
         public MainGameScreen()
         {
             _backgroundImage = Engine.TextureList["background720"];
             ScreenLocations = new ScreenLocations();
             ServerUpdateBox = new ServerUpdateBox(Engine.FontList["updateFont"]);
-            _textPrompts = new List<TextBlock>();
-            _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _localPlayer = User.PlayerId;
             if (Client.isSpectator)
             {
@@ -52,17 +49,25 @@ namespace GameEngine.GameScreens
             }
             _localMonster = MonsterController.GetById(_localPlayer);
             _monsterList = GetMonsterList();
+            _textPrompts = new List<TextBlock>();
             _pBlocks = GetPlayerBlocks();
+            _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
         }
 
+        /// <summary>
+        /// Processes all of the games display logic. Updates local objects 
+        /// based on packets received in the Client. Processes any local
+        /// decisions that need to be made, displays relevent objects/info
+        /// </summary>
+        /// <param name="gameTime">Parameter for the game's GameTime</param>
         public override void Update(GameTime gameTime)
         {
             if (GameStateController.GameOver)
             {
                 return;
             }
-            if (GetMonsterList().Count != _monsterList.Count)
+            if (GetMonsterList().Count != _monsterList.Count)   //A change has happened in the monster list
             {
                 _monsterList = GetMonsterList();
                 GetPlayerBlocks();
@@ -70,9 +75,9 @@ namespace GameEngine.GameScreens
             UpdatePositions();
             UpdateGraphicsPieces();
             
-            if (GamePieces.Session.Game.CardsForSale.Count > 0)
+            if (GamePieces.Session.Game.CardsForSale.Count > 0)     //If there are cards for sale display them.
             {
-                _cardList = new TextBlock("cardList", new List<string>()
+                _cardForSaleList = new TextBlock("cardList", new List<string>()
             {
                 "Cards For Sale:",
                 GamePieces.Session.Game.CardsForSale[0].Name,
@@ -81,7 +86,7 @@ namespace GameEngine.GameScreens
             });
             }
 
-            if (!MonsterController.IsDead(_localPlayer))
+            if (!MonsterController.IsDead(_localPlayer))    //If a player isn't dead check for their startOfTurn
             {
                 if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
                     _gameState = GameState.StartTurn;
@@ -132,6 +137,10 @@ namespace GameEngine.GameScreens
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Handles the calling of anything needing to be drawn to the screen
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
             Engine.SpriteBatch.Begin();
@@ -141,6 +150,9 @@ namespace GameEngine.GameScreens
             base.Draw(gameTime);
         }
 
+        /// <summary>
+        /// Unloads any assets to free memory when screen is no longer displayed
+        /// </summary>
         public override void UnloadAssets()
         {
             _pBlocks.Clear();
@@ -152,6 +164,9 @@ namespace GameEngine.GameScreens
 
         #region GameStateFunctions
 
+        /// <summary>
+        /// A function for when a player is in the spectating gamestate
+        /// </summary>
         private static void Spectate()
         {
             _textPrompts.Clear();
@@ -160,6 +175,9 @@ namespace GameEngine.GameScreens
                 }));
         }
 
+        /// <summary>
+        /// Function for when player is first starting their turn
+        /// </summary>
         private void StartingTurn()
         {
             _diceRow.Hidden = true;
@@ -179,29 +197,32 @@ namespace GameEngine.GameScreens
                 "Your Turn " + MonsterController.Name(_localPlayer),
                 "Press R to Roll, P for Menu ",
                 "or E to End Rolling",
-                "Cards: " + MonsterController.Cards(_localPlayer).ToString()
+                //"Cards: " + MonsterController.Cards(_localPlayer).ToString()
                 }));
 
-            if (Engine.InputManager.KeyPressed(Keys.R)) // && RollAnimation <= 0
+            if (Engine.InputManager.KeyPressed(Keys.R))
             {   
                 _gameState = GameState.Rolling;
-                //Client.isStart = false;
-                ServerClasses.Client.SendActionPacket(GameStateController.Roll());
+                Client.SendActionPacket(GameStateController.Roll());
                 System.Threading.Thread.Sleep(500);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
-
                 RollingDice.AddDice(DiceController.GetDice());
                 RollingDice.Hidden = false;
             }
         }
 
+        /// <summary>
+        /// Function for when a player is in their Rolling gamestate. Here the dice are displayed
+        /// and the player has the option to roll when pressing 'R'. They can also save the dice
+        /// by clicking on them.
+        /// </summary>
         private void Rolling()
         {
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 Client.SendMessage(_localMonster.Name + "'s Roll: " + GetDiceText(DiceController.GetDice()));
-                ServerClasses.Client.SendActionPacket(GameStateController.EndRolling());
+                Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
                 _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyingCards : GameState.EndingTurn;
                 return;
@@ -238,53 +259,10 @@ namespace GameEngine.GameScreens
                 }));
         }
 
-        private static string GetDiceText(List<Die> list)
-        {
-            return list[0].Symbol + ", " + list[1].Symbol + ", " + list[2].Symbol + ", " + list[3].Symbol + ", " +
-                   list[4].Symbol + ", " + list[5].Symbol;
-
-
-            /*
-            var attackRolled = 0;
-            var energyRolled = 0;
-            var healthRolled = 0;
-            var pointsRolled = new int[3];
-
-            foreach (var die in list)
-            {
-                if (die.Symbol.Equals(Symbol.Attack))
-                {
-                    attackRolled++;
-                }
-                else if (die.Symbol.Equals(Symbol.Energy))
-                {
-                    energyRolled++;
-                }
-                else if (die.Symbol.Equals(Symbol.Heal))
-                {
-                    healthRolled++;
-                }
-                else
-                {
-                    if (die.Symbol.Equals(Symbol.One))
-                    {
-                        pointsRolled[0]++;
-                    }
-                    else if (die.Symbol.Equals(Symbol.Two))
-                    {
-                        pointsRolled[1]++;
-                    }
-                    else if (die.Symbol.Equals(Symbol.Three))
-                    {
-                        pointsRolled[2]++;
-                    }
-                }
-            }
-
-            return "Attack: " + attackRolled + " Energy: " + energyRolled + " Health: " + healthRolled + " Points: " + pointsRolled;
-            */
-        }
-
+        /// <summary>
+        /// Function for when a player ends their turn. This just clears the screen and
+        /// resets the _firstPlay value then puts them in the waiting gamestate
+        /// </summary>
         private void EndTurn()
         {
             _textPrompts.Clear();
@@ -297,10 +275,14 @@ namespace GameEngine.GameScreens
             _firstPlay = true;
 
             _gameState = GameState.Waiting;
-            ServerClasses.Client.SendActionPacket(GameStateController.EndTurn());
-            ServerClasses.Client.SendActionPacket(GameStateController.StartTurn());
+            Client.SendActionPacket(GameStateController.EndTurn());
+            Client.SendActionPacket(GameStateController.StartTurn());
         }
 
+        /// <summary>
+        /// Function for the waiting gamestate. This has a clear screen, but
+        /// will prompt the player to yield if they can.
+        /// </summary>
         private void Waiting()
         {
             _textPrompts.Clear();
@@ -311,6 +293,10 @@ namespace GameEngine.GameScreens
             }
         }
 
+        /// <summary>
+        /// Function for when a player is dead. Currently just clears the screen
+        /// and informs them they are dead.
+        /// </summary>
         private void IsDead()
         {
             _diceRow.Hidden = true;
@@ -326,6 +312,10 @@ namespace GameEngine.GameScreens
                 }));
         }
 
+        /// <summary>
+        /// Function for prompting the player to Yield. Waits for either a Yes or No response
+        /// before continuing the game.
+        /// </summary>
         private void AskYield()
         {
             _textPrompts.Clear();
@@ -334,19 +324,23 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.KeyPressed(Keys.Y))
             {
-                ServerClasses.Client.SendActionPacket(GameStateController.Yield(_localPlayer));
+                Client.SendActionPacket(GameStateController.Yield(_localPlayer));
                 _gameState = GameState.Waiting;
                 Waiting();
 
             }
             else if (Engine.InputManager.KeyPressed(Keys.N))
             {
-                ServerClasses.Client.SendActionPacket(GameStateController.NoYield(_localPlayer));
+                Client.SendActionPacket(GameStateController.NoYield(_localPlayer));
                 _gameState = GameState.Waiting;
                 Waiting();
             }
         }
 
+        /// <summary>
+        /// Function for prompting to open the buyCards() screen and buy some cards.
+        /// Only asks if they player has enough energy to purchase any of the cards.
+        /// </summary>
         private void AskBuyCards()
         {
             _textPrompts.Clear();
@@ -393,6 +387,11 @@ namespace GameEngine.GameScreens
             }
         }
 
+        /// <summary>
+        /// Function for when the game comes to completion. Clears
+        /// the screen and displays the winner's name
+        /// </summary>
+        /// <param name="winner">The name of the game's winner</param>
         public static void EndGame(string winner)
         {
             _textPrompts.Clear();
@@ -402,13 +401,17 @@ namespace GameEngine.GameScreens
                 "Winner: " + winner + "!"
             }));
             _gameState = GameState.EndGame;
-
         }
 
         #endregion
 
         #region PrivateHelpers
 
+        /// <summary>
+        /// Private helper function to determine if a player can afford any cards
+        /// </summary>
+        /// <param name="playerEnergy">The amount of energy a player has</param>
+        /// <returns>True if any card can be afforded, false otherwise.</returns>
         private static bool AskForCards(int playerEnergy)
         {
             var ask = false;
@@ -422,6 +425,10 @@ namespace GameEngine.GameScreens
             return ask;
         }
 
+        /// <summary>
+        /// Private helper function for updating positions. Should only be needed if
+        /// there is a resolution change.
+        /// </summary>
         private void UpdatePositions()
         {
             ScreenLocations.Update();
@@ -433,6 +440,9 @@ namespace GameEngine.GameScreens
             RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
         }
 
+        /// <summary>
+        /// Private helper function for calling update on all of the local game pieces
+        /// </summary>
         private void UpdateGraphicsPieces()
         {
             foreach (var ds in _diceRow.DiceSprites)
@@ -442,6 +452,9 @@ namespace GameEngine.GameScreens
             ServerUpdateBox.UpdateList();
         }
 
+        /// <summary>
+        /// Private helper function for calling draw on all of the local game pieces
+        /// </summary>
         private void DrawGraphicsPieces()
         {
             ServerUpdateBox.Draw(Engine.SpriteBatch);
@@ -450,9 +463,10 @@ namespace GameEngine.GameScreens
 
             if (!_diceRow.Hidden)
             {
+                /*
                 foreach(var ds in _diceRow.DiceSprites)
                     ds.Draw(Engine.SpriteBatch);
-
+                */
                 
                 for (var i = 0; i < _diceRow.DiceSprites.Count; i++)
                 {
@@ -473,9 +487,13 @@ namespace GameEngine.GameScreens
             foreach (var tp in _textPrompts)
                 tp.Draw(Engine.SpriteBatch);
 
-            _cardList?.Draw(Engine.SpriteBatch);
+            _cardForSaleList?.Draw(Engine.SpriteBatch);
         }
 
+        /// <summary>
+        /// Private helper function for getting the games MonsterList
+        /// </summary>
+        /// <returns>List of monsters currently in the game</returns>
         private static List<Monster> GetMonsterList()
         {
             var mon = MonsterController.GetById(_localPlayer);
@@ -489,6 +507,11 @@ namespace GameEngine.GameScreens
             return monList;
         }
 
+        /// <summary>
+        /// Private helper function used for initializing the list of playerBlocks. Currently
+        /// uses the number of players in the game to determine the locations and updates accordingly.
+        /// </summary>
+        /// <returns></returns>
         private static List<PlayerBlock> GetPlayerBlocks()
         {
             var monList = GetMonsterList();
@@ -526,10 +549,63 @@ namespace GameEngine.GameScreens
                     toReturn.Add(new PlayerBlock("MidRight", monList[5]));
                     break;
                 default:
-                    Console.WriteLine("Something went wrong.");
+                    Console.WriteLine("Something went wrong. Need minimum of two players, max of 6.");
                     break;
             }
             return toReturn;
+        }
+        
+        /// <summary>
+        /// Private helper function used for converting the dice roll values into
+        /// text for displaying
+        /// </summary>
+        /// <param name="list">List of currently rolled dice</param>
+        /// <returns>String containing the converted & formatted dice values</returns>
+        private static string GetDiceText(List<Die> list)
+        {
+            return list[0].Symbol + ", " + list[1].Symbol + ", " + list[2].Symbol + ", " + list[3].Symbol + ", " +
+                   list[4].Symbol + ", " + list[5].Symbol;
+
+
+            /*
+            var attackRolled = 0;
+            var energyRolled = 0;
+            var healthRolled = 0;
+            var pointsRolled = new int[3];
+
+            foreach (var die in list)
+            {
+                if (die.Symbol.Equals(Symbol.Attack))
+                {
+                    attackRolled++;
+                }
+                else if (die.Symbol.Equals(Symbol.Energy))
+                {
+                    energyRolled++;
+                }
+                else if (die.Symbol.Equals(Symbol.Heal))
+                {
+                    healthRolled++;
+                }
+                else
+                {
+                    if (die.Symbol.Equals(Symbol.One))
+                    {
+                        pointsRolled[0]++;
+                    }
+                    else if (die.Symbol.Equals(Symbol.Two))
+                    {
+                        pointsRolled[1]++;
+                    }
+                    else if (die.Symbol.Equals(Symbol.Three))
+                    {
+                        pointsRolled[2]++;
+                    }
+                }
+            }
+
+            return "Attack: " + attackRolled + " Energy: " + energyRolled + " Health: " + healthRolled + " Points: " + pointsRolled;
+            */
         }
 
         #endregion
