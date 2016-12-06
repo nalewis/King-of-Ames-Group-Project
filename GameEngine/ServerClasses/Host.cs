@@ -260,10 +260,13 @@ namespace GameEngine.ServerClasses
         public static void DeclareWinner()
         {
             //send packet type game over, update player stats, show final scores
-            var outMsg = _server.CreateMessage();
-            outMsg.Write((byte) PacketTypes.GameOver);
-            outMsg.Write(Game.Winner.Name);
-            _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+            if (Game.Winner != null)
+            {
+                var outMsg = _server.CreateMessage();
+                outMsg.Write((byte)PacketTypes.GameOver);
+                outMsg.Write(Game.Winner.Name);
+                _server.SendToAll(outMsg, NetDeliveryMethod.ReliableOrdered);
+            }
         }
 
         public static void PassMessageAlong(string message)
