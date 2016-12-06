@@ -32,7 +32,6 @@ namespace GameEngine.GameScreens
         private static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
         private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
         private readonly RollButton _rollButton;
-        private bool waitForYield = true;
 
         /// <summary>
         /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
@@ -112,10 +111,10 @@ namespace GameEngine.GameScreens
                     Waiting();
                     break;
                 case GameState.BuyCardPrompt:
-                   // AskBuyCards();
+                    AskBuyCards();
                     break;
                 case GameState.BuyingCards:
-                 //   BuySomeCards();
+                    BuySomeCards();
                     break;
                 case GameState.EndingTurn:
                     EndTurn();
@@ -218,8 +217,6 @@ namespace GameEngine.GameScreens
                 RollingDice.AddDice(DiceController.GetDice());
                 RollingDice.Hidden = false;
             }
-
-            Client.IsStart = false;
         }
 
         /// <summary>
@@ -234,9 +231,7 @@ namespace GameEngine.GameScreens
                 Client.SendMessage("Rolled: " + GetDiceText(DiceController.GetDice()));
                 Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
-                _gameState = GameState.EndingTurn;
-                
-                //_gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyCardPrompt : GameState.EndingTurn;
+                _gameState = AskForCards(MonsterController.Energy(_localPlayer)) ? GameState.BuyCardPrompt : GameState.EndingTurn;
                 return;
             }
 
@@ -280,7 +275,9 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void EndTurn()
         {
-            if(GetMonsterList().Any(mon => mon.CanYield)) { return; }
+            System.Threading.Thread.Sleep(100);
+            var data = GetMonsterList();
+            if (data.Any(mon => mon.CanYield)) { return; }
             _textPrompts.Clear();
             _diceRow.Clear();
             _diceRow.Hidden = true;
@@ -306,7 +303,6 @@ namespace GameEngine.GameScreens
             _textPrompts.Clear();
             if (MonsterController.GetById(_localPlayer).CanYield)
             {
-                Console.WriteLine("can yield: " + _localMonster.CanYield);
                 _gameState = GameState.AskYield;
                 AskYield();
             }
@@ -356,7 +352,7 @@ namespace GameEngine.GameScreens
             }
         }
 
-        /*
+        
         /// <summary>
         /// Function for prompting to open the buyCards() screen and buy some cards.
         /// Only asks if they player has enough energy to purchase any of the cards.
@@ -410,7 +406,7 @@ namespace GameEngine.GameScreens
             CardScreenChoice = -1; //reset choice for next time.
             _gameState = GameState.EndingTurn;
         }
-        */
+        
 
         /// <summary>
         /// Function for when the game comes to completion. Clears
