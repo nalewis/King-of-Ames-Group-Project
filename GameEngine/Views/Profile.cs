@@ -9,7 +9,16 @@ namespace GameEngine.Views
         public Profile()
         {
             InitializeComponent();
-            InitializeStats();
+            InitializeStats(User.Username);
+            groupBox1.Text = User.Username;
+        }
+
+        public Profile(string username)
+        {
+            InitializeComponent();
+            InitializeStats(username);
+            groupBox1.Text = username;
+            BackButton.Visible = false;
         }
 
         private void BackButton_Click(object sender, EventArgs e)
@@ -19,11 +28,11 @@ namespace GameEngine.Views
             Dispose();
         }
 
-        private void InitializeStats()
+        private void InitializeStats(string user)
         {
-            joinedGames.Text = NetworkClasses.GetUserStat("Games_Joined");
-            hostedGames.Text = NetworkClasses.GetUserStat("Games_Hosted");
-            wonGames.Text = NetworkClasses.GetUserStat("Games_Won");
+            joinedGames.Text = NetworkClasses.GetUserStat(user, "Games_Joined");
+            hostedGames.Text = NetworkClasses.GetUserStat(user, "Games_Hosted");
+            wonGames.Text = NetworkClasses.GetUserStat(user, "Games_Won");
         }
 
         /// <summary>
@@ -33,9 +42,8 @@ namespace GameEngine.Views
         /// <param name="e"></param>
         public void Profile_Closing(object sender, FormClosingEventArgs e)
         {
-            if (e.CloseReason != CloseReason.UserClosing) return;
             Dispose();
-            Environment.Exit(0);
+            if (BackButton.Visible) { Environment.Exit(0);}
         }
     }
 }

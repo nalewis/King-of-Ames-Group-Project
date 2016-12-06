@@ -67,7 +67,7 @@ namespace GameEngine.Views
             {
                 if (ContainsVaildChars(passChangeText.Text))
                 {
-                    if (NetworkClasses.UpdateUserValue("User_List","Password",passChangeText.Text,User.PlayerId))
+                    if (NetworkClasses.UpdateUserValue("User_List","Password",StringCipher.Encrypt(passChangeText.Text, "thomas").ToString(),User.PlayerId))
                     {
                         MessageBox.Show("Password has been changed", "Password Updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         passChangeText.Text = "";

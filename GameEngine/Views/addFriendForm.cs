@@ -10,13 +10,33 @@ namespace GameEngine.Views
         public AddFriendForm()
         {
             InitializeComponent();
+            username.Select();
         }
 
         private void add_Click(object sender, EventArgs e)
         {
+            AddFriend();
+        }
+
+        private void addFriendForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            e.Cancel = true;
+            username.Text = "";
+            Hide();
+        }
+
+        private void addFriendForm_KeyPressed(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar != 13) return;
+            AddFriend();
+        }
+
+        private void AddFriend()
+        {
             if (username.Text.Length > 0)
             {
-                if(ContainsVaildChars(username.Text))
+                if (ContainsVaildChars(username.Text))
                 {
                     var status = NetworkClasses.AddFriend(username.Text);
                     switch (status)
@@ -42,13 +62,6 @@ namespace GameEngine.Views
             {
                 MessageBox.Show("Please enter a username", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void addFriendForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason != CloseReason.UserClosing) return;
-            e.Cancel = true;
-            Hide();
         }
 
         /// <summary>

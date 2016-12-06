@@ -49,6 +49,7 @@ namespace GameEngine.Views
             this.RightToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
+            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.cm1.SuspendLayout();
             this.SuspendLayout();
@@ -105,12 +106,13 @@ namespace GameEngine.Views
             // 
             this.cm1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addToolStripMenuItem,
+            this.viewProfileToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.joinGameToolStripMenuItem,
             this.spectateToolStripMenuItem});
             this.cm1.Name = "cm1";
             this.cm1.ShowImageMargin = false;
-            this.cm1.Size = new System.Drawing.Size(128, 114);
+            this.cm1.Size = new System.Drawing.Size(128, 136);
             // 
             // addToolStripMenuItem
             // 
@@ -121,7 +123,6 @@ namespace GameEngine.Views
             // 
             // deleteToolStripMenuItem
             // 
-            this.deleteToolStripMenuItem.Enabled = false;
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
@@ -129,7 +130,6 @@ namespace GameEngine.Views
             // 
             // joinGameToolStripMenuItem
             // 
-            this.joinGameToolStripMenuItem.Enabled = false;
             this.joinGameToolStripMenuItem.Name = "joinGameToolStripMenuItem";
             this.joinGameToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.joinGameToolStripMenuItem.Text = "Join Game";
@@ -137,7 +137,6 @@ namespace GameEngine.Views
             // 
             // spectateToolStripMenuItem
             // 
-            this.spectateToolStripMenuItem.Enabled = false;
             this.spectateToolStripMenuItem.Name = "spectateToolStripMenuItem";
             this.spectateToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.spectateToolStripMenuItem.Text = "Spectate";
@@ -201,6 +200,13 @@ namespace GameEngine.Views
             // 
             this.ContentPanel.Size = new System.Drawing.Size(150, 150);
             // 
+            // viewProfileToolStripMenuItem
+            // 
+            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.viewProfileToolStripMenuItem.Text = "View Profile";
+            this.viewProfileToolStripMenuItem.Click += new EventHandler(viewProfileToolStripMenuItem_Click);
+            // 
             // FriendsList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -242,5 +248,7 @@ namespace GameEngine.Views
         private ToolStripMenuItem joinGameToolStripMenuItem;
         private ToolStripMenuItem spectateToolStripMenuItem;
         private Label label1;
+        private ToolStripMenuItem toolStripMenuItem1;
+        private ToolStripMenuItem viewProfileToolStripMenuItem;
     }
 }

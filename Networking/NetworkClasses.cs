@@ -68,13 +68,13 @@ namespace Networking
             return ds.Tables[0].Rows[0][value].ToString();
         }
 
-        public static string GetUserStat(string stat)
+        public static string GetUserStat(string username, string stat)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
             var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM User_Stats WHERE Player_ID = @user";
-            command.Parameters.AddWithValue("@user", User.PlayerId);
+            command.Parameters.AddWithValue("@user", GetPlayer(username).Tables[0].Rows[0]["Player_ID"]);
             var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
@@ -228,7 +228,6 @@ namespace Networking
             var command = connection.CreateCommand();
             command.CommandText = "SELECT * FROM Server_List WHERE Host = @id OR Player_2 = @id OR Player_3 = @id OR Player_4 = @id OR Player_5 = @id OR Player_6 = @id";
             command.Parameters.AddWithValue("@id", id);
-            Console.WriteLine(command.CommandText);
             var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
@@ -514,9 +513,8 @@ namespace Networking
                 connection.Open();
                 var command = connection.CreateCommand();
                 if(value == null) { command.CommandText = "UPDATE " + table + " SET " + column + " = null WHERE Player_ID = " + playerid;}
-                else if(value.Contains("+")){ command.CommandText = "UPDATE " + table + " SET " + column + " = " + value + " WHERE Player_ID = " + playerid; }
+                else if(value.Contains("+1") || value.Contains("+ 1")){ command.CommandText = "UPDATE " + table + " SET " + column + " = " + value + " WHERE Player_ID = " + playerid; }
                 else { command.CommandText = "UPDATE " + table + " SET " + column + " = '" + value + "' WHERE Player_ID = " + playerid; }
-                Console.WriteLine(command.CommandText);
                 command.ExecuteNonQuery();
 
                 connection.Close();

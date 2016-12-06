@@ -79,7 +79,6 @@ namespace GameEngine.Views
         /// </summary>
         private void Create()
         {
-            errorLabel.Hide();
             //Check that the inputs are not empty
             if (newUsername.TextLength > 0 && newPassword.TextLength >= 5 && newUsername.TextLength <= 20 && newPassword.TextLength < 20)
             {
@@ -95,20 +94,32 @@ namespace GameEngine.Views
                     }
                     else
                     {
-                        errorLabel.Text = "Username already exists.";
-                        errorLabel.Show();
+                        MessageBox.Show("Username already exists.", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
                     }
                 }
                 else
                 {
-                    errorLabel.Text = "LETTERS AND NUMBERS ONLY";
-                    errorLabel.Show();
+                    MessageBox.Show("LETTERS AND NUMBERS ONLY", "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation);
                 }
             }
             else
             {
-                errorLabel.Text = "Username must be between 1 and 20 characters\nPassword must be between 5 and 20 characters.";
-                errorLabel.Show();
+                if (newUsername.Text.Length < 1 || newUsername.Text.Length > 20)
+                {
+                    MessageBox.Show(
+                        "Username must be between 1 and 20 characters",
+                        "Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                }
+                if (newPassword.Text.Length < 5 || newPassword.Text.Length < 20)
+                {
+                    MessageBox.Show(
+                        "Password must be between 5 and 20 characters",
+                        "Error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                }
             }
         }
     }
