@@ -90,8 +90,9 @@ namespace GameEngine.GameScreens
 
             if (!MonsterController.IsDead(_localPlayer))    //If a player isn't dead check for their startOfTurn
             {
-                if (_gameState != GameState.Spectating && MonsterController.State(_localPlayer) == State.StartOfTurn)
-                    _gameState = GameState.StartTurn;
+                if (_gameState != GameState.Spectating && Client.IsStart)
+                    if(MonsterController.CanYield(_localPlayer) == false)
+                        _gameState = GameState.StartTurn;
             }
             else
             {
@@ -210,12 +211,14 @@ namespace GameEngine.GameScreens
             {   
                 _gameState = GameState.Rolling;
                 Client.SendActionPacket(GameStateController.Roll());
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(50);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
                 RollingDice.AddDice(DiceController.GetDice());
                 RollingDice.Hidden = false;
             }
+
+            Client.IsStart = false;
         }
 
         /// <summary>
@@ -285,9 +288,12 @@ namespace GameEngine.GameScreens
 
             _firstPlay = true;
 
-            _gameState = GameState.Waiting;
-            Client.SendActionPacket(GameStateController.EndTurn());
-            Client.SendActionPacket(GameStateController.StartTurn());
+            if (!(GetMonsterList().Any(mon => mon.CanYield)))
+            {
+                _gameState = GameState.Waiting;
+                Client.SendActionPacket(GameStateController.EndTurn());
+                Client.SendActionPacket(GameStateController.StartTurn());
+            }
         }
 
         /// <summary>

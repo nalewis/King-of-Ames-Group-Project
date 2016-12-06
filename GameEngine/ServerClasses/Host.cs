@@ -174,6 +174,7 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void ReceiveActionUpdate(ActionPacket packet)
         {
+            Console.WriteLine(packet.Action);
             GameStateController.AcceptAction(packet);
             //Checks if anyone has won the game
             if (GameStateController.GameOver)
