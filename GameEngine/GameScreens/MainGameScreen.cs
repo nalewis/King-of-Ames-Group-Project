@@ -19,7 +19,7 @@ namespace GameEngine.GameScreens
         public static ScreenLocations ScreenLocations;  //This is a static list of locations to be used for where to display Playerblocks (e.g., Mid-Left, Mid-Center)
         private readonly List<PlayerBlock> _pBlocks;    //A list of PlayerBlocks used to display player images + text related to their status
         private static List<TextBlock> _textPrompts;    //A list of textBlocks that are updated to display text on the screen as needed
-        private static readonly DiceRow _diceRow;      //The dice that are updated to show what the player's real roll is
+        private static DiceRow _diceRow;      //The dice that are updated to show what the player's real roll is
         //private DiceRow RollingDice { get; }        //The dice that are displayed during roll animation
         //private int RollAnimation { get; set; }     //int used for counting dice roll animation
         public ServerUpdateBox ServerUpdateBox;     //A box use used to display update messages from the server
@@ -31,7 +31,7 @@ namespace GameEngine.GameScreens
         public static int CardScreenChoice = -1;    //int changed based on the player's choice in the BuyCardScreen(), intialized to -1 for no choice.
         public static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
         private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
-        private static readonly RollButton _rollButton;
+        private static RollButton _rollButton;
         private static string _winner = null;
         public static bool gameOver = false;
 
