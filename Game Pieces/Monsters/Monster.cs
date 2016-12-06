@@ -128,7 +128,7 @@ namespace GamePieces.Monsters
         }
 
         public int PreviousHealth { get; private set; }
-        public int MaximumHealth { get; set; } = 10;
+        public int MaximumHealth { get; set; } = 2;
         public int AttackPoints { get; set; }
 
 

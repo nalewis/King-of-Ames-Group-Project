@@ -55,7 +55,7 @@ namespace GameEngine.GameScreens
             _textPrompts = new List<TextBlock>();
             _pBlocks = GetPlayerBlocks();
             _diceRow = new DiceRow(ScreenLocations.GetPosition("DicePos"));
-            RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
+            //RollingDice = new DiceRow(ScreenLocations.GetPosition("DicePos"));
             _rollButton = new RollButton();
         }
 
@@ -172,7 +172,7 @@ namespace GameEngine.GameScreens
             _pBlocks.Clear();
             _textPrompts.Clear();
             _diceRow.Clear();
-            RollingDice.Clear();
+            //RollingDice.Clear();
             base.UnloadAssets();
         }
 
@@ -201,8 +201,8 @@ namespace GameEngine.GameScreens
             _diceRow.Hidden = true;
             _diceRow.Clear();
 
-            RollingDice.Hidden = true;
-            RollingDice.Clear();
+            //RollingDice.Hidden = true;
+           // RollingDice.Clear();
 
             _textPrompts.Clear();
             if (_firstPlay)
@@ -225,8 +225,8 @@ namespace GameEngine.GameScreens
                 System.Threading.Thread.Sleep(100);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
-                RollingDice.AddDice(DiceController.GetDice());
-                RollingDice.Hidden = false;
+                //RollingDice.AddDice(DiceController.GetDice());
+                //RollingDice.Hidden = false;
             }
         }
 
@@ -238,7 +238,7 @@ namespace GameEngine.GameScreens
         private void Rolling()
         {
             _diceRow.Hidden = false;
-            RollingDice.Hidden = false;
+            //RollingDice.Hidden = false;
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
                 _rollButton.Hidden = true;
@@ -260,6 +260,12 @@ namespace GameEngine.GameScreens
 
             if (Engine.InputManager.LeftClick())
             {
+                if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState))
+                {
+                    Client.SendActionPacket(GameStateController.Roll());
+                }
+
+                /*
                 if (_rollButton.MouseOver(Engine.InputManager.FreshMouseState) && RollAnimation <= 0)
                 {
                     Client.SendActionPacket(GameStateController.Roll());
@@ -272,6 +278,7 @@ namespace GameEngine.GameScreens
                         ds.Click();
                     }
                 }
+                */
             }
 
             if (_textPrompts.Count > 0)
@@ -293,15 +300,15 @@ namespace GameEngine.GameScreens
         /// </summary>
         private void EndTurn()
         {
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(200);
             var data = GetMonsterList();
             if (data.Any(mon => mon.CanYield)) { return; }
             _textPrompts.Clear();
             _diceRow.Clear();
             _diceRow.Hidden = true;
 
-            RollingDice.Clear();
-            RollingDice.Hidden = true;
+            //RollingDice.Clear();
+            //RollingDice.Hidden = true;
 
             _rollButton.Hidden = true;
 
@@ -335,8 +342,8 @@ namespace GameEngine.GameScreens
             _diceRow.Hidden = true;
             _diceRow.Clear();
 
-            RollingDice.Hidden = true;
-            RollingDice.Clear();
+            //RollingDice.Hidden = true;
+            //RollingDice.Clear();
 
             _textPrompts.Clear();
 
@@ -482,7 +489,7 @@ namespace GameEngine.GameScreens
                 tp.Position = ScreenLocations.GetPosition(tp.Name);
             }
             _diceRow.setPosition(ScreenLocations.GetPosition("DicePos"));
-            RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
+            //RollingDice.setPosition(ScreenLocations.GetPosition("DicePos"));
         }
 
         /// <summary>
@@ -509,11 +516,12 @@ namespace GameEngine.GameScreens
 
             if (!_diceRow.Hidden)
             {
-                /*
+                
                 foreach(var ds in _diceRow.DiceSprites)
                     ds.Draw(Engine.SpriteBatch);
-                */
                 
+                
+                /*
                 for (var i = 0; i < _diceRow.DiceSprites.Count; i++)
                 {
                     if (RollAnimation <= 0 || _diceRow.DiceSprites[i].Save)
@@ -527,6 +535,7 @@ namespace GameEngine.GameScreens
                         RollAnimation--;
                     }
                 }
+                */
                 
             }
 
