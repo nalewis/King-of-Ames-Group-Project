@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 using GameEngine.ServerClasses;
 using Networking;
@@ -8,7 +11,8 @@ namespace GameEngine.Views
     public partial class FriendsList : Form
     {
         private readonly Timer _timer;
-        private string[] _old;
+        private int _friendCount = 0;
+        private List<DataSet> friendInfo = new List<DataSet>();
         private readonly Form _add;
         private Form _profile;
 
@@ -34,37 +38,35 @@ namespace GameEngine.Views
 
         public void GetFriends()
         {
-            var ds = NetworkClasses.GetPlayer(User.PlayerId);
-            if (ds.Tables[0].Rows[0]["Friends"].ToString() == "0")
+            var playerFriends =
+                NetworkClasses.GetPlayer(User.PlayerId).Tables[0].Rows[0]["Friends"].ToString().Split(',');
+            var datasets = playerFriends.Select(friend => NetworkClasses.GetPlayer(int.Parse(friend))).ToList();
+            if (datasets.Count != _friendCount)
             {
+                _friendCount = datasets.Count;
                 BoxOFriends.Items.Clear();
+                foreach (var player in datasets)
+                {
+                    var listItem = new ListViewItem(player.Tables[0].Rows[0]["Username"].ToString());
+                    listItem.SubItems.Add(player.Tables[0].Rows[0]["Online"].ToString());
+                    BoxOFriends.Items.Add(listItem);
+                }
+                friendInfo = datasets;
                 return;
             }
-            var friends = ds.Tables[0].Rows[0]["Friends"].ToString().Split(',');
-            if(friends.Length == 20) { addFriend.Enabled = false; }
-            else if (friends.Length < 20 && !addFriend.Enabled)
+            for (var i = 0; i < datasets.Count; i++)
             {
-                addFriend.Enabled = true;
-            }
-            if (_old != null && friends.Length == _old.Length)
-            {
-                    return;
-            }
-            BoxOFriends.Items.Clear();
-            _old = friends;
-            try
-            {
-                foreach (var friend in friends)
+                if (datasets[i].Tables[0].Rows[0]["Online"].ToString() ==
+                    friendInfo[i].Tables[0].Rows[0]["Online"].ToString()) continue;
+                BoxOFriends.Items.Clear();
+                foreach (var player in datasets)
                 {
-                    ds = NetworkClasses.GetPlayer(int.Parse(friend));
-                    var item = new ListViewItem(ds.Tables[0].Rows[0]["Username"].ToString());
-                    item.SubItems.Add(ds.Tables[0].Rows[0]["Online"].ToString());
-                    BoxOFriends.Items.Add(item);
+                    var listItem = new ListViewItem(player.Tables[0].Rows[0]["Username"].ToString());
+                    listItem.SubItems.Add(player.Tables[0].Rows[0]["Online"].ToString());
+                    BoxOFriends.Items.Add(listItem);
                 }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
+                friendInfo = datasets;
+                return;
             }
         }
 
