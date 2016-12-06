@@ -40,6 +40,7 @@ namespace GameEngine.Views
         {
             var playerFriends =
                 NetworkClasses.GetPlayer(User.PlayerId).Tables[0].Rows[0]["Friends"].ToString().Split(',');
+            if (playerFriends[0] == "0") return;
             var datasets = playerFriends.Select(friend => NetworkClasses.GetPlayer(int.Parse(friend))).ToList();
             if (datasets.Count != _friendCount)
             {
