@@ -12,13 +12,15 @@ namespace GameEngine.GraphicPieces
         private readonly SpriteFont _font;
         private readonly Texture2D _background;
         private readonly Vector2 _position;
+        private Color _color;
         private Vector2 _textPosition;
-        private const string Text = "     Roll";
+        private const string Text = "Roll";
         public bool Hidden { get; set; }
 
         public RollButton()
         {
             Hidden = true;
+            _color = Color.DarkRed;
             _background = GetBackground();
             _font = Engine.FontList["updateFont"];
             _position = MainGameScreen.ScreenLocations.GetPosition("RollButton");
@@ -27,11 +29,31 @@ namespace GameEngine.GraphicPieces
 
         public void Draw(SpriteBatch sB)
         {
-            sB.Draw(_background, _position, Color.DarkRed);
+            sB.Draw(_background, _position, _color);
             sB.DrawString(_font, Text, _textPosition, Color.White);
         }
 
-        /// <summary>
+        public void Update()
+        {
+            MouseState mouseState = Engine.InputManager.FreshMouseState;
+            if (MouseOver(mouseState))
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    _color = Color.Blue;
+                }
+                else
+                {
+                    _color = Color.DarkRed;
+                }
+            }
+            else
+            {
+                _color = Color.DarkRed;
+            }
+        }
+
+    /// <summary>
         /// Determines if the mouse is hovering over the die.
         /// </summary>
         /// <param name="mouse">Current state of the mouse.</param>

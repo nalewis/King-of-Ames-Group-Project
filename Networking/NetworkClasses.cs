@@ -621,5 +621,28 @@ namespace Networking
             }
         }
 
+        public static bool AddWin(int playerid)
+        {
+            try
+            {
+                int wins = int.Parse(GetUserStat(User.Username, "Games_Won"));
+                wins++;
+                var connection = new MySqlConnection(ConnectString);
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = "UPDATE User_Stats SET Games_Won = @wins WHERE Player_ID = @playerid";
+                command.Parameters.AddWithValue("@playerid", playerid);
+                command.Parameters.AddWithValue("@wins", wins);
+                command.ExecuteNonQuery();
+
+                connection.Close();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
     }
 }

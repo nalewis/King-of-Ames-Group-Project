@@ -22,7 +22,7 @@ namespace GameEngine.ServerClasses
         public static string Conn = "";
         public static NetClient NetClient { get; } = new NetClient(new NetPeerConfiguration("King of Ames"));
         private static Thread _loop;
-        private static readonly Thread GameLoop = new Thread(Program.Run);
+        private static Thread GameLoop;
         private static bool _shouldStop;
         public static MonsterDataPacket[] MonsterPackets;
         public static bool CanContinue = true;
@@ -99,6 +99,7 @@ namespace GameEngine.ServerClasses
 
                                 LobbyController.StartGame(MonsterPackets);
                                 //Makes this thread a STAThread, not sure if necessary...
+                                GameLoop = new Thread(Program.Run);
                                 GameLoop.SetApartmentState(ApartmentState.STA);
                                 GameLoop.Start();
                             }
@@ -114,6 +115,7 @@ namespace GameEngine.ServerClasses
 
                                 LobbyController.StartGame(MonsterPackets);
                                 //Makes this thread a STAThread, not sure if necessary...
+                                GameLoop = new Thread(Program.Run);
                                 GameLoop.SetApartmentState(ApartmentState.STA);
                                 GameLoop.Start();
                             }
@@ -167,6 +169,10 @@ namespace GameEngine.ServerClasses
                                 Console.WriteLine("Game Over!");
                                 MainGameScreen.gameOver = true;
                                 var winnerName = inc.ReadString();
+                                if (winnerName == NetworkClasses.GetUserValue("_Character").ToString())
+                                {
+                                    NetworkClasses.AddWin(User.PlayerId);
+                                }
                                 MainGameScreen.EndGame(winnerName);
                             }
                             else if (type == (byte)PacketTypes.Message)
@@ -234,6 +240,13 @@ namespace GameEngine.ServerClasses
             NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
         }
 
+        public static void CloseServer()
+        {
+            var outMsg = NetClient.CreateMessage();
+            outMsg.Write((byte)PacketTypes.Closed);
+            NetClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
+        }
+
         /// <summary>
         /// Tells the server to delete it from list, stops loop and shuts down NetClient
         /// </summary>
@@ -249,6 +262,8 @@ namespace GameEngine.ServerClasses
             _shouldStop = true;
             Conn = "";
             isSpectator = false;
+            NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
+            GameLoop = new Thread(Program.Run);
             if (GameLoop.IsAlive) { GameLoop.Abort(); }
         }
     }

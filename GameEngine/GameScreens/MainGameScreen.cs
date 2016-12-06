@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Linq;
-using System.Xml;
 using GameEngine.GraphicPieces;
 using GameEngine.ServerClasses;
 using GamePieces.Monsters;
@@ -68,7 +67,10 @@ namespace GameEngine.GameScreens
         /// <param name="gameTime">Parameter for the game's GameTime</param>
         public override void Update(GameTime gameTime)
         {
-            
+            if (Engine.ExitGame)
+            {
+                ScreenManager.RemoveScreen(this);    
+            }
             if (gameOver)
             {
                 EndGame(_winner);
@@ -220,7 +222,7 @@ namespace GameEngine.GameScreens
             {   
                 _gameState = GameState.Rolling;
                 Client.SendActionPacket(GameStateController.Roll());
-                System.Threading.Thread.Sleep(50);
+                System.Threading.Thread.Sleep(100);
                 _diceRow.AddDice(DiceController.GetDice());
                 _diceRow.Hidden = false;
                 RollingDice.AddDice(DiceController.GetDice());
@@ -239,6 +241,8 @@ namespace GameEngine.GameScreens
             RollingDice.Hidden = false;
             if (MonsterController.RollsRemaining(_localPlayer) == 0 || Engine.InputManager.KeyPressed(Keys.E))
             {
+                _rollButton.Hidden = true;
+                _textPrompts.Clear();
                 Client.SendMessage("Rolled: " + GetDiceText(DiceController.GetDice()));
                 Client.SendActionPacket(GameStateController.EndRolling());
                 //Buy Cards?
@@ -441,7 +445,6 @@ namespace GameEngine.GameScreens
             if (Engine.InputManager.KeyPressed(Keys.Escape))
             {
                 Engine.ExitGame = true;
-                //TODO set games won if applicable, end host server
             }
         }
 
@@ -492,6 +495,7 @@ namespace GameEngine.GameScreens
             foreach (var pb in _pBlocks)
                 pb.Update();
             ServerUpdateBox.UpdateList();
+            _rollButton.Update();
         }
 
         /// <summary>
