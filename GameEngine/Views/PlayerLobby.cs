@@ -15,6 +15,7 @@ namespace GameEngine.Views
         //Timer to handle view updates
         private readonly Timer _timer;
         private readonly Form _chat = new LobbyChat();
+        private Form _profile = new Profile();
         private readonly List<DataSet> _players = new List<DataSet>();
 
         /// <summary>
@@ -56,6 +57,7 @@ namespace GameEngine.Views
             Form form = new MainMenuForm();
             form.Show();
             _chat.Dispose();
+            if (!_profile.IsDisposed) _profile.Dispose();
             Dispose();
         }
 
@@ -69,6 +71,7 @@ namespace GameEngine.Views
             if (e.CloseReason != CloseReason.UserClosing) return;
             _timer.Stop();
             _chat.Dispose();
+            if (!_profile.IsDisposed) _profile.Dispose();
             Dispose();
             NetworkClasses.UpdateUserValue("User_List", "_Character", null, User.PlayerId);
             NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
@@ -108,6 +111,7 @@ namespace GameEngine.Views
                     MainMenuForm form = new MainMenuForm();
                     form.Show();
                     _chat.Dispose();
+                    if(!_profile.IsDisposed)_profile.Dispose();
                     _timer.Stop();
                     Dispose();
                 }
@@ -211,6 +215,17 @@ namespace GameEngine.Views
             {
                 MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void playerList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            viewProfileToolStripMenuItem.Visible = playerList.SelectedItems.Count == 1;
+        }
+
+        private void viewProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _profile = new Profile(playerList.SelectedItems[0].Text);
+            _profile.Show();
         }
     }
 }

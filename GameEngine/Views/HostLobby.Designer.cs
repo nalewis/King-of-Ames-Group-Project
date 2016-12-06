@@ -30,14 +30,18 @@ namespace GameEngine.Views
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.playerList = new System.Windows.Forms.ListView();
             this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.character = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.cm1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.leaveGame = new System.Windows.Forms.Button();
             this.char_label = new System.Windows.Forms.Label();
             this.char_list = new System.Windows.Forms.ComboBox();
             this.start_game = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.cm1.SuspendLayout();
             this.SuspendLayout();
             // 
             // playerList
@@ -45,6 +49,7 @@ namespace GameEngine.Views
             this.playerList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.playerName,
             this.character});
+            this.playerList.ContextMenuStrip = this.cm1;
             this.playerList.FullRowSelect = true;
             this.playerList.GridLines = true;
             this.playerList.Location = new System.Drawing.Point(12, 12);
@@ -53,6 +58,7 @@ namespace GameEngine.Views
             this.playerList.TabIndex = 0;
             this.playerList.UseCompatibleStateImageBehavior = false;
             this.playerList.View = System.Windows.Forms.View.Details;
+            this.playerList.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
             this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
             // 
             // playerName
@@ -64,6 +70,20 @@ namespace GameEngine.Views
             // 
             this.character.Text = "Character";
             this.character.Width = 97;
+            // 
+            // cm1
+            // 
+            this.cm1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewProfileToolStripMenuItem});
+            this.cm1.Name = "cm1";
+            this.cm1.Size = new System.Drawing.Size(137, 26);
+            // 
+            // viewProfileToolStripMenuItem
+            // 
+            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.viewProfileToolStripMenuItem.Text = "View Profile";
+            this.viewProfileToolStripMenuItem.Click += new System.EventHandler(this.viewProfileToolStripMenuItem_Click);
             // 
             // leaveGame
             // 
@@ -144,6 +164,7 @@ namespace GameEngine.Views
             this.Text = "ServerListForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HostGameListForm_Closing);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HostGameListForm_KeyPressed);
+            this.cm1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,5 +180,7 @@ namespace GameEngine.Views
         private System.Windows.Forms.ComboBox char_list;
         private System.Windows.Forms.Button start_game;
         private Label label1;
+        private ContextMenuStrip cm1;
+        private ToolStripMenuItem viewProfileToolStripMenuItem;
     }
 }

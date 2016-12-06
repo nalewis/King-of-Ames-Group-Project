@@ -30,6 +30,7 @@ namespace GameEngine.Views
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.leaveGame = new System.Windows.Forms.Button();
             this.playerList = new System.Windows.Forms.ListView();
             this.playerName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -37,6 +38,9 @@ namespace GameEngine.Views
             this.char_list = new System.Windows.Forms.ComboBox();
             this.char_label = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.cm1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.viewProfileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cm1.SuspendLayout();
             this.SuspendLayout();
             // 
             // leaveGame
@@ -64,7 +68,9 @@ namespace GameEngine.Views
             this.playerList.TabIndex = 3;
             this.playerList.UseCompatibleStateImageBehavior = false;
             this.playerList.View = System.Windows.Forms.View.Details;
+            this.playerList.SelectedIndexChanged += new System.EventHandler(this.playerList_SelectedIndexChanged);
             this.playerList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
+            this.playerList.ContextMenuStrip = cm1;
             // 
             // playerName
             // 
@@ -113,6 +119,20 @@ namespace GameEngine.Views
             this.label1.TabIndex = 8;
             this.label1.Text = "Press \'c\' to view/hide chat window";
             // 
+            // cm1
+            // 
+            this.cm1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewProfileToolStripMenuItem});
+            this.cm1.Name = "cm1";
+            this.cm1.Size = new System.Drawing.Size(153, 48);
+            // 
+            // viewProfileToolStripMenuItem
+            // 
+            this.viewProfileToolStripMenuItem.Name = "viewProfileToolStripMenuItem";
+            this.viewProfileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.viewProfileToolStripMenuItem.Text = "View Profile";
+            this.viewProfileToolStripMenuItem.Click += new System.EventHandler(this.viewProfileToolStripMenuItem_Click);
+            // 
             // PlayerLobby
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -129,6 +149,7 @@ namespace GameEngine.Views
             this.Text = "PlayerLobby";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PlayerLobby_Closing);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.PlayerLobby_KeyPressed);
+            this.cm1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -143,5 +164,7 @@ namespace GameEngine.Views
         private System.Windows.Forms.ComboBox char_list;
         private System.Windows.Forms.Label char_label;
         private Label label1;
+        private ContextMenuStrip cm1;
+        private ToolStripMenuItem viewProfileToolStripMenuItem;
     }
 }

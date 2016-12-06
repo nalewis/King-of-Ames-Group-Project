@@ -17,6 +17,7 @@ namespace GameEngine.Views
         //Timer to facilitate the updating of the view
         private readonly Timer _timer;
         private readonly Form _chat = new LobbyChat();
+        private Form _profile = new Profile();
         private readonly List<DataSet> _players = new List<DataSet>();
 
         /// <summary>
@@ -27,6 +28,7 @@ namespace GameEngine.Views
             InitializeComponent();
             _chat.Show();
             start_game.Enabled = false;
+            viewProfileToolStripMenuItem.Visible = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
             _timer = new Timer {Interval = (1*1000)}; //Ticks every 1 seconds
@@ -71,12 +73,13 @@ namespace GameEngine.Views
         {
             //if (e.CloseReason == CloseReason.UserClosing)
             //{
-                _timer.Stop();
-                _chat.Dispose();
-                Dispose();
-                NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
-                Host.ServerStop();
-                Environment.Exit(0);
+            _timer.Stop();
+            _chat.Dispose();
+            if (!_profile.IsDisposed) _profile.Dispose();   
+            Dispose();
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Offline", User.PlayerId);
+            Host.ServerStop();
+            Environment.Exit(0);
             //}
         }
 
@@ -94,6 +97,7 @@ namespace GameEngine.Views
             Form form = new MainMenuForm();
             form.Show();
             _chat.Dispose();
+            if (!_profile.IsDisposed) _profile.Dispose();
             Dispose();
         }
 
@@ -189,6 +193,7 @@ namespace GameEngine.Views
             Host.StartGame();
             _timer.Stop();
             _chat.Dispose();
+            if (!_profile.IsDisposed) _profile.Dispose();
             Dispose();
 
             MainMenuForm waiter = new MainMenuForm();
@@ -212,6 +217,17 @@ namespace GameEngine.Views
             {
                 MessageBox.Show("Invalid character", "Please choose a valid character", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void viewProfileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _profile = new Profile(playerList.SelectedItems[0].Text);
+            _profile.Show();
+        }
+
+        private void playerList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            viewProfileToolStripMenuItem.Visible = playerList.SelectedItems.Count == 1;
         }
     }
 }
