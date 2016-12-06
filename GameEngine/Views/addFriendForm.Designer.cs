@@ -44,13 +44,17 @@ namespace GameEngine.Views
             this.add.Text = "Add";
             this.add.UseVisualStyleBackColor = true;
             this.add.Click += new System.EventHandler(this.add_Click);
+            this.add.KeyPress += new KeyPressEventHandler(addFriendForm_KeyPressed);
             // 
             // username
             // 
             this.username.Location = new System.Drawing.Point(12, 70);
+            this.username.MaxLength = 30;
             this.username.Name = "username";
             this.username.Size = new System.Drawing.Size(183, 20);
             this.username.TabIndex = 1;
+            this.username.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.username.KeyPress += new KeyPressEventHandler(addFriendForm_KeyPressed);
             // 
             // label1
             // 
@@ -61,8 +65,9 @@ namespace GameEngine.Views
             this.label1.Size = new System.Drawing.Size(156, 25);
             this.label1.TabIndex = 2;
             this.label1.Text = "Enter username:";
+            this.label1.KeyPress += new KeyPressEventHandler(addFriendForm_KeyPressed);
             // 
-            // addFriendForm
+            // AddFriendForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -72,10 +77,12 @@ namespace GameEngine.Views
             this.Controls.Add(this.username);
             this.Controls.Add(this.add);
             this.Name = "AddFriendForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "addFriendForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.addFriendForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.FormClosing += new FormClosingEventHandler(addFriendForm_FormClosing);
+            this.KeyPress += new KeyPressEventHandler(addFriendForm_KeyPressed);
 
         }
 

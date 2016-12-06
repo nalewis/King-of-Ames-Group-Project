@@ -34,7 +34,6 @@ namespace GameEngine.Views
             this.newPassword = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.errorLabel = new System.Windows.Forms.Label();
             this.newUserButton = new System.Windows.Forms.Button();
             this.toLogin = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -75,16 +74,6 @@ namespace GameEngine.Views
             this.label2.TabIndex = 3;
             this.label2.Text = "Password";
             // 
-            // errorLabel
-            // 
-            this.errorLabel.AutoSize = true;
-            this.errorLabel.Location = new System.Drawing.Point(120, 137);
-            this.errorLabel.Name = "errorLabel";
-            this.errorLabel.Size = new System.Drawing.Size(108, 13);
-            this.errorLabel.TabIndex = 4;
-            this.errorLabel.Text = "Error Label goes here";
-            this.errorLabel.Visible = false;
-            // 
             // newUserButton
             // 
             this.newUserButton.Location = new System.Drawing.Point(181, 153);
@@ -92,7 +81,7 @@ namespace GameEngine.Views
             this.newUserButton.Size = new System.Drawing.Size(104, 23);
             this.newUserButton.TabIndex = 5;
             this.newUserButton.Text = "Create Profile";
-            this.newUserButton.UseVisualStyleBackColor = true;
+            this.newUserButton.UseVisualStyleBackColor = false;
             this.newUserButton.Click += new System.EventHandler(this.newUserButton_Click);
             // 
             // toLogin
@@ -102,7 +91,7 @@ namespace GameEngine.Views
             this.toLogin.Size = new System.Drawing.Size(104, 23);
             this.toLogin.TabIndex = 6;
             this.toLogin.Text = "Back to Login";
-            this.toLogin.UseVisualStyleBackColor = true;
+            this.toLogin.UseVisualStyleBackColor = false;
             this.toLogin.Click += new System.EventHandler(this.toLogin_Click);
             // 
             // label3
@@ -123,11 +112,11 @@ namespace GameEngine.Views
             this.Controls.Add(this.label3);
             this.Controls.Add(this.toLogin);
             this.Controls.Add(this.newUserButton);
-            this.Controls.Add(this.errorLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.newPassword);
             this.Controls.Add(this.newUsername);
+            this.ForeColor = System.Drawing.Color.DeepSkyBlue;
             this.Name = "NewUserForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "New User";
@@ -144,7 +133,6 @@ namespace GameEngine.Views
         private System.Windows.Forms.TextBox newPassword;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label errorLabel;
         private System.Windows.Forms.Button newUserButton;
         private System.Windows.Forms.Button toLogin;
         private System.Windows.Forms.Label label3;

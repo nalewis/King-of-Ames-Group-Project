@@ -46,7 +46,7 @@ namespace GameEngine.Views
             this.usernameBox.Name = "usernameBox";
             this.usernameBox.Size = new System.Drawing.Size(100, 20);
             this.usernameBox.TabIndex = 1;
-            this.usernameBox.KeyPress += new KeyPressEventHandler(LoginForm_KeyPressed);
+            this.usernameBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LoginForm_KeyPressed);
             // 
             // passwordBox
             // 
@@ -56,7 +56,7 @@ namespace GameEngine.Views
             this.passwordBox.Size = new System.Drawing.Size(100, 20);
             this.passwordBox.TabIndex = 2;
             this.passwordBox.UseSystemPasswordChar = true;
-            this.passwordBox.KeyPress += new KeyPressEventHandler(LoginForm_KeyPressed);
+            this.passwordBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LoginForm_KeyPressed);
             // 
             // usernameLabel
             // 
@@ -143,7 +143,7 @@ namespace GameEngine.Views
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Login";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.LoginForm_Closing);
-            this.KeyPress += new KeyPressEventHandler(LoginForm_KeyPressed);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LoginForm_KeyPressed);
             this.ResumeLayout(false);
             this.PerformLayout();
 

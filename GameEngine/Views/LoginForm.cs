@@ -61,8 +61,6 @@ namespace GameEngine.Views
             //Check input isn't empty, else error message is shown
             if (usernameBox.TextLength > 0 && passwordBox.TextLength > 0)
             {
-                //Hide existing error label, if any
-                errorLabel.Hide();
 
                 //Sends input to login function, if input is good, sends user to main menu 
                 //Else error message is shown
@@ -75,14 +73,14 @@ namespace GameEngine.Views
                 }
                 else
                 {
-                    errorLabel.Text = "Invalid Username/Password";
-                    errorLabel.Show();
+                    MessageBox.Show("Invalid Username/Password", "Login error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                 }
             }
             else
             {
-                errorLabel.Text = "Username/Password cannot be blank.";
-                errorLabel.Show();
+                MessageBox.Show("Username and password cannot be blank.", "Login error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
             }
         }
     }
