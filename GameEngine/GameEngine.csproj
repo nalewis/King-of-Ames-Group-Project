@@ -77,11 +77,11 @@
     <Compile Include="ServerClasses\Client.cs" />
     <Compile Include="ServerClasses\Host.cs" />
     <Compile Include="ServerClasses\PacketTypes.cs" />
-    <Compile Include="Views\addFriendForm.cs">
+    <Compile Include="Views\AddFriendForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\addFriendForm.Designer.cs">
-      <DependentUpon>addFriendForm.cs</DependentUpon>
+    <Compile Include="Views\AddFriendForm.Designer.cs">
+      <DependentUpon>AddFriendForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Views\FriendsList.cs">
       <SubType>Form</SubType>
@@ -164,8 +164,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
-    <EmbeddedResource Include="Views\addFriendForm.resx">
-      <DependentUpon>addFriendForm.cs</DependentUpon>
+    <EmbeddedResource Include="Views\AddFriendForm.resx">
+      <DependentUpon>AddFriendForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FriendsList.resx">
       <DependentUpon>FriendsList.cs</DependentUpon>

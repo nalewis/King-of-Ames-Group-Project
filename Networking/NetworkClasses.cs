@@ -91,7 +91,7 @@ namespace Networking
         /// <param name="pass"></param>
         /// <param name="ip"></param>
         /// <returns></returns>
-        public static bool Login(string user, string pass, string ip)
+        public static string Login(string user, string pass, string ip)
         {
             var connection = new MySqlConnection(ConnectString);
             connection.Open();
@@ -101,10 +101,10 @@ namespace Networking
             var adapter = new MySqlDataAdapter(command);
             var ds = new DataSet();
             adapter.Fill(ds);
-            if (ds.Tables[0].Rows.Count == 0) return false;
+            if (ds.Tables[0].Rows.Count == 0) return "user";
             var dbpass = StringCipher.Decrypt(ds.Tables[0].Rows[0]["password"].ToString(), "thomas");
-            if (dbpass != pass) return false;
-            if (ds.Tables[0].Rows[0]["Online"].ToString() == "1") return false;
+            if (dbpass != pass) return "pass";
+            //if (ds.Tables[0].Rows[0]["Online"].ToString() != "Offline") return "online";
             //update the players ip
             UpdateUserValue("User_List", "Local_IP", ip, int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString()));
 
@@ -116,7 +116,7 @@ namespace Networking
             connection.Close();
             DeleteServer(User.PlayerId);
             UpdateUserValue("User_List", "_Character", null, User.PlayerId);
-            return true;
+            return "good";
         }
 
         /// <summary>

@@ -16,9 +16,9 @@ namespace GameEngine.Views
     {
         //Timer to facilitate the updating of the view
         private readonly Timer _timer;
+        private readonly Timer _gameTimer;
         private readonly Form _chat = new LobbyChat();
         private Form _profile = new Profile();
-        private readonly List<DataSet> _players = new List<DataSet>();
 
         /// <summary>
         /// Initializing variables
@@ -31,8 +31,10 @@ namespace GameEngine.Views
             viewProfileToolStripMenuItem.Visible = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            _timer = new Timer {Interval = (1*1000)}; //Ticks every 1 seconds
+            _timer = new Timer {Interval = 1000}; //Ticks every 1 seconds
+            _gameTimer = new Timer {Interval = 2000};
             _timer.Tick += timer_Tick;
+            _gameTimer.Tick += gameTimer_tick;
             _timer.Start();
 
         }
@@ -49,6 +51,18 @@ namespace GameEngine.Views
                 start_game.Enabled = NetworkClasses.CheckReady(Host.Players);
             }
             UpdateList();
+        }
+
+        private void gameTimer_tick(object sender, EventArgs e)
+        {
+            if (!Client.gameEnd) return;
+            Host.ServerStop();
+            _gameTimer.Stop();
+            if (!_chat.IsDisposed) _chat.Dispose();
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
+            MessageBox.Show("Results go here", "Results", MessageBoxButtons.OK);
+            Form form = new MainMenuForm();
+            form.Show();
         }
 
         private void HostGameListForm_KeyPressed(object sender, KeyPressEventArgs e)
@@ -106,47 +120,16 @@ namespace GameEngine.Views
         /// </summary>
         private void UpdateList()
         {
-            var done = true;
             //Gets server info and puts it into a dataset
             var ds = NetworkClasses.GetServer(User.PlayerId, User.LocalIp);
 
-            //Checks if number of players has changed
-            var currentNumPlayers = NetworkClasses.GetNumPlayers(int.Parse(ds.Tables[0].Rows[0]["Server_ID"].ToString()));
-            if (_players.Count == currentNumPlayers && _players.Count >= 1)
-            {
-                //Check if characters have changed
-                var newPlayerChars = new List<DataSet>();
-                newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Host"].ToString())));
-                for (var i = 2; i <= 6; i++)
-                {
-                    if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString()))
-                    {
-                        newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Player_" + i].ToString())));
-                    }
-                }
-                for (var i = 0; i < newPlayerChars.Count; i++)
-                {
-                    if (_players[i].Tables[0].Rows[0]["_Character"].ToString() !=
-                        newPlayerChars[i].Tables[0].Rows[0]["_Character"].ToString())
-                    {
-                        done = false;
-                        break;
-                    }
-                }
-                if (done)
-                {
-                    return;
-                }
-            }
             //Updating
-            _players.Clear();
             playerList.Items.Clear();
             var row = ds.Tables[0].Rows[0];
             var grabber = NetworkClasses.GetPlayer(int.Parse(row["Host"].ToString()));
             var _character = "";
 
             //Host
-            _players.Add(grabber);
             var listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
             _character = grabber.Tables[0].Rows[0]["_Character"].ToString();
             listItem.SubItems.Add(_character);
@@ -157,7 +140,6 @@ namespace GameEngine.Views
             {
                 if (string.IsNullOrEmpty(row["Player_" + i].ToString())) continue;
                 grabber = NetworkClasses.GetPlayer(int.Parse(row["Player_" + i].ToString()));
-                _players.Add(grabber);
                 listItem = new ListViewItem(grabber.Tables[0].Rows[0]["Username"].ToString());
                 _character = grabber.Tables[0].Rows[0]["_Character"].ToString();
                 listItem.SubItems.Add(_character);
@@ -192,12 +174,13 @@ namespace GameEngine.Views
             LobbyController.StartGame();
             Host.StartGame();
             _timer.Stop();
-            _chat.Dispose();
+            //_chat.Dispose();
+            _gameTimer.Start();
             if (!_profile.IsDisposed) _profile.Dispose();
-            Dispose();
+            Hide();
 
-            MainMenuForm waiter = new MainMenuForm();
-            waiter.Show();
+            //MainMenuForm waiter = new MainMenuForm();
+            //waiter.Show();
         }
 
         private void char_list_SelectedIndexChanged(object sender, EventArgs e)

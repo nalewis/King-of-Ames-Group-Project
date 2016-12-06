@@ -64,18 +64,25 @@ namespace GameEngine.Views
 
                 //Sends input to login function, if input is good, sends user to main menu 
                 //Else error message is shown
-                if (NetworkClasses.Login(usernameBox.Lines[0], passwordBox.Lines[0], Helpers.GetLocalIpAddress()))
+                var result = NetworkClasses.Login(usernameBox.Lines[0], passwordBox.Lines[0],
+                    Helpers.GetLocalIpAddress());
+                if (result == "good" || result == "online")
                 {
                     NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
                     Form form = new MainMenuForm();
                     form.Show();
                     Dispose();
                 }
-                else
+                else if(result == "pass" || result == "user")
                 {
                     MessageBox.Show("Invalid Username/Password", "Login error", MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
+                /*else if (result == "online")
+                {
+                    MessageBox.Show("User already logged in", "Login error", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }*/
             }
             else
             {
