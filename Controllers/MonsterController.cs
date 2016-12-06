@@ -227,7 +227,9 @@ namespace Controllers
         /// <returns>If the monster is dead.</returns>
         public static bool IsDead(int playerId)
         {
-            return Game.Dead.Any(monster => monster.PlayerId == playerId);
+            return !Game.Monsters.Any(monster => monster.PlayerId == playerId);
         }
+
+        
     }
 }
