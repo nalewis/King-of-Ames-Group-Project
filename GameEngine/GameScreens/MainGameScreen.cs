@@ -30,7 +30,7 @@ namespace GameEngine.GameScreens
         private List<Monster> _monsterList;     //list of Monsters in the server
         private TextBlock _cardForSaleList;     //A TextBlock used specifically to show the cards currently up for sale
         public static int CardScreenChoice = -1;    //int changed based on the player's choice in the BuyCardScreen(), intialized to -1 for no choice.
-        private static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
+        public static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
         private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
         private readonly RollButton _rollButton;
         private static string _winner = null;

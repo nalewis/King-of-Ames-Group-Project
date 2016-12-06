@@ -198,11 +198,15 @@ namespace GameEngine.ServerClasses
         /// <param name="packet"></param>
         public static void SendActionPacket(ActionPacket packet)
         {
-            while (!CanContinue)
+            if (MainGameScreen._gameState != MainGameScreen.GameState.EndGame)
             {
-                Thread.Sleep(500);
-                Console.WriteLine("Sleeping packet type: " + packet.Action);
+                while (!CanContinue)
+                {
+                    Thread.Sleep(500);
+                    Console.WriteLine("Sleeping packet type: " + packet.Action);
+                }
             }
+
             var outMsg = NetClient.CreateMessage();
             outMsg.Write((byte) PacketTypes.Action);
             var json = JsonConvert.SerializeObject(packet);
