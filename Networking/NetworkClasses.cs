@@ -220,6 +220,23 @@ namespace Networking
             return ds;
         }
 
+        public static DataSet GetServerByPlayerId(string id)
+        {
+            var connection = new MySqlConnection(ConnectString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM Server_List WHERE Host = @id OR Player_2 = @id OR Player_3 = @id OR Player_4 = @id OR Player_5 = @id OR Player_6 = @id";
+            command.Parameters.AddWithValue("@id", id);
+            Console.WriteLine(command.CommandText);
+            var adapter = new MySqlDataAdapter(command);
+            var ds = new DataSet();
+            adapter.Fill(ds);
+
+            connection.Close();
+            return ds;
+        }
+
         /// <summary>
         /// Gets the server info of all servers in the database
         /// </summary>

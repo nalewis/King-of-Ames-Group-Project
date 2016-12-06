@@ -11,6 +11,7 @@ namespace GameEngine.Views
     public partial class MainMenuForm : Form
     {
         private readonly Form _friends;
+        private readonly Timer _timer;
 
         /// <summary>
         /// Intializing variables
@@ -19,6 +20,18 @@ namespace GameEngine.Views
         {
             InitializeComponent();
             _friends = new FriendsList();
+            _timer = new Timer() {Interval = 1000};
+            _timer.Tick += timer_tick;
+            _timer.Start();
+        }
+
+        private void timer_tick(object sender, EventArgs e)
+        {
+            if (_friends.IsDisposed)
+            {
+                _timer.Stop();
+                Dispose();
+            }
         }
 
         /// <summary>

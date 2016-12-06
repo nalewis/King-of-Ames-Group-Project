@@ -93,13 +93,15 @@ namespace GameEngine.Views
                 deleteToolStripMenuItem.Enabled = true;
                 if (BoxOFriends.SelectedItems[0].SubItems[1].Text == "In Lobby")
                     joinGameToolStripMenuItem.Enabled = true;
-                else if (BoxOFriends.SelectedItems[0].SubItems[1].Text == "In Game")
+                if (BoxOFriends.SelectedItems[0].SubItems[1].Text == "In Game")
                     spectateToolStripMenuItem.Enabled = true;
             }
             else
             {
                 delFriend.Enabled = false;
                 deleteToolStripMenuItem.Enabled = false;
+                joinGameToolStripMenuItem.Enabled = false;
+                spectateToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -134,7 +136,29 @@ namespace GameEngine.Views
 
         private void joinGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Client.NetClient.Start();
+            var ds = NetworkClasses.GetServerByPlayerId(NetworkClasses.GetPlayer(BoxOFriends.SelectedItems[0].Text).Tables[0].Rows[0]["Player_ID"].ToString());
+            //Console.WriteLine(ds.Tables[0].Rows[0]["Host"]);
+            Client.Conn = ds.Tables[0].Rows[0]["Host_IP"].ToString();
+            Client.NetClient.Start();
+            Client.Connect();
+            NetworkClasses.JoinServer(Client.Conn, User.PlayerId);
+            //Increments games joined
+            NetworkClasses.UpdateUserValue("User_Stats", "Games_Joined", "Games_Joined+1", User.PlayerId);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "In Lobby", User.PlayerId);
+            Form form = new PlayerLobby();
+            form.Show();
+            Dispose();
+        }
+
+        private void spectateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var ds = NetworkClasses.GetServerByPlayerId(NetworkClasses.GetPlayer(BoxOFriends.SelectedItems[0].Text).Tables[0].Rows[0]["Player_ID"].ToString());
+            Console.WriteLine(ds.Tables[0].Rows[0]["Host"]);
+            Client.Conn = ds.Tables[0].Rows[0]["Host_IP"].ToString();
+            Client.NetClient.Start();
+            Client.Connect(false);
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Spectating", User.PlayerId);
+            Dispose();
         }
     }
 }

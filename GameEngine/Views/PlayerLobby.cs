@@ -98,7 +98,7 @@ namespace GameEngine.Views
                 var ds = NetworkClasses.GetServer(Client.Conn);
                 if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
                 {
-                    NetworkClasses.UpdateUserValue("User_List", "Online", "In game", User.PlayerId);
+                    NetworkClasses.UpdateUserValue("User_List", "Online", "In Game", User.PlayerId);
                     _chat.Dispose();
                     _timer.Stop();
                     Dispose();
