@@ -219,7 +219,7 @@ namespace GameEngine.GameScreens
         {
             _textPrompts.Clear();
             _textPrompts.Add(new TextBlock("RollingText", new List<string> {
-                "Your Spectating!",
+                "You're Spectating! Have fun!",
                 }));
         }
 
