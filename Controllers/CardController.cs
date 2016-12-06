@@ -24,7 +24,6 @@ namespace Controllers
         {
             try
             {
-                Console.WriteLine(dataPacket.Type);
                 var card = (Card) Activator.CreateInstance(dataPacket.Type);
                 card.Activated = dataPacket.Activated;
                 return card;
