@@ -32,6 +32,7 @@ namespace GameEngine.GameScreens
         private static GameState _gameState = GameState.Waiting;       //Initialize the local gamestate to waiting to prevent conflicts
         private Texture2D _backgroundImage;     //Will need to change based on resolution. Currently 720 only.
         private readonly RollButton _rollButton;
+        private bool waitForYield = true;
 
         /// <summary>
         /// The constuctor for the MainGameScreen(). Initializes the various local objects/values
@@ -288,11 +289,17 @@ namespace GameEngine.GameScreens
 
             _firstPlay = true;
 
+            if (waitForYield)
+            {
+                Client.SendActionPacket(GameStateController.EndTurn());
+                waitForYield = false;
+            }
+
             if (!(GetMonsterList().Any(mon => mon.CanYield)))
             {
                 _gameState = GameState.Waiting;
-                Client.SendActionPacket(GameStateController.EndTurn());
                 Client.SendActionPacket(GameStateController.StartTurn());
+                waitForYield = true;
             }
         }
 
