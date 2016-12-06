@@ -16,6 +16,7 @@ namespace GameEngine.Views
     {
         //Timer to facilitate the updating of the view
         private readonly Timer _timer;
+        private readonly Timer _gameTimer;
         private readonly Form _chat = new LobbyChat();
         private Form _profile = new Profile();
         private readonly List<DataSet> _players = new List<DataSet>();
@@ -31,8 +32,10 @@ namespace GameEngine.Views
             viewProfileToolStripMenuItem.Visible = false;
             UpdateList();
             //timer that runs to check for updated SQL values, then updates listview accordingly
-            _timer = new Timer {Interval = (1*1000)}; //Ticks every 1 seconds
+            _timer = new Timer {Interval = 1000}; //Ticks every 1 seconds
+            _gameTimer = new Timer {Interval = 2000};
             _timer.Tick += timer_Tick;
+            _gameTimer.Tick += gameTimer_tick;
             _timer.Start();
 
         }
@@ -49,6 +52,17 @@ namespace GameEngine.Views
                 start_game.Enabled = NetworkClasses.CheckReady(Host.Players);
             }
             UpdateList();
+        }
+
+        private void gameTimer_tick(object sender, EventArgs e)
+        {
+            if (Client.Conn != "") return;
+            _gameTimer.Stop();
+            if (!_chat.IsDisposed) _chat.Dispose();
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
+            MessageBox.Show("Results go here", "Results", MessageBoxButtons.OK);
+            Form form = new MainMenuForm();
+            form.Show();
         }
 
         private void HostGameListForm_KeyPressed(object sender, KeyPressEventArgs e)
@@ -192,12 +206,13 @@ namespace GameEngine.Views
             LobbyController.StartGame();
             Host.StartGame();
             _timer.Stop();
-            _chat.Dispose();
+            //_chat.Dispose();
+            _gameTimer.Start();
             if (!_profile.IsDisposed) _profile.Dispose();
-            Dispose();
+            Hide();
 
-            MainMenuForm waiter = new MainMenuForm();
-            waiter.Show();
+            //MainMenuForm waiter = new MainMenuForm();
+            //waiter.Show();
         }
 
         private void char_list_SelectedIndexChanged(object sender, EventArgs e)

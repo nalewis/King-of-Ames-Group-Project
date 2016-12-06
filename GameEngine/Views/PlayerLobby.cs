@@ -14,6 +14,7 @@ namespace GameEngine.Views
     {
         //Timer to handle view updates
         private readonly Timer _timer;
+        private readonly Timer _gameTimer;
         private readonly Form _chat = new LobbyChat();
         private Form _profile = new Profile();
         private readonly List<DataSet> _players = new List<DataSet>();
@@ -27,8 +28,10 @@ namespace GameEngine.Views
             _chat.Show();
             UpdateList();
 
-            _timer = new Timer {Interval = (1*1000)};//Ticks every 1 seconds
+            _timer = new Timer {Interval = 1000};//Ticks every 1 seconds
+            _gameTimer = new Timer {Interval = 2000};
             _timer.Tick += timer_Tick;
+            _gameTimer.Tick += gameTimer_tick;
             _timer.Start();
         }
 
@@ -40,6 +43,17 @@ namespace GameEngine.Views
         private void timer_Tick(object sender, EventArgs e)
         {
             UpdateList();
+        }
+
+        private void gameTimer_tick(object sender, EventArgs e)
+        {
+            if (Client.Conn != "") return;
+            _gameTimer.Stop();
+            if (!_chat.IsDisposed)_chat.Dispose();
+            NetworkClasses.UpdateUserValue("User_List", "Online", "Online", User.PlayerId);
+            MessageBox.Show("Things here", "Results", MessageBoxButtons.OK);
+            Form form = new MainMenuForm();
+            form.Show();
         }
 
         /// <summary>
@@ -108,12 +122,13 @@ namespace GameEngine.Views
                 if (ds.Tables[0].Rows[0]["Status"].ToString() == "In Progress")
                 {
                     NetworkClasses.UpdateUserValue("User_List", "Online", "In Game", User.PlayerId);
-                    MainMenuForm form = new MainMenuForm();
-                    form.Show();
-                    _chat.Dispose();
+                    //MainMenuForm form = new MainMenuForm();
+                    //form.Show();
+                    //_chat.Dispose();
                     if(!_profile.IsDisposed)_profile.Dispose();
                     _timer.Stop();
-                    Dispose();
+                    _gameTimer.Start();
+                    Hide();
                 }
 
                 //Checks if number of players has changed
@@ -121,8 +136,10 @@ namespace GameEngine.Views
                 if (_players.Count == currentNumPlayers && _players.Count >= 1)
                 {
                     //Check if characters have changed
-                    var newPlayerChars = new List<DataSet>();
-                    newPlayerChars.Add(NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Host"].ToString())));
+                    var newPlayerChars = new List<DataSet>
+                    {
+                        NetworkClasses.GetPlayer(int.Parse(ds.Tables[0].Rows[0]["Host"].ToString()))
+                    };
                     for (var i = 2; i <= 6; i++)
                     {
                         if (!string.IsNullOrEmpty(ds.Tables[0].Rows[0]["Player_" + i].ToString()))
@@ -174,16 +191,21 @@ namespace GameEngine.Views
                     }
                 }
             }
-            catch (Exception) //Thrown if server no longer exists
+            catch (Exception e) //Thrown if server no longer exists
             {
+                if (e.GetBaseException() == new IndexOutOfRangeException())
+                {
+                    Console.WriteLine("Index out of range.");
+                    return;
+                }
                 //If the host leaves, the server no longer exists and the removing the player will throw an exception
                 try
                 {
                     NetworkClasses.FindRemovePlayer(Client.Conn, User.PlayerId);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(e);
+                    Console.WriteLine(ex);
                 }
                 _chat.Dispose();
                 Form form = new MainMenuForm();
