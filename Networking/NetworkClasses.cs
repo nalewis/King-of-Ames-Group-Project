@@ -104,7 +104,7 @@ namespace Networking
             if (ds.Tables[0].Rows.Count == 0) return "user";
             var dbpass = StringCipher.Decrypt(ds.Tables[0].Rows[0]["password"].ToString(), "thomas");
             if (dbpass != pass) return "pass";
-            if (ds.Tables[0].Rows[0]["Online"].ToString() != "Offline") return "online";
+            //if (ds.Tables[0].Rows[0]["Online"].ToString() != "Offline") return "online";
             //update the players ip
             UpdateUserValue("User_List", "Local_IP", ip, int.Parse(ds.Tables[0].Rows[0]["Player_ID"].ToString()));
 
